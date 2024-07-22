@@ -40,6 +40,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (compose f g)
   (define (the-composition . args)
+    ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Continuations.html#index-values
+    ;; > The continuation in effect when this procedure is called must be a multiple-value continuation that was created by *call-with-values*.
     (call-with-values (lambda () (apply g args))
       f))
   (restrict-arity the-composition (get-arity g)))
@@ -59,6 +61,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (parallel-apply f g)
   (define (the-combination . args)
+    ;; https://stackoverflow.com/q/45379116/21294350 the main part is value*s*.
     (let-values ((fv (apply f args))
                  (gv (apply g args)))
       (apply values (append fv gv))))
