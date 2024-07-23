@@ -21,6 +21,22 @@
  'a 'b 'c 'd)
 'expect-value: '(foo a b d)
 
+;; tests for 3 assertion.
+(((discard-argument 'a)
+  (lambda (x y z)
+    (list 'foo x y z)))
+ 'a 'b 'c 'd)
+
+(((discard-argument 2)
+  (lambda (x y z)
+    (list 'foo x y z)))
+ 'a 'b 'c)
+
+(((discard-argument 4)
+  (lambda (x y z)
+    (list 'foo x y z)))
+ 'a 'b 'c 'd)
+
 ;; code base
 (define (compose f g)
   (define (the-composition . args)
@@ -51,10 +67,10 @@
 
 (define (values* args) (apply values args))
 
-(define (curry-left* f . args)
-  ((apply (curry-arguments* 0) args) f))
+(define (curry-left*-check-arity f arity . args)
+  ((apply (curry-arguments*-check-arity 0) args) f arity))
 
-(define (((curry-arguments* position) . fixed-args) f)
+(define (((curry-arguments*-check-arity position) . fixed-args) f arity)
   (assert (exact-nonnegative-integer? position))
   (display ((lambda args
               (list-insert fixed-args position args)) 'a 'b 'c 'd))
@@ -65,9 +81,12 @@
 
   ; (display (((compose-args f (lambda args
   ;                   (list-insert fixed-args position args))) 'a 'b 'c 'd)))
-  (display ((compose-args f (lambda args
-                    '((a b c d) 2)))))
+  ; (display ((compose-args f (lambda args
+  ;                   '((a b c d) 2)))))
+
+  ;; Here the args the most inner accepted param.
   (compose-args f (lambda args ; here we should use args instead of `args` to accept multiple args.
+                    (assert (= (length args) arity))
                     (list-insert fixed-args position args))))
 
 (define ((discard-argument i) f)
@@ -75,7 +94,8 @@
   (let ((m (+ (get-arity f) 1)))
     (assert (< i m))
     (restrict-arity
-      (compose-args f (curry-left* list-remove i))
+      ;; Here we need to check the most inner func to ensure accepting the correct param number.
+      (compose-args f (curry-left*-check-arity list-remove m i))
       m ; same as 2.3, here we don't consider the general case.
       )))
 
@@ -84,3 +104,19 @@
     (list 'foo x y z)))
  'a 'b 'c 'd)
 'expect-value: '(foo a b d)
+
+;; tests for 3 assertion.
+(((discard-argument 'a)
+  (lambda (x y z)
+    (list 'foo x y z)))
+ 'a 'b 'c 'd)
+
+(((discard-argument 2)
+  (lambda (x y z)
+    (list 'foo x y z)))
+ 'a 'b 'c)
+
+(((discard-argument 4)
+  (lambda (x y z)
+    (list 'foo x y z)))
+ 'a 'b 'c 'd)
