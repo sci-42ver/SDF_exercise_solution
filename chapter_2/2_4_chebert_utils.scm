@@ -49,3 +49,6 @@
   (compose-args f (lambda args ; here we should use args instead of `args` to accept multiple args.
                     (assert (= (length args) arity))
                     (list-insert fixed-args position args))))
+
+(define swap-args
+  (permute-arguments 1 0))
