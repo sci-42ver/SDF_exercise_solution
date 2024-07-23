@@ -68,31 +68,31 @@
 (define 2_ary_list (lambda (x y) (list x y)))
 
 ((simple-parallel-combine
-  ; list ; not used since it has 0,#f for `procedure-arity`. See MIT_Scheme_Reference
-  2_ary_list
-  (lambda (x y z) (list 'foo x y z))
-  (lambda (u v w) (list 'bar u v w))) 
-    'a 'b 'c)
+   ; list ; not used since it has 0,#f for `procedure-arity`. See MIT_Scheme_Reference
+   2_ary_list
+   (lambda (x y z) (list 'foo x y z))
+   (lambda (u v w) (list 'bar u v w))) 
+ 'a 'b 'c)
 
 ;; test point 1
 ((simple-parallel-combine
-  2_ary_list
-  (lambda (A x y z) (list 'foo x y z))
-  (lambda (u v w) (list 'bar u v w))) 
-    'a 'b 'c)
+   2_ary_list
+   (lambda (A x y z) (list 'foo x y z))
+   (lambda (u v w) (list 'bar u v w))) 
+ 'a 'b 'c)
 
 ((simple-parallel-combine
-  (lambda (x) x)
-  (lambda (x y z) (list 'foo x y z))
-  (lambda (u v w) (list 'bar u v w))) 
-    'a 'b 'c)
+   (lambda (x) x)
+   (lambda (x y z) (list 'foo x y z))
+   (lambda (u v w) (list 'bar u v w))) 
+ 'a 'b 'c)
 
 ;; test point 2
 ((simple-parallel-combine
-  2_ary_list
-  (lambda (x y z) (list 'foo x y z))
-  (lambda (u v w) (list 'bar u v w))) 
-    'a 'b 'c 'd)
+   2_ary_list
+   (lambda (x y z) (list 'foo x y z))
+   (lambda (u v w) (list 'bar u v w))) 
+ 'a 'b 'c 'd)
 
 ;; test point 3
 (define test_pc 
@@ -101,14 +101,14 @@
     (lambda (x y z) (list 'foo x y z))
     (lambda (u v w) (list 'bar u v w))))
 ((simple-parallel-combine
-  2_ary_list
-  test_pc
-  (lambda (u v w) (list 'bar u v w))) 
-  'a 'b 'c)
+   2_ary_list
+   test_pc
+   (lambda (u v w) (list 'bar u v w))) 
+ 'a 'b 'c)
 ;Value: (((foo a b c) (bar a b c)) (bar a b c))
 
 ((simple-parallel-combine
-  2_ary_list
-  test_pc
-  (lambda (A u v w) (list 'bar u v w))) 
-  'a 'b 'c)
+   2_ary_list
+   test_pc
+   (lambda (A u v w) (list 'bar u v w))) 
+ 'a 'b 'c)

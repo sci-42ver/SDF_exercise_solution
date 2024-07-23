@@ -13,7 +13,7 @@
       (define (the-composition . args)
         ;; https://groups.csail.mit.edu/mac/ftpdir/scheme-reports/r5rs-html/r5rs_6.html#IDX71
         ;; > a newly allocated list of the actual arguments
-        
+
         ;; point 2
         (let ((arg_len (length args)))
           (if (not (equal? ng_max #f))
@@ -44,13 +44,13 @@
 
 (define test_general_compose 
   (compose-mod-general (lambda (x) (+ x (square x)))
-                      -))
+                       -))
 ;; MIT_Scheme_Reference is written by Chris Hanson which is also the author of SDF. So probably procedure-arity is based on hash-table.
 (procedure-arity test_general_compose)
 
 ((compose-mod-general test_general_compose
                       (lambda (x) (+ x (square x))))
-    3)
+ 3)
 ((lambda (x) (+ (- (+ x (square x))) (square (+ x (square x))))) 3)
 
 ;; > Sketch a plan for how to extend the combinators to use the more general arities.
@@ -63,7 +63,7 @@
 (define (check-arity arity n-args)
   (assert (>= n-args (procedure-arity-min arity)))
   (if (procedure-arity-max arity)
-      (assert (<= n-args (procedure-arity-max arity)))))
+    (assert (<= n-args (procedure-arity-max arity)))))
 
 ;; based on the code base
 ;; Also see mbillingr.
@@ -74,17 +74,17 @@
 (define (simple-spread-combine h f g)
   (check-arity (get-arity-general h) 2) ; point 1
   (let* ((n (get-arity-general f)) 
-        (m (get-arity-general g))
-        (n_min (procedure-arity-min n))
-        (n_max (procedure-arity-max n))
-        (m_min (procedure-arity-min m))
-        (m_max (procedure-arity-max m))
-        (res_min (+ n_min m_min))
-        ;; similar to join-arities in nbardiuk
-        (plus_arity (lambda (a1_min a1_max a2_min a2_max) 
-                      (if (and a1_max a2_max)
-                        (make-procedure-arity res_min (+ a1_max a2_max))
-                        (make-procedure-arity res_min #f)))))
+         (m (get-arity-general g))
+         (n_min (procedure-arity-min n))
+         (n_max (procedure-arity-max n))
+         (m_min (procedure-arity-min m))
+         (m_max (procedure-arity-max m))
+         (res_min (+ n_min m_min))
+         ;; similar to join-arities in nbardiuk
+         (plus_arity (lambda (a1_min a1_max a2_min a2_max) 
+                       (if (and a1_max a2_max)
+                         (make-procedure-arity res_min (+ a1_max a2_max))
+                         (make-procedure-arity res_min #f)))))
     (assert (and n_max (= n_min n_max))) ; ensure we can split the parameter list.
     (let ((t (plus_arity n_min n_max m_min m_max)))
       (define (the-combination . args)
@@ -97,47 +97,47 @@
       )))
 
 ((simple-spread-combine
-  list
-  (lambda (x y) (list 'foo x y))
-  (lambda (u v w) (list 'bar u v w)))
-    'a 'b 'c 'd 'e)
+   list
+   (lambda (x y) (list 'foo x y))
+   (lambda (u v w) (list 'bar u v w)))
+ 'a 'b 'c 'd 'e)
 
 ((simple-spread-combine 
-  + 
-  (lambda (x y) (* x y)) 
-  (lambda (x y) (+ x y)))
-    1 2 3 4)
+   + 
+   (lambda (x y) (* x y)) 
+   (lambda (x y) (+ x y)))
+ 1 2 3 4)
 
 (define test_sc (simple-spread-combine 
-  + 
-  (lambda (x y) (* x y)) 
-  (lambda (x y) (+ x y))))
+                  + 
+                  (lambda (x y) (* x y)) 
+                  (lambda (x y) (+ x y))))
 
 ;; point 1
 ((simple-spread-combine 
-  (lambda (x) x)
-  (lambda (x y) (* x y))
-  (lambda (x y) (+ x y)))
-    1 2 3 4)
+   (lambda (x) x)
+   (lambda (x y) (* x y))
+   (lambda (x y) (+ x y)))
+ 1 2 3 4)
 
 ;; point 2
 ((simple-spread-combine 
-  + 
-  (lambda (x y) (* x y)) 
-  (lambda (x y z) (+ x y)))
-    1 2 3 4)
+   + 
+   (lambda (x y) (* x y)) 
+   (lambda (x y z) (+ x y)))
+ 1 2 3 4)
 
 ;; point 3
 (get-arity-general test_sc)
 ((simple-spread-combine 
-  + 
-  test_sc
-  (lambda (x y) (+ x y)))
-    1 2 3 4 5 6)
+   + 
+   test_sc
+   (lambda (x y) (+ x y)))
+ 1 2 3 4 5 6)
 
 ;; ensure we are able to split param.
 ((simple-spread-combine 
-  + 
-  +
-  (lambda (x y) (+ x y)))
-    1 2 3 4)
+   + 
+   +
+   (lambda (x y) (+ x y)))
+ 1 2 3 4)

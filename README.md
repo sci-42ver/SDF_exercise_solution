@@ -7,7 +7,7 @@ exercise solution for Software Design for Flexibility (SDF)
 - partial
   [This](https://github.com/nbardiuk/software-design-for-flexibility) is one repo with solutions to some exercises although too *less*.
   [This](https://github.com/mbillingr/sdf) has partial solutions by [this search](https://github.com/search?q=repo%3Ambillingr%2Fsdf%20parallel-combine&type=code) although without appropriate tests.
-  - [This](https://github.com/chebert/software-design-for-flexibility) ~~I *can't find the relation* with the exercises~~ gives partial solution in *Racket* based on chapter.
+  [This](https://github.com/chebert/software-design-for-flexibility) ~~I *can't find the relation* with the exercises~~ gives partial solution in *Racket* based on chapter. (This seems to be the most detailed one)
     ~~ https://github.com/chebert/software-design-for-flexibility/blob/5eacde59855888180482031b9ee27c7c7b6cf4d1/sdf-function-combinators.rkt#L110-L111 implies it *doesn't solve the exercise* at all.~~
     - ~~Since it uses something like `arity-at-least?`, it will take unnecessary time to check Racket doc. So I won't read this implementation except when I am really stuck at something.~~
   - [~~this~~](https://github.com/jeffhhk/SoftwareDesignForFlexibility) has *no* solutions as README says.
@@ -24,11 +24,14 @@ exercise solution for Software Design for Flexibility (SDF)
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # nbardiuk solution comment
+By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.
 ## 2.1
 - > ; (assert (= 2 (get-arity h))) this is too naive - does not allow to use 'list
   Not. Since if this holds, then `(assert (= 1 f-arity))` also doesn't work.
 ## 2.2
 - `(guarantee-procedure-of-arity h (make-procedure-arity 2) 'h)` implies `h` can have more than 2 arguments.
+## 2.3
+- totally independent from 2.1~2 without any assertion.
 # mbillingr solution comment
 ## 2.1
 - `call-with-values`
@@ -45,7 +48,15 @@ The following is more general than mine since it allow the case where f has vari
     (assert (or (fixed-arity? arity-f)
                 (fixed-arity? arity-g)))
 ```
+## 2.3 (See codes)
+## lack
+2.4
 # chebert solution comment
 ## 2.1 (See code comments in this repo)
 ## 2.2
 - `combine-arities` is a bit different due to `arity-list`.
+## 2.3
+- without any assertion same as nbardiuk.
+## lack
+# internal func description
+- Use `((lambda (x) x) (values 1 2))` to show what `values` returns.

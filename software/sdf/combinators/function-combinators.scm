@@ -90,7 +90,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (assert (= (length args) t))
         (let-values ((fv (apply f (list-head args n)))
                      (gv (apply g (list-tail args n))))
-          (apply values (append fv gv))))
+          (apply values (append fv gv)))) ; This combines 2 values into 1 by first combining them into one list.
       (restrict-arity the-combination t))))
 
 (define (spread-combine h f g)
@@ -108,9 +108,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define ((curry-argument i) . args)
   (lambda (f)
-    (assert (= (length args) (- (get-arity f) 1)))
-    (lambda (x)
-      (apply f (list-insert args i x)))))
+    (let ((arg_len (length args)))
+      ;; Here f is input which predefined arity, so we don't need to restrict it.
+      (assert (= arg_len (- (get-arity f) 1)))
+      ;; Same as `discard-argument`, here we had better ensure `i` is valid. 
+      (assert (and (>= i 0) (<= i arg_len)))
+      (lambda (x)
+        (apply f (list-insert args i x))))))
 
 #|
 (define (curry-argument i)
