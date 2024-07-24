@@ -119,6 +119,7 @@
 ;; We can generalize 
 ;; 1. `iterate` to make something like f^2\circ g^3...
 ;; 2. `parallel-combine` with any number of f, g... Similar for `spread-combine`.
+;; Use cases is same as the original base but more general.
 
 ;; No reference answers since I don't know how to search when all available reference answer repo isn't based on exercise number.
 
@@ -133,22 +134,25 @@
 
 (define (identity x) x)
 
-(define (func_polynomial_minimal_unit . func_pow_pair_lst)
-  (if (null? (car func_pow_pair_lst))
+(define (func_polynomial_minimal_unit func_pow_pair_lst)
+  (if (null? func_pow_pair_lst)
     identity
+    ;; Here caar since `. func_pow_pair_lst` will add one level of list, so `'((square . 3) ((lambda (x) (* 3 x)) . 2)))` will become `(((square . 3) ((lambda (x) (* 3 x)) . 2))))`.
     (let ((cur_func_pow (car func_pow_pair_lst)))
       (compose 
         ((iterate (cdr cur_func_pow)) (car cur_func_pow)) 
         (func_polynomial_minimal_unit (cdr func_pow_pair_lst))))))
 
-((lambda (x) (expt (* x 9) (expt 2 3))) 3)
+(define test_res_1 ((lambda (x) (expt (* x 9) (expt 2 3))) 3))
+;; https://stackoverflow.com/a/78784662/21294350 either `list` (then the above `car` etc. need small modification) or quaiquote.
+(assert (= test_res_1 ((func_polynomial_minimal_unit `((,square . 3) (,(lambda (x) (* 3 x)) . 2))) 3)))
 ; ((func_polynomial_minimal_unit '((square . 3) ((lambda (x) (* 3 x)) . 2))) 3)
 
 ;;; parallel-combine generalization
 (define (parallel-apply-variant . funcs)
   (define (the-combination . args)
     ;; here we use one list, so not use `let-values`.
-    ;; But we must use call-with-values since `apply` returns `values`.
+    ;; But we must use call-with-values since `func` may return `values` as the following example shows.
     ; (let ((func_results (map (lambda (func) (apply func args)) funcs)))
     ;   (displayln func_results)
     ;   (displayln (fold-right append '() func_results))
@@ -197,3 +201,77 @@
                      (values w v u))
                     (lambda (u v w a)
                      (values w v u))) 'a 'b 'c)
+
+;;; spread-combine generalization based on code base
+
+;; https://stackoverflow.com/a/2313064/21294350 We can use prefix sum of arities
+(define scan
+  (lambda (func seq)
+    (reverse 
+      (fold
+       (lambda (e l) (cons (func e (car l)) l))
+       (list (car seq))
+       (cdr seq)))))
+;; We can map over adjacent pairs using the original list and the shifted list.
+
+(define (spread-apply-variant . funcs)
+  (let* ((arities (map (lambda (func) (get-arity func)) funcs))
+         (arities_prefix_sum (scan + arities)))
+    (let ((t (reduce + 0 arities)))
+      (define (the-combination . args)
+        (assert (= (length args) t))
+        ;; Here we need recursive which can't be 
+        (apply values (fold-right 
+                        (lambda (func arg_cnt arg_end cur_lst)
+                          (call-with-values (lambda () 
+                                              (apply func (list-tail (list-head args arg_end) (- arg_end arg_cnt))))
+                            ;; here x auto transform the param to list.
+                            (lambda x
+                              (append x cur_lst))))
+                        '() 
+                        funcs
+                        arities
+                        arities_prefix_sum))
+        )
+      (restrict-arity the-combination t))))
+
+;; same as parallel-combine-variant
+(define (spread-combine-variant h . funcs)
+  (compose h (apply spread-apply-variant funcs)))
+
+((spread-combine-variant list
+                 (lambda (x y)
+                   (list 'foo x y))
+                 (lambda (u v w)
+                   (list 'bar u v w)))
+ 'a 'b 'c 'd 'e)
+'expect-value: '((foo a b) (bar c d e))
+
+(define test_sc (spread-combine-variant list
+                 (lambda (x y)
+                   (list 'foo x y))
+                 (lambda (u v)
+                   (list 'bar u v))
+                 (lambda (w)
+                   (list 'baz w))
+                  ))
+
+(test_sc
+ 'a 'b 'c 'd 'e)
+
+;; same as before
+; (get-arity test_sc)
+
+(test_sc
+ 'a 'b 'c 'd)
+
+;;; c See 2_4_chebert_utils.scm
+(load "2_4_chebert_utils.scm")
+(define f square)
+(define g (lambda (x) (* 2 x)))
+(define h (lambda (x) (+ 4 x)))
+(define test_res_2 ((lambda (x) (square (* 2 (+ 4 x)))) 3))
+(assert (= test_res_2 ((compose-multiple f g h) 3)))
+(assert (= test_res_2 ((compose f (compose g h)) 3)))
+(assert (= test_res_2 ((compose-multiple f (compose-multiple g h)) 3)))
+(assert (= test_res_2 ((compose (compose f g) h) 3)))
