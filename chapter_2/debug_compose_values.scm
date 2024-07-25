@@ -5,8 +5,10 @@
     (let ((t (+ n m)))
       (define (the-combination . args)
         (assert (= (length args) t))
+        ;; here is 2 sub-values combined into one values
         (values (apply f (list-head args n))
-                (apply g (list-tail args n))))
+                (apply g (list-tail args n)))
+        )
       (restrict-arity the-combination t))))
 
 ; (define (spread-apply f g)

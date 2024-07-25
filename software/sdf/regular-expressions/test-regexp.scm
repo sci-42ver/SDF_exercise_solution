@@ -23,7 +23,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define tests-file
   (->namestring
+    ;; MIT_Scheme_Reference
+    ;; > The merging rules for the version are more complex and depend on whether pathname specifies a name
+    ;; I didn't dig into the exact merge rules.
    (merge-pathnames "tests.txt"
+                    ;; `current-load-pathname` may be the file name when calling `load` literally.
+                    ;; No detailed doc in MIT_Scheme_Reference
                     (directory-pathname (current-load-pathname)))))
 
 (define (assert-grep= expected pattern)

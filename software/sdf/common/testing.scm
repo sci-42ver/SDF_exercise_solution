@@ -68,12 +68,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         env)
       (extend-top-level-environment current-working-environment)))
 
+;; See book Appendix B
 (define-record-type <test>
     (make-test name run)
     test?
   (name test-name)
   (run test-run))
-
+
+;; will delete if already existing in `all-tests`.
 (define (define-test name run)
   (let ((existing-test
          (find (lambda (test)
@@ -95,6 +97,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (run-tests filename show-tests?)
   (let ((failed 0))
     (for-each (lambda (test)
+                ;; https://people.csail.mit.edu/jaffer/slib/Fluid_002dLet.html
+                ;; > fluid-let temporarily rebinds existing variables
+                ;; IMHO it will change the above `*test-file*` definition, etc.
                 (fluid-let ((*test-file* filename)
                             (*test-name* (test-name test))
                             (*test-index* 0)
@@ -103,6 +108,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       (begin
                         (fresh-line)
                         (display "Running test: ")
+                        ;; I didn't dig into the difference with display https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Output-Procedures.html#index-write-6
                         (write *test-name*)
                         (display " from file ")
                         (write (->namestring filename))
@@ -114,6 +120,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (cons failed (length all-tests))))
 
 (define (increment-index)
+  ;; n:+ is probably defined in analyze-sections.scm.
   (set! *test-index* (n:+ *test-index* 1)))
 
 (define (fail)
@@ -133,6 +140,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (assert-true value)
   (assert-not-eqv #f value))
 
+;; = here is arg.
 (define (make-equality-asserter =)
   (lambda (o1 o2)
     (increment-index)

@@ -1,4 +1,6 @@
 This is licenced same as MIT-Scheme although I don't know whether it is appropriate. If someone knows detailedly about the difference among licences, please tell me the appropriate choice.
+
+solution comment also see codes.
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 
