@@ -13,6 +13,7 @@
           (cons (car rest_lst) rest_filtered_lst)))))
   (recur 0 args_lst))
 ;; based on code base
+;; nbardiuk no implementation.
 (define (discard-arguments . args)
   (check_all_conds (lambda (i) (assert (exact-nonnegative-integer? i))) args)
   (lambda (f)

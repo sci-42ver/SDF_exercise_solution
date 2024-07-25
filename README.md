@@ -1,6 +1,8 @@
 This is licenced same as MIT-Scheme although I don't know whether it is appropriate. If someone knows detailedly about the difference among licences, please tell me the appropriate choice.
 
 solution comment also see codes.
+# Notice
+- Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 
@@ -25,6 +27,8 @@ exercise solution for Software Design for Flexibility (SDF)
     > so I might end up *fooling myself*.
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
+# exercise solutions by 3 references (i.e. nbardiuk etc.) checked up to now
+- 2.1~2.7
 # nbardiuk solution comment
 By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.
 ## 2.1
@@ -59,6 +63,10 @@ The following is more general than mine since it allow the case where f has vari
 - `combine-arities` is a bit different due to `arity-list`.
 ## 2.3
 - without any assertion same as nbardiuk.
+## TODO
+- 2.7
+  - > (ere expr) or (bre expr)
+    > multiple references ...
 ## lack
 # internal func description
 - Use `((lambda (x) x) (values 1 2))` to show what `values` returns.

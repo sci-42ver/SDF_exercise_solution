@@ -2,6 +2,7 @@
 
 ;;; discard-argument
 ;; the basic idea is same but with abstraction and more readable
+;; nbardiuk, mbillingr no implementation
 (define (discard-argument i)
   (assert (exact-nonnegative-integer? i))
   (lambda (f)
