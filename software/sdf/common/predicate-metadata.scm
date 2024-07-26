@@ -23,6 +23,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;;; Simple predicate metadata
 
+;; TODO not in MIT_Scheme_Reference
 (define (register-predicate! predicate name)
   (set-predicate-metadata! predicate name)
   predicate)

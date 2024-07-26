@@ -18,6 +18,16 @@
 
 ; (displayln tests-file)
 
+; (find-scheme-libraries! ".")
+; (define-library (regex utils)
+;   ; (include 
+;   ;           "../software/sdf/manager/load.scm"
+;   ;           "../software/sdf/common/testing.scm"
+;   ;           "../software/sdf/regular-expressions/test-regexp.scm")
+;   (import (scheme base)
+;           (common displayln))
+;   )
+
 ;; based on ../software/sdf/common/testing.scm and test-regexp.scm.
 (define (single-assert-grep= expected pattern)
   (assert (equal*? expected

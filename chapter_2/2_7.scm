@@ -8,6 +8,13 @@
 ;; |,? are not supported by BRE.
 ;; trivially smaller size and see above "... without recursive"
 
+;; See 6.945_assignment_solution:
+;; a. The above a is wrong.
+;; b. > The code would also be easier to implement since Bonnie is proposing a one-line replacement
+;; maybe it assume `string-repeat` (not in MIT-Scheme as MIT_Scheme_Reference shows) is ok.
+;; c. > This *may* make the implementation more robust / portable.
+;; > making the compiled expressions easier to read
+
 ;; d
 (load "../software/sdf/manager/load")
 (manage 'new 'regular-expressions)

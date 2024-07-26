@@ -3,6 +3,7 @@ This is licenced same as MIT-Scheme although I don't know whether it is appropri
 solution comment also see codes.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
+- I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 
@@ -27,8 +28,8 @@ exercise solution for Software Design for Flexibility (SDF)
     > so I might end up *fooling myself*.
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
-# exercise solutions by 3 references (i.e. nbardiuk etc.) checked up to now
-- 2.1~2.7
+# exercise solutions by 3 references (i.e. nbardiuk etc.) and 6.945_assignment_solution checked up to now
+- 2.1~2.9
 # nbardiuk solution comment
 By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.
 ## 2.1
@@ -70,3 +71,14 @@ The following is more general than mine since it allow the case where f has vari
 ## lack
 # internal func description
 - Use `((lambda (x) x) (values 1 2))` to show what `values` returns.
+# exercise comments
+## chapter 2
+- 2.9
+  - [POSIX_regex]
+    > The string matched by a contained subexpression shall be within the string matched by the containing subexpression. If *the containing subexpression does not match*, or if there is no match for the contained subexpression within the string matched by the containing subexpression, then back-reference expressions corresponding to the contained subexpression shall not match.
+    See "the expression "\(a\(b\)*\)*\2" fails to match 'abab'" where b must correspond to "\2", then "aba" can be matched to "the containing subexpression".
+    > When a subexpression matches more than one string, a back-reference expression corresponding to the subexpression shall refer to *the last matched string*.
+    See "the expression "^\(ab*\)*\1$" matches 'ababbabb', but fails to match 'ababbab'." where the last "abb" is matched to "\1".
+  - 
+
+[POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html

@@ -210,6 +210,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; MIT/GNU Scheme implementation specific:
 
+;; not in 
 (define (make-bundle-predicate name)
   (let ((predicate (n:make-bundle-predicate name)))
     (register-predicate! predicate name)
