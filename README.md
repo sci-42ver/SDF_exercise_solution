@@ -59,6 +59,7 @@ The following is more general than mine since it allow the case where f has vari
 ## lack
 2.4
 # chebert solution comment
+It seems to have no test files by searching "r:seq" with only 1 result file.
 ## 2.1 (See code comments in this repo)
 ## 2.2
 - `combine-arities` is a bit different due to `arity-list`.
@@ -79,6 +80,7 @@ The following is more general than mine since it allow the case where f has vari
     See "the expression "\(a\(b\)*\)*\2" fails to match 'abab'" where b must correspond to "\2", then "aba" can be matched to "the containing subexpression".
     > When a subexpression matches more than one string, a back-reference expression corresponding to the subexpression shall refer to *the last matched string*.
     See "the expression "^\(ab*\)*\1$" matches 'ababbabb', but fails to match 'ababbab'." where the last "abb" is matched to "\1".
-  - 
+- 2.10
+  - [factor](https://stackoverflow.com/a/5600318/21294350)
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html

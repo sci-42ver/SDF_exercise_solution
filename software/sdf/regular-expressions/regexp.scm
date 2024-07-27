@@ -39,6 +39,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       (list char)))
                 (string->list string)))))
 
+;; See POSIX_regex 9.3.3 BRE Special Characters
 (define chars-needing-quoting
   ;; See MIT_Scheme_Reference 5 Characters based on index.
   '(#\. #\[ #\\ #\^ #\$ #\*))
