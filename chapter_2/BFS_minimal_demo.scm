@@ -1,44 +1,3 @@
-;; I learned BFS and DFS when learning DMIA. The basic ideas are not hard. I won't code from scratch since this is not what SDF wants to teach.
-;; https://stackoverflow.com/q/7805005/21294350
-; (define net
-; '(("A" "B")
-;   ("B" "A" "C")
-;   ("C" "B" "D")
-;   ("D" "C" "E" "F")
-;   ("F" "I" "D")
-;   ("I" "F")
-;   ("E" "D" "J")
-;   ("J" "E" "G")
-;   ("G" "J" "H"))) 
-
-; (define (path-demo start finish)
-;         (for-each (lambda (x) (display x) (display " "))
-;                   (cons "Route:" (shortest-path start finish net))))
-
-; (define (shortest-path start end net)
-;   (bfs end (list (list start)) net))
-
-; ;; Breadth-first search
-; (define (bfs end queue net)
-;   (display queue) (newline) (newline) ; entertainment
-;   (if (null? queue)
-;     '()
-;     (let ((path (car queue)))
-;       (let ((node (car path)))
-;         (if (equal? node end) ;; Graham used CL eql
-;             (reverse path)
-;             (bfs end 
-;                 (append (cdr queue)
-;                         (new-paths path node net))
-;                 net))))))
-
-; (define (new-paths path node net)
-;   (map (lambda (n) (cons n path)) (cdr (assoc node net))))
-
-; ;;
-; (path-demo "J" "I")
-
-;; https://stackoverflow.com/a/9035697/21294350
 ;; https://htdp.org/2003-09-26/Solutions/find-route4.html
 (define (printf . args)
   (newline)
@@ -102,19 +61,6 @@
                 ((boolean? possible-route) (find-route/list (cdr lo-Os) D graph))
                 (else possible-route)))))))))
 
-#| neighbors: node graph -> (listof node)
-   (define (neighbors a-node a-graph) ...)
-   Purpose: compute a-node's neighbors in a-graph
-|#
-(define (neighbors a-node a-graph)
-  (cond
-    ((null? a-graph) (error 'neighbors "can't happen"))
-    (else (cond
-	    ((eq? (first (first a-graph)) a-node)
-	     (second (first a-graph)))
-	    (else (neighbors a-node (cdr a-graph)))))))
-
-;; equivalently, with Scheme's built-in lookup function:
 (define (neighbors a-node a-graph)
   (second (assq a-node a-graph)))
 
