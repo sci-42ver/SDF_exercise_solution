@@ -27,9 +27,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((to-op (make-apply-hook to #f))
         (from-op (make-apply-hook from #f)))
     (set-apply-hook-extra! to-op
+                          ;; MIT_Scheme_Reference "an extra component of object." maybe intends to be different from procedure.
                            (make-unit-conversion-record from-op))
     (set-apply-hook-extra! from-op
                            (make-unit-conversion-record to-op))
+    ;; i.e. to.
     to-op))
 
 (define-record-type <unit-conversion-record>
@@ -43,7 +45,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (register-predicate! unit-conversion? 'unit-conversion)
 
 (define (unit:invert unit-conversion)
-  (guarantee unit-conversion? unit-conversion)
+  (guarantee unit-conversion? unit-conversion) ; just check pred(icate).
   (unit-conversion-record-inverse (apply-hook-extra unit-conversion)))
 
 (define (unit:* u1 u2)
@@ -54,10 +56,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (unit:/ u1 u2)
   (unit:* u1 (unit:invert u2)))
 
+;; Same as SICP (fast-expt b n) but consider the negative case.
+;; contract: b^n=b*b*...*b, n>=0. And b^{-1}*b=1 (b^{-1}: unit:invert), b^-n=b^{-1}*b^{-1}*...*b^{-1}
 (define (unit:expt conversion n)
   (let ((positive-case
          (lambda (conversion n)
            (let loop ((count n))
+              ;; I didn't dig into n:... implementation.
+              ;; What they mean: See footnote 2 in SDF p196.
+              
+              ;; base case count=1 since `(n:= n 0)` is manipulated outside `loop`.
              (cond ((n:= count 1)
                     conversion)
                    ((even? count)
@@ -77,6 +85,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;;; Unit-conversion registry
 
 (define (register-unit-conversion input-unit output-unit unit-conversion)
+  ;; See https://stackoverflow.com/a/78762839/21294350. Here it will change the already inited table.
   (hash-table-set! unit-conversion-table
                    (cons input-unit output-unit)
                    unit-conversion)
@@ -91,13 +100,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (make-converter input-unit output-unit)
   (or (and (equal? input-unit output-unit)
-           identity-unit-conversion)
+           identity-unit-conversion) ; output this procedure if equal.
       (hash-table-ref/default unit-conversion-table
                               (cons input-unit output-unit)
                               #f)
       (error "Unable to find unit converter:" input-unit output-unit)))
 
 (define unit-conversion-table
+  ;; MIT_Scheme_Reference
+  ;; hash-table-entry-type:strong See make-key-weak-eqv-hash-table
+  ;; It constructs one specific type based on `make-hash-table-type`.
   (make-equal-hash-table))
 
 ;;; Creates a factory that produces a procedure specialized for given units.
@@ -110,6 +122,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (make-converter implicit-output-unit
                            specific-output-unit))
           (input-converters
+            ;; from specific to implicit
            (map make-converter
                 specific-input-units
                 implicit-input-units)))

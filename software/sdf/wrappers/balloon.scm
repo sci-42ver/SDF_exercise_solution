@@ -22,16 +22,20 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 |#
 
 ;;; clumsy
+;; `/ 1` is to make the correct data at the numerator.
 ;(define (psi-to-nsm psi)
 ;  (/ 1
 ;     (inch-to-meter (inch-to-meter
 ;                    (/ 1
 ;                       (pound-to-newton psi))))))
 
-;;; wrong
+;;; wrong since * or / for procedures are undefined. 
 ;(define (psi-to-nsm psi)
 ;  ((/ pound-to-newton (* inch-to-meter inch-to-meter))
 ;   psi))
+
+(load "../manager/load")
+(manage 'new 'wrappers)
 
 ;;; correct but a little clumsy
 (define psi-to-nsm
@@ -90,3 +94,6 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;Value: 7.04962463583981
 
 |#
+
+(sphere-radius (conventional-gas-law-volume 14.7 68 1))
+;Value: 7.04962463583981

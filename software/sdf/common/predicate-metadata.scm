@@ -25,6 +25,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; TODO not in MIT_Scheme_Reference
 (define (register-predicate! predicate name)
+  ;; -> make-metadata-association
   (set-predicate-metadata! predicate name)
   predicate)
 
