@@ -56,15 +56,33 @@
     If there is no path, the function produces #f. 
 |#
 
+;; See https://en.wikipedia.org/wiki/Breadth-first_search#Pseudocode
+;; We need `visited` https://stackoverflow.com/a/23677118/21294350, i.e. `discovered` https://en.wikipedia.org/wiki/Depth-first_search#Pseudocode
+(define (set-minus set-1 set-2)
+  (remove (lambda (x) (member x set-2)) set-1))
+(define visited '())
+
 (define (find-route origination destination graph)
   (printf "(find-route ~s ~s cyclic-graph)~n" origination destination)
   (cond
+    ;; > if v is the goal then
     ((eq? origination destination) (list destination))
-    (else (let ((possible-route 
-		              (find-route/list (neighbors origination graph) destination graph)))
-	    (cond
-	      ((boolean? possible-route) #f)
-	      (else (cons origination possible-route)))))))
+    (else 
+      (if (member origination visited)
+        '()
+        (begin
+          (printf "neighbors of " origination " are " (neighbors origination graph))
+          ;; > label root as explored
+          ;; when called from `find-route/list`
+          ;; > label w as explored
+          (set! visited (cons origination visited))
+          (let ((possible-route 
+                  ;; > Q.enqueue(root)
+                  ;; > for all edges from v to w in 
+                  (find-route/list (set-minus (neighbors origination graph) visited) destination graph)))
+            (cond
+              ((boolean? possible-route) #f)
+              (else (cons origination possible-route)))))))))
 
 #| find-route/list : (listof node) node graph -> (listof node) or #f
    Purpose: produce a list of nodes, starting with one node on lo-originations 
@@ -75,10 +93,21 @@
   (printf "(find-route ~s ~s cyclic-graph)~n" lo-Os D)
   (cond
     ((null? lo-Os) #f)
-    (else (let ((possible-route (find-route (first lo-Os) D graph)))
-	    (cond
-	      ((boolean? possible-route) (find-route/list (rest lo-Os) D graph))
-	      (else possible-route))))))
+    ;; > while Q is not empty do
+    (else 
+      ;; This with `(cdr lo-Os)` implies queue FIFO (i.e. firsted called and then finished)
+      ;; > Q.enqueue(w)
+      ;; > v := Q.dequeue()
+      (let ((next-node (first lo-Os)))
+        (if (member next-node visited)
+          '()
+          (begin
+            ; comment the following out to avoid inserting twice.
+            ; (set! visited (cons next-node visited))
+            (let ((possible-route (find-route next-node D graph)))
+              (cond
+                ((boolean? possible-route) (find-route/list (cdr lo-Os) D graph))
+                (else possible-route)))))))))
 
 #| neighbors: node graph -> (listof node)
    (define (neighbors a-node a-graph) ...)
@@ -90,7 +119,7 @@
     (else (cond
 	    ((eq? (first (first a-graph)) a-node)
 	     (second (first a-graph)))
-	    (else (neighbors a-node (rest a-graph)))))))
+	    (else (neighbors a-node (cdr a-graph)))))))
 
 ;; equivalently, with Scheme's built-in lookup function:
 (define (neighbors a-node a-graph)
@@ -111,5 +140,8 @@
   (find-route 'A 'G Graph)
 ; = (list 'A 'B 'E 'F 'G)
 
+(define visited '())
   (find-route 'C 'G Graph)
+(define visited '())
+  (find-route 'G 'C Graph)
 ; = #f
