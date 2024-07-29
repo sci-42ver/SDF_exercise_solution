@@ -92,3 +92,6 @@
                           (apply (string-joiner 'infix "-") ((make-permutation '(2 0 1)) ((string-splitter 'delimiter #\/) hyphen-time))))))
 (hyphen-time-to-slash-time "2023-09-21")
 (assert (equal? (hyphen-time-to-slash-time "2023-09-21") "09/21/2023"))
+
+;; f
+(load "DFS_demo.scm")
