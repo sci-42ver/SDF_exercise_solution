@@ -24,6 +24,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; Unit conversions
 
 (define (make-unit-conversion to from)
+  ;; can be used like a procedure
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Application-Hooks.html#index-make_002dapply_002dhook
   (let ((to-op (make-apply-hook to #f))
         (from-op (make-apply-hook from #f)))
     (set-apply-hook-extra! to-op

@@ -38,7 +38,6 @@
                 (lambda (adjacent-list-elem) (equal? from (car adjacent-list-elem))) 
                 res)))
         (if (>= from-idx 0)
-          ;; Here is based on no key duplicity in hash table. https://www.quora.com/Can-Hashtable-have-duplicate-keys-in-Java#:~:text=A%20Hashtable%20does%20not%20accept,does%20not%20accept%20duplicate%20keys.
           (begin 
             (displayln from-idx) 
             (list-set! res from-idx (list from (list (cadr (list-ref res from-idx)) to)))
@@ -48,28 +47,28 @@
     '()
     adjacency-pairs))
 
-; (define (adjacency-pairs-to-adjacency-list adjacency-pairs)
-;   (let iter ((rest-adjacency-pairs adjacency-pairs)
-;               (res '()))
-;     (if (null? rest-adjacency-pairs)
-;       res
-;       (let* ((adjacency-pair (car rest-adjacency-pairs)))
-;         (let* ((from (car adjacency-pair))
-;               (to (cdr adjacency-pair))
-;               (from-idx 
-;                 (list-index 
-;                   (lambda (adjacent-list-elem) (equal? from (car adjacent-list-elem))) 
-;                   res)))
-;           (let ((rest-adjacency-pairs (cdr rest-adjacency-pairs)))
-;             (if (>= from-idx 0)
-;               (begin 
-;                 (displayln from-idx) 
-;                 (list-set! res from-idx (list from (list (cadr (list-ref res from-idx)) to)))
-;                 (displayln res)
-;                 (displayln "ending")
-;                 (iter rest-adjacency-pairs res))
-;               (iter rest-adjacency-pairs (cons (list from to) res))))))))
-; )
+(define (adjacency-pairs-to-adjacency-list adjacency-pairs)
+  (let iter ((rest-adjacency-pairs adjacency-pairs)
+              (res '()))
+    (if (null? rest-adjacency-pairs)
+      res
+      (let* ((adjacency-pair (car rest-adjacency-pairs)))
+        (let* ((from (car adjacency-pair))
+              (to (cdr adjacency-pair))
+              (from-idx 
+                (list-index 
+                  (lambda (adjacent-list-elem) (equal? from (car adjacent-list-elem))) 
+                  res)))
+          (let ((rest-adjacency-pairs (cdr rest-adjacency-pairs)))
+            (if (>= from-idx 0)
+              (begin 
+                (displayln from-idx) 
+                (list-set! res from-idx (list from (list (cadr (list-ref res from-idx)) to)))
+                (displayln res)
+                (displayln "ending")
+                (iter rest-adjacency-pairs res))
+              (iter rest-adjacency-pairs (cons (list from to) res))))))))
+)
 
 (define unit-conversion-key-graph (adjacency-pairs-to-adjacency-list unit-conversion-pairs))
 (displayln unit-conversion-key-graph)

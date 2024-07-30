@@ -72,6 +72,10 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 ## lack
 # internal func description
 - Use `((lambda (x) x) (values 1 2))` to show what `values` returns.
+## TODO
+- > If multiple returns occur from map, the values returned by earlier returns are not mutated.
+  https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Mapping-of-Lists.html
+  Does it mean https://groups.google.com/g/comp.lang.scheme/c/ruhDvI9utVc/m/jS0DdIh2yKMJ? Then what does "earlier returns" mean?
 # exercise comments
 ## chapter 2
 - 2.9

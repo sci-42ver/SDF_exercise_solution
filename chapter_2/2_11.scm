@@ -105,13 +105,6 @@
 (assert (equal? (hyphen-time-to-slash-time "2023-09-21") "09/21/2023"))
 
 ;; f
-; (load "DFS_demo.scm")
-
-; (define Test-Graph 
-;   '(('s 'min)
-;     ('min ('s 'h))
-;     ('h 'min)))
-
 (define unit-conversion-pairs (map car (hash-table->alist unit-conversion-table)))
 (displayln unit-conversion-pairs)
 ;; https://stackoverflow.com/a/7382392/21294350
@@ -157,7 +150,8 @@
       res
       (let* ((adjacency-pair (car rest-adjacency-pairs)))
         (let* ((from (car adjacency-pair))
-              (to (cdr adjacency-pair))
+              ;; to be compatible with DFS_demo.scm
+              (to (list (cdr adjacency-pair)))
               (from-idx 
                 (list-index 
                   (lambda (adjacent-list-elem) (equal? from (car adjacent-list-elem))) 
@@ -166,7 +160,7 @@
             (if (>= from-idx 0)
               (begin 
                 (displayln from-idx) 
-                (list-set! res from-idx (list from (list (cadr (list-ref res from-idx)) to)))
+                (list-set! res from-idx (list from (append (cadr (list-ref res from-idx)) to)))
                 (displayln res)
                 (displayln "ending")
                 (iter rest-adjacency-pairs res))
@@ -196,9 +190,33 @@
 ;   (tonne kg) 
 ;   (celsius (kelvin fahrenheit)))
 
+(define (unit-conversion-pair-and-proc-hashtable-to-graph hashtable)
+  (adjacency-pairs-to-adjacency-list (map car (hash-table->alist hashtable))))
+
 (define hour-to-min
-  (let ((mins-per-hour 1000))
+  (let ((mins-per-hour 60))
     (make-unit-conversion (lambda (hours)
                             (* hours mins-per-hour))
                           (lambda (mins)
                             (/ mins mins-per-hour)))))
+(register-unit-conversion 'h 'min hour-to-min)
+(define unit-conversion-key-graph (unit-conversion-pair-and-proc-hashtable-to-graph unit-conversion-table))
+(displayln unit-conversion-key-graph)
+
+(load "DFS_demo.scm")
+(load "2_4_chebert_utils.scm")
+(define derived-hour-to-s
+  (let ((route (find-route 'h 's unit-conversion-key-graph)))
+    (if route
+      ;; similar to 2.9
+      ;; here route must have length >= 2, so `shifted_route` is always one list.
+      (let* ((shifted_route (cdr route))
+              (hour-to-s-apply-hook-route (map (lambda (from to) (make-converter from to)) route shifted_route))
+              (s-to-hour-apply-hook-route (map (lambda (apply-hook) (unit:invert apply-hook)) hour-to-s-apply-hook-route))
+              (hour-to-s (apply compose-multiple hour-to-s-apply-hook-route))
+              (s-to-hour (apply compose-multiple s-to-hour-apply-hook-route)))
+        (make-unit-conversion hour-to-s s-to-hour))
+      (error "unable to derive"))))
+(register-unit-conversion 'h 's derived-hour-to-s)
+(assert (= 3600 (derived-hour-to-s 1)))
+(assert (= 1 ((unit:invert derived-hour-to-s) 3600)))

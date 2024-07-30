@@ -24,7 +24,11 @@
 (test 1)
 
 ;; here quote 'inch needs to be unquoted/evaluated.
+;; from units.scm
 (define (symbol_in_list symbol)
   (displayln `(expt symbol))
   (displayln `(expt ,symbol)))
 (symbol_in_list 'inch)
+
+;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Mapping-of-Lists.html
+(map (lambda (x y) x) '(1 2) '())

@@ -71,9 +71,10 @@
       (if (member origination visited)
         '()
         (begin
-          (printf "neighbors of " origination " are " (neighbors origination graph))
           ;; > label v as discovered
           (set! visited (cons origination visited))
+          (printf "neighbors of " origination " are " (neighbors origination graph))
+          (printf "visited: " visited)
           (let ((possible-route 
                   (find-route/list (set-minus (neighbors origination graph) visited) destination graph)))
             (cond
@@ -121,6 +122,7 @@
 #| ---------------------------------------------------------------------------------
    Tests: data followed by expessions |#
 
+;; Here assumes cdr of each pair is always one list.
 (define Graph 
   '((A (B E))
     (B (E F))
@@ -129,12 +131,3 @@
     (E (C F))
     (F (D G))
     (G ())))
-
-  (find-route 'A 'G Graph)
-; = (list 'A 'B 'E 'F 'G)
-
-(define visited '())
-  (find-route 'C 'G Graph)
-(define visited '())
-  (find-route 'G 'C Graph)
-; = #f
