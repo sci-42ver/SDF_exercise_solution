@@ -205,6 +205,7 @@
 
 (load "DFS_demo.scm")
 (load "2_4_chebert_utils.scm")
+(displayln (find-route 'h 's unit-conversion-key-graph))
 (define derived-hour-to-s
   (let ((route (find-route 'h 's unit-conversion-key-graph)))
     (if route

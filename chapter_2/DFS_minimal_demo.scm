@@ -16,13 +16,16 @@
     If there is no path, the function produces #f. 
 |#
 
-;; See https://en.wikipedia.org/wiki/Breadth-first_search#Pseudocode
 ;; We need `visited` https://stackoverflow.com/a/23677118/21294350, i.e. `discovered` https://en.wikipedia.org/wiki/Depth-first_search#Pseudocode
 (define (set-minus set-1 set-2)
   (remove (lambda (x) (member x set-2)) set-1))
 (define visited '())
 
 (define (find-route origination destination graph)
+  (set! visited '())
+  (find-route-helper origination destination graph))
+
+(define (find-route-helper origination destination graph)
   (printf "(find-route ~s ~s cyclic-graph)~n" origination destination)
   (cond
     ((eq? origination destination) (list destination))
@@ -56,7 +59,7 @@
           (begin
             ;; comment the following out to avoid inserting twice.
             ; (set! visited (cons next-node visited))
-            (let ((possible-route (find-route next-node D graph)))
+            (let ((possible-route (find-route-helper next-node D graph)))
               (cond
                 ((boolean? possible-route) (find-route/list (cdr lo-Os) D graph))
                 (else possible-route)))))))))
@@ -76,11 +79,10 @@
     (F (D G))
     (G ())))
 
-  (find-route 'A 'G Graph)
-; = (list 'A 'B 'E 'F 'G)
+(assert (equal? (list 'A 'B 'E 'F 'G) (find-route 'A 'G Graph)))
+(assert (equal? '(c b e f g) (find-route 'C 'G Graph)))
+(assert (not (find-route 'G 'C Graph)))
 
-(define visited '())
-  (find-route 'C 'G Graph)
-(define visited '())
-  (find-route 'G 'C Graph)
-; = #f
+;; Here DFS doesn't ensure to find the shortest path. Here I didn't intend to find that since it is beyond what SDf intends to teach.
+;; See https://medium.com/@buketsenturk/dfs-vs-bfs-51cae3ff881a#:~:text=DFS%20uses%20a%20stack%20(either,not%20guarantee%20an%20optimal%20solution.
+(assert (equal? '(a b e) (find-route 'A 'E Graph)))

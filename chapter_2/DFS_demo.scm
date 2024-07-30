@@ -64,6 +64,10 @@
 (define visited '())
 
 (define (find-route origination destination graph)
+  (set! visited '())
+  (find-route-helper origination destination graph))
+
+(define (find-route-helper origination destination graph)
   (printf "(find-route ~s ~s cyclic-graph)~n" origination destination)
   (cond
     ((eq? origination destination) (list destination))
@@ -98,7 +102,7 @@
           (begin
             ;; comment the following out to avoid inserting twice.
             ; (set! visited (cons next-node visited))
-            (let ((possible-route (find-route next-node D graph)))
+            (let ((possible-route (find-route-helper next-node D graph)))
               (cond
                 ((boolean? possible-route) (find-route/list (cdr lo-Os) D graph))
                 (else possible-route)))))))))
