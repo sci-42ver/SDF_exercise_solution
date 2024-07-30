@@ -29,7 +29,7 @@ exercise solution for Software Design for Flexibility (SDF)
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # exercise solutions by 3 references (i.e. nbardiuk etc.) and 6.945_assignment_solution checked up to now
-- 2.1~2.9
+- 2.1~2.11
 # nbardiuk solution comment
 By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.
 ## 2.1

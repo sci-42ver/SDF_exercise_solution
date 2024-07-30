@@ -9,7 +9,7 @@
 ;; https://extension.psu.edu/conversion-factors-for-english-and-si-metric-units https://en.wikipedia.org/wiki/SI_base_unit#:~:text=The%20units%20and%20their%20physical,the%20candela%20for%20luminous%20intensity. https://en.wikipedia.org/wiki/Mass#Units_of_mass
 
 ;; https://github.com/search?q=repo%3Ambillingr%2Fsdf+kilo&type=code mbillingr only has one python implementation.
-;; chebert and nbardiuk both don't have such an implementation.
+;; chebert, nbardiuk and blakeelias all don't have such an implementation.
 (load "../software/sdf/manager/load")
 (manage 'new 'wrappers)
 ;; length see inch-to-meter.
