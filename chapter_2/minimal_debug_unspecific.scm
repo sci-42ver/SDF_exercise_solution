@@ -5,7 +5,8 @@
 
 (define unit-conversion-list '((('celsius . 'kelvin) . 1) (('tonne . 'kg) . 2)
                                 (('tonne . 'g) . 3) (('celsius . 'fahrenheit) . 4)))
-(displayln unit-conversion-list)
+(define unit-conversion-pairs (map car unit-conversion-list))
+(displayln unit-conversion-pairs)
 
 ;; https://stackoverflow.com/a/7382392/21294350
 (define (list-set! lst k val)
@@ -27,48 +28,48 @@
               index
               (iter (cdr lst) (+ index 1)))))))
 
-; (define unit-conversion-key-graph 
-;   (fold 
-;     (lambda (unit-conversion res) 
-;       (let ((key-pair (car unit-conversion)))
-;         (let* ((from (car key-pair))
-;               (to (cdr key-pair))
+(define (adjacency-pairs-to-adjacency-list adjacency-pairs)
+  (fold 
+    (lambda (adjacency-pair res) 
+      (let* ((from (car adjacency-pair))
+            (to (cdr adjacency-pair))
+            (from-idx 
+              (list-index 
+                (lambda (adjacent-list-elem) (equal? from (car adjacent-list-elem))) 
+                res)))
+        (if (>= from-idx 0)
+          ;; Here is based on no key duplicity in hash table. https://www.quora.com/Can-Hashtable-have-duplicate-keys-in-Java#:~:text=A%20Hashtable%20does%20not%20accept,does%20not%20accept%20duplicate%20keys.
+          (begin 
+            (displayln from-idx) 
+            (list-set! res from-idx (list from (list (cadr (list-ref res from-idx)) to)))
+            (displayln res)
+            (displayln "ending"))
+          (cons (list from to) res))))
+    '()
+    adjacency-pairs))
+
+; (define (adjacency-pairs-to-adjacency-list adjacency-pairs)
+;   (let iter ((rest-adjacency-pairs adjacency-pairs)
+;               (res '()))
+;     (if (null? rest-adjacency-pairs)
+;       res
+;       (let* ((adjacency-pair (car rest-adjacency-pairs)))
+;         (let* ((from (car adjacency-pair))
+;               (to (cdr adjacency-pair))
 ;               (from-idx 
 ;                 (list-index 
-;                   (lambda (adjacent-node-pair) (equal? from (car adjacent-node-pair))) 
+;                   (lambda (adjacent-list-elem) (equal? from (car adjacent-list-elem))) 
 ;                   res)))
-;           (if (>= from-idx 0)
-;             (begin 
-;               (displayln from-idx) 
-;               (set! res (list-with res from-idx (list from (list (cadr (list-ref res from-idx)) to))))
-;               (displayln res)
-;               (displayln "one iter ends"))
-;             (cons (list from to) res)))))
-;     '()
-;     unit-conversion-list))
+;           (let ((rest-adjacency-pairs (cdr rest-adjacency-pairs)))
+;             (if (>= from-idx 0)
+;               (begin 
+;                 (displayln from-idx) 
+;                 (list-set! res from-idx (list from (list (cadr (list-ref res from-idx)) to)))
+;                 (displayln res)
+;                 (displayln "ending")
+;                 (iter rest-adjacency-pairs res))
+;               (iter rest-adjacency-pairs (cons (list from to) res))))))))
+; )
 
-(define unit-conversion-key-graph 
-  (let iter ((rest-unit-conversion-list unit-conversion-list)
-              (res '()))
-    (if (null? rest-unit-conversion-list)
-      res
-      (let* ((unit-conversion (car rest-unit-conversion-list))
-              (key-pair (car unit-conversion)))
-        (let* ((from (car key-pair))
-              (to (cdr key-pair))
-              (from-idx 
-                (list-index 
-                  (lambda (adjacent-node-pair) (equal? from (car adjacent-node-pair))) 
-                  res)))
-          (let ((rest-unit-conversion-list (cdr rest-unit-conversion-list)))
-            (if (>= from-idx 0)
-              (begin 
-                (displayln from-idx) 
-                (list-set! res from-idx (list from (list (cadr (list-ref res from-idx)) to)))
-                (displayln res)
-                (displayln "ending")
-                (iter rest-unit-conversion-list res))
-              (iter rest-unit-conversion-list (cons (list from to) res))))))))
-)
-
+(define unit-conversion-key-graph (adjacency-pairs-to-adjacency-list unit-conversion-pairs))
 (displayln unit-conversion-key-graph)
