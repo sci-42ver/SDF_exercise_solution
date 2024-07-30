@@ -48,6 +48,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define default-equality-tolerance 1e-10)
 
 (define (close-enuf? h1 h2 tolerance)
+  ;; TODO n:magnitude and flo:ulp-of-one?
   (n:<= (n:magnitude (n:- h1 h2))
         (n:* .5
              (n:max tolerance flo:ulp-of-one)
