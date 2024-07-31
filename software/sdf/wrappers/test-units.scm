@@ -20,7 +20,12 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
+;; not use .. which needs bash with the correct dir.
+(load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
+(manage 'new 'wrappers)
+(load "~/SICP_SDF/SDF_exercises/software/sdf/common/testing.scm")
+
 (define (get-unit-operation operator base-operation)
   (let ((uniform
          (lambda (procedure)
@@ -124,3 +129,6 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (compose pound-to-newton
            (unit:invert inch-to-meter)
            (unit:invert inch-to-meter)))
+
+;; SDF_exercises TODO why define as it is.
+(close-enuf?  1e4 (+ 1 1e4) 1e-4)

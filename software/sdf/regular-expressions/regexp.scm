@@ -53,7 +53,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (lambda (members)
                 (if (lset= eqv? '(#\- #\^) members)
                     ;; This may be due to `quote-bracketed-contents` will output [^-] instead of [-^] although this can be easily avoided by swapping.
-                    '(#\- #\^) ; TODO something like [^-]?
+                    '(#\- #\^)
                     (quote-bracketed-contents members)))))))
 
 (define (r:char-not-from string)

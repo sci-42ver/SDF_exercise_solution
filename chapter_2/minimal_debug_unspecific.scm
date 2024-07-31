@@ -7,6 +7,8 @@
                                 (('tonne . 'g) . 3) (('celsius . 'fahrenheit) . 4)))
 (define unit-conversion-pairs (map car unit-conversion-list))
 (displayln unit-conversion-pairs)
+; Outputs:
+; (((quote celsius) quote kelvin) ((quote tonne) quote kg) ((quote tonne) quote g) ((quote celsius) quote fahrenheit))
 
 ;; https://stackoverflow.com/a/7382392/21294350
 (define (list-set! lst k val)

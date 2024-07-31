@@ -33,6 +33,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (make-change board piece flags)
   (guarantee board? board)
   (guarantee piece? piece)
+  ;; TODO no `definers` in `saved-total-index` and also undefined in MIT_Scheme_Reference
   (guarantee list-of-unique-symbols? flags)
   (%make-change board piece flags))
 
@@ -50,6 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (is-pmove-empty? pmove)
   (guarantee pmove? pmove)
+  ;; See generate-moves-using-rule-interpreter. We init with one element in each pmove.
   (null? (cdr pmove)))
 
 (define (final-change pmove)
@@ -77,6 +79,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (guarantee pmove? pmove)
   (reverse pmove))
 
+;; checked.
 (define (update-piece updater pmove)
   (let* ((change (final-change pmove))
          (piece (get-piece change))
@@ -108,6 +111,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (get-final-board pmove)
   (board-end-turn (current-board pmove)))
 
+;; checked.
 (define (new-piece-position coords pmove)
   (update-piece (lambda (piece) (piece-move piece coords))
                 pmove))
@@ -116,6 +120,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (update-piece (lambda (piece) (piece-new-type piece type))
                 pmove))
 
+;; checked.
 (define (capture-piece-at coords pmove)
   (let ((board (current-board pmove)))
     (if (not (is-position-occupied-by-opponent? coords board))

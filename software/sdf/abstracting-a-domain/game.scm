@@ -91,5 +91,5 @@ Assumptions:
   (let ((rules (get-rules game)))
     (let ((p (assq name rules)))
       (if p
-          (set-cdr! p procedure)
+          (set-cdr! p procedure) ; correspond to the following assignment value of `set-rules`.
           (set-rules game (cons (cons name procedure) rules))))))

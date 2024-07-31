@@ -23,6 +23,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;;;                The Interpreter
 
+;; checked.
 (define (generate-moves-using-rule-interpreter board)
   (execute-rules (map (lambda (piece)
                         (initial-pmove board piece))
@@ -46,6 +47,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                             (evolution-rule pmove))
                           evolution-rules)))
 
+;; use `append-map` to return again a list of possible pmove's recursively by calling self.
 (define (evolve-pmove pmove evolution-rules)
   (append-map (lambda (new-pmove)
                 (if (is-pmove-finished? new-pmove)
@@ -56,6 +58,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                                   pmove))
                           evolution-rules)))
 
+;; return a list of possible pmove's.
 (define (apply-evolution-rule evolution-rule pmove)
   (guarantee-list-of (lambda (pmove*)
                        (and (pmove? pmove*)

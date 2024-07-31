@@ -4,6 +4,7 @@ solution comment also see codes.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
+- I won't dig into checking whether it is  appropriate to use `eq` or `equal` etc. for each case.
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 
@@ -72,10 +73,23 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 ## lack
 # internal func description
 - Use `((lambda (x) x) (values 1 2))` to show what `values` returns.
+- `reduce` [diff](https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Folding-of-Lists.html#index-reduce) `fold`
+  kw: "right identity"
+  > Note that ridentity is used *only* in the empty-list case.
+  - > you’d like to avoid the extra application incurred when fold applies f to the head of list and the identity value
+    i.e.
+    > return (fold f (car list) (cdr list)).
+    But this just decreases *only one* operation.
 ## TODO
 - > If multiple returns occur from map, the values returned by earlier returns are not mutated.
   https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Mapping-of-Lists.html
   Does it mean https://groups.google.com/g/comp.lang.scheme/c/ruhDvI9utVc/m/jS0DdIh2yKMJ? Then what does "earlier returns" mean?
+- > However, in cases where this ambiguity can arise, you should use find-tail instead of find—find-tail has no such ambiguity:
+  IMHO both "no such pair" and "doesn’t find such an element" will occur.
+- The following are both undefined in saved-total-index and MIT_Scheme_Reference.
+  - list-of-unique-symbols?
+  - list-of-type?
+    - maybe mean a list of data whose type satisfies `pred` by `(list-of-type? object change?)`.
 # exercise comments
 ## chapter 2
 - 2.9

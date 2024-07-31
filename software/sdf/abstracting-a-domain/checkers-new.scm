@@ -27,10 +27,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; coderef: evolution-rule:simple-move
 (define-evolution-rule 'simple-move checkers
   (lambda (pmove)
+    ;; simple-move can be only done at first but not after jump.
     (if (is-pmove-empty? pmove)
-        (get-simple-moves pmove)
+        (get-simple-moves pmove) ; may return one list
         '())))
 
+;; combine compute-next-steps and try-step
 (define (get-simple-moves pmove)
   (filter-map
    (lambda (direction)
@@ -49,10 +51,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (cond ((not (null? jumps))
              jumps)
             ((is-pmove-empty? pmove)
+              ;; Here return '() to make `append-map (lambda (evolution-rule)` won't have duplicate inited pmove's.
              '())
             (else
              (list (finish-move pmove)))))))
 
+;; See `try-step`
 (define (get-jumps pmove)
   (filter-map
    (lambda (direction)
@@ -68,7 +72,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                               (new-piece-position landing
                                                   pmove)))))
    (possible-directions (current-piece pmove))))
-
+
+;; checked.
 ;; coderef: aggregate-rule:coronation
 (define-aggregate-rule 'coronation checkers
   (lambda (pmoves)
@@ -79,6 +84,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  pmove)))
          pmoves)))
 
+;; See mandate-jumps.
 ;; coderef: aggregate-rule:require-jumps
 (define-aggregate-rule 'require-jumps checkers
   (lambda (pmoves)

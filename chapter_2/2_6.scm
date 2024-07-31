@@ -1,13 +1,16 @@
-; (load "../software/sdf/manager/load")
-; (manage 'new 'regular-expressions)
-; (load "../software/sdf/common/testing.scm")
-; (load "../software/sdf/regular-expressions/test-regexp.scm")
-; (load "utils.scm")
-; (load "regex_utils.scm")
-(find-scheme-libraries! ".")
-(define-library (main lib)
-  (import (scheme base)
-          (regex utils)))
+(load "../software/sdf/manager/load")
+(manage 'new 'regular-expressions)
+;; This is not indexed in saved-total-index.
+(load "../software/sdf/common/testing.scm")
+(load "../software/sdf/regular-expressions/test-regexp.scm")
+(load "utils.scm")
+(load "regex_utils.scm")
+
+; (find-scheme-libraries! ".")
+; (define-library (main lib)
+;   (import (scheme base)
+;           (regex utils)))
+
 ;; same as nbardiuk, chebert (mbillingr has no such an implementation) and 6.945_assignment_solution
 (define (r:* expr) (r:repeat 0 #f expr))
 (define (r:+ expr) (r:repeat 1 #f expr))

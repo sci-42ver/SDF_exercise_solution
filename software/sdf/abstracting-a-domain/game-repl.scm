@@ -31,6 +31,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (new-board board)
   (set! try-history (cons board try-history))
+  ;; I skipped digging into this since REPL is not taught specifically in SDF.
   (restart-board))
 
 (define (undo)

@@ -221,3 +221,4 @@
 (register-unit-conversion 'h 's derived-hour-to-s)
 (assert (= 3600 (derived-hour-to-s 1)))
 (assert (= 1 ((unit:invert derived-hour-to-s) 3600)))
+(displayln (unit-conversion-pair-and-proc-hashtable-to-graph unit-conversion-table))

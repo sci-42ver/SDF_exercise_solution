@@ -91,6 +91,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (map (lambda (path)
          (let ((piece (step-to (car path))))
            (if (should-be-crowned? piece)
+                ;; here from and to share coord. This corresponds to `(not (piece=? from piece))`.
+               ;; Here it considers crowning as one step. But actually this is done automatically.
                (cons (replace-piece (crown-piece piece)
                                     piece
                                     (step-board (car path)))
@@ -104,6 +106,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         paths
         jumps)))
 
+;; checked.
 (define (evolve-paths piece board)
   (let ((paths (compute-next-steps piece board '())))
     (let ((jumps (filter path-contains-jumps? paths)))
@@ -112,22 +115,29 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (evolve-jumps jumps)))))
 
 (define (evolve-jumps paths)
+  ;; here `(evolve-jumps paths)` may return one list for each `path`, so we combine all these paths into one list by `append`.
   (append-map (lambda (path)
                 (let ((paths
+                        ;; correspond to how `try-step` updates `path`.
                        (let ((step (car path)))
                          (compute-next-steps (step-to step)
                                              (step-board step)
                                              path))))
                   (if (null? paths)
                       (list path)
+                      ;; Here we check whether successive jumps in `try-step`.
+                      ;; https://en.wikipedia.org/wiki/Checkers#Man
+                      ;; > Multiple enemy pieces can be captured in a single turn provided this is done by successive jumps made by a single piece
                       (evolve-jumps paths))))
               paths))
 
+;; checked.
 (define (compute-next-steps piece board path)
   (filter-map (lambda (direction)
                 (try-step piece board direction path))
               (possible-directions piece)))
-
+
+;; All underlying implementations are checked.
 (define (try-step piece board direction path)
   (let ((new-coords
          (coords+ (piece-coords piece) direction)))

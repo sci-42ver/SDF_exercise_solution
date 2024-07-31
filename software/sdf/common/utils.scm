@@ -47,10 +47,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define default-equality-tolerance 1e-10)
 
+;; If only considering the real number, then (2-t)h1<=(2+t)h2+2t
 (define (close-enuf? h1 h2 tolerance)
-  ;; TODO n:magnitude and flo:ulp-of-one?
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Numerical-operations.html#index-magnitude
   (n:<= (n:magnitude (n:- h1 h2))
         (n:* .5
+              ;; see https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Flonum-Operations.html#index-flo_003aulp_002dof_002done
+              ;; 1/r^{p-1} see https://en.wikipedia.org/wiki/Floating-point_arithmetic
              (n:max tolerance flo:ulp-of-one)
              (n:+ (n:magnitude h1)
                   (n:magnitude h2)

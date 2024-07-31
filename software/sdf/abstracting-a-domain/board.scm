@@ -77,6 +77,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (coords=? (piece-coords piece)
                     (if (eq? (piece-color piece) (current-color board))
                         coords
+                        ;; coord from the opponent view.
                         (flip-coords board coords))))
         (board-pieces board)))
 
@@ -106,6 +107,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (board-pieces board)
                 (modulo (+ (current-color-index board) 1) 2)))
 
+;; checked
 (define (board-replace-piece board from to)
   (guarantee-piece-on-board from board)
   (if (not (memq (piece-color to) (board-colors board)))
@@ -121,7 +123,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                            piece))
                      (board-pieces board))
                 (current-color-index board)))
-
+
+;; checked
 (define (board-remove-piece board piece)
   (guarantee-piece-on-board piece board)
   (update-board board

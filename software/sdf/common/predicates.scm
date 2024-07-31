@@ -27,7 +27,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define get-predicate-metadata)
 (define set-predicate-metadata!)
 (let ((association (make-metadata-association)))
-  (set! predicate? (association 'has?))
+  (set! predicate? (association 'has?)) ; just get the procedure
   (set! get-predicate-metadata (association 'get))
   (set! set-predicate-metadata! (association 'put!)))
 
@@ -55,6 +55,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (predicate-description predicate)
   (if (predicate? predicate)
+      ;; predicate-name i.e. get-predicate-metadata
       (object->description (predicate-name predicate))
       (string-append "object satisfying "
                      (object->description predicate))))

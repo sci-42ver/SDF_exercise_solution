@@ -178,7 +178,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (make-metadata-association)
   (let* ((store
           (make-hash-table-store make-key-weak-eqv-hash-table))
-         (base-has? (store 'has?))
+         (base-has? (store 'has?)) ; returns one procedure
          (base-get (store 'get))
          (base-put! (store 'put!)))
 
@@ -186,6 +186,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (if (base-has? key)
           (let ((metadata* (base-get key)))
             (if (not (eqv? metadata* metadata))
+                ;; why must metadata* be equal to metadata, i.e. why define such a put! different from base-put!?
+                ;; Here maybe we can't change the value for one specific key.
                 (error "Can't change metadata for:"
                        key metadata metadata*))))
       (base-put! key metadata))

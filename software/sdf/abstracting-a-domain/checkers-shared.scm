@@ -24,6 +24,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (new-checkers-game)
   (new-game (make-board checkers)))
 
+;; checked
 (define (make-checkers moves-generator)
   (make-game 8 8 '(black red) '(man king)
              checkers-initial-pieces
@@ -36,6 +37,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        (lambda (column row)
                          (make-piece color 'man (make-coords column row)))))
                   (append-map (lambda (n)
+                                ;; See https://www.247checkers.com/
                                 (list (make (* n 2) 0)
                                       (make (+ (* n 2) 1) 1)
                                       (make (* n 2) 2)))
@@ -72,6 +74,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (eq? 'king (piece-type piece)))
 
 (define (should-be-crowned? piece)
+  ;; SDF_exercises TODO 7 depends on the checker board. In https://www.247checkers.com/ it should be 8.
   (and (= 7 (get-row (piece-coords piece)))
        (not (piece-is-king? piece))))
 

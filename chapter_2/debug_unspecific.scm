@@ -3,16 +3,17 @@
       (display x))
 
 ;; https://stackoverflow.com/a/8387641/21294350
-(define (flatten x)
-  (cond ((null? x) '())
-        ((pair? x) (append (flatten (car x)) (flatten (cdr x))))
-        (else (list x))))
+; (define (flatten x)
+;   (cond ((null? x) '())
+;         ((pair? x) (append (flatten (car x)) (flatten (cdr x))))
+;         (else (list x))))
 
-(define (duplicate x n)
-  (cond
-    ((= n 0) '())
-    (else
-     (flatten (cons x (duplicate x (- n 1)))))))
+;; This is used to construct big unit-conversion-list, but it will flatten too much making `('celsius . 'kelvin)` disappear.
+; (define (duplicate x n)
+;   (cond
+;     ((= n 0) '())
+;     (else
+;      (flatten (cons x (duplicate x (- n 1)))))))
 
 (define unit-conversion-list '((('celsius . 'kelvin) . 1) (('tonne . 'kg) . 2)
                                 (('tonne . 'g) . 3) (('celsius . 'fahrenheit) . 3)))
