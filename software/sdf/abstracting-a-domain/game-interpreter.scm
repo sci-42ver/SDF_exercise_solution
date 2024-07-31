@@ -23,6 +23,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;;;                The Interpreter
 
+;; > build a rule executive that captures the control structure without incorporating the specific content of the rules.
+;; Here the "control structure" means composition of evolution-rules and then aggregate-rules.
+;; > It removes the control structure from our program and localizes it in the executive.
+;; i.e. let "the control structure" in the lib instead of checkers-original.scm or checkers-new.scm.
 ;; checked.
 (define (generate-moves-using-rule-interpreter board)
   (execute-rules (map (lambda (piece)
@@ -35,6 +39,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        aggregate-rules)
   ((reduce compose (lambda (x) x) aggregate-rules)
    (append-map (lambda (pmove)
+                  ;; SDF_exercises TODO only here we have "finished pmoves".
+                  ;; > However, because the rule executive explicitly handles finished pmoves,
                  (evolve-pmove pmove evolution-rules))
                initial-pmoves)))
 

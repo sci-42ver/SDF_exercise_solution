@@ -1,10 +1,11 @@
-This is licenced same as MIT-Scheme although I don't know whether it is appropriate. If someone knows detailedly about the difference among licences, please tell me the appropriate choice.
+This is licenced same as [SDF book](https://mitpress.mit.edu/9780262045490/software-design-for-flexibility/) using [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.txt) since most of my codes are based on the course code base and the book. 
 
-solution comment also see codes.
+I don't know whether it is appropriate. If it is inappropriate and someone knows detailedly about the difference among licences, please tell me the appropriate choice.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
 - I won't dig into checking whether it is  appropriate to use `eq` or `equal` etc. for each case.
+- solution comment also see codes.
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 
