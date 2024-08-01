@@ -200,6 +200,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (assert-board expected-color expected-pieces board)
   (assert-equal expected-color (current-color board))
+  ;; So `initial-pieces-generator` doesn't need to care about the order.
   (assert-lset= piece=? expected-pieces (board-pieces board)))
 
 (define (assert-moves index expected-moves board)

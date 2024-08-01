@@ -103,5 +103,35 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
     See "the expression "^\(ab*\)*\1$" matches 'ababbabb', but fails to match 'ababbab'." where the last "abb" is matched to "\1".
 - 2.10
   - [factor](https://stackoverflow.com/a/5600318/21294350)
+- 2.12
+  - check the rules *intuitively* by manual playing for 2 players https://www.chessmultiplayer.com/
+  - > Don't try to implement the castling rule.
+    we need to check 3 conditions in wikipedia if to implement it.
+    a. "must not have previously moved" can be checked by flag.
+    b. "There must be no pieces between the king and the rook;" can be checked by inspecting position-info between them
+    c. "The king may not currently be ..." i.e. call *check* for all related positions.
+    d. "The castling must be kingside or queenside" since they are the only 2 possible cases.
+  - All *rules* are based on https://en.wikipedia.org/wiki/Rules_of_chess#Touch-move_rule
+    - Here I *won't check* 
+      - "Competitive rules of play", i.e. FIDE rules.
+      - "Touch-move rule" and "Resigning" since these depends on artifical interposition.
+    - *IGNORE* 
+      - (see the following) ~~We need to check~~
+        > It is illegal to make a move that places or leaves one's king in check.
+        - so also *Checkmate*
+      - (see "castling".) ~~3. Check similar to `require-jumps`: If failure, then Checkmate~~
+        - So we also won't check "stalemate", then combined with "Dead position" we *won't check "draw"*.
+      - due to the very hardness of implementation 
+        ~~Dead position~~ skipped due to the possible huge combination number (`man_1_options * man_2_options * man_1_options_currect ...` infinitely recursion) and we must check it after each iteration.
+        > by *any sequence* of legal moves.
+        even if we don't consider the *complexity overhead*, the *correct* algorithm is not easy https://chess.stackexchange.com/a/22764.
+        - https://chess.stackexchange.com/a/22557 doesn't say any valuable but just show possibility ...
+        - TODO I can't see such a comments for "in the comments user17439".
+    - **what to do beyond "Basic moves"**
+      1. Promotion is trivial by checking the type and position (similar to `should-be-crowned?`)
+      2. En passant: check adjacent piece "on the same rank" whether with flag "advances two squares on its initial move" (only on the move *immediately* following the pawn's advance) and type "pawn".
+  - notice
+    after checking https://en.wikipedia.org/wiki/Rules_of_chess#Basic_moves preface
+    > The king can be put in check but *cannot be captured* (see below).
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html

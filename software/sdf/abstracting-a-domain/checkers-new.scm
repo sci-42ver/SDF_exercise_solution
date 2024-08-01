@@ -48,6 +48,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; coderef: evolution-rule:jump
 (define-evolution-rule 'jump checkers
   (lambda (pmove)
+    ;; See generate-moves-using-rule-interpreter where for each piece evolution-rule is called at most once at each iteration.
+    ;; So jump after simple move is impossible since it is already marked as finished. 
     (let ((jumps (get-jumps pmove)))
       (cond ((not (null? jumps))
              jumps)

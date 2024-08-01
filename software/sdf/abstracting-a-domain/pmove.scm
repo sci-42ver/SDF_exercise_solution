@@ -88,7 +88,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (add-change (make-change (board-replace-piece (get-board change)
                                                   piece
                                                   piece*)
-                             piece*
+                             piece* ; one specific piece instead of all pieces.
                              (get-flags change))
                 pmove)))
 
