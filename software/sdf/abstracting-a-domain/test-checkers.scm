@@ -20,7 +20,11 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
+(load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
+(manage 'new 'abstracting-a-domain:factoring) ; notice not use the bare `'abstracting-a-domain` which lacks many things.
+(load "~/SICP_SDF/SDF_exercises/software/sdf/common/testing.scm")
+
 (define-test 'checkers
   (lambda ()
     (let ((board (make-board checkers)))
@@ -201,7 +205,17 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (assert-moves index expected-moves board)
   (let ((moves (generate-legal-moves board)))
     (assert-lset= equal? expected-moves (map summarize-move moves))
+    ;; board-end-turn changes the color
     (get-final-board
      (find (lambda (move)
              (equal? (list-ref expected-moves index) (summarize-move move)))
            moves))))
+
+(run-tests "" #t)
+
+(define (generate-moves-using-rule-interpreter board piece-idx)
+  (display (list (initial-pmove board (list-ref (current-pieces board) piece-idx))))
+  (execute-rules (list (initial-pmove board (list-ref (current-pieces board) piece-idx)))
+                 (get-evolution-rules (board-game board))
+                 (get-aggregate-rules (board-game board))))
+; (generate-moves-using-rule-interpreter (make-board checkers) 1)

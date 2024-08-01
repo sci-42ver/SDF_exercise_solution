@@ -6,6 +6,8 @@ I don't know whether it is appropriate. If it is inappropriate and someone knows
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
 - I won't dig into checking whether it is  appropriate to use `eq` or `equal` etc. for each case.
 - solution comment also see codes.
+- Here I use the absolute path like `(load "~/SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain/game-interpreter.scm")` to make we can call `scheme < foo.scm` in any dir.
+  You can use `sed` etc. to change this.
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 

@@ -61,7 +61,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (map (lambda (change)
                (piece-coords (get-piece change)))
              (pmove->list move))))
-    (if (pair? coords-list)
+    (if (pair? coords-list) ; since it is already one list, this will return #f only for '().
         (let ((tail (loop (cdr coords-list))))
           (if (and (pair? (cdr coords-list))
                    (coords=? (car coords-list)
@@ -74,7 +74,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (eq? 'king (piece-type piece)))
 
 (define (should-be-crowned? piece)
-  ;; SDF_exercises TODO 7 depends on the checker board. In https://www.247checkers.com/ it should be 8.
+  ;; 7 when indexed from 0. See https://www.247checkers.com/ and test-checkers.scm.
   (and (= 7 (get-row (piece-coords piece)))
        (not (piece-is-king? piece))))
 

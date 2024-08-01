@@ -30,6 +30,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (pieces board-pieces)
   (current-color-index current-color-index))
 
+;; checked.
 (define (make-board game)
   (%make-board game ((initial-pieces-generator game) game) 0))
 
@@ -77,7 +78,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (coords=? (piece-coords piece)
                     (if (eq? (piece-color piece) (current-color board))
                         coords
-                        ;; coord from the opponent view.
+                        ;; coord from the opponent view. See test-checkers.scm and `checkers-initial-pieces`.
                         (flip-coords board coords))))
         (board-pieces board)))
 

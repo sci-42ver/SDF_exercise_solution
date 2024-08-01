@@ -1,4 +1,5 @@
 (load "../software/sdf/manager/load")
+;; not manage testing files like `test-regexp.scm` and `testing.scm`.
 (manage 'new 'regular-expressions)
 ;; This is not indexed in saved-total-index.
 (load "../software/sdf/common/testing.scm")

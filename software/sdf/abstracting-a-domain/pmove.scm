@@ -33,7 +33,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (make-change board piece flags)
   (guarantee board? board)
   (guarantee piece? piece)
-  ;; TODO no `definers` in `saved-total-index` and also undefined in MIT_Scheme_Reference
+  ;; SDF_exercises TODO no `definers` in `saved-total-index` and also undefined in MIT_Scheme_Reference
   (guarantee list-of-unique-symbols? flags)
   (%make-change board piece flags))
 
@@ -84,6 +84,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let* ((change (final-change pmove))
          (piece (get-piece change))
          (piece* (updater piece)))
+    ;; uses `update-board` to return one new board.
     (add-change (make-change (board-replace-piece (get-board change)
                                                   piece
                                                   piece*)

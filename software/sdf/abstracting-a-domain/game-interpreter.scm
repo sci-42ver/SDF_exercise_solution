@@ -39,13 +39,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        aggregate-rules)
   ((reduce compose (lambda (x) x) aggregate-rules)
    (append-map (lambda (pmove)
-                  ;; SDF_exercises TODO only here we have "finished pmoves".
-                  ;; > However, because the rule executive explicitly handles finished pmoves,
                  (evolve-pmove pmove evolution-rules))
                initial-pmoves)))
 
 (define (evolve-pmove-from-text pmove evolution-rules)
   (append-map (lambda (new-pmove)
+                ;; > However, However, because the rule executive explicitly handles finished pmoves, we don't need to test for those in the rules.
                 (if (is-pmove-finished? new-pmove)
                     (list new-pmove)
                     (evolve-pmove new-pmove evolution-rules)))

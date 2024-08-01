@@ -22,6 +22,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 |#
 
 (define checkers
+  ;; See checkers-shared.scm
   (make-checkers generate-moves-using-rule-interpreter))
 
 ;; coderef: evolution-rule:simple-move
