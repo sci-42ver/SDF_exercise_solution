@@ -1,16 +1,16 @@
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'abstracting-a-domain:factoring)
 
-(load "chess-cfg.scm")
-(load "chess-factoring.scm")
-(load "coords-complement.scm")
+(load "chess-lib/chess-cfg.scm")
+(load "chess-lib/chess-factoring.scm")
+(load "chess-lib/coords-complement.scm")
 (load "2_12.scm")
 
-(load "piece-complement.scm")
+(load "chess-lib/piece-complement.scm")
 (load "2_13.scm")
 
 (load "~/SICP_SDF/SDF_exercises/software/sdf/common/testing.scm")
-(load "test-chess-utils.scm")
+(load "chess-lib/test-chess-utils.scm")
 (define-test 'checkers
   (lambda ()
     (let ((board (make-board chess)))

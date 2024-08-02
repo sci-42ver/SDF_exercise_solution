@@ -70,7 +70,7 @@
 (define (get-direct-moves pmove)
   ;; here knight direction may be not general, so not define it in coords.scm.
   (define knight-directions 
-    (let ((col-1-steps (map (lambda (col) 
+    (let ((col-1-steps (append-map (lambda (col) 
                               (list (make-coords col -2) 
                                     (make-coords col 2))) 
                             '(1 -1))))

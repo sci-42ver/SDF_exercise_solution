@@ -42,6 +42,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (append (list (piece-coords (get-piece change)))
             (list (get-flags change)))))
 
+;; works for '()
 (define (pmove? object)
   (and (pair? object)
        (list-of-type? object change?)))
