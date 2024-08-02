@@ -19,6 +19,7 @@
 (define (r:seq . exprs)
   (apply string-append exprs))
 
+;; test
 (assert (equal? (r:seq (r:quote "a")
                         (r:dot)
                         (r:quote "c"))

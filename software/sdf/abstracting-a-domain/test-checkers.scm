@@ -21,9 +21,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
 
-(load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
-(manage 'new 'abstracting-a-domain:factoring) ; notice not use the bare `'abstracting-a-domain` which lacks many things.
-(load "~/SICP_SDF/SDF_exercises/software/sdf/common/testing.scm")
+; (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
+; (manage 'new 'abstracting-a-domain:factoring) ; notice not use the bare `'abstracting-a-domain` which lacks many things.
+; (load "~/SICP_SDF/SDF_exercises/software/sdf/common/testing.scm")
 
 (define-test 'checkers
   (lambda ()
@@ -204,6 +204,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (assert-lset= piece=? expected-pieces (board-pieces board)))
 
 (define (assert-moves index expected-moves board)
+  ;; generate-legal-moves -> moves-generator -> generate-moves-using-rule-interpreter -> initial-pmove
+  ;; So here pmove's are not remembered.
   (let ((moves (generate-legal-moves board)))
     (assert-lset= equal? expected-moves (map summarize-move moves))
     ;; board-end-turn changes the color
@@ -212,7 +214,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (equal? (list-ref expected-moves index) (summarize-move move)))
            moves))))
 
-(run-tests "" #t)
+; (run-tests "" #t)
 
 (define (generate-moves-using-rule-interpreter board piece-idx)
   (display (list (initial-pmove board (list-ref (current-pieces board) piece-idx))))

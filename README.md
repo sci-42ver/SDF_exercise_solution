@@ -8,6 +8,7 @@ I don't know whether it is appropriate. If it is inappropriate and someone knows
 - solution comment also see codes.
 - Here I use the absolute path like `(load "~/SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain/game-interpreter.scm")` to make we can call `scheme < foo.scm` in any dir.
   You can use `sed` etc. to change this.
+- All exercise solutions will be given related tests. But obviously I won't ensure the test must promise the solution is correct since there is no such a test (Correctness should be proved by maths).
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 
@@ -33,6 +34,8 @@ exercise solution for Software Design for Flexibility (SDF)
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # exercise solutions by 3 references (i.e. nbardiuk etc.) and 6.945_assignment_solution checked up to now
+- 2.1~2.11
+# exercise tests finished
 - 2.1~2.11
 # nbardiuk solution comment
 By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.
@@ -129,7 +132,11 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
         - TODO I can't see such a comments for "in the comments user17439".
     - **what to do beyond "Basic moves"**
       1. Promotion is trivial by checking the type and position (similar to `should-be-crowned?`)
-      2. En passant: check adjacent piece "on the same rank" whether with flag "advances two squares on its initial move" (only on the move *immediately* following the pawn's advance) and type "pawn".
+    - En passant: check adjacent piece "on the same rank" ~~whether with flag "advances two squares on its initial move"~~ (only on the move *immediately* following the pawn's advance) and type "pawn".
+      - I won't check it since pawn can either advance one square twice or advance "two squares" once. "flag" is associated with `pmove` which *won't be remembered* for later usage.
+        IMHO the best solution is to add flag with piece but the interface for `piece` will be all changed.
+        - Here whether we can remember history steps is also needed in "castling" to test
+          > The king and rook involved in castling must *not have previously moved*
   - notice
     after checking https://en.wikipedia.org/wiki/Rules_of_chess#Basic_moves preface
     > The king can be put in check but *cannot be captured* (see below).

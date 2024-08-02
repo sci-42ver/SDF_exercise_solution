@@ -22,6 +22,7 @@
         (apply values (append fv gv)))) ; This combines 2 values into 1 by first combining them into one list.
     (restrict-arity the-combination n)))
 
+;; test (since here we only refactor, so we just test it functions well without checking something like `(assert (= n m))`)
 ((parallel-combine list
                    (lambda (x y z)
                      (list 'foo x y z))

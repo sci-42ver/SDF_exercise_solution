@@ -1,5 +1,6 @@
 (define (make-chess moves-generator)
   ;; same as wikipedia color
+  ;; > chess involves many types of pieces.
   (make-game max-row max-col '(black white) '(King	Queen	Rook	Bishop	Knight	Pawn)
              chess-initial-pieces
              moves-generator
@@ -8,11 +9,13 @@
 (define (chess-initial-pieces game)
   (append-map (lambda (color)
                 (append (map (lambda (column) (make-piece color 'Pawn (make-coords column 1))) (iota max-col))
-                        (append (map (lambda (type column) 
-                                        (list (make-piece color type (make-coords column 0))
-                                              (make-piece color type (make-coords (- max-col 1 column) 0))))
-                                      '(Rook Knight Bishop)
-                                      (iota 3)))
+                        ;; use apply to ensure `append` works for list parameter.
+                        (apply append (map 
+                                        (lambda (type column) 
+                                          (list (make-piece color type (make-coords column 0))
+                                                (make-piece color type (make-coords (- max-col 1 column) 0))))
+                                        '(Rook Knight Bishop)
+                                        (iota 3)))
                         (if (eq? color 'black)
                             (list (make-piece color 'King (make-coords 3 0))
                               (make-piece color 'Queen (make-coords 4 0)))

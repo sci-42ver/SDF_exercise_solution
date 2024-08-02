@@ -20,6 +20,7 @@
                           (lambda (tonnes)
                             (/ tonnes tonnes-per-kg)))))
 (register-unit-conversion 'kg 'tonne kg-to-tonne)
+;; test
 (assert (= 1000 (kg-to-tonne 1)))
 
 ;; d
@@ -50,6 +51,7 @@
   (unit:/ (unit:invert inch-to-meter)
     (unit:expt second-to-min 2)))
 (define mps2-to-ipm2 (make-converter 'mps2 'ipm2))
+;; test
 (assert-close (mps2-to-ipm2 1) tolerance (* 60 2362.2047244094488))
 
 ;; e https://www.astera.com/type/blog/data-conversion/
@@ -85,6 +87,7 @@
     (delete-duplicates lst)
     (write-data-list log-name "Output to log" (string-append "clean_list with wrong arg: " lst))
     ))
+;; test
 (assert (equal? '(1 2 3) (clean_list '(1 2 3 2 1))))
 (clean_list "test_clean_list")
 
@@ -101,7 +104,8 @@
                           ;; i.e. permutation (0,1,2)*(0,2,1).
                           ;; TODO I didn't dig into mathematical derivation of the inverse permutation.
                           (apply (string-joiner 'infix "-") ((make-permutation '(2 0 1)) ((string-splitter 'delimiter #\/) hyphen-time))))))
-(hyphen-time-to-slash-time "2023-09-21")
+(hyphen-time-to-slash-time "2023-309-21")
+;; test
 (assert (equal? (hyphen-time-to-slash-time "2023-09-21") "09/21/2023"))
 
 ;; f
@@ -219,6 +223,7 @@
         (make-unit-conversion hour-to-s s-to-hour))
       (error "unable to derive"))))
 (register-unit-conversion 'h 's derived-hour-to-s)
+;; test
 (assert (= 3600 (derived-hour-to-s 1)))
 (assert (= 1 ((unit:invert derived-hour-to-s) 3600)))
 (displayln (unit-conversion-pair-and-proc-hashtable-to-graph unit-conversion-table))
