@@ -9,12 +9,12 @@
          (cur-piece-coords (piece-coords cur-piece))
          (cur-piece-row (get-row cur-piece-coords))
          ;; promotion when 7 but it should be manipulated in "aggregate-rules".
-         (move-directions (list forward-direction)))
+         (move-directions (list forward-direction))
          ;; > A pawn can capture an enemy piece on either of the two squares diagonally in front of the pawn.
          
          ;; > It cannot move to those squares when vacant except when capturing en passant.
          ;; So I use 2 directions
-         (capture-directions forward-diagonal-directions)
+         (capture-directions forward-diagonal-directions))
     ;; Since pawn rule may be not generalized to others. So here I won't give 2 funcs for move and capture.
     (append
       (filter-map
@@ -28,41 +28,32 @@
                                                board)
               (capture-piece-at landing
                                 (new-piece-position landing
-                                                    pmove))))
+                                                    pmove)))))
         capture-directions)
-      (filter-map
-        (lambda (direction)
-          (let loop ((step-dist 1)
-                    (res '()))
-            (let ((landing
-                    (compute-new-position direction step-dist pmove))
-                  (board (current-board pmove)))
-            ; (if (and (is-position-on-board? landing board)
-            ;       (is-position-unoccupied? landing board))
-            ;   ;; very similar to `get-direct-moves`. TODO refactor to make one general func.
-            ;   (begin
-            ;     ;; > If it has not yet moved
-            ;     ;; This check is based on
-            ;     ;; > Pawns cannot move backwards.
-            ;     (if (= cur-piece-row 1)
-            ;       ;; > provided both squares are vacant
-            ;       (loop (+ step-dist 1) (append (finish-move (new-piece-position landing pmove)) res))
-            ;       (append (finish-move (new-piece-position landing pmove)) res)))
-            ;   #f)
+      ;; Here `filter-map` will have (pmoves pmoves ...) where pmoves are (list pmove ...)
+      (apply append 
+        (filter-map
+          (lambda (direction)
+            (let loop ((step-dist 1)
+                      (res '()))
+              (let ((landing
+                      (compute-new-position direction step-dist pmove))
+                    (board (current-board pmove)))
+              (and (is-position-on-board? landing board)
+                (is-position-unoccupied? landing board)
+                ;; very similar to `get-direct-moves`. TODO refactor to make one general func.
 
-            (and (is-position-on-board? landing board)
-              (is-position-unoccupied? landing board)
-              ;; very similar to `get-direct-moves`. TODO refactor to make one general func.
-              (lambda () 
-                ;; > If it has not yet moved
+                ;; 1. > If it has not yet moved
                 ;; This check is based on
                 ;; > Pawns cannot move backwards.
-                (if (= cur-piece-row 1)
-                  ;; > provided both squares are vacant
-                  (loop (+ step-dist 1) (append (finish-move (new-piece-position landing pmove)) res))
-                  (append (finish-move (new-piece-position landing pmove)) res))))
-              ))
-        move-directions))))))
+                ;; 2. Here if not using `(= step-dist 1)`, then at last we will encounter #f and this is passed back. So all are #f.
+                (if (and (= step-dist 1) (= cur-piece-row 1))
+                  ;; 1. > provided both squares are vacant
+                  ;; 2. Here pmove is one list. So do not use `append` otherwise it will combine 2 pmoves into 1 by concatenation. 
+                  (loop (+ step-dist 1) (cons (finish-move (new-piece-position landing pmove)) res))
+                  (cons (finish-move (new-piece-position landing pmove)) res)))
+                )))
+          move-directions)))))
 
 ;; almost same as coronation.
 (define-aggregate-rule 'promotion chess

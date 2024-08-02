@@ -66,6 +66,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; return a list of possible pmove's.
 (define (apply-evolution-rule evolution-rule pmove)
   (guarantee-list-of (lambda (pmove*)
+                      ;; See pmove.scm 
                        (and (pmove? pmove*)
                             (is-pmove-derived-from? pmove*
                                                     pmove)))

@@ -11,6 +11,8 @@
 
 (load "~/SICP_SDF/SDF_exercises/software/sdf/common/testing.scm")
 (load "chess-lib/test-chess-utils.scm")
+
+(load "utils.scm")
 (define-test 'checkers
   (lambda ()
     (let ((board (make-board chess)))
@@ -27,7 +29,7 @@
               (make-piece-type 'Knight 'white 6 0) (make-piece-type 'Rook 'white 7 0))
           (map (lambda (col) (make-piece-type 'Pawn 'white col 1)) (iota 8)))
         board)
-      (generate-legal-moves board)
+      (displayln (map summarize-move (generate-legal-moves board)))
       )))
 
 (run-tests "" #t)
