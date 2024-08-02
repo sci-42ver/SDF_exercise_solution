@@ -30,7 +30,9 @@
                                 (new-piece-position landing
                                                     pmove)))))
         capture-directions)
-      ;; Here `filter-map` will have (pmoves pmoves ...) where pmoves are (list pmove ...)
+      ;; 1. Here `filter-map` will have (pmoves pmoves ...) where pmoves are (list pmove ...)
+      ;; 2. Notice this can't be manipulated with `evolve-pmove` recursive call since that will make pmove have multiple steps unexpectedly.
+      ;; And the latter also doesn't intend to give multiple possible pmoves but evolve one single pmove as the name indicates.
       (apply append 
         (filter-map
           (lambda (direction)
@@ -56,6 +58,7 @@
           move-directions)))))
 
 ;; almost same as coronation.
+;; So here we will have 2 ending `(move-is-finished)` flags after promotion.
 (define-aggregate-rule 'promotion chess
   (lambda (pmoves)
     (append-map (lambda (pmove)
@@ -78,8 +81,8 @@
 (define-evolution-rule 'queen-move chess
   (lambda (pmove)
     (if (eq? 'Queen (piece-type (current-piece pmove)))
-        (get-direct-moves pmove) ; may return one list
-        '())))
+      (get-direct-moves pmove)
+      '())))
 
 ;; similar to `get-simple-moves`.
 (define-evolution-rule 'king-move chess

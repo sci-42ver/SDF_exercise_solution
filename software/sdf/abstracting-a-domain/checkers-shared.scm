@@ -63,7 +63,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (pmove->list move))))
     (if (pair? coords-list) ; since it is already one list, this will return #f only for '().
         (let ((tail (loop (cdr coords-list))))
-          (if (and (pair? (cdr coords-list))
+          (if (and (pair? (cdr coords-list)) ; equal-coord list will be condensed to the last element with nil.
+                    ;; doesn't check transform like `coronation`.
                    (coords=? (car coords-list)
                              (cadr coords-list)))
               tail

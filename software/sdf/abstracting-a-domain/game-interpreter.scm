@@ -54,6 +54,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; use `append-map` to return again a list of possible pmove's recursively by calling self.
 (define (evolve-pmove pmove evolution-rules)
+  (assert (not (null? evolution-rules)))
   (append-map (lambda (new-pmove)
                 (if (is-pmove-finished? new-pmove)
                     (list new-pmove)
