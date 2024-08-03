@@ -108,7 +108,7 @@
     (let ((board (make-board capture-chess)))
       ; (displayln (generate-legal-moves board))
       (displayln (filter-map 
-                    (lambda (move) (summarize-move-checking-type 'Pawn move)) 
+                    (lambda (move) (summarize-move-checking-type 'King move)) 
                     (generate-legal-moves board)))
       (assert-moves
         (lambda (move) (summarize-move-checking-type 'Pawn move))
@@ -159,6 +159,18 @@
           ((queen (4 . 5) ()) (queen (5 . 4) ()) (queen (5 . 4) (move-is-finished)))
           ;; (-1 -1) blocked by black knight
           )
+        board)
+      (assert-moves
+        (lambda (move) (summarize-move-checking-type 'King move))
+        1
+        '(((king (2 . 6) ()) (king (2 . 7) ()) (king (2 . 7) (move-is-finished))) 
+          ((king (2 . 6) ()) (king (2 . 5) ()) (king (2 . 5) (move-is-finished))) 
+          ((king (2 . 6) ()) (king (1 . 6) ()) (king (1 . 6) (move-is-finished))) 
+          ((king (2 . 6) ()) (king (3 . 6) ()) (king (3 . 6) (move-is-finished))) 
+          ((king (2 . 6) ()) (king (3 . 7) ()) (king (3 . 7) (move-is-finished))) 
+          ((king (2 . 6) ()) (king (1 . 7) ()) (king (1 . 7) (move-is-finished))) 
+          ((king (2 . 6) ()) (king (3 . 5) ()) (king (3 . 5) (move-is-finished))) 
+          ((king (2 . 6) ()) (king (2 . 6) ()) (king (2 . 6) (captures-pieces)) (king (1 . 5) (captures-pieces)) (king (1 . 5) (move-is-finished captures-pieces))))
         board)
       )))
 
