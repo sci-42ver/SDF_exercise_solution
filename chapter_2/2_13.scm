@@ -39,8 +39,9 @@
               (let ((landing
                       (compute-new-position direction step-dist pmove))
                     (board (current-board pmove)))
-              (and (is-position-on-board? landing board)
-                (is-position-unoccupied? landing board)
+              (if (and 
+                    (is-position-on-board? landing board)
+                    (is-position-unoccupied? landing board))
                 ;; very similar to `get-direct-moves`. TODO refactor to make one general func.
 
                 ;; 1. > If it has not yet moved
@@ -51,7 +52,8 @@
                   ;; 1. > provided both squares are vacant
                   ;; 2. Here pmove is one list. So do not use `append` otherwise it will combine 2 pmoves into 1 by concatenation. 
                   (loop (+ step-dist 1) (cons (finish-move (new-piece-position landing pmove)) res))
-                  (cons (finish-move (new-piece-position landing pmove)) res)))
+                  (cons (finish-move (new-piece-position landing pmove)) res))
+                (non-null-lst res))
                 )))
           move-directions)))))
 

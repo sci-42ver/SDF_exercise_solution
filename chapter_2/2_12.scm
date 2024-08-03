@@ -28,14 +28,17 @@
                 ;; board is updated in test with `set!`
                 (board (current-board pmove)))
             ;; avoid using explicit #f
-            (and (is-position-on-board? landing board)
+            (if (is-position-on-board? landing board)
               (if (is-position-unoccupied? landing board)
                 (loop (+ step-dist 1) (cons (finish-move (new-piece-position landing pmove)) res))
                 ;; 1. > A piece moves to a vacant square except when capturing an opponent's piece.
                 ;; 2. > pieces cannot jump over other pieces.
                 ;; So we won't continue loop if encountering one pos occupied.
-                (and (is-position-occupied-by-non-king-opponent? landing board)
-                  (cons (chess-capture landing pmove) res)))))
+                ;; 3. Notice here we don't use and as others since we need to keep history accumulated pmoves.
+                (if (is-position-occupied-by-non-king-opponent? landing board)
+                  (cons (chess-capture landing pmove) res)
+                  (non-null-lst res)))
+              (non-null-lst res)))
                 ))
       (possible-directions (current-piece pmove)))))
 

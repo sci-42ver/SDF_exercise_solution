@@ -6,6 +6,7 @@
 (load "chess-lib/coords-complement.scm")
 (load "chess-lib/chess-rule-utils.scm")
 (load "chess-lib/board-complement.scm")
+(load "chess-lib/misc-utils.scm")
 (load "2_12.scm")
 
 (load "chess-lib/piece-complement.scm")
@@ -62,7 +63,7 @@
         board)
       )))
 
-;; See https://lichess.org/editor/8/8/8/8/4np2/3q2P1/3K1k1p/8_w_-_-_0_1?color=black for the following chess board layout.
+;; See https://lichess.org/editor/8/1p6/8/1P6/4np2/3q2P1/3K1k1p/8_w_-_-_0_1?color=black for the following chess board layout.
 (define (pawn-promotion-initial-pieces game)
   (list
     (make-piece 'black 'Pawn (make-coords 0 6)) ; test promotion
@@ -95,6 +96,8 @@
     (make-piece 'black 'Queen (make-coords 4 5))
     (make-piece 'black 'King (make-coords 2 6))
     (make-piece 'white 'King (make-coords 3 1))
+    (make-piece 'white 'Pawn (make-coords 1 4))
+    (make-piece 'black 'Pawn (make-coords 6 1))
     ))
 (define capture-chess
   (make-chess* capture-initial-pieces generate-moves-using-rule-interpreter))
@@ -105,14 +108,15 @@
     (let ((board (make-board capture-chess)))
       ; (displayln (generate-legal-moves board))
       (displayln (filter-map 
-                    (lambda (move) (summarize-move-checking-type 'Knight move)) 
+                    (lambda (move) (summarize-move-checking-type 'Pawn move)) 
                     (generate-legal-moves board)))
       (assert-moves
         (lambda (move) (summarize-move-checking-type 'Pawn move))
         1
         ;; >  capture an enemy piece on either of the two squares diagonally
         '(((pawn (2 . 4) ()) (pawn (2 . 4) ()) (pawn (2 . 4) (captures-pieces)) (pawn (1 . 5) (captures-pieces)) (pawn (1 . 5) (move-is-finished captures-pieces))) 
-          ((pawn (2 . 4) ()) (pawn (2 . 5) ()) (pawn (2 . 5) (move-is-finished))))
+          ((pawn (2 . 4) ()) (pawn (2 . 5) ()) (pawn (2 . 5) (move-is-finished))) 
+          ((pawn (6 . 1) ()) (pawn (6 . 2) ()) (pawn (6 . 2) (move-is-finished))))
         board)
       (assert-moves
         (lambda (move) (summarize-move-checking-type 'Knight move))
@@ -126,6 +130,35 @@
           ((knight (3 . 4) ()) (knight (5 . 5) ()) (knight (5 . 5) (move-is-finished))) 
           ((knight (3 . 4) ()) (knight (1 . 3) ()) (knight (1 . 3) (move-is-finished))) 
           ((knight (3 . 4) ()) (knight (5 . 3) ()) (knight (5 . 3) (move-is-finished))))
+        board)
+      (assert-moves
+        (lambda (move) (summarize-move-checking-type 'Queen move))
+        1
+        '(;; (0 1) blocked by white king.
+          ((queen (4 . 5) ()) (queen (4 . 0) ()) (queen (4 . 0) (move-is-finished))) 
+          ((queen (4 . 5) ()) (queen (4 . 1) ()) (queen (4 . 1) (move-is-finished))) 
+          ((queen (4 . 5) ()) (queen (4 . 2) ()) (queen (4 . 2) (move-is-finished))) 
+          ((queen (4 . 5) ()) (queen (4 . 3) ()) (queen (4 . 3) (move-is-finished))) 
+          ((queen (4 . 5) ()) (queen (4 . 4) ()) (queen (4 . 4) (move-is-finished)))
+
+          ((queen (4 . 5) ()) (queen (4 . 5) ()) (queen (4 . 5) (captures-pieces)) (queen (1 . 5) (captures-pieces)) (queen (1 . 5) (move-is-finished captures-pieces))) 
+          ((queen (4 . 5) ()) (queen (2 . 5) ()) (queen (2 . 5) (move-is-finished))) 
+          ((queen (4 . 5) ()) (queen (3 . 5) ()) (queen (3 . 5) (move-is-finished)))
+
+          ((queen (4 . 5) ()) (queen (7 . 5) ()) (queen (7 . 5) (move-is-finished))) 
+          ((queen (4 . 5) ()) (queen (6 . 5) ()) (queen (6 . 5) (move-is-finished)))
+          ((queen (4 . 5) ()) (queen (5 . 5) ()) (queen (5 . 5) (move-is-finished)))
+
+          ((queen (4 . 5) ()) (queen (6 . 7) ()) (queen (6 . 7) (move-is-finished))) 
+          ((queen (4 . 5) ()) (queen (5 . 6) ()) (queen (5 . 6) (move-is-finished)))
+
+          ((queen (4 . 5) ()) (queen (2 . 7) ()) (queen (2 . 7) (move-is-finished))) 
+          ((queen (4 . 5) ()) (queen (3 . 6) ()) (queen (3 . 6) (move-is-finished)))
+
+          ((queen (4 . 5) ()) (queen (4 . 5) ()) (queen (4 . 5) (captures-pieces)) (queen (6 . 3) (captures-pieces)) (queen (6 . 3) (move-is-finished captures-pieces))) 
+          ((queen (4 . 5) ()) (queen (5 . 4) ()) (queen (5 . 4) (move-is-finished)))
+          ;; (-1 -1) blocked by black knight
+          )
         board)
       )))
 
