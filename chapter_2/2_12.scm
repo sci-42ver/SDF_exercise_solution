@@ -27,38 +27,16 @@
                   (compute-new-position direction step-dist pmove))
                 ;; board is updated in test with `set!`
                 (board (current-board pmove)))
-          ;  (if (is-position-on-board? landing board)
-          ;     (if (is-position-unoccupied? landing board)
-          ;       (loop (+ step-dist 1) (append (finish-move (new-piece-position landing pmove)) res))
-          ;       ;; > A piece moves to a vacant square except when capturing an opponent's piece.
-          ;       (if (is-position-occupied-by-opponent? landing board)
-          ;         ;; > The king can be put in check but cannot be captured.
-          ;         (if (eq? 'King (piece-type (board-get landing board)))
-          ;           #f
-          ;           ;; > pieces cannot jump over other pieces.
-          ;           ;; So we won't continue loop.
-          ;           ;; > Another difference is that capture is by displacement rather than jump.
-          ;           ;; so both positions are `landing`.
-          ;           (append (capture-piece-at landing
-          ;                         (new-piece-position landing
-          ;                                             pmove)) res))
-          ;         #f))
-          ;     #f))
-
-          ;; avoid using explicit #f
-          (and (is-position-on-board? landing board)
-            (if (is-position-unoccupied? landing board)
-              (loop (+ step-dist 1) (cons (finish-move (new-piece-position landing pmove)) res))
-              ;; > A piece moves to a vacant square except when capturing an opponent's piece.
-              (and (is-position-occupied-by-opponent? landing board)
-                ;; > The king can be put in check but cannot be captured.
-                (and (not (eq? 'King (piece-type (board-get landing board))))
-                  ;; > pieces cannot jump over other pieces.
-                  ;; So we won't continue loop.
-                  ;; > Another difference is that capture is by displacement rather than jump.
-                  ;; so both positions are `landing`.
+            ;; avoid using explicit #f
+            (and (is-position-on-board? landing board)
+              (if (is-position-unoccupied? landing board)
+                (loop (+ step-dist 1) (cons (finish-move (new-piece-position landing pmove)) res))
+                ;; 1. > A piece moves to a vacant square except when capturing an opponent's piece.
+                ;; 2. > pieces cannot jump over other pieces.
+                ;; So we won't continue loop if encountering one pos occupied.
+                (and (is-position-occupied-by-non-king-opponent? landing board)
                   (cons (chess-capture landing pmove) res)))))
-                  )))
+                ))
       (possible-directions (current-piece pmove)))))
 
 (define-evolution-rule 'knight-move chess
@@ -82,21 +60,12 @@
             (compute-new-position direction 1 pmove))
           (board (current-board pmove)))
       ;; > The knight is not blocked by other pieces; it jumps to the new location.
+      ;; > Except for any move of the knight and castling, pieces cannot jump over other pieces.
       ;; So we won't check whether passed positions are occupied, etc.
-      ; (if (is-position-on-board? landing board)
-      ;   (if (is-position-unoccupied? landing board)
-      ;     (finish-move (new-piece-position landing pmove))
-      ;     (if (is-position-occupied-by-opponent? landing board)
-      ;       (capture-piece-at landing
-      ;         (new-piece-position landing
-      ;                             pmove))
-      ;       #f))
-      ;   #f)
-
       (and (is-position-on-board? landing board)
         (if (is-position-unoccupied? landing board)
           (finish-move (new-piece-position landing pmove))
-          (and (is-position-occupied-by-opponent? landing board)
+          (and (is-position-occupied-by-non-king-opponent? landing board)
             (chess-capture landing pmove))))
       ))
    knight-directions))

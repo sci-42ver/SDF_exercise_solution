@@ -24,7 +24,7 @@
                 (board (current-board pmove)))
             ;; similar to `get-jumps`.
             (and (is-position-on-board? landing board)
-              (is-position-occupied-by-opponent? landing
+              (is-position-occupied-by-non-king-opponent? landing
                                                board)
               (chess-capture landing pmove))))
         capture-directions)
@@ -98,7 +98,7 @@
        (and (is-position-on-board? landing board)
           (if (is-position-unoccupied? landing board)
             (finish-move (new-piece-position landing pmove))
-            (and (is-position-occupied-by-opponent? landing board)
+            (and (is-position-occupied-by-non-king-opponent? landing board)
               ;; notice here we first remove the piece then replace it.
               (chess-capture landing pmove))))))
    (possible-directions (current-piece pmove))))

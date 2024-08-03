@@ -5,6 +5,7 @@
 (load "chess-lib/chess-factoring.scm")
 (load "chess-lib/coords-complement.scm")
 (load "chess-lib/chess-rule-utils.scm")
+(load "chess-lib/board-complement.scm")
 (load "2_12.scm")
 
 (load "chess-lib/piece-complement.scm")
@@ -36,6 +37,8 @@
         summarize-move
         1
         ;; test pawn "moving two squares straight forward" and knight without capture.
+        ;; > moves straight forward one square
+        ;; > moving two squares straight forward
         '(((0 . 1) (0 . 3))
           ((0 . 1) (0 . 2))
           ((1 . 1) (1 . 3))
@@ -59,7 +62,7 @@
         board)
       )))
 
-;; See https://lichess.org/editor/8/8/8/8/4np2/3q2P1/5k1p/8_w_-_-_0_1?color=black for the following chess board layout.
+;; See https://lichess.org/editor/8/8/8/8/4np2/3q2P1/3K1k1p/8_w_-_-_0_1?color=black for the following chess board layout.
 (define (pawn-promotion-initial-pieces game)
   (list
     (make-piece 'black 'Pawn (make-coords 0 6)) ; test promotion
@@ -91,6 +94,7 @@
     (make-piece 'black 'Knight (make-coords 3 4))
     (make-piece 'black 'Queen (make-coords 4 5))
     (make-piece 'black 'King (make-coords 2 6))
+    (make-piece 'white 'King (make-coords 3 1))
     ))
 (define capture-chess
   (make-chess* capture-initial-pieces generate-moves-using-rule-interpreter))
@@ -101,13 +105,27 @@
     (let ((board (make-board capture-chess)))
       ; (displayln (generate-legal-moves board))
       (displayln (filter-map 
-                    (lambda (move) (summarize-move-checking-type 'Pawn move)) 
+                    (lambda (move) (summarize-move-checking-type 'Knight move)) 
                     (generate-legal-moves board)))
       (assert-moves
         (lambda (move) (summarize-move-checking-type 'Pawn move))
         1
+        ;; >  capture an enemy piece on either of the two squares diagonally
         '(((pawn (2 . 4) ()) (pawn (2 . 4) ()) (pawn (2 . 4) (captures-pieces)) (pawn (1 . 5) (captures-pieces)) (pawn (1 . 5) (move-is-finished captures-pieces))) 
           ((pawn (2 . 4) ()) (pawn (2 . 5) ()) (pawn (2 . 5) (move-is-finished))))
+        board)
+      (assert-moves
+        (lambda (move) (summarize-move-checking-type 'Knight move))
+        1
+        '(((knight (3 . 4) ()) (knight (4 . 2) ()) (knight (4 . 2) (move-is-finished))) 
+          ;; > The king can be put in check but cannot be captured
+          ; ((knight (3 . 4) ()) (knight (4 . 6) ()) (knight (4 . 6) (move-is-finished))) 
+          ((knight (3 . 4) ()) (knight (2 . 2) ()) (knight (2 . 2) (move-is-finished))) 
+          ;; > The knight is not blocked by other pieces
+          ((knight (3 . 4) ()) (knight (3 . 4) ()) (knight (3 . 4) (captures-pieces)) (knight (1 . 5) (captures-pieces)) (knight (1 . 5) (move-is-finished captures-pieces))) 
+          ((knight (3 . 4) ()) (knight (5 . 5) ()) (knight (5 . 5) (move-is-finished))) 
+          ((knight (3 . 4) ()) (knight (1 . 3) ()) (knight (1 . 3) (move-is-finished))) 
+          ((knight (3 . 4) ()) (knight (5 . 3) ()) (knight (5 . 3) (move-is-finished))))
         board)
       )))
 
