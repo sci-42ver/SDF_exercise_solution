@@ -3,7 +3,7 @@
 (load "../software/sdf/common/testing.scm")
 (load "../software/sdf/regular-expressions/test-regexp.scm")
 (load "utils.scm")
-(load "regex_utils.scm")
+(load "regex-lib/regex_utils.scm")
 
 (load "2_10.scm") ; used as the lib
 

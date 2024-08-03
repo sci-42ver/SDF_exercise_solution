@@ -154,7 +154,7 @@
       res
       (let* ((adjacency-pair (car rest-adjacency-pairs)))
         (let* ((from (car adjacency-pair))
-              ;; to be compatible with DFS_demo.scm
+              ;; to be compatible with graph-lib/DFS_demo.scm
               (to (list (cdr adjacency-pair)))
               (from-idx 
                 (list-index 
@@ -207,7 +207,7 @@
 (define unit-conversion-key-graph (unit-conversion-pair-and-proc-hashtable-to-graph unit-conversion-table))
 (displayln unit-conversion-key-graph)
 
-(load "DFS_demo.scm")
+(load "graph-lib/DFS_demo.scm")
 (load "2_4_chebert_utils.scm")
 (displayln (find-route 'h 's unit-conversion-key-graph))
 (define derived-hour-to-s

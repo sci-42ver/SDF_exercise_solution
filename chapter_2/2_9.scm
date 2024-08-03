@@ -3,10 +3,10 @@
 (load "../software/sdf/common/testing.scm")
 (load "../software/sdf/regular-expressions/test-regexp.scm")
 (load "utils.scm")
-(load "regex_utils.scm")
+(load "regex-lib/regex_utils.scm")
 
 ;; TODO `(load "2_8.scm")` seems to use one env by "../software/sdf/manager/load" and can't pass `r:seq` definition.
-(load "regex_grouping_utils.scm")
+(load "regex-lib/regex_grouping_utils.scm")
 ; (define (r:seq . exprs)
 ;   (apply string-append exprs))
 

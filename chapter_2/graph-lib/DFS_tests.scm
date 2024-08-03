@@ -1,4 +1,4 @@
-(load "DFS_demo.scm")
+(load "graph-lib/DFS_demo.scm")
 (assert (equal? (list 'A 'B 'E 'F 'G) (find-route 'A 'G Graph)))
 ; = (list 'A 'B 'E 'F 'G)
 
