@@ -13,6 +13,7 @@
         (get-direct-moves pmove) ; may return one list
         '())))
 
+;; See chebert which uses `is-pmove-finished?` to manipulate the following iteration. That is better.
 (define (get-direct-moves pmove)
   (apply 
     append

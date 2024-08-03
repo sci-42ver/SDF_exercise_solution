@@ -34,11 +34,12 @@ exercise solution for Software Design for Flexibility (SDF)
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # exercise solutions by 3 references (i.e. nbardiuk etc.) and 6.945_assignment_solution checked up to now
-- 2.1~2.11
+- 2.1~2.13
 # exercise tests finished
-- 2.1~2.11
+- 2.1~2.13
 # nbardiuk solution comment
-By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.
+~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
+It only have solutions up to chapter 2 regular-expressions.
 ## 2.1
 - > ; (assert (= 2 (get-arity h))) this is too naive - does not allow to use 'list
   Not. Since if this holds, then `(assert (= 1 f-arity))` also doesn't work.
@@ -110,7 +111,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - check the rules *intuitively* by manual playing for 2 players https://www.chessmultiplayer.com/
   - > Don't try to implement the castling rule.
     we need to check 3 conditions in wikipedia if to implement it.
-    a. "must not have previously moved" can be checked by flag.
+    a. "must not have previously moved" ~~can be checked by flag.~~
     b. "There must be no pieces between the king and the rook;" can be checked by inspecting position-info between them
     c. "The king may not currently be ..." i.e. call *check* for all related positions.
     d. "The castling must be kingside or queenside" since they are the only 2 possible cases.
@@ -140,5 +141,9 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - notice
     after checking https://en.wikipedia.org/wiki/Rules_of_chess#Basic_moves preface
     > The king can be put in check but *cannot be captured* (see below).
+  - chebert
+    - check castling
+      - by *adding types*. (also used for other *special* moves)
+      - 
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html

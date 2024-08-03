@@ -1,3 +1,4 @@
+;;; Only chebert of 4 possible solution repos have implemented this by searching "chess".
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'abstracting-a-domain:factoring)
 
