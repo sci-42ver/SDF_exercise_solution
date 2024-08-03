@@ -4,6 +4,7 @@
 (load "chess-lib/chess-cfg.scm")
 (load "chess-lib/chess-factoring.scm")
 (load "chess-lib/coords-complement.scm")
+(load "chess-lib/chess-rule-utils.scm")
 (load "2_12.scm")
 
 (load "chess-lib/piece-complement.scm")
@@ -79,6 +80,34 @@
             ((pawn (0 . 6) ()) (pawn (0 . 7) ()) (pawn (0 . 7) (move-is-finished)) (rook (0 . 7) (move-is-finished)))
             ((pawn (0 . 6) ()) (pawn (0 . 7) ()) (pawn (0 . 7) (move-is-finished)) (bishop (0 . 7) (move-is-finished)))
             ((pawn (0 . 6) ()) (pawn (0 . 7) ()) (pawn (0 . 7) (move-is-finished)) (knight (0 . 7) (move-is-finished))))
+        board)
+      )))
+
+(define (capture-initial-pieces game)
+  (list
+    ;; test capture (all the following black can capture the white pawn)
+    (make-piece 'white 'Pawn (make-coords 6 2))
+    (make-piece 'black 'Pawn (make-coords 2 4))
+    (make-piece 'black 'Knight (make-coords 3 4))
+    (make-piece 'black 'Queen (make-coords 4 5))
+    (make-piece 'black 'King (make-coords 2 6))
+    ))
+(define capture-chess
+  (make-chess* capture-initial-pieces generate-moves-using-rule-interpreter))
+(inherit-rules capture-chess chess)
+
+(define-test 'capture-chess
+  (lambda ()
+    (let ((board (make-board capture-chess)))
+      ; (displayln (generate-legal-moves board))
+      (displayln (filter-map 
+                    (lambda (move) (summarize-move-checking-type 'Pawn move)) 
+                    (generate-legal-moves board)))
+      (assert-moves
+        (lambda (move) (summarize-move-checking-type 'Pawn move))
+        1
+        '(((pawn (2 . 4) ()) (pawn (2 . 4) ()) (pawn (2 . 4) (captures-pieces)) (pawn (1 . 5) (captures-pieces)) (pawn (1 . 5) (move-is-finished captures-pieces))) 
+          ((pawn (2 . 4) ()) (pawn (2 . 5) ()) (pawn (2 . 5) (move-is-finished))))
         board)
       )))
 

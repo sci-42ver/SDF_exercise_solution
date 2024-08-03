@@ -26,9 +26,7 @@
             (and (is-position-on-board? landing board)
               (is-position-occupied-by-opponent? landing
                                                board)
-              (capture-piece-at landing
-                                (new-piece-position landing
-                                                    pmove)))))
+              (chess-capture landing pmove))))
         capture-directions)
       ;; 1. Here `filter-map` will have (pmoves pmoves ...) where pmoves are (list pmove ...)
       ;; 2. Notice this can't be manipulated with `evolve-pmove` recursive call since that will make pmove have multiple steps unexpectedly.
@@ -101,9 +99,8 @@
           (if (is-position-unoccupied? landing board)
             (finish-move (new-piece-position landing pmove))
             (and (is-position-occupied-by-opponent? landing board)
-              (capture-piece-at landing
-                                (new-piece-position landing
-                                                    pmove)))))))
+              ;; notice here we first remove the piece then replace it.
+              (chess-capture landing pmove))))))
    (possible-directions (current-piece pmove))))
 
 ;; Here I won't define `require-captures` similar to `require-jumps` 

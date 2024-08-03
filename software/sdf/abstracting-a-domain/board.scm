@@ -113,6 +113,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (guarantee-piece-on-board from board)
   (if (not (memq (piece-color to) (board-colors board)))
       (error "Piece has unknown color:" to board))
+  ;; find called by board-get: if unoccupied, then piece returns #f.
   (if (let ((piece (board-get (piece-coords to) board)))
         (and piece
              (not (piece=? from piece))))

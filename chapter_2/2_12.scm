@@ -48,7 +48,7 @@
           ;; avoid using explicit #f
           (and (is-position-on-board? landing board)
             (if (is-position-unoccupied? landing board)
-              (loop (+ step-dist 1) (append (finish-move (new-piece-position landing pmove)) res))
+              (loop (+ step-dist 1) (cons (finish-move (new-piece-position landing pmove)) res))
               ;; > A piece moves to a vacant square except when capturing an opponent's piece.
               (and (is-position-occupied-by-opponent? landing board)
                 ;; > The king can be put in check but cannot be captured.
@@ -57,9 +57,7 @@
                   ;; So we won't continue loop.
                   ;; > Another difference is that capture is by displacement rather than jump.
                   ;; so both positions are `landing`.
-                  (append (capture-piece-at landing
-                                (new-piece-position landing
-                                                    pmove)) res)))))
+                  (cons (chess-capture landing pmove) res)))))
                   )))
       (possible-directions (current-piece pmove)))))
 
@@ -99,8 +97,6 @@
         (if (is-position-unoccupied? landing board)
           (finish-move (new-piece-position landing pmove))
           (and (is-position-occupied-by-opponent? landing board)
-            (capture-piece-at landing
-              (new-piece-position landing
-                                  pmove)))))
+            (chess-capture landing pmove))))
       ))
    knight-directions))
