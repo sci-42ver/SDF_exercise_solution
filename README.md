@@ -6,7 +6,7 @@ I don't know whether it is appropriate. If it is inappropriate and someone knows
   - I tried to find one possible example to implement in https://martinfowler.com/dsl.html#:~:text=Domain%2Dspecific%20languages%20have%20been,strut's%20configuration%20file....
     but only ["ant"](https://news.ycombinator.com/item?id=21840947) and ["graphviz's dot language"](https://www.graphviz.org/pdf/dotguide.pdf) *seem* to be implement as one *demo*.
     But the former is related with Java and the latter is related with drawing one graph.
-  - "salary calculation" in [this](https://en.wikipedia.org/wiki/Domain-specific_language#Overview) doesn't have one general model.
+  - ["salary calculation"](https://buddypunch.com/blog/how-is-salary-and-wages-calculated/) in [this](https://en.wikipedia.org/wiki/Domain-specific_language#Overview) doesn't have one general model.
   - After all, this exercise is more about how we think about a domain and then program it.
     IMHO checkers and then manual implementation of chess are enough.
     - "domain model" as SDF_notes.md shows is about "abstract types".
@@ -43,10 +43,10 @@ exercise solution for Software Design for Flexibility (SDF)
     > so I might end up *fooling myself*.
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
-# exercise solutions by 3 references (i.e. nbardiuk etc.) and 6.945_assignment_solution checked up to now
-- 2.1~2.13
-# exercise tests finished
-- 2.1~2.13
+# *exercise solutions by 3 references (i.e. nbardiuk etc.) and 6.945_assignment_solution checked up to now
+- 2.1~2.14
+# *exercise tests finished
+- 2.1~2.14
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions.
