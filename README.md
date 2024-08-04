@@ -4,11 +4,12 @@ I don't know whether it is appropriate. If it is inappropriate and someone knows
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
-- I won't dig into checking whether it is appropriate to use `eq?` or `equal?` etc. for each case.
 - solution comment also see codes.
 - Here I use the absolute path like `(load "~/SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain/game-interpreter.scm")` to make we can call `scheme < foo.scm` in any dir.
   You can use `sed` etc. to change this.
 - All exercise solutions will be given related tests. But obviously I won't ensure the test must promise the solution is correct since there is no such a test (Correctness should be proved by maths).
+## I *won't dig into* 
+- checking whether it is appropriate to use `eq?` or `equal?` etc. for each case. (so same for `memv`, etc.)
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 

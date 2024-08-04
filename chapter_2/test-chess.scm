@@ -122,6 +122,7 @@
       (assert-moves
         (lambda (move) (summarize-move-checking-type 'Knight move))
         1
+        ;; length 6
         '(((knight (3 . 4) ()) (knight (4 . 2) ()) (knight (4 . 2) (move-is-finished))) 
           ;; > The king can be put in check but cannot be captured
           ; ((knight (3 . 4) ()) (knight (4 . 6) ()) (knight (4 . 6) (move-is-finished))) 
@@ -135,6 +136,7 @@
       (assert-moves
         (lambda (move) (summarize-move-checking-type 'Queen move))
         1
+        ;; length 17
         '(;; (0 1) blocked by white king.
           ((queen (4 . 5) ()) (queen (4 . 0) ()) (queen (4 . 0) (move-is-finished))) 
           ((queen (4 . 5) ()) (queen (4 . 1) ()) (queen (4 . 1) (move-is-finished))) 

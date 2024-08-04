@@ -62,9 +62,11 @@
 (define-aggregate-rule 'promotion chess
   (lambda (pmoves)
     (append-map (lambda (pmove)
+                  ;; see chebert. This can be abstracted.
                   (let* ((cur-piece (current-piece pmove))
                         (cur-piece-row (get-row (piece-coords cur-piece))))
                     (if (and (= 7 cur-piece-row) (eq? 'Pawn (piece-type cur-piece)))
+                      ;; see chebert. Here we don't need to define one extra `update-piece-type`.
                       (map (lambda (type) 
                             (update-piece-type 
                               (lambda (piece type) (piece-new-type piece type)) pmove type))
