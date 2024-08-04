@@ -1,6 +1,15 @@
 This is licenced same as [SDF book](https://mitpress.mit.edu/9780262045490/software-design-for-flexibility/) using [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.txt) since most of my codes are based on the course code base and the book. 
 
 I don't know whether it is appropriate. If it is inappropriate and someone knows detailedly about the difference among licences, please tell me the appropriate choice.
+# Skipped exercise
+- 2.14
+  - I tried to find one possible example to implement in https://martinfowler.com/dsl.html#:~:text=Domain%2Dspecific%20languages%20have%20been,strut's%20configuration%20file....
+    but only ["ant"](https://news.ycombinator.com/item?id=21840947) and ["graphviz's dot language"](https://www.graphviz.org/pdf/dotguide.pdf) *seem* to be implement as one *demo*.
+    But the former is related with Java and the latter is related with drawing one graph.
+  - "salary calculation" in [this](https://en.wikipedia.org/wiki/Domain-specific_language#Overview) doesn't have one general model.
+  - After all, this exercise is more about how we think about a domain and then program it.
+    IMHO checkers and then manual implementation of chess are enough.
+    - "domain model" as SDF_notes.md shows is about "abstract types".
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
@@ -145,6 +154,5 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - chebert
     - check castling
       - by *adding types*. (also used for other *special* moves)
-      - 
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
