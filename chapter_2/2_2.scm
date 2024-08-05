@@ -53,6 +53,12 @@
  3)
 ((lambda (x) (+ (- (+ x (square x))) (square (+ x (square x))))) 3)
 
+;; ps01 2.b
+;; > YOUR JOB is to reengineer the arity interface (RESTRICT-ARITY and GET-ARITY in function-combinators.scm)
+;; Here `RESTRICT-ARITY` just set the table so we don't need to change it.
+;; GET-ARITY -> get-arity-general.
+(assert (= (cos (+ 3 4)) ((compose-mod-general cos +) 3 4)))
+
 ;; > Sketch a plan for how to extend the combinators to use the more general arities.
 ;; > What choices will you have to make in reformulating spread-combine?
 ;; change all procedures related with arity.
@@ -135,7 +141,7 @@
    (lambda (x y) (+ x y)))
  1 2 3 4 5 6)
 
-;; ensure we are able to split param.
+;; ensure we are able to split param. This will throw error.
 ((simple-spread-combine 
    + 
    +
