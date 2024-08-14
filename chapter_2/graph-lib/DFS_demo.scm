@@ -48,13 +48,13 @@
 
 #| ---------------------------------------------------------------------------------
 
-   Find Route in Graph: Tests
+Find Route in Graph: Tests
 
-   find-route : node node graph -> (listof node) or #f
-   Purpose: produce a list of nodes, starting with origination 
-    and ending destination. The list represent a path from 
-    the origination node to the destination node in a-graph.
-    If there is no path, the function produces #f. 
+find-route : node node graph -> (listof node) or #f
+Purpose: produce a list of nodes, starting with origination 
+and ending destination. The list represent a path from 
+the origination node to the destination node in a-graph.
+If there is no path, the function produces #f. 
 |#
 
 ;; See https://en.wikipedia.org/wiki/Breadth-first_search#Pseudocode
@@ -86,10 +86,10 @@
               (else (cons origination possible-route)))))))))
 
 #| find-route/list : (listof node) node graph -> (listof node) or #f
-   Purpose: produce a list of nodes, starting with one node on lo-originations 
-    and ending destination. The list represent a path from 
-    the node on lo-originations to destination in a-graph.
-    If there is no path, the function produces #f.     |#
+Purpose: produce a list of nodes, starting with one node on lo-originations 
+and ending destination. The list represent a path from 
+the node on lo-originations to destination in a-graph.
+If there is no path, the function produces #f.     |#
 (define (find-route/list lo-Os D graph)
   (printf "(find-route ~s ~s cyclic-graph)~n" lo-Os D)
   (cond
@@ -108,23 +108,23 @@
                 (else possible-route)))))))))
 
 #| neighbors: node graph -> (listof node)
-   (define (neighbors a-node a-graph) ...)
-   Purpose: compute a-node's neighbors in a-graph
+(define (neighbors a-node a-graph) ...)
+Purpose: compute a-node's neighbors in a-graph
 |#
 (define (neighbors a-node a-graph)
   (cond
     ((null? a-graph) (error 'neighbors "can't happen"))
     (else (cond
-	    ((eq? (first (first a-graph)) a-node)
-	     (second (first a-graph)))
-	    (else (neighbors a-node (cdr a-graph)))))))
+            ((eq? (first (first a-graph)) a-node)
+             (second (first a-graph)))
+            (else (neighbors a-node (cdr a-graph)))))))
 
 ;; equivalently, with Scheme's built-in lookup function:
 (define (neighbors a-node a-graph)
   (second (assq a-node a-graph)))
 
 #| ---------------------------------------------------------------------------------
-   Tests: data followed by expessions |#
+Tests: data followed by expessions |#
 
 ;; Here assumes cdr of each pair is always one list.
 (define Graph 

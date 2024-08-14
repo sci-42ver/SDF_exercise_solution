@@ -10,8 +10,8 @@
 (define regex_type 'ere)
 (define (test_str)
   (r:seq (r:quote "a")
-      (r:dot)
-      (r:quote "c")))
+         (r:dot)
+         (r:quote "c")))
 (define test_expected
   '("[00]. abc"
     "[01]. aac"

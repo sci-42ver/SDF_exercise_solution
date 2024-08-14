@@ -21,6 +21,6 @@
 
 ;; test
 (assert (equal? (r:seq (r:quote "a")
-                        (r:dot)
-                        (r:quote "c"))
+                       (r:dot)
+                       (r:quote "c"))
                 "a.c"))

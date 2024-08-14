@@ -123,5 +123,5 @@
  'a 'b 'c 'd)
 
 (get-arity ((permute-arguments 1 2 0 3)
-              (lambda (x y z w)
-                (list 'foo x y z w))))
+            (lambda (x y z w)
+              (list 'foo x y z w))))

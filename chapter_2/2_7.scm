@@ -25,24 +25,24 @@
 
 (define (r:repeat min max expr)
   (apply r:seq
-          ;; 1. same as nbardiuk but nbardiuk doesn't capture group in r:seq.
-          ;; `(and max (= min max)` gives one small optimization when max is #f.
-          ;; 2. mbillingr didn't implement this.
+         ;; 1. same as nbardiuk but nbardiuk doesn't capture group in r:seq.
+         ;; `(and max (= min max)` gives one small optimization when max is #f.
+         ;; 2. mbillingr didn't implement this.
          (append (list expr 
-                        "\\{" ; Caveat: ... 
-                        (number->string min))
+                       "\\{" ; Caveat: ... 
+                       (number->string min))
                  (append 
-                    (if (= max min)
-                      (list "")
-                      (list ","
-                        (if (not max) ; By `((lambda (max) (if max 1 0)) #f)`, here max will just be the arg instead of the related procedure in `(if max 1 0)`.
-                          ""
-                          (number->string max))))
-                    (list "\\}")
-                    ))))
+                   (if (= max min)
+                     (list "")
+                     (list ","
+                           (if (not max) ; By `((lambda (max) (if max 1 0)) #f)`, here max will just be the arg instead of the related procedure in `(if max 1 0)`.
+                             ""
+                             (number->string max))))
+                   (list "\\}")
+                   ))))
 
 (define test_str (r:alt (r:quote "cat") (r:quote "dog")))
 (displayln (r:repeat 3 5 test_str))
 
 (assert (equal? '("[09]. catdogcat" "[10]. catcatdogdog" "[11]. dogdogcatdogdog" "[12]. catcatcatdogdogdog" "[13]. acatdogdogcats" "[14]. ifacatdogdogs" "[15]. acatdogdogsme")
-              (r:grep (r:repeat 3 5 test_str) tests-file)))
+                (r:grep (r:repeat 3 5 test_str) tests-file)))

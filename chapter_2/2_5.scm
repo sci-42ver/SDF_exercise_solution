@@ -76,21 +76,21 @@
       (check_all_conds (lambda (i) (assert (and (>= i 0) (<= i arg_len)))) to_add_arg_indices)
       ;; to_add_arg_indices should be sorted in parallel with `args` since it may have one-to-one correspondence with `to_add_args`.
       ;; TODO If using unsorted data, then we need methods to insert them all at once.
-      
+
       ;; fold here is similar to https://rosettacode.org/wiki/Loop_over_multiple_arrays_simultaneously#Scheme but more elegant.
       (define the-combination (compose-args f (lambda args 
-                        (let* ((combined_to_add (map cons to_add_arg_indices args))
-                               (combined_to_add (sort combined_to_add > car))
-                               ;; TODO what is the syntax to combine the following 2 operations  
-                               (to_add_arg_indices (map car combined_to_add))
-                               (args (map cdr combined_to_add)))
-                          (fold
-                            ;; https://stackoverflow.com/a/36121211/21294350 or https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Folding-of-Lists.html `(x count)`.
-                            (lambda (i x args)
-                              (list-insert args i x))
-                            fixed_args
-                            to_add_arg_indices
-                            args)))))
+                                                (let* ((combined_to_add (map cons to_add_arg_indices args))
+                                                       (combined_to_add (sort combined_to_add > car))
+                                                       ;; TODO what is the syntax to combine the following 2 operations  
+                                                       (to_add_arg_indices (map car combined_to_add))
+                                                       (args (map cdr combined_to_add)))
+                                                  (fold
+                                                    ;; https://stackoverflow.com/a/36121211/21294350 or https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Folding-of-Lists.html `(x count)`.
+                                                    (lambda (i x args)
+                                                      (list-insert args i x))
+                                                    fixed_args
+                                                    to_add_arg_indices
+                                                    args)))))
       (restrict-arity the-combination to_add_cnt))))
 ((((curry-arguments 2)
    'a 'b 'c)
@@ -101,11 +101,11 @@
 
 (define test_ca (((curry-arguments 1 2)
                   'a 'b 'c)
-                  (lambda (x y z w a)
-                    (list 'foo x y z w a))))
+                 (lambda (x y z w a)
+                   (list 'foo x y z w a))))
 
 (test_ca
- 'd 'e)
+  'd 'e)
 'expect-value: '(foo a d b e c)
 
 (get-arity test_ca)
@@ -129,8 +129,8 @@
 (define (iterate n)
   (define (the-iterator f)
     (if (= n 0)
-        identity
-        (compose f ((iterate (- n 1)) f))))
+      identity
+      (compose f ((iterate (- n 1)) f))))
   the-iterator)
 
 (define (identity x) x)
@@ -161,9 +161,9 @@
     (apply values (fold-right 
                     (lambda (func cur_lst)
                       (call-with-values (lambda () (apply func args))
-                        ;; here x auto transform the param to list.
-                        (lambda x
-                          (append x cur_lst)))) 
+                                        ;; here x auto transform the param to list.
+                                        (lambda x
+                                          (append x cur_lst)))) 
                     '() 
                     funcs)))
   (let ((arities (map (lambda (func) (get-arity func)) funcs)))
@@ -178,30 +178,30 @@
   (compose h (apply parallel-apply-variant funcs)))
 
 (define test_pc (parallel-combine-variant list
-                    (lambda (x y z)
-                      (values x y z))
-                    (lambda (u v w)
-                      (values w v u))
-                    (lambda (u v w)
-                     (values w v u))
-                    (lambda (u v w)
-                     (values w v u))))
+                                          (lambda (x y z)
+                                            (values x y z))
+                                          (lambda (u v w)
+                                            (values w v u))
+                                          (lambda (u v w)
+                                            (values w v u))
+                                          (lambda (u v w)
+                                            (values w v u))))
 (test_pc
- 'a 'b 'c)
+  'a 'b 'c)
 'expect-value: '(a b c c b a c b a ...)
 
 ;; here due to we use `procedure-arity` in arity which doesn't check hash-table. This can be fixed like 2.2 does.
 (get-arity test_pc)
 
 ((parallel-combine-variant list
-                    (lambda (x y z)
-                      (values x y z))
-                    (lambda (u v w)
-                      (values w v u))
-                    (lambda (u v w)
-                     (values w v u))
-                    (lambda (u v w a)
-                     (values w v u))) 'a 'b 'c)
+                           (lambda (x y z)
+                             (values x y z))
+                           (lambda (u v w)
+                             (values w v u))
+                           (lambda (u v w)
+                             (values w v u))
+                           (lambda (u v w a)
+                             (values w v u))) 'a 'b 'c)
 
 ;;; spread-combine generalization based on code base
 
@@ -210,9 +210,9 @@
   (lambda (func seq)
     (reverse 
       (fold
-       (lambda (e l) (cons (func e (car l)) l))
-       (list (car seq))
-       (cdr seq)))))
+        (lambda (e l) (cons (func e (car l)) l))
+        (list (car seq))
+        (cdr seq)))))
 ;; We can map over adjacent pairs using the original list and the shifted list.
 
 (define (spread-apply-variant . funcs)
@@ -226,9 +226,9 @@
                         (lambda (func arg_cnt arg_end cur_lst)
                           (call-with-values (lambda () 
                                               (apply func (list-tail (list-head args arg_end) (- arg_end arg_cnt))))
-                            ;; here x auto transform the param to list.
-                            (lambda x
-                              (append x cur_lst))))
+                                            ;; here x auto transform the param to list.
+                                            (lambda x
+                                              (append x cur_lst))))
                         '() 
                         funcs
                         arities
@@ -241,30 +241,30 @@
   (compose h (apply spread-apply-variant funcs)))
 
 ((spread-combine-variant list
-                 (lambda (x y)
-                   (list 'foo x y))
-                 (lambda (u v w)
-                   (list 'bar u v w)))
+                         (lambda (x y)
+                           (list 'foo x y))
+                         (lambda (u v w)
+                           (list 'bar u v w)))
  'a 'b 'c 'd 'e)
 'expect-value: '((foo a b) (bar c d e))
 
 (define test_sc (spread-combine-variant list
-                 (lambda (x y)
-                   (list 'foo x y))
-                 (lambda (u v)
-                   (list 'bar u v))
-                 (lambda (w)
-                   (list 'baz w))
-                  ))
+                                        (lambda (x y)
+                                          (list 'foo x y))
+                                        (lambda (u v)
+                                          (list 'bar u v))
+                                        (lambda (w)
+                                          (list 'baz w))
+                                        ))
 
 (test_sc
- 'a 'b 'c 'd 'e)
+  'a 'b 'c 'd 'e)
 
 ;; same as before
 ; (get-arity test_sc)
 
 (test_sc
- 'a 'b 'c 'd)
+  'a 'b 'c 'd)
 
 ;;; c See 2_4_chebert_utils.scm
 (load "2_4_chebert_utils.scm")

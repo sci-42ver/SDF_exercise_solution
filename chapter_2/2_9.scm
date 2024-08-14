@@ -26,14 +26,14 @@
 ;; Here I implement mcs Problem 7.20. similar to https://www.geeksforgeeks.org/check-for-balanced-parentheses-in-python/ where poping one empty stack will throw errors.
 (define (balanced_parentheses? expr)
   (= (fold (lambda (elem res) 
-            (if (< res 0)
-              res
-              ;; Here I assume the user correctly escapes ( and ).
-              (cond ((equal? elem #\() (+ res 1))
-                    ((equal? elem #\)) (- res 1))
-                    (else res))))
-          0
-          (string->list expr)) 0))
+             (if (< res 0)
+               res
+               ;; Here I assume the user correctly escapes ( and ).
+               (cond ((equal? elem #\() (+ res 1))
+                     ((equal? elem #\)) (- res 1))
+                     (else res))))
+           0
+           (string->list expr)) 0))
 
 ;; Assume to_escape is one character.
 (define (check_escape? to_escape expr)
@@ -52,9 +52,9 @@
               (if (equal? elem_2 to_escape)
                 (and res (equal? elem_1 #\\))
                 res))
-        #t
-        lst
-        shifted_lst)
+            #t
+            lst
+            shifted_lst)
       (not (equal? (car lst) to_escape))))
   )
 
@@ -82,12 +82,12 @@
       (string-append expr_str "\\" (number->string idx)))))
 
 (define test_str_br (r:seq (r:group 
-                              (r:group 
-                                (r:quote "a")
-                                (r:dot)
-                                (r:quote "c"))
-                              (r:quote "d")) 
-                            (r:quote "e")))
+                             (r:group 
+                               (r:quote "a")
+                               (r:dot)
+                               (r:quote "c"))
+                             (r:quote "d")) 
+                           (r:quote "e")))
 (r:back-references 2 test_str_br)
 
 (r:back-references 10 "")

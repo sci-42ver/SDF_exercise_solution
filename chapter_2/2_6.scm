@@ -33,4 +33,4 @@
 (r:grep (r:+ test_str) tests-file)
 ;; TODO equal*? diff equal?
 (assert (equal? '("[09]. catdogcat" "[10]. catcatdogdog" "[11]. dogdogcatdogdog" "[12]. catcatcatdogdogdog" "[13]. acatdogdogcats" "[14]. ifacatdogdogs" "[15]. acatdogdogsme")
-              (r:grep (r:+ test_str) tests-file)))
+                (r:grep (r:+ test_str) tests-file)))

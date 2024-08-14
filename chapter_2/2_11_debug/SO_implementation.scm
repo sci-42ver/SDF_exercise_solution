@@ -14,9 +14,9 @@
 
 (define (adjacency-pairs->wt-tree pairs)
   (fold
-   (lambda (p wt-tree)
-     (wt-tree/update wt-tree (car p) (lambda (list) (cons (cdr p) list)) '()))
-   (make-wt-tree symbol-wt-tree-type)
-   pairs))
+    (lambda (p wt-tree)
+      (wt-tree/update wt-tree (car p) (lambda (list) (cons (cdr p) list)) '()))
+    (make-wt-tree symbol-wt-tree-type)
+    pairs))
 
 (displayln (wt-tree->alist (adjacency-pairs->wt-tree unit-conversion-pairs))) 

@@ -1,12 +1,12 @@
 (define cross-directions 
   (list forward-direction
-    backward-direction
-    left-direction
-    right-direction))
+        backward-direction
+        left-direction
+        right-direction))
 
 (define all-directions 
   (append cross-directions
-    diagonal-directions))
+          diagonal-directions))
 
 (define (possible-directions piece)
   (case (piece-type piece)

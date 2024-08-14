@@ -8,7 +8,7 @@
       (check_all_conds (lambda (i) (assert (and (>= i 0) (<= i arg_len)))) to_add_arg_indices)
       ;; to_add_arg_indices should be sorted in parallel with `args` since it may have one-to-one correspondence with `to_add_args`.
       ;; TODO If using unsorted data, then we need methods to insert them all at once.
-      
+
       ;; fold here is similar to https://rosettacode.org/wiki/Loop_over_multiple_arrays_simultaneously#Scheme but more elegant.
       (compose-args f (lambda args 
                         (let* ((combined_to_add (map cons to_add_arg_indices args))
@@ -42,8 +42,8 @@
 (define (iterate n)
   (define (the-iterator f)
     (if (= n 0)
-        identity
-        (compose f ((iterate (- n 1)) f))))
+      identity
+      (compose f ((iterate (- n 1)) f))))
   the-iterator)
 
 (define (identity x) x)

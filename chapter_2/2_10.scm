@@ -18,7 +18,7 @@
 ;; IMPLEMENTATION AND TEST: In the following, I use r:escape to check them and give one related r:seq implementation
 (define ERE_Special_Characters_Addition
   ;; if \} the error may be delayed until #\\
-  
+
   ;; 6.945_assignment_solution lacks } in ps01.scm but `make-special` includes it.
   ;; grep seems to not be exactly BRE since `echo "aa" | grep -e 'a\+' -` works.
   '(#\( #\{ #\) #\}))
@@ -33,8 +33,8 @@
   (list->string
     (append-map (lambda (char)
                   (if (memv char chars-needing-quoting)
-                      (list #\\ char)
-                      (list char)))
+                    (list #\\ char)
+                    (list char)))
                 (string->list string))))
 
 ;; naming same as chebert
@@ -61,25 +61,25 @@
             #t
             #f))
         (char_str (char->name char)))
-        (if use_bre
-          (if (member char BRE_not_supported_special_characters)
-            (error "not available in BRE")
-            ;; not use (member char chars-needing-quoting) since something like \. corresponds to ordinary char.
-            (if (member char ERE_Special_Characters_Addition)
-              (string-append "\\" char_str)
-              char_str))
-          char_str)))
+    (if use_bre
+      (if (member char BRE_not_supported_special_characters)
+        (error "not available in BRE")
+        ;; not use (member char chars-needing-quoting) since something like \. corresponds to ordinary char.
+        (if (member char ERE_Special_Characters_Addition)
+          (string-append "\\" char_str)
+          char_str))
+      char_str)))
 
 ;; same as 6.945_assignment_solution
 (define (r:alt . exprs)
   (if (pair? exprs) ; i.e. list in the current context.
-      ;; https://unix.stackexchange.com/a/526274/568529
-      (apply r:seq
-          (cons (car exprs) ; For (element list), append does same as cons.
-                (append-map (lambda (expr)
-                              (list (r:escape #\|) expr))
-                            (cdr exprs))))
-      (r:seq)))
+    ;; https://unix.stackexchange.com/a/526274/568529
+    (apply r:seq
+           (cons (car exprs) ; For (element list), append does same as cons.
+                 (append-map (lambda (expr)
+                               (list (r:escape #\|) expr))
+                             (cdr exprs))))
+    (r:seq)))
 
 (load "utils.scm")
 ;; Here the abstraction works since we don't need to change each levels to *add the arg* as 6.945_assignment_solution and chebert do.
@@ -92,11 +92,11 @@
             #t
             #f)))
     (string-append (if escape_parenthesis
-                      "grep -e "
-                      (begin
-                        (displayln "use egrep")
-                        ;; See chebert we should use -Ee
-                        "grep -E "))
-                (bourne-shell-quote-string expr)
-                " "
-                filename)))
+                     "grep -e "
+                     (begin
+                       (displayln "use egrep")
+                       ;; See chebert we should use -Ee
+                       "grep -E "))
+                   (bourne-shell-quote-string expr)
+                   " "
+                   filename)))

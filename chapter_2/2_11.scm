@@ -27,7 +27,7 @@
 ;; velocity (m/s . inch/min). Similar to psi-to-nm2
 (define second-to-min
   (let ((mins-per-second (/ 60)))
-  ; (let ((mins-per-second 60))
+    ; (let ((mins-per-second 60))
     (make-unit-conversion (lambda (seconds)
                             (* seconds mins-per-second))
                           (lambda (mins)
@@ -35,8 +35,8 @@
 (register-unit-conversion 's 'min second-to-min)
 
 (register-unit-conversion 'mps 'ipm
-  (unit:/ (unit:invert inch-to-meter)
-    second-to-min))
+                          (unit:/ (unit:invert inch-to-meter)
+                                  second-to-min))
 ;; 1/0.0254*60=2362.2047244094488
 (define mps-to-ipm (make-converter 'mps 'ipm))
 ;; parameter from test-units.scm
@@ -48,8 +48,8 @@
 
 ;; acceleration similar.
 (register-unit-conversion 'mps2 'ipm2
-  (unit:/ (unit:invert inch-to-meter)
-    (unit:expt second-to-min 2)))
+                          (unit:/ (unit:invert inch-to-meter)
+                                  (unit:expt second-to-min 2)))
 (define mps2-to-ipm2 (make-converter 'mps2 'ipm2))
 ;; test
 (assert-close (mps2-to-ipm2 1) tolerance (* 60 2362.2047244094488))
@@ -113,20 +113,20 @@
 (displayln unit-conversion-pairs)
 ;; https://stackoverflow.com/a/7382392/21294350
 (define (list-set! list k val)
-    (if (zero? k)
-        (set-car! list val)
-        (list-set! (cdr list) (- k 1) val)))
+  (if (zero? k)
+    (set-car! list val)
+    (list-set! (cdr list) (- k 1) val)))
 
 ;; https://cookbook.scheme.org/find-index-of-element-in-list/
 (define (list-index fn list)
   (displayln list)
   (let iter ((list list) (index 0))
     (if (null? list)
-        -1
-        (let ((item (car list)))
-          (if (fn item)
-              index
-              (iter (cdr list) (+ index 1)))))))
+      -1
+      (let ((item (car list)))
+        (if (fn item)
+          index
+          (iter (cdr list) (+ index 1)))))))
 
 (define (adjacency-pairs-to-adjacency-list adjacency-pairs)
   ; (fold 
@@ -147,19 +147,19 @@
   ;         (cons (list from to) res))))
   ;   '()
   ;   adjacency-pairs)
-  
+
   (let iter ((rest-adjacency-pairs adjacency-pairs)
-              (res '()))
+             (res '()))
     (if (null? rest-adjacency-pairs)
       res
       (let* ((adjacency-pair (car rest-adjacency-pairs)))
         (let* ((from (car adjacency-pair))
-              ;; to be compatible with graph-lib/DFS_demo.scm
-              (to (list (cdr adjacency-pair)))
-              (from-idx 
-                (list-index 
-                  (lambda (adjacent-list-elem) (equal? from (car adjacent-list-elem))) 
-                  res)))
+               ;; to be compatible with graph-lib/DFS_demo.scm
+               (to (list (cdr adjacency-pair)))
+               (from-idx 
+                 (list-index 
+                   (lambda (adjacent-list-elem) (equal? from (car adjacent-list-elem))) 
+                   res)))
           (let ((rest-adjacency-pairs (cdr rest-adjacency-pairs)))
             (if (>= from-idx 0)
               (begin 
@@ -169,7 +169,7 @@
                 (displayln "ending")
                 (iter rest-adjacency-pairs res))
               (iter rest-adjacency-pairs (cons (list from to) res))))))))
-)
+  )
 
 (define unit-conversion-key-graph (adjacency-pairs-to-adjacency-list unit-conversion-pairs))
 (displayln unit-conversion-key-graph)
@@ -216,10 +216,10 @@
       ;; similar to 2.9
       ;; here route must have length >= 2, so `shifted_route` is always one list.
       (let* ((shifted_route (cdr route))
-              (hour-to-s-apply-hook-route (map (lambda (from to) (make-converter from to)) route shifted_route))
-              (s-to-hour-apply-hook-route (map (lambda (apply-hook) (unit:invert apply-hook)) hour-to-s-apply-hook-route))
-              (hour-to-s (apply compose-multiple hour-to-s-apply-hook-route))
-              (s-to-hour (apply compose-multiple s-to-hour-apply-hook-route)))
+             (hour-to-s-apply-hook-route (map (lambda (from to) (make-converter from to)) route shifted_route))
+             (s-to-hour-apply-hook-route (map (lambda (apply-hook) (unit:invert apply-hook)) hour-to-s-apply-hook-route))
+             (hour-to-s (apply compose-multiple hour-to-s-apply-hook-route))
+             (s-to-hour (apply compose-multiple s-to-hour-apply-hook-route)))
         (make-unit-conversion hour-to-s s-to-hour))
       (error "unable to derive"))))
 (register-unit-conversion 'h 's derived-hour-to-s)

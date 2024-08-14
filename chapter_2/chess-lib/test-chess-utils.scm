@@ -11,9 +11,9 @@
     (assert-lset= equal? expected-moves (filter-map summarize-move-proc moves))
     ;; board-end-turn changes the color
     (get-final-board
-     (find (lambda (move)
-             (equal? (list-ref expected-moves index) (summarize-move-proc move)))
-           moves))))
+      (find (lambda (move)
+              (equal? (list-ref expected-moves index) (summarize-move-proc move)))
+            moves))))
 
 (define (make-chess* initial-pieces-generator moves-generator)
   (make-game max-row max-col '(black white) '(King	Queen	Rook	Bishop	Knight	Pawn)
@@ -29,12 +29,12 @@
 
 (define (summarize-move-with-type move)
   (let loop
-      ((coords-with-type-list
-        (map (lambda (change)
-                (let ((piece (get-piece change)))
-                  (list (piece-type piece) (piece-coords piece) (get-flags change))))
+    ((coords-with-type-list
+       (map (lambda (change)
+              (let ((piece (get-piece change)))
+                (list (piece-type piece) (piece-coords piece) (get-flags change))))
             ;; reverse first.
-             (pmove->list move))))
+            (pmove->list move))))
     (if (pair? coords-with-type-list)
       ;; Here we don't need condense.
       (cons (car coords-with-type-list) (loop (cdr coords-with-type-list)))
@@ -43,14 +43,14 @@
 (define (summarize-move-checking-type type move)
   (let ((reverse-move (pmove->list move))) ; reverse first.
     (and (eq? type (piece-type (get-piece (car reverse-move))))
-      (let 
-        loop
-        ((coords-with-type-list
-          (map (lambda (change)
-                  (let ((piece (get-piece change)))
-                    (list (piece-type piece) (piece-coords piece) (get-flags change))))
-              reverse-move)))
-        (if (pair? coords-with-type-list)
-          ;; Here we don't need condense.
-          (cons (car coords-with-type-list) (loop (cdr coords-with-type-list)))
-          '())))))
+         (let 
+           loop
+           ((coords-with-type-list
+              (map (lambda (change)
+                     (let ((piece (get-piece change)))
+                       (list (piece-type piece) (piece-coords piece) (get-flags change))))
+                   reverse-move)))
+           (if (pair? coords-with-type-list)
+             ;; Here we don't need condense.
+             (cons (car coords-with-type-list) (loop (cdr coords-with-type-list)))
+             '())))))

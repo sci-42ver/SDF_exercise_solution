@@ -1,6 +1,6 @@
 (define (displayln x)
-      (newline)
-      (display x))
+  (newline)
+  (display x))
 
 ;; https://stackoverflow.com/a/8387641/21294350
 ; (define (flatten x)
@@ -16,16 +16,16 @@
 ;      (flatten (cons x (duplicate x (- n 1)))))))
 
 (define unit-conversion-list '((('celsius . 'kelvin) . 1) (('tonne . 'kg) . 2)
-                                (('tonne . 'g) . 3) (('celsius . 'fahrenheit) . 3)))
+                                                          (('tonne . 'g) . 3) (('celsius . 'fahrenheit) . 3)))
 (displayln unit-conversion-list)
 ;; https://stackoverflow.com/a/7382392/21294350
 (define (list-set! lst k val)
-    (if (zero? k)
-        (begin
-          (displayln "set to")
-          (displayln val)
-          (set-car! lst val))
-        (list-set! (cdr lst) (- k 1) val)))
+  (if (zero? k)
+    (begin
+      (displayln "set to")
+      (displayln val)
+      (set-car! lst val))
+    (list-set! (cdr lst) (- k 1) val)))
 
 ;; https://stackoverflow.com/a/7871106/21294350
 (define (list-with lst idx val)
@@ -42,11 +42,11 @@
   (displayln lst)
   (let iter ((lst lst) (index 0))
     (if (null? lst)
-        -1
-        (let ((item (car lst)))
-          (if (fn item)
-              index
-              (iter (cdr lst) (+ index 1)))))))
+      -1
+      (let ((item (car lst)))
+        (if (fn item)
+          index
+          (iter (cdr lst) (+ index 1)))))))
 
 (define unit-conversion-key-graph 
   ; (fold 
@@ -74,17 +74,17 @@
   ;; https://standards.scheme.org/corrected-r7rs/r7rs-Z-H-6.html#TAG:__tex2page_index_190
   ;; > express recursion
   (let iter ((rest-unit-conversion-list unit-conversion-list)
-              (res '()))
+             (res '()))
     (if (null? rest-unit-conversion-list)
       res
       (let* ((unit-conversion (car rest-unit-conversion-list))
-              (key-pair (car unit-conversion)))
+             (key-pair (car unit-conversion)))
         (let* ((from (car key-pair))
-              (to (cdr key-pair))
-              (from-idx 
-                (list-index 
-                  (lambda (adjacent-node-pair) (equal? from (car adjacent-node-pair))) 
-                  res)))
+               (to (cdr key-pair))
+               (from-idx 
+                 (list-index 
+                   (lambda (adjacent-node-pair) (equal? from (car adjacent-node-pair))) 
+                   res)))
           (let ((rest-unit-conversion-list (cdr rest-unit-conversion-list)))
             (if (>= from-idx 0)
               (begin 
@@ -94,5 +94,5 @@
                 (displayln "ending")
                 (iter rest-unit-conversion-list res))
               (iter rest-unit-conversion-list (cons (list from to) res))))))))
-)
+  )
 (((quote tonne) ((quote kg) (quote g))) ((quote celsius) ((quote kelvin) (quote fahrenheit))))

@@ -1,8 +1,8 @@
 ;;; discard-arguments
 
 (define (displayln x)
-      (newline)
-      (display x))
+  (newline)
+  (display x))
 (define (check_all_conds condition lst)
   (assert (fold 
             (lambda (x y) (and x y)) 
