@@ -62,9 +62,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (value (cdr binding)))
               (let ((old-value
                      (if (and (environment-bound? environment name)
+                              ;; https://stackoverflow.com/a/72388910/21294350
+                              ;; > which refers to the current value of the binding of a which is <illegal>
+                              ;; "Unassigned variable" may mean <illegal-value>
                               (environment-assigned? environment name))
                          (environment-lookup environment name)
                          #f)))
+                ;; change operator operations.
                 (environment-define environment name value)
                 (cons name old-value))))
           (package-bindings package)))))

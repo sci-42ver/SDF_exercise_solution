@@ -32,6 +32,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         codomain-constant))
     (lambda (operator codomain-operation)
       (simple-operation operator function?
+        ;; See `((+ cos sin) 3)` example.
         (lambda functions
           (lambda args
             (apply-operation codomain-operation

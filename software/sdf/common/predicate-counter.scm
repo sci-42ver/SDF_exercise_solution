@@ -24,6 +24,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;;; Log number of uses of registered predicates
 
 (define %predicate-counts
+  ;; IGNORE: TODO call this will always return one already defined value for `(%predicate-counts)`?
+  ;; See https://srfi.schemers.org/srfi-39/srfi-39.html
+  ;; > When it is called with no argument, the content of the cell bound to this parameter object *in the current dynamic environment* is returned.
   (make-parameter (make-key-weak-eqv-hash-table)))
 
 (define (reset-predicate-counts!)

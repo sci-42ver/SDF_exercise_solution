@@ -62,11 +62,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; API
 (define (constant-union name . constants)
+  ;; TODO both not defined in MIT_Scheme_Reference and saved-total-index
   (declare (ignore name))
   (let ((unique
          (remove default-object?
                  (delete-duplicates constants eqv?))))
     (if (n:pair? unique)
+        ;; IGNORE: TODO see arithmetic-constant-names. here just get its name?
+        ;;         But why does symbolic-extender return base-constant value?
+        ;; See book "Making this arbitrary choice is not really reasonable. ..." where we just "selects one of the argument constants".
         (car unique)
         (default-object))))
 
@@ -75,6 +79,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (operation-union* operator operations))
 
 ;;; API
+;; checked
 (define (operation-union* operator operations)
   (make-operation operator
                   (applicability-union*

@@ -103,9 +103,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (disjoin . predicates)
   (disjoin* predicates))
 
+;; i.e. any or disjunction
 (define (disjoin* predicates)
+  ;; IGNORE: TODO what if "predicates" are not all predicate?, then `(predicate object)` will throw errors.
   (maybe-register-compound-predicate!
    (lambda (object)
+    ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Mapping-of-Lists.html#index-any
+    ;; > any applies predicate to the first elements of the list parameters. If this application returns a true value, any immediately returns that value.
+    ;; so `((disjoin 2 number?) 1)` will throw errors while `((disjoin number? 2) 1)`
      (any (lambda (predicate)
             (predicate object))
           predicates))

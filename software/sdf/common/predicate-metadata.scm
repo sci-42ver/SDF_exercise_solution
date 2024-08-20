@@ -28,6 +28,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (set-predicate-metadata! predicate name)
   predicate)
 
+;; checked
 (define (register-compound-predicate! predicate type components)
   (register-predicate! predicate
                        (cons type

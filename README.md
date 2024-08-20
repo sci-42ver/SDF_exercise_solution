@@ -19,6 +19,8 @@ I don't know whether it is appropriate. If it is inappropriate and someone knows
 - All exercise solutions will be given related tests. But obviously I won't ensure the test must promise the solution is correct since there is no such a test (Correctness should be proved by maths).
 ## I *won't dig into* 
 - checking whether it is appropriate to use `eq?` or `equal?` etc. for each case. (so same for `memv`, etc.)
+## miscs clipboard
+- SDF_exercises TODO
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 

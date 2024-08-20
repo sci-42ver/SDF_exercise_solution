@@ -66,6 +66,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (any-arg arity predicate base-predicate)
   (if (n:= 0 arity)
       (list)
+      ;; remove 0, i.e. all base-predicate's.
       (cdr (all-sequences-of arity base-predicate predicate))))
 
 (define (applicability-union . applicabilities)

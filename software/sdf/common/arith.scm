@@ -28,15 +28,17 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       operation-alist)
     arithmetic?
   (name arithmetic-name)
-  (bases arithmetic-bases)
+  (bases arithmetic-bases) ; never used here
   (domain-predicate arithmetic-domain-predicate)
   (constant-alist arithmetic-constant-alist)
   (operation-alist arithmetic-operation-alist))
 
+;; > has a name that is useful for debugging.
+;; here name is just to debug by `(cons name (map arithmetic-name bases)`.
 (define (make-arithmetic name
                          domain-predicate
                          bases
-                         get-constant
+                         get-constant ; as its naming, this is the func to return the constant values for one `name`.
                          get-operation)
   (guarantee predicate? domain-predicate)
   (guarantee-list-of arithmetic? bases)
@@ -71,8 +73,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (arithmetic-constant-names-for bases)
   (if (n:pair? bases)
+      ;; eq? as the 1st arg https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Procedure-Operations.html#index-apply.
       (apply lset-union eq?
              (map arithmetic-constant-names bases))
+      ;; '(additive-identity multiplicative-identity)
       (constant-names)))
 
 (define (arithmetic-constants-for name bases)
@@ -130,6 +134,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    (arithmetic-operation operator arithmetic)))
 
 (define (find-arithmetic-operation operator arithmetic)
+  ;; may return #f
   (let ((p (assq operator
                  (arithmetic-operation-alist arithmetic))))
     (and p
@@ -167,6 +172,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (arithmetic->package arithmetic)
   (make-package (arithmetic-name arithmetic)
     (arithmetic->bindings arithmetic
+                          ;; return arithmetic defined operations
+                          ;; I only checked the former 4 cases when finish reading 3.1
                           (+-like '+ 'additive-identity)
                           (--like '- 'negate)
                           (+-like '* 'multiplicative-identity)
@@ -183,6 +190,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((overrides
          (filter-map (lambda (modification)
                        (and modification
+                            ;; this may return #f
                             (modification arithmetic)))
                      modifications)))
     (map (lambda (operator)
@@ -211,6 +219,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                            procedure))
                 (assq operator overrides))))
       (if override
+          ;; either return modifed `operation-procedure` by override or return `(get-implementation-value operator)`
           (let ((procedure*
                  (make-installable-operation-procedure
                   procedure
@@ -219,7 +228,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                                 procedure)
             procedure*)
           procedure))))
-
+
+;; checked
+;; compared with arithmetic original operation, we adds identity related proc.
 (define (+-like operator identity-name)
   (lambda (arithmetic)
     (let ((binary-operation
@@ -296,9 +307,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (pairwise binary args)
   (let loop
+      ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Iteration.html#index-let-6
+      ;; > Named let has the same syntax and semantics as ordinary let
+      ;; So here `(car args)` corresponds to the original args.
       ((args (cddr args))
        (result (binary (car args) (cadr args))))
     (if (n:null? args)
         result
         (loop (cdr args)
+              ;; IGNORE: SDF_exercises TODO here seems to accumulate `(car args)` twice?
+              ;; This args are `(cddr args)` of the original args.
               (binary result (car args))))))

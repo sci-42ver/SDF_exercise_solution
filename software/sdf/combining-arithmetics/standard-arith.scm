@@ -30,6 +30,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (symbolic-extender base-arithmetic)
   (make-arithmetic 'symbolic symbolic? (list base-arithmetic)
+    ;; IGNORE: TODO this will throw error for `(apply (lambda (x y) (list x y)) 2 '(x y))` but `base-constants` in `make-arithmetic` may be one list.
+    ;;          make-arithmetic-1 corresponding part is even more interesting with only one arg.
+    ;; See "Another difference you may have noticed ..." where we assumes one base have only one corresponding constant for each type.
     (lambda (name base-constant)
       base-constant)
     (let ((base-predicate
@@ -39,6 +42,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         (any-arg (operator-arity operator)
                                  symbolic?
                                  base-predicate)
+                        ;; define what to do with such an operator. Here we just does `(+ a b)` for `(+ ’a ’b)` 
                         (lambda args (cons operator args)))))))
 
 ;;;; Function arithmetic
@@ -63,16 +67,22 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                  codomain-predicate)
           (lambda things
             (lambda args
+              ;; > (+ 1 (cos a))
+              ;; works since "codomain-operation" allows '(cos a) as the symbolic.
               (apply-operation codomain-operation
                                (map (lambda (thing)
                                       (if (function? thing)
+                                          ;; small changes
                                           (apply thing args)
                                           thing))
                                     things)))))))))
 
 ;;;; Book examples
 
+;; here bases are nil, so `operation-alist, constant-alist` are both default `operator-names` etc. due to both (length bases) and (length base-operations) are 0 ~~both nil by `base-operations`, etc~~.
+;; So `arithmetic->bindings` have nil overrides.
 (define (make-arithmetic-1 name get-operation)
+  ;; default to use `%arithmetic-operator-alist` operator list.
   (make-arithmetic name any-object? '()
     (lambda (name)
       (case name
@@ -81,7 +91,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (else (default-object))))
     (lambda (operator)
       (simple-operation operator
-                        any-object?
+                        any-object? ; allow (+ ’a ’b)
+                        ;; func by `(lambda args (cons operator args))`.
                         (get-operation operator)))))
 
 (define symbolic-arithmetic-1
