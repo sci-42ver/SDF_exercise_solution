@@ -156,5 +156,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - chebert
     - check castling
       - by *adding types*. (also used for other *special* moves)
+## chapter 3
+- [vector vs list](https://stackoverflow.com/a/27589146/21294350)
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html

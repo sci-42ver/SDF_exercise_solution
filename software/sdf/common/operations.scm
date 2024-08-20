@@ -92,6 +92,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; helper to make book description clearer
 (define (operation-union-dispatch operator operations args)
   (let ((operation
+          ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Searching-Lists.html#index-find
+          ;; > Returns the first element in list for which predicate is true
+          ;; > the operation from the *first* arithmetic in the arguments to add-arithmetics is chosen.
          (find (lambda (operation)
                  (is-operation-applicable? operation args))
                operations)))
