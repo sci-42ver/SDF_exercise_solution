@@ -45,13 +45,14 @@ exercise solution for Software Design for Flexibility (SDF)
     > so I might end up *fooling myself*.
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
-# *exercise solutions by 3 references (i.e. nbardiuk etc.) and 6.945_assignment_solution checked up to now
+# @exercise solutions by 3 references (i.e. nbardiuk etc.) and 6.945_assignment_solution checked up to now (sometimes *code base* has sample implementations)
+with check comments in codes.
 - 2.1~2.14
-# *exercise tests finished
+# @exercise tests finished
 - 2.1~2.14
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
-It only have solutions up to chapter 2 regular-expressions.
+It only have solutions up to chapter 2 regular-expressions based on 5 filenames.
 ## 2.1
 - > ; (assert (= 2 (get-arity h))) this is too naive - does not allow to use 'list
   Not. Since if this holds, then `(assert (= 1 f-arity))` also doesn't work.
@@ -157,6 +158,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
     - check castling
       - by *adding types*. (also used for other *special* moves)
 ## chapter 3
+mbillingr only has automatic-differentiation.
 - [vector vs list](https://stackoverflow.com/a/27589146/21294350)
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html

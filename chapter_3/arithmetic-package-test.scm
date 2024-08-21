@@ -9,3 +9,5 @@
 (install-arithmetic! symbolic-arithmetic-1)
 
 (+ 'a 'b)
+;; due `(pairwise binary args)` is one loop based on binary, the following outputs "(+ (+ a b) c)".
+(+ 'a 'b 'c)

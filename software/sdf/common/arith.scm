@@ -169,6 +169,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (with-installed-package! (arithmetic->package arithmetic)
                            thunk))
 
+;; here actually we doesn't have negate operator *installed*.
 (define (arithmetic->package arithmetic)
   (make-package (arithmetic-name arithmetic)
     (arithmetic->bindings arithmetic
@@ -257,6 +258,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (lambda ()
           constant))))
 
+;; See `numeric-arithmetic` where negate is just -, so `unary` and `binary` are same here.
 (define (--like operator inversion-operator)
   (lambda (arithmetic)
     (let ((binary-operation

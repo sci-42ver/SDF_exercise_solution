@@ -1,3 +1,8 @@
+;; 1. chebert no implementation by searching "bool"
+;; 2. compared with 6.945_assignment_solution, I generalize `(-)`.
+;; 3. Also see code base common/boolean-arith.scm.
+;; By `+-like` etc. here we only need to define binary operation.
+;; Its generalized - throws errors.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'combining-arithmetics)
 
@@ -7,9 +12,6 @@
 ;; > When an arithmetic is installed, the binary operators +, * , - , and / are generalized to be n-ary operators.
 ;; > The unary application (- operand) is transformed by the installer into ( negate operand).
 ;; See `--like`
-
-;; Also see code base common/boolean-arith.scm.
-;; By `+-like` etc. here we only need to define binary operation.
 (define boolean-arithmetic
   (make-arithmetic 'boolean boolean? '()
                    (lambda (name)
@@ -20,8 +22,8 @@
                    (lambda (operator)
                      (let ((procedure
                              (case operator
-                                ;; notice https://stackoverflow.com/q/78774181/21294350
-                                ;; otherwise (lambda args (apply or args)) will cause ";Classifier may not be used as an expression: #[classifier-item 12]".
+                               ;; notice https://stackoverflow.com/q/78774181/21294350
+                               ;; otherwise (lambda args (apply or args)) will cause ";Classifier may not be used as an expression: #[classifier-item 12]".
                                ((+) (lambda args (reduce (lambda (a b) (or a b)) #f args)))
                                ;; Here I allow it to accept multiple arguments as `--like` needs although I don't know whether it is appropriate.
                                ((-) (lambda args (map not args)))
@@ -32,8 +34,8 @@
                                    (error "Operator undefined in Boolean"
                                           operator))))))
                        (simple-operation operator boolean? procedure))
-                      ; (simple-operation operator boolean? (lambda args (map not args)))
-                      )))
+                     ; (simple-operation operator boolean? (lambda args (map not args)))
+                     )))
 
 (install-arithmetic! boolean-arithmetic)
 

@@ -35,4 +35,5 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         number?
                         ;; allows `(+ 1 2)` -> 3 based on `operation-union-dispatch`.
                         (get-implementation-value
+                          ;; here negate is just -.
                          (operator->procedure-name operator))))))

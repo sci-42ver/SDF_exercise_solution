@@ -88,7 +88,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (else (error "Unknown domain:" indicator))))))
     (values (map mapper (operator-domains operator))
             (mapper (operator-codomain operator)))))
-
+
+;; by regex "(\(domain\)|\(domain domain\))", here only binary or unary operations are allowed.
 (define %arithmetic-operator-alist
   '((* (domain domain) domain)
     (+ (domain domain) domain)
