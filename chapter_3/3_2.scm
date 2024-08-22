@@ -253,7 +253,7 @@
                                                       dot-product-maker
                                                       ;; IGNORE: here bases is defined when calling `make-arithmetic` and then call `get-operation`.
                                                       +*-proc-lst))
-                                                ;; this can be simplified by removing lambda.
+                                               ;; this can be simplified by removing lambda.
                                                (else (lambda vecs (apply (vector-element-wise procedure) vecs)))))
                                            ))
                        ; (simple-operation operator vector? (lambda args (map not args)))
@@ -285,56 +285,56 @@
                                     (lambda args
                                       (error "Operator undefined in vector"
                                              operator))))))
-                          (let* ((+*-proc-lst 
+                         (let* ((+*-proc-lst 
                                   (map 
                                     (lambda (operator) (operation-procedure (car (arithmetic-operations-for operator bases)))) 
                                     '(+ *)))
-                                  (base-+ (car +*-proc-lst))
-                                  (base-* (cadr +*-proc-lst))
-                                  (scalar-vec-product 
-                                    (lambda (scalar vec) 
-                                      (apply 
-                                        (vector-element-wise 
-                                          (lambda (elem) (base-* scalar elem))) 
-                                        (list vec))))
-                                )
-                            ; (trace scalar-vec-product)
-                            ;; Here we use the above modified numeric-arithmetic which allows vector?.
-                            ; (if (base-predicate #(1 2))
-                            ;   (display "weird")                              
-                            ;   (display "fine"))
-                            (case operator
-                              ((*) 
-                                ;; Here due to operation-union implied order, we use (vector? vector?) by simple-operation instead of the 2nd.
-                                ;; Also any-arg removes the case of (base-predicate base-predicate), so only 3 are left.
-                                (operation-union operator 
-                                  (simple-operation operator vector?
+                                (base-+ (car +*-proc-lst))
+                                (base-* (cadr +*-proc-lst))
+                                (scalar-vec-product 
+                                  (lambda (scalar vec) 
                                     (apply 
-                                      dot-product-maker
-                                      ;; IGNORE: here bases is defined when calling `make-arithmetic` and then call `get-operation`.
-                                      +*-proc-lst))
-                                  ;; similar to symbolic-extender
-                                  (make-operation operator
-                                    (any-arg (operator-arity operator)
-                                      vector?
-                                      base-predicate)
-                                    ;; to be clear, I use explicit 2 args which is compatible with `pairwise` proc.
-                                    (lambda (arg1 arg2) 
-                                      ;; not use this based on the above modified `numeric-arithmetic`.
-                                      ; (if (base-predicate arg1)
-                                      (if (vector? arg2)
-                                        (scalar-vec-product arg1 arg2)
-                                        (scalar-vec-product arg2 arg1))))))
-                              (else 
-                                (simple-operation operator vector?
-                                            (case operator
-                                                ;; TODO here it doesn't check input size similar to `vector-extender` `component-proc`.
-                                                ((magnitude)
-                                                  (vector-magnitude-maker base-+ base-* sqrt))
-                                                (else (lambda vecs (apply (vector-element-wise procedure) vecs))))
-                                            ))))))
-                       ; (simple-operation operator vector? (lambda args (map not args)))
-                       ))
+                                      (vector-element-wise 
+                                        (lambda (elem) (base-* scalar elem))) 
+                                      (list vec))))
+                                )
+                           ; (trace scalar-vec-product)
+                           ;; Here we use the above modified numeric-arithmetic which allows vector?.
+                           ; (if (base-predicate #(1 2))
+                           ;   (display "weird")                              
+                           ;   (display "fine"))
+                           (case operator
+                             ((*) 
+                              ;; Here due to operation-union implied order, we use (vector? vector?) by simple-operation instead of the 2nd.
+                              ;; Also any-arg removes the case of (base-predicate base-predicate), so only 3 are left.
+                              (operation-union operator 
+                                               (simple-operation operator vector?
+                                                                 (apply 
+                                                                   dot-product-maker
+                                                                   ;; IGNORE: here bases is defined when calling `make-arithmetic` and then call `get-operation`.
+                                                                   +*-proc-lst))
+                                               ;; similar to symbolic-extender
+                                               (make-operation operator
+                                                               (any-arg (operator-arity operator)
+                                                                        vector?
+                                                                        base-predicate)
+                                                               ;; to be clear, I use explicit 2 args which is compatible with `pairwise` proc.
+                                                               (lambda (arg1 arg2) 
+                                                                 ;; not use this based on the above modified `numeric-arithmetic`.
+                                                                 ; (if (base-predicate arg1)
+                                                                 (if (vector? arg2)
+                                                                   (scalar-vec-product arg1 arg2)
+                                                                   (scalar-vec-product arg2 arg1))))))
+                             (else 
+                               (simple-operation operator vector?
+                                                 (case operator
+                                                   ;; TODO here it doesn't check input size similar to `vector-extender` `component-proc`.
+                                                   ((magnitude)
+                                                    (vector-magnitude-maker base-+ base-* sqrt))
+                                                   (else (lambda vecs (apply (vector-element-wise procedure) vecs))))
+                                                 ))))))
+                     ; (simple-operation operator vector? (lambda args (map not args)))
+                     ))
   )
 (install-arithmetic! vector-arithmetic)
 
