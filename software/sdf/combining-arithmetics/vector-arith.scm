@@ -112,6 +112,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (disjoin component-predicate vector?)
           (list component-arithmetic)
           (lambda (name component-constant)
+            ;; no identity by identity-name->getter
             (default-object))
           (lambda (operator component-operation)
             (case operator

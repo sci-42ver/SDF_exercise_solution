@@ -23,6 +23,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;;; Simple predicate metadata
 
+;; See `predicate-description` for how to use name.
 (define (register-predicate! predicate name)
   ;; -> make-metadata-association
   (set-predicate-metadata! predicate name)

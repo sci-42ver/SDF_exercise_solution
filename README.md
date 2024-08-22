@@ -19,8 +19,10 @@ I don't know whether it is appropriate. If it is inappropriate and someone knows
 - All exercise solutions will be given related tests. But obviously I won't ensure the test must promise the solution is correct since there is no such a test (Correctness should be proved by maths).
 ## I *won't dig into* 
 - checking whether it is appropriate to use `eq?` or `equal?` etc. for each case. (so same for `memv`, etc.)
+- tests of sample implementations.
 ## miscs clipboard
 - SDF_exercises TODO
+- sci-42ver/SDF_exercise_solution
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 
@@ -50,6 +52,9 @@ with check comments in codes.
 - 2.1~2.14
 # @exercise tests finished
 - 2.1~2.14
+# @TODO
+- I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
+  - `make-predicate-template`
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions based on 5 filenames.
@@ -159,6 +164,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
       - by *adding types*. (also used for other *special* moves)
 ## chapter 3
 mbillingr only has automatic-differentiation.
-- [vector vs list](https://stackoverflow.com/a/27589146/21294350)
+- 2
+  - [vector vs list](https://stackoverflow.com/a/27589146/21294350)
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html

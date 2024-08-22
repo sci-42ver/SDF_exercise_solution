@@ -1,3 +1,11 @@
+;; 1. chebert: none by vector
+;; 2. 6.945_assignment_solution
+;; - we better use n:...
+;; - it lacks d. numerical operator magnitude
+;; for e. it uses `v:*-maker`.
+;; - Here the add-arithmetics order doesn't matter.
+;; 3. combining-arithmetics/vector-arith.scm mainly based on maker's.
+;; 4. I skipped most of user-defined-types/vector-arith.scm since it uses one totally different structure not introduced in the book.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'combining-arithmetics)
 
@@ -9,6 +17,7 @@
                      combined-arithmetic))
 
 (negate #(1 2))
+;; > When creating new arithmetics, you do not need to write n-ary procedures—n-ary procedures
 ;; NOTICE: Here we all assume we only need to define binary or unary operations in arithmetic func.
 ;; See `%arithmetic-operator-alist` negate only allows one arg with arity got by operator-arity.
 ;; TODO how to assert this must throw errors https://man.scheme.org/error.3scm.
@@ -34,6 +43,7 @@
 (register-predicate! vector? 'vector)
 (arithmetic? combined-arithmetic)
 
+;; mimic boolean-arithmetic definition
 (define vector-arithmetic
   (make-arithmetic 'vector vector? 
                    (list combined-arithmetic); To pass the arithmetic object, not use quote. 
@@ -123,6 +133,9 @@
 ;; The latter will use static combined-arithmetic to define static operation-alist.
 ;; > Hint: ...
 ;; Still has the above problem.
+
+;; See 6.945_assignment_solution: We can use `extend-arithmetic` to simplify make process of vector-arithmetic
+;; and `v:*-maker` etc. to allow rewriting the whole make-arithmetic each time.
 
 ;; c
 (define (dot-product-maker add mul)
@@ -233,11 +246,14 @@
                                              (case operator
                                                ;; TODO here it doesn't check input size similar to `vector-extender` `component-proc`.
                                                ((magnitude)
+                                                ;; it is better to use base-sqrt which allows symbolic.
+                                                ;; See combining-arithmetics/vector-arith.scm `(sqrt (component-proc 'sqrt))`
                                                 (vector-magnitude-maker base-+ base-* sqrt))
                                                ((*) (apply 
                                                       dot-product-maker
                                                       ;; IGNORE: here bases is defined when calling `make-arithmetic` and then call `get-operation`.
                                                       +*-proc-lst))
+                                                ;; this can be simplified by removing lambda.
                                                (else (lambda vecs (apply (vector-element-wise procedure) vecs)))))
                                            ))
                        ; (simple-operation operator vector? (lambda args (map not args)))
@@ -253,6 +269,7 @@
 (define vector-arithmetic
   (let ((bases (list combined-arithmetic))
         (base-predicate (arithmetic-domain-predicate combined-arithmetic)))
+    ;; here better to use `(disjoin vector? (arithmetic-domain-predicate base-arithmetic))` to allow further extension.
     (make-arithmetic 'vector vector? 
                      bases ; To pass the arithmetic object, not use quote. 
                      (lambda (name base-constant)
@@ -281,7 +298,7 @@
                                           (lambda (elem) (base-* scalar elem))) 
                                         (list vec))))
                                 )
-                            (trace scalar-vec-product)
+                            ; (trace scalar-vec-product)
                             ;; Here we use the above modified numeric-arithmetic which allows vector?.
                             ; (if (base-predicate #(1 2))
                             ;   (display "weird")                              
@@ -322,5 +339,7 @@
 (install-arithmetic! vector-arithmetic)
 
 (dot-product-test)
-(* #(1 2) 3)
-(* #(1 2) 'a)
+(assert-predicate equal? (* #(1 2) 3) #(3 6))
+(assert-predicate equal? (* 3 #(1 2)) #(3 6))
+; (assert-predicate equal? (* 3 6) 18) ; should throw errors.
+(assert-predicate equal? (* #(1 2) 'a) '#((* a 1) (* a 2)))

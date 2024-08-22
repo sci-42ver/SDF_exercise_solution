@@ -42,6 +42,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define vector-predicate-element
   (predicate-template-accessor 'element vector-template))
 
+;; SDF_exercises TODO I skipped checking the above detailed implementation
+
 (define (vector-constructor elt-predicate)
   (let ((constructor
          (predicate-constructor
@@ -64,9 +66,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (guarantee-same-dimension v1 v2)
   (if (not (same-dimension? v1 v2))
       (error "Vector dimension mismatch:" v1 v2)))
-
+
 (define (make-vector-arithmetic elt-arithmetic)
   (make-arithmetic 'vector
+                    ;; SDF_exercises TODO predicate is not the main part, skipped.
                    (make-vector-predicate
                     (arithmetic-domain-predicate elt-arithmetic))
                    (list elt-arithmetic)
@@ -75,11 +78,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (lambda (operator elt-operation)
       (let ((handlers (get-vector-handlers operator)))
         (if (n:pair? handlers)
+            ;; SDF_exercises TODO It uses `union-function` instead of operation-union, how does this relate with operation object?
             (extend-operation-function operator elt-operation
               (lambda (elt-function)
                 (operation-union*
                  operator
                  (map (lambda (handler)
+                        ;; The key part.
                         (handler elt-arithmetic elt-function))
                       handlers))))
             elt-operation)))))
@@ -118,6 +123,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (lambda (elt-arithmetic elt-operation)
       ;; TODO(cph): revise this to use operation abstraction.
       (let ((codomain
+              ;; SDF_exercises TODO -> function-predicate-codomain what does this do?
              (let ((codomain (operation-codomain elt-operation)))
                (if (selector 'codomain)
                    (make-vector-predicate codomain)
