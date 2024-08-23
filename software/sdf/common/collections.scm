@@ -175,6 +175,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((put!) put!)
         (else (error "Unknown operator:" operator))))))
 
+;; checked
 (define (make-metadata-association)
   (let* ((store
           (make-hash-table-store make-key-weak-eqv-hash-table))

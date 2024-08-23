@@ -35,8 +35,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (reset-predicate-counts!)
 
 (define (increment-predicate-count! predicate)
+  ;; see https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Basic-Hash-Table-Operations.html#index-hash_002dtable_002dupdate_0021
   (hash-table-update! (%predicate-counts)
                       predicate
+                      ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Fixnum-Operations.html#index-fix_003a_002b
                       (lambda (count) (fix:+ count 1))
                       (lambda () 1)))
 

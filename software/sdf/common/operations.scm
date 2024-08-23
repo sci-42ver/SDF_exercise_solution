@@ -84,6 +84,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (make-operation operator
                   (applicability-union*
                    (map operation-applicability operations))
+                  ;; here we delay the actual operation choice until we get args.
                   (lambda args
                     (operation-union-dispatch operator
                                               operations

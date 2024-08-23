@@ -152,6 +152,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                              arithmetics))
                        arithmetics
                        constant-union
+                       ;; at last, each operator will have *one* operation which may be union of operations by `operation-union-dispatch`.
                        operation-union)))
 
 (define (extend-arithmetic extender base-arithmetic)

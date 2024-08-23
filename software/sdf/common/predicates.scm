@@ -36,6 +36,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (error:not-a predicate object caller))
   object)
 
+;; checked
+;; if caller is not provided, it is #!default checked by `((lambda (#!optional a b c) (display a)))`.
 (define (error:not-a predicate object #!optional caller)
   (error:wrong-type-argument object
                              (predicate-description predicate)

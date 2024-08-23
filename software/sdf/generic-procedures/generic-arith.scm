@@ -24,6 +24,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;;; Generic arithmetic
 
 (define (make-generic-arithmetic dispatch-store-maker)
+  ;; Here the 1st `any-object?` make it  extensible to be still generic
+  ;; the 2nd is why it is generic.
   (make-arithmetic 'generic any-object? '()
     constant-union
     (let ((make-generic-procedure
@@ -52,6 +54,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (arithmetic-constant-binding name
                                          generic-arithmetic))
            (element (find-arithmetic-constant name arithmetic)))
+        ;; This still use arithmetic related operations
        (set-cdr! binding
                  (constant-union name
                                  (cdr binding)
@@ -68,6 +71,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                    generic-arithmetic)))
            (operation
             (arithmetic-operation operator arithmetic)))
+        ;; This uses generic-procedure specific operation.
        (define-generic-procedure-handler
            generic-procedure
            (operation-applicability operation)

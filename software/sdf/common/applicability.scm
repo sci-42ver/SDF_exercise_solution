@@ -44,6 +44,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (length (car applicability))
       0))
 
+;; checked
 (define (is-applicable? applicability args)
   (any (lambda (and-clause)
          (predicates-match? and-clause args))
