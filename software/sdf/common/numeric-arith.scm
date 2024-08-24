@@ -38,6 +38,19 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           ;; here negate is just -.
                           (operator->procedure-name operator))))))
 
+;; arithmetic-constant-alist: all are (default-object), so `(default-object? constant)` throws errors.
+(define numeric-arithmetic-without-constant
+  (make-arithmetic 'numeric number? '()
+    (lambda (name)
+      (default-object))
+    (lambda (operator)
+      (simple-operation operator
+                        number?
+                        ;; allows `(+ 1 2)` -> 3 based on `operation-union-dispatch`.
+                        (get-implementation-value
+                          ;; here negate is just -.
+                          (operator->procedure-name operator))))))
+
 (define generic-numeric-arithmetic
   (make-arithmetic 'numeric number? '()
     (lambda (name)

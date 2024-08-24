@@ -52,6 +52,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    (filter-map (lambda (name)
                  (let ((base-constants
                         (arithmetic-constants-for name bases)))
+                    ;; if no bases, then both are nil.
                    (and (n:= (length bases)
                              (length base-constants))
                         (cons name
@@ -76,7 +77,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       ;; eq? as the 1st arg https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Procedure-Operations.html#index-apply.
       (apply lset-union eq?
              (map arithmetic-constant-names bases))
-      ;; '(additive-identity multiplicative-identity)
+      ;; default: '(additive-identity multiplicative-identity)
       (constant-names)))
 
 (define (arithmetic-constants-for name bases)
