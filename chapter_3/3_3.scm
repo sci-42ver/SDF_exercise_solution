@@ -22,6 +22,7 @@
     vector-extender
     (extend-arithmetic function-extender combined-arithmetic)))
 
+;; > However, each of these expressions fails with one of the two orderings of the extensions.
 (install-arithmetic! vec-before-func)
 (define (unit-circle x)
   (vector (sin x) (cos x)))
@@ -67,6 +68,7 @@
 ;; will call `(vector-extender combined-arithmetic)`
 ; ((magnitude (vector sin cos)) 'a)
 
+;;;;;;;;;;;;;;;;;; The following are tests for other exercises or book contents.
 ;; > Now we can use complex mixed expressions, because the functions are defined over the generic arithmetic:
 (define func-symbolic-numeric
   (extend-arithmetic function-extender combined-arithmetic))
@@ -77,8 +79,9 @@
 ;; then (* 'b ...) combined-arithmetic
 (* 'b ((+ 'c cos sin) (+ 3 'a)))
 
-(((+ (lambda (x) (lambda (y) (cons x y)))
-     (lambda (x) (lambda (y) (cons y x))))
-  3)
- 4)
+;; See exercise 3.4
+; (((+ (lambda (x) (lambda (y) (cons x y)))
+;      (lambda (x) (lambda (y) (cons y x))))
+;   3)
+;  4)
 ; (+ (lambda (y) (cons 3 y)) (lambda (y) (cons y 3)))

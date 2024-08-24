@@ -69,6 +69,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                          (environment-lookup environment name)
                          #f)))
                 ;; change operator operations.
+                ;; > the installer will bind the name to the procedure.
                 (environment-define environment name value)
                 (cons name old-value))))
           (package-bindings package)))))
@@ -76,7 +77,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; **** Implement package-uninstaller and uninstall-package!.
 
 ;;; THE-ENVIRONMENT is also MIT/GNU Scheme specific:
-(define install-package! (package-installer (the-environment)))
+(define install-package! 
+  ; (pp (pe))
+  (package-installer (the-environment)))
 
 (define (with-installed-package! package thunk)
   (let ((old))

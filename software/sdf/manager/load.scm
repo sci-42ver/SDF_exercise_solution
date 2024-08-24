@@ -41,6 +41,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (load-1 "analyze-sections")
   (load-1 "software-manager")
 
+  ;; 
   (environment-define system-global-environment
                       'manage
+                      ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Assignments.html#index-access
                       (access manage-software manager-env)))

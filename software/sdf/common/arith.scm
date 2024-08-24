@@ -196,6 +196,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                             (modification arithmetic)))
                      modifications)))
     (map (lambda (operator)
+            ;; > the installer will bind the name to the procedure.
            (cons operator
                  (make-installable-procedure operator
                                              arithmetic
@@ -241,6 +242,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (let ((binary
                   (operation-procedure binary-operation))
                  (get-identity
+                  ;; this just return constant which is unchanged when re-call.
                   (identity-name->getter identity-name
                                          arithmetic)))
              (cons operator

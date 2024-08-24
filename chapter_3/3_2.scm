@@ -29,6 +29,8 @@
     ; Note: this takes multiple vectors
     (ensure-vector-lengths-match vecs)
     (apply vector-map element-procedure vecs)))
+
+;; > Addition (and subtraction) is defined only for vectors of the same dimension, so your arithmetic must know about dimensions.
 (define (ensure-vector-lengths-match vecs)
   (let ((first-vec-length (vector-length (car vecs))))
     (if (any (lambda (v)
@@ -75,13 +77,18 @@
 
 (load "test-lib.scm")
 (define (test)
+  ;; > only addition, negation, and subtraction
+  ;; >  it works for numerical vectors and for vectors with mixed numerical and symbolic coordinates.
   (assert-predicate equal? (+ #(1 2) #(3 4)) #(4 6))
   ;; > for vectors with mixed numerical and symbolic coordinates.
   (assert-predicate equal? (+ '#(1 c) '#(2 b)) '#(3 (+ c b)))
   ;; Here we use `inversion-operator` for a.
   (assert-predicate equal? (- #(a 1)) '#((negate a) -1))
+  (assert-predicate equal? (- #(a 1) #(b 2)) '#((- a b) -1))
   )
 (test)
+;; > Applying any other operation to a vector should report an error.
+; (cos #(a 1)) ; error
 ; (negate #(1 2) #(1 2)) ; error -> ;Inapplicable operation: negate (1 1)
 
 ;; b
@@ -174,6 +181,7 @@
 
 (install-arithmetic! vector-arithmetic)
 
+;; > Show that your dot product works.
 (define (dot-product-test)
   (assert-predicate equal? (* #(1 2) #(3 4)) 11))
 (dot-product-test)
@@ -207,6 +215,7 @@
                      numeric-arithmetic))
 
 (install-arithmetic! combined-arithmetic)
+;; > extending the numerical operator magnitude to give the length of a vector.
 (assert-predicate equal? (magnitude #(1 2)) 2)
 ; (magnitude #(1 2) #(1 2)) ; error due to the same reasons as negate.
 
@@ -261,6 +270,7 @@
   )
 
 (install-arithmetic! vector-arithmetic)
+;; > Add vector magnitude to your vector arithmetic
 ;; if using changed sqrt, then error is thrown before calling `(apply vector-map element-procedure vecs)`.
 (assert-predicate equal? (magnitude #(1 2)) (numerical-sqrt 5))
 ; (magnitude #(1 2) #(1 2)) ; error due to the same reasons as negate.
@@ -338,6 +348,7 @@
   )
 (install-arithmetic! vector-arithmetic)
 
+;; > Show that your vector arithmetic can handle both dot product and scalar product.
 (dot-product-test)
 (assert-predicate equal? (* #(1 2) 3) #(3 6))
 (assert-predicate equal? (* 3 #(1 2)) #(3 6))

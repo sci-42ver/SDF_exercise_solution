@@ -41,11 +41,16 @@
 
 (define (test)
   (assert (not (- #t)))
+  ;; > - , and / are generalized to be n-ary operators.
+  ;; See code base implementation which implements (this should be right)
+  ;; > the operator - is typically used only as a unary operator and is realized as negate.
   (assert (equal? '(#f #t) (- #t #f)))
   (assert (not (* #t #f)))
   (assert (+ #t #f))
   (assert (+ #t #f #t #f)))
 (test)
+;; > so the appropriate result of applying something like cos to a boolean is to report an error.
+; (cos #t) ; throw error
 
 (load "~/SICP_SDF/SDF_exercises/software/sdf/common/boolean-arith.scm")
 (test)
