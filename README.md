@@ -164,6 +164,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
       - by *adding types*. (also used for other *special* moves)
 ## chapter 3
 mbillingr only has automatic-differentiation.
+6.945_assignment_solution has 3.2, 3.5, 3.6, 3.7, 4.0 although they are not same as 2024 version.
 - 2
   - [vector vs list](https://stackoverflow.com/a/27589146/21294350)
 

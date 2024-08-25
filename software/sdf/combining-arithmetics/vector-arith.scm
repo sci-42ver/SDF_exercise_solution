@@ -91,7 +91,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (define (vector-magnitude v)
       (sqrt (dot-product v v)))
     vector-magnitude))
-
+
 (define (vector-extender component-arithmetic)
   (let ((component-predicate
          (arithmetic-domain-predicate component-arithmetic))
