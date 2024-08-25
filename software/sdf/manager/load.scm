@@ -24,6 +24,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (let ((here (directory-pathname (current-load-pathname)))
       (manager-env (make-top-level-environment)))
 
+  ; (pp manager-env)
   (define (load-1 name)
     (load (merge-pathnames name here)
           manager-env))

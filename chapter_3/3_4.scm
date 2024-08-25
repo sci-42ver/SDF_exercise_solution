@@ -86,8 +86,12 @@
 ;; 1. + here obviously supports func due to generic calling any-object?.
 ;; 2. magnitude called in function-extender is again generic. We only need to ensure it has vector implementation.
 
+(pp (pe))
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
+(pp (pe))
 (manage 'new 'generic-procedures)
+(pp (pe))
+(manage 'help)
 (load "~/SICP_SDF/SDF_exercises/software/sdf/combining-arithmetics/vector-arith.scm")
 
 (define (test-1)

@@ -22,6 +22,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 |#
 
 (define (manage-software command-name . args)
+  ; (pp (pe))
   (call-with-current-continuation
     (lambda (k)
       (parameterize ((manager-continuation k))
@@ -190,7 +191,9 @@ The read-eval-print loop is moved to be in that environment."
             (for-each (lambda (flavor)
                         (add-flavor model flavor load-specs))
                       (cdr flavors))))
+      ;; just change `system-global-environment`.
       (enter-working-environment model)
+      ;; TODO all 3 used procedures are not defined anywhere in this code base. And they are also not shown in MIT_Scheme_Reference.
       (force-top-level-repl! flavors
                              `(manage 'new-environment
                                       ,@(map (lambda (flavor) `',flavor)

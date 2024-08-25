@@ -95,9 +95,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         (any-arg (operator-arity operator)
                                  number?
                                  codomain-predicate)
-                        ;; IMHO This should be done in lib since only here env is right with the primitive implementation. 
-                        ;; See https://stackoverflow.com/q/78908527/21294350. If `manager-env` doesn't influence `system-global-environment` and the corresponding `(environment-define environment name value)` is done in `manager-env`,
-                        ;; then it is fine to use this anywhere after the arithmetic is redefined 
+                        ;; IGNORE: IMHO This should be done in lib since only here env is right with the primitive implementation. 
+                        ;; See https://stackoverflow.com/q/78908527/21294350 and https://stackoverflow.com/q/78908635/21294350
+                        ;; IGNORE: If `manager-env` doesn't influence `system-global-environment` and the corresponding `(environment-define environment name value)` is done in `manager-env`,
+                        ;;          then it is fine to use this anywhere after the arithmetic is redefined 
 
                         ;; when using simple-operation: debugger finds one weird proc in `get-handler`.
                         ;;     ('((#[compound-procedure any-object?] #[compiled-procedure ("arith" #xf0) #x1c #xb75eb4])

@@ -55,6 +55,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; This installer is MIT/GNU Scheme specific:
 (define (package-installer environment)
   (lambda (package)
+    ; (pp environment)
     (make-package
      (list 'uninstall (package-debug-name package))
      (map (lambda (binding)

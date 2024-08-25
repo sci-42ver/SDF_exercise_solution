@@ -168,3 +168,4 @@ mbillingr only has automatic-differentiation.
   - [vector vs list](https://stackoverflow.com/a/27589146/21294350)
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
+[software-manager-doc]:https://groups.csail.mit.edu/mac/users/gjs/6.945/sdf/manager/software-manager.pdf

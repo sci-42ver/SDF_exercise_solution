@@ -22,6 +22,10 @@
                           (min-like 'min)
                           (min-like 'max))))
 
+;; NOTICE https://stackoverflow.com/q/78908527/21294350:
+;; Here `install-arithmetic!` will be installed in the env created by `(manage 'new 'combining-arithmetics)` (see software-manager-doc).
+;; That env is `make-top-level-environment` (see `(define-command '(new-environment . flavors)` -> make-working-env-model)
+;; https://stackoverflow.com/a/78908764/21294350 So `get-implementation-value` -> `(environment-lookup system-global-environment name)` won't be influenced since top-level-environment is not the ancestor of system-global-environment.
 (define (install-specific-generic-arithmetic-2)
   (let ((g
         (make-generic-arithmetic make-simple-dispatch-store)))
