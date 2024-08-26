@@ -12,6 +12,8 @@
        (or (eq? 'col (car object)) (eq? 'row (car object)))
        (vector? (vector-data object))))
 (register-predicate! general-vector? 'general-vector)
+(define (make-col-vec data)
+  (list 'col data))
 (define (row-vector? object)
   (and (general-vector? object)
        (eq? 'row (car object))))
@@ -21,7 +23,14 @@
 
 (define (make-vec-operation operator applicability procedure)
   (list 'operation operator applicability
-    (lambda (vec) (procedure (vector-data vec)))))
+    (lambda data 
+      (apply procedure 
+        (map 
+          (lambda (datum) 
+            (if (general-vector? datum)
+              (vector-data datum)
+              datum)) 
+          data)))))
 
 (define (vector-extender component-arithmetic)
   (let ((component-predicate
