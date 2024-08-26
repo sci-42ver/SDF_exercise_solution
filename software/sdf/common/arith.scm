@@ -156,9 +156,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        ;; at last, each operator will have *one* operation which may be union of operations by `operation-union-dispatch`.
                        operation-union)))
 
+;; base-arithmetic are prioritized in operation-union.
 (define (extend-arithmetic extender base-arithmetic)
   (add-arithmetics base-arithmetic (extender base-arithmetic)))
-
+
 ;;;; Installation
 
 (define *current-arithmetic* #f)

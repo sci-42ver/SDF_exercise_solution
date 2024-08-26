@@ -21,7 +21,7 @@
 ;; from 3_4.scm to have vector-extender.
 (define (install-specific-generic-arithmetic)
   (let ((g
-        (make-generic-arithmetic make-simple-dispatch-store)))
+          (make-generic-arithmetic make-simple-dispatch-store)))
     ;; it has numeric-arithmetic, (function-extender g), (extend-arithmetic ...).
     (add-to-generic-arithmetic! g numeric-arithmetic)
     (extend-generic-arithmetic! g function-extender)

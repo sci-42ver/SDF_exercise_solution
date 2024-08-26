@@ -2,15 +2,15 @@
 ;; from http://community.schemewiki.org/?sicp-ex-2.37
 (define (accumulate ops initial sequence) 
   (if (null? sequence) 
-      initial 
-      (ops (car sequence) 
-          (accumulate ops initial (cdr sequence))))) 
+    initial 
+    (ops (car sequence) 
+         (accumulate ops initial (cdr sequence))))) 
 
 (define (accumulate-n op init seqs) 
   (if (null? (car seqs)) 
-      '() 
-      (cons (accumulate op init (map car seqs)) 
-            (accumulate-n op init (map cdr seqs))))) 
+    '() 
+    (cons (accumulate op init (map car seqs)) 
+          (accumulate-n op init (map cdr seqs))))) 
 
 ; (define (dot-product v w) 
 ;   (accumulate + 0 (map * v w)))

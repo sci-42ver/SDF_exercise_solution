@@ -25,22 +25,22 @@
 
 (define (make-vec-operation operator applicability procedure)
   (list 'operation operator applicability
-    (lambda data 
-      (apply procedure 
-        (map 
-          (lambda (datum) 
-            (if (general-vector? datum)
-              (vector-data datum)
-              datum)) 
-          data)))))
+        (lambda data 
+          (apply procedure 
+                 (map 
+                   (lambda (datum) 
+                     (if (general-vector? datum)
+                       (vector-data datum)
+                       datum)) 
+                   data)))))
 
 (define (vector-extender component-arithmetic)
   (let ((component-predicate
-         (arithmetic-domain-predicate component-arithmetic))
+          (arithmetic-domain-predicate component-arithmetic))
         (component-proc
-         (lambda (operator)
-           (operation-procedure
-            (arithmetic-operation operator component-arithmetic)))))
+          (lambda (operator)
+            (operation-procedure
+              (arithmetic-operation operator component-arithmetic)))))
     (let ((+ (component-proc '+))
           (- (component-proc '-))
           (* (component-proc '*))
@@ -51,51 +51,51 @@
             (right-scalar-product (right-scalar-product-maker *))
             (magnitude (vector-magnitude-maker + * sqrt)))
         (make-arithmetic 'vector
-          (disjoin component-predicate general-vector?)
-          (list component-arithmetic)
-          (lambda (name component-constant)
-            ;; no identity by identity-name->getter
-            (default-object))
-          (lambda (operator component-operation)
-            (case operator
-              ((+)
-               (make-vec-operation operator
-                               (all-args (operator-arity operator)
-                                         general-vector?)
-                               (vector-element-wise +)))
-              ((-)
-               (make-vec-operation operator
-                               (all-args (operator-arity operator)
-                                         general-vector?)
-                               (vector-element-wise -)))
-              ((*)
-               (operation-union
-                operator
-                (make-vec-operation operator
-                                (all-args (operator-arity operator)
-                                          general-vector?)
-                                dot-product)
-                (make-vec-operation operator
-                                (match-args component-predicate general-vector?)
-                                left-scalar-product)
-                (make-vec-operation operator
-                                (match-args general-vector? component-predicate)
-                                right-scalar-product)))
-              ((negate)
-               (make-vec-operation operator
-                               (all-args (operator-arity operator)
-                                         general-vector?)
-                               (vector-element-wise negate)))
-              ((magnitude)
-               (make-vec-operation operator
-                               (all-args (operator-arity operator)
-                                         general-vector?)
-                               magnitude))
-              (else
-               (make-vec-operation operator
-                               (any-arg (operator-arity operator)
-                                        general-vector?
-                                        component-predicate)
-                               (lambda args
-                                 (error "Don't know how to "
-                                        operator args)))))))))))
+                         (disjoin component-predicate general-vector?)
+                         (list component-arithmetic)
+                         (lambda (name component-constant)
+                           ;; no identity by identity-name->getter
+                           (default-object))
+                         (lambda (operator component-operation)
+                           (case operator
+                             ((+)
+                              (make-vec-operation operator
+                                                  (all-args (operator-arity operator)
+                                                            general-vector?)
+                                                  (vector-element-wise +)))
+                             ((-)
+                              (make-vec-operation operator
+                                                  (all-args (operator-arity operator)
+                                                            general-vector?)
+                                                  (vector-element-wise -)))
+                             ((*)
+                              (operation-union
+                                operator
+                                (make-vec-operation operator
+                                                    (all-args (operator-arity operator)
+                                                              general-vector?)
+                                                    dot-product)
+                                (make-vec-operation operator
+                                                    (match-args component-predicate general-vector?)
+                                                    left-scalar-product)
+                                (make-vec-operation operator
+                                                    (match-args general-vector? component-predicate)
+                                                    right-scalar-product)))
+                             ((negate)
+                              (make-vec-operation operator
+                                                  (all-args (operator-arity operator)
+                                                            general-vector?)
+                                                  (vector-element-wise negate)))
+                             ((magnitude)
+                              (make-vec-operation operator
+                                                  (all-args (operator-arity operator)
+                                                            general-vector?)
+                                                  magnitude))
+                             (else
+                               (make-vec-operation operator
+                                                   (any-arg (operator-arity operator)
+                                                            general-vector?
+                                                            component-predicate)
+                                                   (lambda args
+                                                     (error "Don't know how to "
+                                                            operator args)))))))))))

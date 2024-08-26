@@ -28,6 +28,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (pair? object)))
 (register-predicate! symbolic? 'symbolic)
 
+;; > We will also find it useful to have a domain predicate that is true for the objects (such as functions or matrices) that a given arithmetic's operations take as arguments
+;; > To allow the coercion of codomain quantities, such as numbers, to
+;; > constant functions, the domain of the new function arithmetic must
+;; > contain both the functions and the elements of the codomain of the
+;; > functions
+;; SDF_exercises TODO IMHO here we should use `(disjoin base-predicate symbolic?)` since `any-arg ...` (see vector-extender and also see the difference from pure-function-extender.)
 (define (symbolic-extender base-arithmetic)
   (make-arithmetic 'symbolic symbolic? (list base-arithmetic)
     ;; IGNORE: TODO this will throw error for `(apply (lambda (x y) (list x y)) 2 '(x y))` but `base-constants` in `make-arithmetic` may be one list.

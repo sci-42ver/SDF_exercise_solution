@@ -65,10 +65,10 @@
 
 (define (test-1)
   (((* 3
-      (lambda (x) (lambda (y) (+ x y)))
-      (lambda (x) (lambda (y) (vector y x))))
+       (lambda (x) (lambda (y) (+ x y)))
+       (lambda (x) (lambda (y) (vector y x))))
     'a)
-  4))
+   4))
 
 (test-1)
 ;; since we call vector after symbolic which allows scalar-product with symbolic.
@@ -96,13 +96,13 @@
 
 (define (test-1)
   (((* 3
-      (lambda (x) (lambda (y) (+ x y)))
-      (lambda (x) (lambda (y) (vector y x))))
+       (lambda (x) (lambda (y) (+ x y)))
+       (lambda (x) (lambda (y) (vector y x))))
     'a)
-  4))
+   4))
 (define (install-specific-generic-arithmetic)
   (let ((g
-        (make-generic-arithmetic make-simple-dispatch-store)))
+          (make-generic-arithmetic make-simple-dispatch-store)))
     ;; it has numeric-arithmetic, (function-extender g), (extend-arithmetic ...).
     (add-to-generic-arithmetic! g numeric-arithmetic)
     (extend-generic-arithmetic! g function-extender)

@@ -11,20 +11,20 @@
 (define (+-like operator identity-name)
   (lambda (arithmetic)
     (let ((binary-operation
-           (find-arithmetic-operation operator arithmetic)))
+            (find-arithmetic-operation operator arithmetic)))
       (and binary-operation
            (let ((binary
-                  (operation-procedure binary-operation))
+                   (operation-procedure binary-operation))
                  (identity
-                  ;; here we either return constant or (error ...).
-                  ;; the former is fine, but the latter will throw error *earlier* when calling `+-like`.
-                  ;; So this means arithmetic must have identity but this is not that case.
-                  
-                  ;; Also see https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Condition-Signalling.html#index-error-2
-                  ;; > Under normal circumstances error will not return a value (although an interactive debugger can be used to *force this to occur*).
-                  ;; get-identity may be nothing.
-                  ((identity-name->getter identity-name
-                                         arithmetic))))
+                   ;; here we either return constant or (error ...).
+                   ;; the former is fine, but the latter will throw error *earlier* when calling `+-like`.
+                   ;; So this means arithmetic must have identity but this is not that case.
+
+                   ;; Also see https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Condition-Signalling.html#index-error-2
+                   ;; > Under normal circumstances error will not return a value (although an interactive debugger can be used to *force this to occur*).
+                   ;; get-identity may be nothing.
+                   ((identity-name->getter identity-name
+                                           arithmetic))))
              (cons operator
                    (lambda args
                      (case (length args)
