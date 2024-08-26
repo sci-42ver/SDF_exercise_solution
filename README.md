@@ -10,6 +10,7 @@ I don't know whether it is appropriate. If it is inappropriate and someone knows
   - After all, this exercise is more about how we think about a domain and then program it.
     IMHO checkers and then manual implementation of chess are enough.
     - "domain model" as SDF_notes.md shows is about "abstract types".
+- 3.6-c.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
@@ -49,9 +50,9 @@ exercise solution for Software Design for Flexibility (SDF)
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # @exercise solutions by *3 references* (i.e. nbardiuk etc.) and *6.945_assignment_solution* checked up to now (sometimes *code base* has sample implementations)
 with check comments in codes.
-- 2, 3.1~3.3
+- 2, 3.1~3.6
 # @exercise tests finished
-- 2, 3.1~3.4
+- 2, 3.1~3.6
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
   - `make-predicate-template`

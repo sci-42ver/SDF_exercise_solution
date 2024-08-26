@@ -1,4 +1,3 @@
-;; by searching "((0) identity)", no sample implementation.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'combining-arithmetics)
 
@@ -6,7 +5,6 @@
 
 ((+ cos sin) 2)
 
-;; by searching "((0) identity)", no sample implementation.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'combining-arithmetics)
 

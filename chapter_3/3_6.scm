@@ -1,3 +1,4 @@
+;; by searching "matri" in "*.scm" or "*.rkt", no sample implementation.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'generic-procedures)
 (load "~/SICP_SDF/SDF_exercises/software/sdf/combining-arithmetics/vector-arith.scm")
@@ -60,7 +61,7 @@
   (assert (n:= (mat-col mat1) (mat-row mat2))))
 
 (define (scalar? data)
-  (or (symbolic? data) (number? data)))
+  (or (strict-symbolic? data) (number? data)))
 
 ;; misc helper
 (define (mat-data->2-level-list mat-data)
@@ -80,15 +81,15 @@
       ((col-vector? vec) (make-matrix (vector-map vector vec-data)))
       ((row-vector? vec) (make-matrix (vector vec-data))))))
 
-(define (scalar->mat scalar)
+(define (scalar->mat scalar dim)
   (make-matrix
     (list->vector
       (map 
         (lambda (idx) 
           (apply 
             vector 
-            (append (make-list idx 0) (list scalar) (make-list (- scalar 1 idx) 0)))) 
-        (iota scalar)))))
+            (append (make-list idx 0) (list scalar) (make-list (- dim 1 idx) 0)))) 
+        (iota dim)))))
 
 ;; mimic SICP
 (load "sicp-matrix-lib.scm")
@@ -128,24 +129,42 @@
 (define (right-product-maker transformer + *)
   (let ((matrix-product (matrix-product-maker + *)))
     (define (product mat v)
-      (matrix-product (transformer v) mat))
+      (matrix-product mat (transformer v)))
+    product))
+
+(define (right-scalar-matrix-product-maker + *)
+  (let ((matrix-product (matrix-product-maker + *)))
+    (define (product mat scalar)
+      (matrix-product mat (scalar->mat scalar (mat-col mat))))
+    product))
+
+(define (left-scalar-matrix-product-maker + *)
+  (let ((matrix-product (matrix-product-maker + *)))
+    (define (product scalar mat)
+      (matrix-product (scalar->mat scalar (mat-row mat)) mat))
     product))
 
 ;; + etc.
-(define (ensure-same-dimension mat1 mat2)
-  (assert 
-    (and
-      (n:= (mat-col mat1) (mat-col mat2))
-      (n:= (mat-row mat1) (mat-row mat2)))))
+;; mimic ensure-vector-lengths-match and vector-element-wise.
+(define (ensure-same-dimension mats)
+  (let ((first-mat-col (mat-col (car mats)))
+        (first-mat-row (mat-row (car mats))))
+    (if (any (lambda (mat)
+               (or
+                  (not (n:= (mat-col mat)
+                            first-mat-col))
+                  (not (n:= (mat-row mat)
+                            first-mat-row))))
+             mats)
+        (error "Vector dimension mismatch:" mats))))
 
-(define (matrix-element-wise op)
-  (lambda (mat1 mat2) 
-    (ensure-same-dimension mat1 mat2)
-    (let ((mat1-data (mat-data mat1))
-          (mat2-data (mat-data mat2)))
-      (vector-map 
-        (lambda (row1 row2) (op (make-col-vec row1) (make-col-vec row2))) 
-        mat1-data mat2-data))))
+(define (matrix-element-wise row-op)
+  (lambda mats    ; Note: this takes multiple vectors
+    (ensure-same-dimension mats)
+    (apply 
+      vector-map 
+      (lambda rows (apply row-op (map make-row-vec rows))) 
+      (map mat-data mats))))
 
 ;; > Make sure that your multiplier can multiply a matrix with a scalar or with a vector.
 ;; Here scalar I only consider symbolic? and number? excluding function?.
@@ -165,8 +184,8 @@
           (negate (component-proc 'negate))
           (sqrt (component-proc 'sqrt)))
       (let ((matrix-product (matrix-product-maker + *))
-            (left-scalar-product (left-product-maker scalar->mat + *))
-            (right-scalar-product (right-product-maker scalar->mat + *))
+            (left-scalar-product (left-scalar-matrix-product-maker + *))
+            (right-scalar-product (right-scalar-matrix-product-maker + *))
             (left-vector-product (left-product-maker vec->mat + *))
             (right-vector-product (right-product-maker vec->mat + *)))
         (make-arithmetic 'matrix
@@ -242,6 +261,54 @@ a = np.array([[1, 2],
               [3, 4]])
 b = np.array([[5, 6],
               [7, 8]])
-np.matmul(a, b)
+print(np.matmul(a, b))
+
+v1= np.array([[1], [2]])
+v2= np.array([[1, 2]])
+print(np.matmul(a, v1))
+print(np.matmul(v2, a))
 |#
-(assert (equal? (* test-numeric-mat1 test-numeric-mat2) #(#(19 22) #(43 50))))
+(load "test-lib.scm")
+(assert-predicate equal? (* test-numeric-mat1 test-numeric-mat2) #(#(19 22) #(43 50)))
+
+(define test-numeric-mat3 (make-matrix (vector (vector 5 6 7) (vector 7 8 9))))
+;; > since matrix multiplication is defined only ...
+; (* test-numeric-mat3 test-numeric-mat1) ; throw errors.
+
+;; > multiply a matrix with a scalar or with a vector.
+(define test-vec-data (vector 1 2))
+(define test-numeric-vec1 (make-col-vec test-vec-data))
+(define test-numeric-vec2 (make-row-vec test-vec-data))
+(assert-predicate equal? (* test-numeric-mat1 test-numeric-vec1) #(#(5) #(11)))
+(assert-predicate equal? (* test-numeric-vec2 test-numeric-mat1) #(#(7 10)))
+
+(assert-predicate equal? (* test-numeric-mat1 -1) #(#(-1 -2) #(-3 -4)))
+(assert-predicate equal? (* -1 test-numeric-mat1) #(#(-1 -2) #(-3 -4)))
+
+;; - should be similar.
+(assert-predicate equal? (+ test-numeric-mat1 test-numeric-mat2) #(#(6 8) #(10 12)))
+; (negate test-numeric-mat1 test-numeric-mat2) ; As expected, Inapplicable generic procedure ...
+(assert-predicate equal? (negate test-numeric-mat1) #(#(-1 -2) #(-3 -4)))
+
+;; b
+#|
+https://stackoverflow.com/a/46852013
+
+from sympy import *
+var('a b c')
+A = Matrix([[1, 2],
+            [3, 4]])
+B = Matrix([[a, 2],
+            [3, b]])
+A.multiply(B)
+C = Matrix([[1],
+            [c]])
+B.multiply(C)
+|#
+(define test-symbolic-mat1 (make-matrix (vector (vector 'a 2) (vector 3 'b))))
+(define test-symbolic-vec1 (make-col-vec (vector 1 'c)))
+(assert-predicate equal? (* test-numeric-mat1 test-symbolic-mat1) #(#((+ (* a 1) 6) (+ 2 (* b 2))) #((+ (* a 3) 12) (+ 6 (* b 4)))))
+(assert-predicate equal? (negate test-symbolic-mat1) '#(#((negate a) -2) #(-3 (negate b))))
+(assert-predicate equal? (* test-symbolic-mat1 test-symbolic-vec1) '#(#((+ (* 1 a) (* c 2))) #((+ 3 (* c b)))))
+
+;; c I don't know which method will cause this scary space usage. https://en.wikipedia.org/wiki/Invertible_matrix#Methods_of_matrix_inversion

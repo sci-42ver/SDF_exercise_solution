@@ -14,6 +14,8 @@
 (register-predicate! general-vector? 'general-vector)
 (define (make-col-vec data)
   (list 'col data))
+(define (make-row-vec data)
+  (list 'row data))
 (define (row-vector? object)
   (and (general-vector? object)
        (eq? 'row (car object))))
