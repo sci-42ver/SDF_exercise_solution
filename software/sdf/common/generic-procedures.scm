@@ -146,7 +146,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (define-generic-procedure-handler procedure
     (apply match-args preds)
     handler))
-
+
 ;;;; Metadata
 
 (define-record-type <generic-metadata>

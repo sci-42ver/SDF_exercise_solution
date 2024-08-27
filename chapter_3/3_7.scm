@@ -1,3 +1,5 @@
+;; By searching "literal-mat", no sample implementation.
+
 ;; > It is also possible to have arithmetic on literal matrices and literal vectors
 ;; > an algebra of symbolic expressions of vectors and matrices.
 ;; I assume they are *totally* symbolic as "literal function".
