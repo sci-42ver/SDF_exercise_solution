@@ -58,5 +58,5 @@
 ;; > install an atan2 handler for differentials. Remember, it must coexist with the atan1 handler.
 (assign-handler!  atan     diff:atan2    differential? differential?)
 
-(atan 1)
-(atan 1 1)
+(assert (= (atan 1) (n:atan 1)))
+(assert (= (atan 1 1) (n:atan 1)))
