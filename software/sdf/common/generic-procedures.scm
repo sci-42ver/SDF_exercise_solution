@@ -107,6 +107,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (generic-procedure-name proc)
   (generic-metadata-name (generic-procedure-metadata proc)))
 
+;; This is not used. We just let generic-procedure-dispatch to manipulate pred.
 (define (generic-procedure-arity proc)
   (generic-metadata-arity (generic-procedure-metadata proc)))
 
@@ -121,7 +122,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (generic-procedure-metadata object)
   (define (try-object candidate)
     (if (generic-procedure? candidate)
-        (%generic-procedure-metadata candidate)
+        (begin
+          (display "use generic")
+          (%generic-procedure-metadata candidate))
         ;; SDF_exercises TODO why define generic-procedure-extractors which is not used in SDF book.
         (let loop ((extractors generic-procedure-extractors))
           (if (not (pair? extractors))
@@ -180,6 +183,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     ;; > choosing a handler
                      (predicates-match? (car rule) args))
                    rules)))
+        ; (bkpt 'check-rule rules)
         (and rule
              (cdr rule))))
 

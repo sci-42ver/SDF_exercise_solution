@@ -172,6 +172,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (with-installed-package! (arithmetic->package arithmetic)
                            thunk))
 
+;; Notice here we don't override all operators.
 ;; here actually we doesn't have negate operator *installed*.
 (define (arithmetic->package arithmetic)
   (make-package (arithmetic-name arithmetic)
