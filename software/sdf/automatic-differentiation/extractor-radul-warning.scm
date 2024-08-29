@@ -43,14 +43,21 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (memq tag *active-tags*))
 
 (define (with-active-tag tag f args)
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Dynamic-Binding.html#index-fluid_002dlet
+  ;; > Unlike let, fluid-let creates no new bindings;
+  ;; IMHO it changes the global value.
   (fluid-let ((*active-tags*
                (cons tag *active-tags*)))
     (apply f args)))
 
 
 (define (extract-dx-differential value dx)
-  (if (tag-active? dx)
-      (warn "Entering Radul Territory" *active-tags*))
+  ;; This is not contained in the book.
+  ;; commented out since IMHO this conflicts with extract-dx-function checking `tag-active?`.
+  ; (if (tag-active? dx)
+  ;     (warn "Entering Radul Territory" *active-tags*))
+
+  ; (display "extract-dx-differential")
   (let ((dx-diff-terms
          (filter-map
           (lambda (term)
@@ -60,6 +67,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     (diff-coefficient term)
                     (delv dx factors)))))
           (diff-terms value))))
+    ; (bkpt "test" dx-diff-terms)
+    ; (display dx-diff-terms)
+    
+    ;; this part similar to make-differential.
     (cond ((null? dx-diff-terms) 0)
           ((and (null? (cdr dx-diff-terms))
                 (null? (diff-factors (car dx-diff-terms))))
@@ -80,13 +91,26 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 |#
 
 (define (extract-dx-function fn dx)
+  ; (display *active-tags*)
+  ; (display (tag-active? dx))
   (lambda args
     (if (tag-active? dx)
         (let ((eps (make-new-dx)))
+          ; (display "tag active")
+          ;; diff-factor? diff-factor? 
           (replace-dx dx eps
+                      ;; Here (tag-active? dx) is #t, so if this call `extract-dx-differential`, it will show warning.
                       (extract-dx-part
+                        ;; Take "In a case where a function is returned, as in" as the example
+                        ;; If we do (d:* (+ (u '()) (1 dx1)) (+ v dx1)) (here I only give the detailed representation in the 1st arg) where dx2 becomes dx1.
+                        ;; Then we will get extract-dx-part in the 2nd derivative to be (+ u v) (dx1^2 becomes 0).
+                        ;; The correct should be (+ u dx1).
+
+                        ;; The above may be due to 
+                        ;; > using the tag that was created for the outer derivative calculation
                        (with-active-tag dx fn
                                         (map (lambda (arg)
+                                              ;; maybe diff-factor? diff-factor? symbolic?
                                                (replace-dx eps dx arg))
                                              args))
                        dx)))
@@ -132,13 +156,19 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                             replace-dx-default))
 
 
+;; I won't dig into another bug patch skip-due-to-general-strategy-target
+
 ;;; This has a bug, reported by Sam Richie <sritchie09@gmail.com>
 ;;;  see replace-dx-differential.scm for a better version.
 (define (replace-dx-differential new-dx old-dx object)
   (make-differential
+    ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Miscellaneous-List-Operations.html#index-sort
+    ;; > So, for example, if the elements of sequence are numbers, and procedure is <, then the resulting elements are sorted in monotonically nondecreasing order.
+    ;; Here the former diff-term>? the latter. 
    (sort (map (lambda (term)
                 (make-diff-term
                  (diff-coefficient term)
+                 ;; See (*diff-terms x y) for why to use diff-factor>?.
                  (sort (substitute new-dx old-dx
                          (diff-factors term))
                        diff-factor>?)))
@@ -158,6 +188,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (replace-dx new-dx old-dx
           (apply fn
             (map (lambda (arg)
+                    ;; Here we won't replace args.
                    (replace-dx eps old-dx arg))
                  args)))))))
 
@@ -171,10 +202,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (cond ((pair? x)
          (cons (substitute new old (car x))
                (substitute new old (cdr x))))
+        ;; SDF_exercises TODO when will this be used?
         ((vector? x)
          (make-initialized-vector (vector-length x)
            (lambda (i)
              (substitute new old
                          (vector-ref x i)))))
+        ;; The latter 2 are bases.
         ((eqv? old x) new)
         (else x)))

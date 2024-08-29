@@ -123,7 +123,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (define (try-object candidate)
     (if (generic-procedure? candidate)
         (begin
-          (display "use generic")
+          ; (display "use generic")
           (%generic-procedure-metadata candidate))
         ;; SDF_exercises TODO why define generic-procedure-extractors which is not used in SDF book.
         (let loop ((extractors generic-procedure-extractors))

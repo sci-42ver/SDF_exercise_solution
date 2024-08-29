@@ -33,8 +33,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (cons (car l1) (lp (cdr l1) l2)))
           ((<-? (car l2) (car l1))
            (cons (car l2) (lp l1 (cdr l2))))
+          ;; See sicp_notes "use the else branch *only for errors*".
           (else (error "Union")))))
 
+;; similar to SICP p209 intersection-set
 (define (ordered-intersect <-? l1 l2)
   (let lp ((l1 l1) (l2 l2))
     (cond ((null? l1) '())

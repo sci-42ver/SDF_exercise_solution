@@ -42,6 +42,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (if (differential? x)
       (let ((factor (default-maximal-factor x factor)))
         (make-differential
+          ;; > all terms except for terms containing the maximal factor in a term of *highest order*
          (remove (lambda (term)
                    (memv factor (diff-factors term)))
                  (diff-terms x))))
@@ -70,6 +71,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                          (and (pair? terms)
                               (let ((factors
                                      (diff-factors (car terms))))
+                                ;; based on the following error, factor may be nil. 
+                                ;; But "(pair? terms)" always returns #t.
                                 (and (pair? factors)
                                      (car factors))))))
                      args)))
@@ -84,6 +87,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (if (diff-factor>? (car factors) maximal)
                   (car factors)
                   maximal))
+        ;; factors is nil.
         maximal)))
 
 ;;; To turn a unary function into one that operates on
@@ -112,6 +116,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (d:* (d1f xf yf) dy)))))
   bop)
 
+;; Here I only checked "... the two partial derivative functions:" with only dx and dy.
+;; Since I don't intend to learn multivariate calculus.
+
 ;;; For multivariate functions we must choose the finite-part and
 ;;; the infinitesimal-part of each input to be consistent with
 ;;; respect to the factor, we do this as follows:
@@ -127,7 +134,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (d:+ (d:* dx (d0f xf yf))
                   (d:* (d1f xf yf) dy))))))
   bop)
-
+
 ;;; Here are the handlers
 
 (define diff:+

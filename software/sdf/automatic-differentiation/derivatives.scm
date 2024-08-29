@@ -73,6 +73,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (not (and (number? coeff) (= coeff 0)))))
           terms)))
     (cond ((null? terms) 0)
+          ;; IMHO i.e. (make-diff-term h ’()).
           ((and (null? (cdr terms))
                 (null? (diff-factors (car terms))))
            (diff-coefficient (car terms)))
@@ -115,6 +116,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; the terms being multiplied have a factor in common.  Thus
 ;;; dx^2 = zero.
 
+;; very similar to SICP (add-terms L1 L2).
 (define (+diff-termlists l1 l2)
   (cond ((null? l1) l2)
         ((null? l2) l1)
@@ -129,7 +131,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                          (make-diff-term newcoeff
                                          (diff-factors t1))
                          (+diff-termlists (cdr l1) (cdr l2))))))
-                 ((diff-term>? t1 t2)
+                 ((diff-term>? t1 t2) ; > use the sorting
+                  ;; > enforce ... the sorting
                   (cons t1 (+diff-termlists (cdr l1) l2)))
                  (else
                   (cons t2 (+diff-termlists l1 (cdr l2)))))))))
@@ -138,7 +141,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (make-differential
    (+diff-termlists (diff-terms x)
                     (diff-terms y))))
-
+
+;; similar to SICP (mul-terms L1 L2) but uses reduce.
 (define (*diff-termlists l1 l2)
   (reduce (lambda (x y)
             (+diff-termlists y x))
@@ -161,9 +165,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (if (null? (ordered-intersect diff-factor>? fx fy))
         (list (make-diff-term
                (* (diff-coefficient x) (diff-coefficient y))
+               ;; result with the former elements diff-factor>? the latter.
                (ordered-union diff-factor>? fx fy)))
+        ;; > because δx2 = 0
         '())))
 
+;; > with higher-order terms coming earlier in the lists
 ;;; Want high-order stuff first.
 (define (diff-term>? x y)
   (let ((fx (diff-factors x)) (fy (diff-factors y)))
@@ -171,7 +178,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (cond ((> lx ly) #t)
             ((= lx ly) (diff-factor>? (car fx) (car fy)))
             (else #f)))))
-
+
 ;;; This will be a unique \delta{x}
 (define (make-new-dx)
   (generate-uninterned-symbol "delta-"))
@@ -180,6 +187,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (uninterned-symbol? object))
 
 (define (diff-factor>? x y)
+  ;; SDF_exercises TODO no definition.
   (symbol>? y x))
 
 (define (make-infinitesimal dx)

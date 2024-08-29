@@ -112,6 +112,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; Eliminating complexities of literal functions.
 
 ;; coderef: deferred-extract
+;; Here x is 'u
+;; so after consuming 'u, then we will call ((extract-dx-part ((lambda (x) ...) 'u+dx1) dx1) 'v).
+;; This is ((extract-dx-part d2 dx1) 'v) (Here d2 means the 2nd the-derivative. Notice d2 uses dx2)
+;; Then it is expanded to (extract-dx-part (apply d2 ('v)) dx1).
+;; Here to calculate d2 (i.e. g'(y)), we need to consume y (i.e. 'u here).
+;; Here (apply d2 ('v)) is (extract-dx-part (l2 v+dx2) dx2) -> x in l1, i.e. 'u+dx1.
+
+;; Here * will call diff:*.
 (((derivative
    (lambda (x)
      (derivative

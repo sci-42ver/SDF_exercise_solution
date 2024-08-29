@@ -1,3 +1,4 @@
+;; no sample implementation by searching "gradient".
 ;; covector definition https://math.stackexchange.com/questions/4872003/am-i-correct-in-terms-of-understanding-gradient-and-covector#comment10387345_4872003
 ;; its definition depends one vector definition https://en.wikipedia.org/wiki/Gradient#Cartesian_coordinates or too long https://math.stackexchange.com/a/240629/1059606
 
