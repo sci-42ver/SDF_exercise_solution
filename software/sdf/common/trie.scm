@@ -64,6 +64,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; These operations fetch a value based on a sequence of
 ;;; features.
 
+;; checked
 (define (get-matching-tries trie features)
   (let loop ((tries (list trie)) (features features))
     (if (n:pair? features)
@@ -73,7 +74,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           tries)
               (cdr features))
         tries)))
-
+
 (define (apply-predicate predicate feature)
   (increment-predicate-count! predicate)
   (predicate feature))
@@ -96,6 +97,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let loop
       ((trie trie)
        (features features)
+       ;; This is passed without changes.
        (succeed
         (lambda (value fail)
           (declare (ignore fail))
@@ -107,12 +109,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (%try-edges (trie-edge-alist trie)
                     (car features)
                     (lambda (trie* fail*)
+                      ;; induction: assume fail* will try the adjacent edges sharing the same parent.
                       (loop trie* (cdr features) succeed fail*))
+                    ;; The top fail may be called after failing all pred paths.
                     fail)
+        ;; Here assume only one path is possible, so if features are all used, then we we finish the loop.
         (if (trie-has-value? trie)
             (succeed (trie-value trie) fail)
             (fail)))))
-
+
+;; checked
 (define (%find-all-edges trie feature)
   (map cdr
        (filter (lambda (p)
@@ -121,19 +127,24 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (%try-edges edges feature succeed fail)
   (if (n:pair? edges)
+      ;; This implies we will choose the 1st candidate based on Pre-order https://en.wikipedia.org/wiki/Tree_traversal#Pre-order,_NLR.
       (%try-edge (car edges)
                  feature
                  succeed
+                 ;; this may be passed down by succeed in `%try-edge` which uses the new trie
+                 ;; and may go back to the upper trie by the fail.
                  (lambda ()
                    (%try-edges (cdr edges)
                                feature
                                succeed
                                fail)))
+      ;; will try the adjacent trie of the trie with `edges` if calling fail*.
       (fail)))
 
 (define (%try-edge edge feature succeed fail)
   (if (apply-predicate (car edge) feature)
       (succeed (cdr edge) fail)
+      ;; will try other edges of the trie.
       (fail)))
 
 (define (trie-entries trie)

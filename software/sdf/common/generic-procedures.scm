@@ -220,6 +220,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (get-a-value trie args))
 
     (define (add-handler! applicability handler)
+      ;; > also the set of rules, which is useful for debugging
+      ;; to use `(get-rules)`
       ((delegate 'add-handler!) applicability handler)
       (for-each (lambda (path)
                   (set-path-value! trie path handler))
