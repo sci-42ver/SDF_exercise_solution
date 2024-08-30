@@ -26,6 +26,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (literal-function fexp)
   (define (the-function . args)
     (if (any differential? args)
+        ;; Think of f(x+Dx,y+Dy,z+Dz) where Dx is general which can be dx or dx*dy, etc.
+        ;; Then maximal-factor will only choose one.
+        ;; Assume it chooses Dx, then fxs is f(x,y+Dy,z+Dz) (notice this will again call `(any differential? args)`. Based on induction, assume it returns right.)
+        ;; Here `(map d:* partials deltargs)` will do the Dx part since all the other `deltargs` are 0's.
+        ;; 
         (let ((n (length args))
               (factor (apply maximal-factor args)))
           (let ((realargs

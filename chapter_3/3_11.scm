@@ -1,3 +1,4 @@
+;; By searching "extract-dx-function", no sample implementation.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'automatic-differentiation)
 

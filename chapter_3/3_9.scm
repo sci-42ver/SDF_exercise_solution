@@ -8,12 +8,31 @@
 ;   (make-generic-procedure 'atan1 1 #f))
 
 ;; a
+(define (tan-derivative x)
+  (lambda (x) (/ 1 (expt (cos x) 2))))
 (define diff:tan
   (diff:unary-proc tan
                   ;; https://www.afralisp.net/archive/lisp/bulge.htm https://www.cuemath.com/calculus/derivative-of-tan-x/#:~:text=The%20formula%20for%20differentiation%20of,%3D%20sec2x%20(or)
-                   (lambda (x) (/ 1 (expt (cos x) 2)))))
-;; TODO to test
+                   tan-derivative))
 (assign-handler!  tan     diff:tan    differential?)
+
+(define (test x func func-derivative)
+  ;; assume x=1.
+  ;; 1+dx
+  ;; See `replace-dx-differential` in extractor.scm and `make-infinitesimal`
+  (define test-diff 
+    (make-differential 
+      (sort 
+        (list (make-diff-term x '()) (make-diff-term 1 (list (make-new-dx))))
+        diff-term>?)))
+
+  ;; func(1+dx)
+  (define (diff-func-1-terms)
+    (diff-terms (func test-diff)))
+  (assert (= (func-derivative x)) (diff-coefficient (car (diff-func-1-terms))))
+  (assert (= (func x)) (diff-coefficient (cadr (diff-func-1-terms)))))
+
+(test 1 tan tan-derivative)
 
 ;; IGNORE: to make get-implementation-value work.
 ; (environment-define system-global-environment 'atan1 atan1)
@@ -21,6 +40,7 @@
 ; (set! %arithmetic-operator-alist (cons '(atan1 (domain) domain) %arithmetic-operator-alist))
 ; (load "~/SICP_SDF/SDF_exercises/software/sdf/automatic-differentiation/utils.scm")
 
+;; test should be similar to diff:tan, so I skipped that.
 (define diff:atan1
   (diff:unary-proc atan
                    (lambda (x) (/ 1 (+ 1 (expt x 2))))))

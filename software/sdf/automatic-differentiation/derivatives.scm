@@ -224,6 +224,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (let ((n (length args)))
       (assert (= n (length increments)))
       ;;(assert (= n (arity g)))
+      
+      ;; > Unfortunately general-derivative does not return the structure of partial derivatives.
+      ;; Here we calculate Dg(x,y)*(\Delta x,\Delta y).
+      ;; So it is not the strict generalization of `partial`.
       (if (= n 1)
           (* ((derivative g) (car args))
              (car increments))

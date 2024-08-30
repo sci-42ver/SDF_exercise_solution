@@ -35,10 +35,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (extract-dx-differential-1 value dx)
   ;; SDF_exercises TODO: since saved-total-index doesn't define it, extract-dx-coefficient-from is just one concept?
+  ;; The following extract-dx-differential just extracts from all diff-terms and then checks whether `(memv dx factors)` to extract from the appropriate terms.
   (extract-dx-coefficient-from (infinitesimal-part value) dx))
 
 (define *active-tags* '())
 
+;; Based on the following usage and Exercise 3.11, it may mean this dx tag is already used in the current env.
 (define (tag-active? tag)
   (memq tag *active-tags*))
 
@@ -50,7 +52,6 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                (cons tag *active-tags*)))
     (apply f args)))
 
-
 (define (extract-dx-differential value dx)
   ;; This is not contained in the book.
   ;; commented out since IMHO this conflicts with extract-dx-function checking `tag-active?`.
@@ -58,6 +59,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;     (warn "Entering Radul Territory" *active-tags*))
 
   ; (display "extract-dx-differential")
+  ; (display value)
   (let ((dx-diff-terms
          (filter-map
           (lambda (term)
@@ -69,7 +71,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (diff-terms value))))
     ; (bkpt "test" dx-diff-terms)
     ; (display dx-diff-terms)
-    
+
     ;; this part similar to make-differential.
     (cond ((null? dx-diff-terms) 0)
           ((and (null? (cdr dx-diff-terms))
@@ -92,8 +94,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (extract-dx-function fn dx)
   ; (display *active-tags*)
+  (display "extract-dx-function")
   ; (display (tag-active? dx))
   (lambda args
+    ; (newline)
+    ; (display args)
+    ; (newline)
     (if (tag-active? dx)
         (let ((eps (make-new-dx)))
           ; (display "tag active")
@@ -110,7 +116,6 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         ;; > using the tag that was created for the outer derivative calculation
                        (with-active-tag dx fn
                                         (map (lambda (arg)
-                                              ;; maybe diff-factor? diff-factor? symbolic?
                                                (replace-dx eps dx arg))
                                              args))
                        dx)))

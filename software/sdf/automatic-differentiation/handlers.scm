@@ -72,7 +72,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                               (let ((factors
                                      (diff-factors (car terms))))
                                 ;; based on the following error, factor may be nil. 
-                                ;; But "(pair? terms)" always returns #t.
+                                ;; But "(pair? terms)" always returns #t since `make-differential` will coerces to 0 if nil terms.
                                 (and (pair? factors)
                                      (car factors))))))
                      args)))
@@ -89,7 +89,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   maximal))
         ;; factors is nil.
         maximal)))
-
+
 ;;; To turn a unary function into one that operates on
 ;;; differentials we must supply the derivative.  This is the
 ;;; essential chain rule.
@@ -98,6 +98,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (define (uop x)
       (let ((xf (finite-part x))
             (dx (infinitesimal-part x)))
+        ;; i.e. f(x+dx)=f(x)+f'(x)dx.
         (d:+ (f xf) (d:* (df xf) dx))))
   uop)
 
@@ -111,6 +112,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (dy (infinitesimal-part y))
           (xf (finite-part x))
           (yf (finite-part y)))
+      ;; IGNORE: SDF_exercises TODO here xf+dx=x (similar for y)
+      ;;        f(x+dx+y+dy)=f(x+y)+f_{x}(x,y)*dx+f_{y}(x,y)*dy
       (d:+ (f xf yf)
            (d:+ (d:* dx (d0f xf yf))
                 (d:* (d1f xf yf) dy)))))
@@ -130,6 +133,33 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (dy (infinitesimal-part y factor))
             (xf (finite-part x factor))
             (yf (finite-part y factor)))
+        ; (bkpt "diff:binary" (pp d0f))
+        ; (newline)
+        ; (display "diff:binary-proc")
+        ; (display (pp d0f))
+        ; (newline)
+        ; (display (list dx dy xf yf))
+        ; (newline)
+        ; (display (list x y))
+        ; (display (d:+ (f xf yf)
+        ;       ;; this may call * again.
+        ;       ;; i.e. delta-1 * yf -> 
+        ;      (d:+ (d:* dx (d0f xf yf))
+        ;           (d:* (d1f xf yf) dy))))
+        ; (newline)
+
+        ;; here only one of dx and dy is not 0.
+        ;; So assume dx is not 0, then yf=y+dy. So we are based on f(x+dx,y+dy)=f(x,y+dy)+dx*f'(x,y+dy).
+        
+        ;; > it doesn't ensure that the finite and infinitesimal parts are consistently chosen
+        ;; > not correct for differential objects with more than one infinitesimal
+        ;; For example f(x+dx+dy,y+dy)=f(x+dy,y+dy)+dx*f_x(x+dx+dy,y+dy), i.e. f(x+dy,y)+dy*f_y(x+dy,y)+dx*f_x(x+dx+dy,y+dy)
+        ;; It should not be equal to f(x+dy,y)+dy*f_x(x+dy,y)+dx*f_x(x+dy,y).
+
+        ;; > we do some algebraic simplification on the result, we get:
+        ;; Here dy=0, so we have (expt (x+dx) 3) = (expt x 3) + 3*(expt x 3)*dx
+        ;; So here "algebraic simplification" may be done in d0f beforehand.
+        ;; This is one case of `differential? any-object?`.
         (d:+ (f xf yf)
              (d:+ (d:* dx (d0f xf yf))
                   (d:* (d1f xf yf) dy))))))
