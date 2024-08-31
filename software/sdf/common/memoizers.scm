@@ -23,7 +23,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;;; Memoizers
 
+;; For cache-wrapped-dispatch-store, it will use dispatch-store at the first time.
+;; And then hash-table for the latter access (this will call *no predicate tests*. See Exercise 3.14).
 (define (make-list-memoizer make-list= dedup?)
+  ;; elt= is used by both comparing key list elem and comparing args elem where args are used to generate key.
   (lambda (elt= get-key get-datum)
     (let ((table (make-memoizer-table make-list= elt=)))
       (lambda (list)
@@ -37,8 +40,18 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (make-memoizer-table make-list= elt=)
   (cond ((eqv? eq? elt=)
+          ;; ref1: https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Construction-of-Hash-Tables.html#index-make_002dhash_002dtable
+          ;; Here make-list= is one proc, so it is not comparator https://srfi.schemers.org/srfi-128/srfi-128.html.
+          ;; see https://srfi.schemers.org/srfi-69/srfi-69.html
          (make-hash-table (make-list= eq?)
+                          ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Address-Hashing.html
+                          ;; > it is necessary to tell the hash-table implementation (by means of the 
+                          ;; > rehash-after-gc? argument to the hash-table type constructors) that the hash numbers computed by your key-hashing procedure \
+                          ;; > must be recomputed after a garbage collection.
                           (make-list-hash eq-hash)
+                          ;; ref1
+                          ;; > The arg arguments are allowed but are implementation dependent; do not provide them.
+                          ;; TODO #t meaning?
                           'rehash-after-gc? #t))
         ((eqv? eqv? elt=)
          (make-hash-table (make-list= eqv?)
@@ -69,6 +82,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (define (list-hash list #!optional modulus)
     (let ((hash
            (apply n:+
+                  ;; elt abbr -> Element https://www.acronymfinder.com/ELT.html 
                   (map (lambda (elt)
                          (elt-hash elt))
                        list))))
@@ -79,13 +93,18 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define list-memoizer (make-list-memoizer make-list= #f))
 (define lset-memoizer (make-list-memoizer make-lset= #t))
-
+
+;; For cache-wrapped-dispatch-store,
+;; It use arg type list as key and handler as the key by calling `(get-datum args)`.
 (define (make-simple-list-memoizer list-memoizer)
   (lambda (elt= get-key get-datum)
     (let ((memoizer
            (list-memoizer elt=
+                          ;; for cache-wrapped-dispatch-store, its get-key just accepts the list as the single arg.
+                          ;; Same for get-datum.
                           (lambda (args)
                             (apply get-key args))
+                          ;; args is list implied by make-list-memoizer and we call `(memoizer args)`.
                           (lambda (args)
                             (apply get-datum args)))))
       (lambda args

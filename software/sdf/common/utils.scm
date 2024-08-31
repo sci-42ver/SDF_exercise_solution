@@ -214,12 +214,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; MIT/GNU Scheme implementation specific:
 
-;; not in 
 (define (make-bundle-predicate name)
   (let ((predicate (n:make-bundle-predicate name)))
     (register-predicate! predicate name)
     predicate))
 
+;; (microcode-type/code->name (object-type 1)) -> fixnum
 (define (implementation-type-name object)
   (microcode-type/code->name (object-type object)))
 
