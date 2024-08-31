@@ -44,20 +44,20 @@
 
 (define (no-tag-derivative arg1 arg2)
   (let* ((dx (make-new-dx))
-          (diff-dx (make-infinitesimal dx))
-          (g 
-            (lambda (y)
-              (* (d:+ arg1 diff-dx) y))))
+         (diff-dx (make-infinitesimal dx))
+         (g 
+           (lambda (y)
+             (* (d:+ arg1 diff-dx) y))))
     (newline)
     (display "dx1 is ")
     (display dx)
-  
+
     ; ((with-active-tag dx extract-dx-part (list g dx)) (d:+ 'v diff-dx))
-    
+
     ;; 1. `(tag-active? dx)` is checked when calling with args. So we should change the wrapping position.
     ;; 2. Here 'v diff-dx -> 'v diff-dx2 temporarily.
     ;; So (with-active-tag dx fn ...) will have (u+dx1)*(v+dx2), then `extract-dx-part` gets (v+dx2), then replace we get (v+dx1).
-    
+
     ;; Here we think about g: (lambda arg1 (lambda arg2 (* arg1 arg2))). Then call (g'_{arg1})'_{arg2} which should be 1.
     (extract-dx-part (with-active-tag dx (extract-dx-part g dx) (list (d:+ arg2 diff-dx))) dx)
     ))
@@ -79,8 +79,8 @@
       (extract-dx-part (apply fn args) dx)))
 
   (define-generic-procedure-handler extract-dx-part
-    (match-args function? diff-factor?)
-    extract-dx-function))
+                                    (match-args function? diff-factor?)
+                                    extract-dx-function))
 
 (use-wrong-extract-dx-function)
 
@@ -94,38 +94,38 @@
   (define (extract-dx-function fn dx)
     (lambda args
       (if (tag-active? dx)
-          (let ((eps (make-new-dx)))
-            (replace-dx dx eps
-                        (extract-dx-part
-                          (with-active-tag dx fn
-                                          (map (lambda (arg)
+        (let ((eps (make-new-dx)))
+          (replace-dx dx eps
+                      (extract-dx-part
+                        (with-active-tag dx fn
+                                         (map (lambda (arg)
                                                 ;; maybe diff-factor? diff-factor? symbolic?
                                                 (replace-dx eps dx arg))
                                               args))
                         dx)))
-          (extract-dx-part (with-active-tag dx fn args)
-                          dx))))
+        (extract-dx-part (with-active-tag dx fn args)
+                         dx))))
 
   (define-generic-procedure-handler extract-dx-part
-    (match-args function? diff-factor?)
-    extract-dx-function))
+                                    (match-args function? diff-factor?)
+                                    extract-dx-function))
 
 (define (no-tag-derivative-reference arg1 arg2)
   (let* ((dx (make-new-dx))
-          (diff-dx (make-infinitesimal dx))
-          (g 
-            (lambda (y)
-              (* (d:+ arg1 diff-dx) (+ (d:+ arg1 diff-dx) y)))))
+         (diff-dx (make-infinitesimal dx))
+         (g 
+           (lambda (y)
+             (* (d:+ arg1 diff-dx) (+ (d:+ arg1 diff-dx) y)))))
     (newline)
     (display "dx1 is ")
     (display dx)
-  
+
     ; ((with-active-tag dx extract-dx-part (list g dx)) (d:+ 'v diff-dx))
-    
+
     ;; 1. `(tag-active? dx)` is checked when calling with args. So we should change the wrapping position.
     ;; 2. Here 'v diff-dx -> 'v diff-dx2 temporarily.
     ;; So (with-active-tag dx fn ...) will have (u+dx1)*(v+dx2), then `extract-dx-part` gets (v+dx2), then replace we get (v+dx1).
-    
+
     ;; Here we think about g: (lambda arg1 (lambda arg2 (* arg1 arg2))). Then call (g'_{arg1})'_{arg2} which should be 1.
     (extract-dx-part (with-active-tag dx (extract-dx-part g dx) (list (d:+ arg2 diff-dx))) dx)
     ))
@@ -146,18 +146,18 @@
 
 ;; we need to register with the new diff-factor?.
 (define-generic-procedure-handler extract-dx-part
-  (match-args differential? diff-factor?)
-  extract-dx-differential)
+                                  (match-args differential? diff-factor?)
+                                  extract-dx-differential)
 (use-wrong-extract-dx-function)
 
 (define (test-1)
   (((derivative
       (lambda (x)
         (derivative
-        (lambda (y)
-          (* x y)))))
+          (lambda (y)
+            (* x y)))))
     'u)
-  'v))
+   'v))
 (assert (= 0 (test-1)))
 
 ;; This has no effects at all, since `((derivative ...) 'u)` calls `(extract-dx-function fn dx)` which returns lambda.

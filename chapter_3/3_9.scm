@@ -12,7 +12,7 @@
   (lambda (x) (/ 1 (expt (cos x) 2))))
 (define diff:tan
   (diff:unary-proc tan
-                  ;; https://www.afralisp.net/archive/lisp/bulge.htm https://www.cuemath.com/calculus/derivative-of-tan-x/#:~:text=The%20formula%20for%20differentiation%20of,%3D%20sec2x%20(or)
+                   ;; https://www.afralisp.net/archive/lisp/bulge.htm https://www.cuemath.com/calculus/derivative-of-tan-x/#:~:text=The%20formula%20for%20differentiation%20of,%3D%20sec2x%20(or)
                    tan-derivative))
 (assign-handler!  tan     diff:tan    differential?)
 

@@ -24,10 +24,10 @@
     (add-to-generic-arithmetic! g numeric-arithmetic)
     (extend-generic-arithmetic! g function-extender)
     (add-to-generic-arithmetic! g
-      (vector-extender (function-extender (symbolic-extender numeric-arithmetic))))
+                                (vector-extender (function-extender (symbolic-extender numeric-arithmetic))))
     ;; put after the above to avoid capture vector? symbolic?
     (add-to-generic-arithmetic! g
-      (symbolic-extender (vector-extender numeric-arithmetic)))
+                                (symbolic-extender (vector-extender numeric-arithmetic)))
     (numerical-simplifier-wrapper g)))
 
 (install-arithmetic! vector-full-arithmetic)
@@ -40,24 +40,24 @@
     (lambda (elem) 
       (cond 
         ((differential? elem) 
-          (display "edv1")
-          ; (display elem)
-          ; (bkpt "edv1" elem)
-          ;; https://stackoverflow.com/q/78930923/21294350 If I inserts one dot after this, this will return 0 and there is no syntax errors.
-          ; (newline)
-          (extract-dx-part elem dx))
+         (display "edv1")
+         ; (display elem)
+         ; (bkpt "edv1" elem)
+         ;; https://stackoverflow.com/q/78930923/21294350 If I inserts one dot after this, this will return 0 and there is no syntax errors.
+         ; (newline)
+         (extract-dx-part elem dx))
         ((function? elem) 
-          (display "edv2")
-          (extract-dx-part elem dx))
+         (display "edv2")
+         (extract-dx-part elem dx))
         ((or (number? elem) (symbolic? elem))
-          (display "edv3")
-          0)
+         (display "edv3")
+         0)
         ))
     value))
 
 (define-generic-procedure-handler extract-dx-part
-  (match-args vector? diff-factor?)
-  extract-dx-vector)
+                                  (match-args vector? diff-factor?)
+                                  extract-dx-vector)
 
 (define (replace-dx-vector new-dx old-dx object)
   (newline)
@@ -66,20 +66,20 @@
     (lambda (elem) 
       (cond 
         ((differential? elem) 
-          (display "rdv1")
-          (replace-dx new-dx old-dx elem))
+         (display "rdv1")
+         (replace-dx new-dx old-dx elem))
         ((function? elem) 
-          (display "rdv2")
-          (replace-dx new-dx old-dx elem))
+         (display "rdv2")
+         (replace-dx new-dx old-dx elem))
         ((or (number? elem) (symbolic? elem))
-          (display "rdv3")
-          elem)
+         (display "rdv3")
+         elem)
         ))
     object))
 
 (define-generic-procedure-handler replace-dx
-  (match-args diff-factor? diff-factor? vector?)
-  replace-dx-vector)
+                                  (match-args diff-factor? diff-factor? vector?)
+                                  replace-dx-vector)
 
 ;; Use this to check the intermediate results.
 ; (trace *)
@@ -97,8 +97,8 @@
         (derivative
           (lambda (y)
             (vector (* x y) (+ x y))))))
-      'u)
-    (vector 3 4)))
+    'u)
+   (vector 3 4)))
 
 ; (define test-diff-1 
 ;   (make-differential 
@@ -116,7 +116,7 @@
 ;; The above `derivative` will always pass differential to f, so we need to explicitly test other cases similar to 3.11 where it always abstracts dx in `derivative`.
 (define (extract-dx-vector-test)
   (let* ((dx (make-new-dx))
-          (diff-dx (make-infinitesimal dx)))
+         (diff-dx (make-infinitesimal dx)))
     ;; test extract-dx-vector
     (define res1
       (extract-dx-part 
@@ -129,7 +129,7 @@
             ))
         dx))
     (assert-predicate = 0 (vector-ref res1 0))
-    
+
     (define res-func (vector-ref res1 1))
     ;; notice to use `with-active-tag` to call replace-dx.
     (define res-func-res (with-active-tag dx res-func (list (vector 1 diff-dx (lambda (x) (+ diff-dx x))))))

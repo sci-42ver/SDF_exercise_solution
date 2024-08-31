@@ -52,6 +52,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (if p
         (cdr p)
         (let ((successor (make-trie)))
+          ;; Here the later addition is prioritized based on `get-a-value-by-searching` used by `get-a-value`.
           (set-trie-edge-alist! trie
                                 (cons (cons predicate successor)
                                       (trie-edge-alist trie)))

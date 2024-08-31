@@ -16,12 +16,12 @@
   (define (the-derivative-covector . args)
     (let* ((n (length args))
            (vec-data 
-              (if (= n 1)
-                (vector ((derivative g) (car args)))
-                (list->vector
-                  (map (lambda (i)
-                          (apply ((partial i) g) args))
-                        (iota n))))))
+             (if (= n 1)
+               (vector ((derivative g) (car args)))
+               (list->vector
+                 (map (lambda (i)
+                        (apply ((partial i) g) args))
+                      (iota n))))))
       (make-row-vec vec-data)))
   the-derivative-covector)
 
@@ -47,24 +47,24 @@
         (vector ((derivative g) (car args)))
         (list->vector
           (map (lambda (i)
-                  (apply ((partial i) g) args))
-                (iota n))))))
+                 (apply ((partial i) g) args))
+               (iota n))))))
   (define (the-derivative-covector . args)
     (let* ((n (length args)))
       (if (= n 1)
         (let* ((arg (car args))
                (vec-data 
-                  (if (general-vector? arg)
-                    (apply derivative-vec-data (vector->list (vector-data arg)))
-                    (derivative-vec-data arg))))
+                 (if (general-vector? arg)
+                   (apply derivative-vec-data (vector->list (vector-data arg)))
+                   (derivative-vec-data arg))))
           (cond 
             ((row-vector? arg) (make-col-vec vec-data))
             (else (make-row-vec vec-data))))
         (make-row-vec
           (list->vector
             (map (lambda (i)
-                    (apply ((partial i) g) args))
-                  (iota n)))))))
+                   (apply ((partial i) g) args))
+                 (iota n)))))))
   the-derivative-covector)
 
 (test-1)

@@ -53,6 +53,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (let ((value (thunk)))
       (for-each (lambda (p)
                   (write-line (list (cdr p)
+                                    ;; > The reason for this is obscure, and the curious are welcome to track it down in the code.
+                                    ;; get metadata. See `(register-predicate! symbolic? 'symbolic)`.
                                     (or (predicate-name (car p))
                                         (car p)))
                               (notification-output-port)))

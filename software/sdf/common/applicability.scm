@@ -64,6 +64,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (all-args arity predicate)
   (list (make-list arity predicate)))
 
+;; order: 0->2^n with 0 removed (0:base-predicate). So the first is 01 when arity is 2, i.e. (base-predicate predicate)
 (define (any-arg arity predicate base-predicate)
   (if (n:= 0 arity)
       (list)

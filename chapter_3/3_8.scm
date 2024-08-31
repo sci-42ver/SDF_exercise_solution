@@ -25,10 +25,10 @@
   (define (the-derivative arg)
     (let ((total-arg-num (+ (length args) 1)))
       (if (not (< i total-arg-num))
-          (error "Not enough arguments for PARTIAL" i f args))
+        (error "Not enough arguments for PARTIAL" i f args))
       (let* ((dx (make-new-dx))
-            (value
-              (((apply (curry-argument i) args) f) 
+             (value
+               (((apply (curry-argument i) args) f) 
                 (d:+ arg (make-infinitesimal dx)))))
         (extract-dx-part value dx))))
   the-derivative)

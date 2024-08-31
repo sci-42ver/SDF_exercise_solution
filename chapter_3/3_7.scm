@@ -57,11 +57,11 @@
                                       base-arithmetic))
                                   ;; here matrix-extender has already domain-predicate including vector.
                                   (extend-arithmetic matrix-extender 
-                                                   (extend-arithmetic vector-extender 
-                                                                      ;; to avoid capturing literal-mat and literal-vec in scalar-matrix-product.
-                                                                      (extend-arithmetic 
-                                                                        (lambda (base-arithmetic) (symbolic-extender-pred symbolic-2? base-arithmetic))
-                                                                        numeric-arithmetic)))))
+                                                     (extend-arithmetic vector-extender 
+                                                                        ;; to avoid capturing literal-mat and literal-vec in scalar-matrix-product.
+                                                                        (extend-arithmetic 
+                                                                          (lambda (base-arithmetic) (symbolic-extender-pred symbolic-2? base-arithmetic))
+                                                                          numeric-arithmetic)))))
     (install-arithmetic! g)))
 (install-specific-generic-arithmetic)
 
@@ -95,10 +95,10 @@
 ;; assume all symbols -> literal-matrix
 (define (literal-matrix? object)
   (and (matrix? object)
-    (every 
-      (lambda (row) 
-        (every symbol? row))
-      (mat-data->2-level-list object))))
+       (every 
+         (lambda (row) 
+           (every symbol? row))
+         (mat-data->2-level-list object))))
 
 ;; See section 3.3. We can use `generate-uninterned-symbol` to avoid conflicts.
 (define test-literal-matrix (literal-mat 'A 2 2))

@@ -26,9 +26,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define predicate?)
 (define get-predicate-metadata)
 (define set-predicate-metadata!)
+;; (key metadata)
 (let ((association (make-metadata-association)))
   (set! predicate? (association 'has?)) ; just get the procedure
-  (set! get-predicate-metadata (association 'get))
+  (set! get-predicate-metadata (association 'get)) ; get metadata
   (set! set-predicate-metadata! (association 'put!)))
 
 (define (guarantee predicate object #!optional caller)

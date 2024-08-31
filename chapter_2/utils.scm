@@ -3,6 +3,10 @@
 (define (displayln x)
   (newline)
   (display x))
+;; See `with-predicate-counts`.
+(define (displayln-alternative x)
+  (write-line x (current-output-port)))
+
 (define (check_all_conds condition lst)
   (assert (fold 
             (lambda (x y) (and x y)) 

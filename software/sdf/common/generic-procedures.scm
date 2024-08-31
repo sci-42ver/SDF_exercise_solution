@@ -223,6 +223,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       ;; > also the set of rules, which is useful for debugging
       ;; to use `(get-rules)`
       ((delegate 'add-handler!) applicability handler)
+      ; (display applicability)
+      ; (newline)
       (for-each (lambda (path)
                   (set-path-value! trie path handler))
                 applicability))
