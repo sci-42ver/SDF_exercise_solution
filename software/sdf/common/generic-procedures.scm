@@ -180,8 +180,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (define (get-handler args)
       (let ((rule
              (find (lambda (rule)
-                    ;; > choosing a handler
-                     (predicates-match? (car rule) args))
+                      ;; > choosing a handler
+                      ; (display (car rule))
+                      (predicates-match? (car rule) args)
+                      )
                    rules)))
         ; (bkpt 'check-rule rules)
         (and rule

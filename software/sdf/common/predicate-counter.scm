@@ -36,11 +36,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (increment-predicate-count! predicate)
   ;; see https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Basic-Hash-Table-Operations.html#index-hash_002dtable_002dupdate_0021
+  ;; > Applies procedure to the datum associated with key in hash-table or to the value of calling get-default if there is no association for key
+  ;; here `(lambda (count) (fix:+ count 1))` will call for count=(lambda () 1) "if there is no association for key".
+  ;; So `(get-predicate-count predicate)` is either 0 or 2 without being 1.
   (hash-table-update! (%predicate-counts)
                       predicate
                       ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Fixnum-Operations.html#index-fix_003a_002b
                       (lambda (count) (fix:+ count 1))
-                      (lambda () 1)))
+                      (lambda () 0) ; changed. originally (lambda () 1).
+                      ))
 
 (define (get-predicate-count predicate)
   (hash-table-ref/default (%predicate-counts) predicate 0))

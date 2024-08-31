@@ -20,7 +20,7 @@
 
 (define (install-arithmetic-func-before-symbolic)
   (let ((g
-        (make-generic-arithmetic make-trie-dispatch-store)))
+          (make-generic-arithmetic make-trie-dispatch-store)))
     ;; root trie addition order: 
     (add-to-generic-arithmetic! g numeric-arithmetic) ; number?
     (extend-generic-arithmetic! g symbolic-extender) ; any-object?, symbolic?
@@ -41,7 +41,7 @@
 
 (define (install-arithmetic-symbolic-before-func)
   (let ((g
-        (make-generic-arithmetic make-trie-dispatch-store)))
+          (make-generic-arithmetic make-trie-dispatch-store)))
     (add-to-generic-arithmetic! g numeric-arithmetic)
     (extend-generic-arithmetic! g function-extender) ;*
     (extend-generic-arithmetic! g symbolic-extender) ;*
@@ -58,10 +58,10 @@
 ;; If we change the above addition order of (any-object?, symbolic?), then its behavior is same as `make-simple-dispatch-store`.
 (define (any-arg arity predicate base-predicate)
   (if (n:= 0 arity)
-      (list)
-      (remove
-        (lambda (arg) (equal? arg (make-list arity base-predicate)))
-        (all-sequences-of arity predicate base-predicate))))
+    (list)
+    (remove
+      (lambda (arg) (equal? arg (make-list arity base-predicate)))
+      (all-sequences-of arity predicate base-predicate))))
 (install-arithmetic-func-before-symbolic)
 (book-order-test)
 (assert-test-mod)

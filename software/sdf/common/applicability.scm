@@ -52,8 +52,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (predicates-match? predicates args)
   (and (n:= (length predicates) (length args))
+        ;; short circuit if one predicate fails.
        (every (lambda (predicate arg)
                 (increment-predicate-count! predicate)
+                ; (display predicate)
+                ; (display (get-predicate-count predicate))
+                ; (newline)
                 (predicate arg))
               predicates
               args)))
