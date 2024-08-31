@@ -47,6 +47,8 @@
 ;; then we go back and try number?.
 ;; Then for the 2nd, we try symbolic? -> number?.
 (display (generic-procedure-rules <))
+(display (generic-procedure-rules +))
+(generic-procedure? +)
 (with-predicate-counts (lambda () 1))
 (<-fib-test) ; calls for <.
 ; (1 any-object)

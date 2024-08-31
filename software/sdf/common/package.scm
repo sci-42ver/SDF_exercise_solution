@@ -69,6 +69,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                               (environment-assigned? environment name))
                          (environment-lookup environment name)
                          #f)))
+                ; (display (list "package-installer" name (generic-procedure? value)))
                 ;; change operator operations.
                 ;; > the installer will bind the name to the procedure.
                 (environment-define environment name value)

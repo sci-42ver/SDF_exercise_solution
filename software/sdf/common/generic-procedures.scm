@@ -112,6 +112,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (generic-metadata-arity (generic-procedure-metadata proc)))
 
 (define (generic-procedure-rules proc)
+  ; (display (generic-procedure? proc))
   (((generic-metadata-dispatch-store
      (generic-procedure-metadata proc))
     'get-rules)))
@@ -119,11 +120,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (generic-procedure-handlers proc)
   (map cdr (generic-procedure-rules proc)))
 
+;; TODO so interesting, why does outer (generic-procedure? object) is #f but (generic-procedure? candidate) is #t?
+;; See 3_14.scm `(display (generic-procedure-rules +))`.
 (define (generic-procedure-metadata object)
   (define (try-object candidate)
     (if (generic-procedure? candidate)
         (begin
-          ; (display "use generic")
+          ; (display (list (generic-procedure? candidate) "use generic"))
           (%generic-procedure-metadata candidate))
         ;; SDF_exercises TODO why define generic-procedure-extractors which is not used in SDF book.
         (let loop ((extractors generic-procedure-extractors))
@@ -133,6 +136,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (if val
                 (try-object val)
                 (loop (cdr extractors)))))))
+  ; (display (list "generic-procedure-metadata" (generic-procedure? object)))
   (try-object object))
 
 (define (define-generic-procedure-extractor name extractor)

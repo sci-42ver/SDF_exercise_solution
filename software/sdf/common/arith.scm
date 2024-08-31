@@ -199,6 +199,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                             (modification arithmetic)))
                      modifications)))
     (map (lambda (operator)
+            ; (display 
+            ;   (list 
+            ;     operator
+            ;     (generic-procedure?
+            ;       (make-installable-procedure operator
+            ;                                  arithmetic
+            ;                                  overrides))))
+            
             ;; > the installer will bind the name to the procedure.
            (cons operator
                  (make-installable-procedure operator
@@ -227,6 +235,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (if override
           ;; either return modifed `operation-procedure` by override or return `(get-implementation-value operator)`
           (let ((procedure*
+                  ;; just return (cdr override)
                  (make-installable-operation-procedure
                   procedure
                   (cdr override))))

@@ -1,3 +1,4 @@
+;; By searching "trie-full-generic-arithmetic" with "*.rkt,*.scm" in VSCode, 6.945_assignment_solution has one sample implementation.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'automatic-differentiation)
 
