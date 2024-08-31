@@ -50,7 +50,7 @@ exercise solution for Software Design for Flexibility (SDF)
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # @exercise solutions by *3 references* (i.e. nbardiuk etc.) and *6.945_assignment_solution* checked up to now (sometimes *code base* has sample implementations)
 with check comments in codes.
-- 2, 3.1~3.12
+- 2, 3.1~3.14
 # @exercise tests finished
 - 2, 3.1~3.12 (3.9 partial without tests for `differential?`)
 # @TODO
