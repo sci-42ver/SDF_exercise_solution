@@ -1,3 +1,4 @@
+;; By searching "(test-stormer-counts)" with "*.rkt,*.scm" in VSCode, 6.945_assignment_solution and code base are reviewed.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'automatic-differentiation)
 
@@ -8,6 +9,8 @@
 
 (install-arithmetic! trie-full-generic-arithmetic)
 (book-fib-test)
+;; This is same as efficient-generic-procedures/microbench.scm for "Tries (searched)" and Cache. But here I made one small modification of increment-predicate-count!.
+;; But that file have no explanation of the result.
 ; (54726 any-object)
 ; (109452 function)
 ; (109452 number)

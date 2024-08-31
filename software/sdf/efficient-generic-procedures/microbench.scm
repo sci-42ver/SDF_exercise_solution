@@ -20,7 +20,10 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
+(load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
+(manage 'new 'efficient-generic-procedures:trie)
+
 (define (run-test test)
   (test)                                ;warm up
   (let loop ((n 3) (time 0))
@@ -107,6 +110,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (make-equal-hash-table))
 
 ;; (set! register-compound-predicate! memoized-register-compound-predicate!)
+
+;; TODO I don't know how the following "Rule lists" is got.
+(set! make-default-dispatch-store make-simple-dispatch-store)
+(define default-microbench-full-generic-arith
+  (microbench-full-generic-arith make-default-dispatch-store))
+(install-arithmetic! default-microbench-full-generic-arith)
+(test-fib-counts)
 
 #|
 ;; Rule lists
