@@ -5,8 +5,8 @@
 (load "performance-tool.scm")
 
 (define (make-cached-dispatch-store)
-  (cache-wrapped-dispatch-store(make-trie-dispatch-store)
-    implementation-type-name))
+  (cache-wrapped-dispatch-store (make-trie-dispatch-store)
+                                implementation-type-name))
 
 (define cache-full-generic-arithmetic
   (let ((g (make-generic-arithmetic make-cached-dispatch-store)))
