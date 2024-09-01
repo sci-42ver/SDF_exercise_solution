@@ -1,3 +1,4 @@
+;; ;; By searching "(test-stormer-counts)" with "*.rkt,*.scm" in VSCode, code base (see 3_14.scm) and 6.945_assignment_solution are reviewed.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'automatic-differentiation)
 
@@ -25,6 +26,7 @@
 
 ; (<-fib-test) ; should 0 predicate test.
 
+;; > make measurements for execution of (test-stormer-counts) and (fib 20) in the cached version of dispatch with the same generic arithmetics explored in exercise 3.14.
 (test-stormer-counts)
 ;; See `make-generic-arithmetic` where each operator has `make-generic-procedure`.
 ;; So here + will call once more which has the same effects for predicate calls as <.

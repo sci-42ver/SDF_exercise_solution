@@ -32,6 +32,7 @@
   (assert (= (func-derivative x)) (diff-coefficient (car diff-func-terms)))
   (assert (= (func x)) (diff-coefficient (cadr diff-func-terms))))
 
+;; > Add handlers for tan
 (test-unary 1 tan tan-derivative)
 
 ;; IGNORE: to make get-implementation-value work.
@@ -88,8 +89,10 @@
 (assign-handler!  atan     diff:atan2    differential? any-object?)
 (assign-handler!  atan     diff:atan2    any-object? differential?)
 
+;; > using atan1 for one argument and atan2 if given two arguments.
 (assert (= (atan 1) (n:atan 1)))
 (assert (= (atan 1 1) (n:atan 1)))
+;; > Remember, it must coexist with the atan1 handler.
 (test-unary 1 atan atan-derivative)
 
 (define (test-binary x y func func-derivative-x func-derivative-y)
@@ -111,4 +114,5 @@
   (assert (= (func-derivative-y x y)) (diff-coefficient (cadr diff-func-terms)))
   (assert (= (func x y)) (diff-coefficient (caddr diff-func-terms)))
   )
+;; > Also, install an atan2 handler for differentials.
 (test-binary 1 1 atan atan2-deriv-x atan2-deriv-y)

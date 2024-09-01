@@ -1,4 +1,4 @@
-;; By searching "(test-stormer-counts)" with "*.rkt,*.scm" in VSCode, 6.945_assignment_solution and code base are reviewed.
+;; By searching "(test-stormer-counts)" with "*.rkt,*.scm" in VSCode, code base are reviewed.
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'automatic-differentiation)
 
