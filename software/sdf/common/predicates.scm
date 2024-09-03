@@ -28,18 +28,23 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define set-predicate-metadata!)
 ;; (key metadata)
 (let ((association (make-metadata-association)))
-  (set! predicate? (association 'has?)) ; just get the procedure
+  (set! predicate? (association 'has?)) ; return bool https://srfi.schemers.org/srfi-69/srfi-69.html#hsht7
   (set! get-predicate-metadata (association 'get)) ; get metadata
   (set! set-predicate-metadata! (association 'put!)))
 
 (define (guarantee predicate object #!optional caller)
   (if (not (predicate object))
+      ;; > (preferably a registered predicate)
       (error:not-a predicate object caller))
   object)
 
 ;; checked
 ;; if caller is not provided, it is #!default checked by `((lambda (#!optional a b c) (display a)))`.
 (define (error:not-a predicate object #!optional caller)
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Taxonomy.html#index-error_003awrong_002dtype_002dargument
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Taxonomy.html#index-condition_002dtype_003awrong_002dtype_002dargument-1
+  ;; compared with (list-copy 3), here object is 3, (predicate-description predicate) is list, caller is list-copy.
+  ;; For (+ 'a 3), operand means "first".
   (error:wrong-type-argument object
                              (predicate-description predicate)
                              caller))
@@ -63,6 +68,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (string-append "object satisfying "
                      (object->description predicate))))
 
+;; number? will return one not readable description "#[compiled-procedure 12 (\"arith\" #xf0) #x1c #xb75eb4]"
 (define (object->description object)
   (call-with-output-string
     (lambda (port)
@@ -123,6 +129,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (conjoin . predicates)
   (conjoin* predicates))
 
+;; For `(define any-object? (conjoin))`
+;; `(every predicate? operands)` -> #t always, so it is registered.
+;; Then (every ... predicates) -> #t always.
 (define (conjoin* predicates)
   (maybe-register-compound-predicate!
    (lambda (object)

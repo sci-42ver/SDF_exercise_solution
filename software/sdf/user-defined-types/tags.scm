@@ -31,6 +31,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (if (not (predicate? data-test))
       (register-predicate! data-test (symbol 'n: name)))
   (let ((predicate
+          ;; will call `%invoke-tagging-strategy` which calls `set-predicate-metadata!` to make `predicate->tag` used by `set-predicate<=!` work.
          (make-simple-predicate name data-test
                                 tagging-strategy:optional)))
     (set-predicate<=! data-test predicate)
@@ -108,11 +109,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;;; Implementation tags
 
+;; checked
 (define implementation-tag
+  ;; Based on abstraction, I didn't dig into what (predicate->tag boolean?) is although I have understood predicate->tag.
   (let ((boolean-tag (predicate->tag boolean?))
         (null-tag (predicate->tag null?)))
     (lambda (object)
-      (cond ((eq? object #t) boolean-tag)
+      (cond ((eq? object #t) boolean-tag) ; TODO why not contain #f?
             ((eq? object '()) null-tag)
             (else
              (let ((name (implementation-type-name object)))

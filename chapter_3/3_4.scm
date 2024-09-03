@@ -136,7 +136,7 @@
 
 (set! %arithmetic-operator-alist (cons '(vector (domain domain) domain) %arithmetic-operator-alist))
 ;; reload `numeric-arithmetic` to ensure (vector num num) is supported.
-(load "~/SICP_SDF/SDF_exercises/software/sdf/common/numeric-arith.scm")
+(load "numeric-arith-mod.scm")
 (install-specific-generic-arithmetic)
 ;; use numeric-arithmetic to get (vector (cos 3) (sin 3)).
 ;; then again numeric-arithmetic to get the final result.

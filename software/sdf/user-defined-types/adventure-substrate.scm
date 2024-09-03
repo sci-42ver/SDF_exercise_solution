@@ -32,6 +32,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (property-list? object)
   (and (plist? object)
+        ;; SDF_exercises TODO when will this be used?
        (<= (count (lambda (keyword)
                     (not (default-object?
                            (plist-value object keyword))))
@@ -44,10 +45,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          predicate
          any-object?)))
 
+;; See `(type-instantiator troll?)` where `(property-optional? property)` is #f since we have no default for fallbakc.
 (define (get-default-supplier-property plist)
   (let ((value (plist-value plist 'default-value))
         (supplier (plist-value plist 'default-supplier))
         (property (plist-value plist 'default-to-property)))
+    ;; Here we have 3 choices for the default case with implied order by cond.
     (cond ((not (default-object? value))
            (lambda (lookup) value))
           ((not (default-object? supplier))
@@ -66,7 +69,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (%make-property name predicate default-supplier)
     property?
   (name property-name)
-  (predicate property-predicate)
+  (predicate property-predicate) ; this is noe used.
   (default-supplier property-default-supplier))
 
 (define (property-optional? property)
@@ -75,9 +78,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-record-printer <property>
   (lambda (property)
     (list (property-name property))))
-
+
 ;;;; Types
 
+;; checked
 (define (make-type name properties)
   (guarantee-list-of property? properties)
   (let ((type (simple-abstract-predicate name instance-data?)))
@@ -85,11 +89,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     type))
 
 (define (get-binding property instance)
+  ;; For troll, tagged-data-data is instance-data whose predicate-accessor will return proc when called.
   (instance-data-binding property (tagged-data-data instance)))
 
 
 ;;; Simplified interface for text -- GJS
 
+;; For troll, here object is troll.
 (define (get-property-value property object)
   ((get-binding property object)))
 
@@ -97,11 +103,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ((get-binding property object) value))
 
 
+;; For autonomous-agent, it may have thing:location.
+;; IMHO this is similar to OOP Inheritance.
 (define (type-properties type)
   (append-map %type-properties
               (cons type (all-supertypes type))))
 
 (define (all-supertypes type)
+  ;; call `get-all-tag-supersets` which recursively gets supersets of all levels up.
   (filter type? (all-predicate-supersets type)))
 
 (define type?)
@@ -114,18 +123,22 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;;; Instantiation
 
+;; create-troll is the following object (tag instance-data) where instance-data is (tag proc) where proc is to modify property.
 (define (type-instantiator type)
-  (let ((constructor (predicate-constructor type))
+  (let ((constructor (predicate-constructor type)) ; accepts instance-data?
         (properties (type-properties type)))
     (lambda plist
       (let ((object
+            ;; see `troll?` which uses `instance-data?`
              (constructor (parse-plist plist properties))))
+        ;; set-up! only called here.
         (set-up! object)
         object))))
 
 ;;; TODO: use properties as the keys in the plist.
 (define (parse-plist plist properties)
   (define (lookup-value property)
+    ;; For troll, property is troll:hunger and property-name is hunger.
     (let ((value (plist-value plist (property-name property))))
       (if (default-object? value)
           (begin
@@ -133,6 +146,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (error "Missing required property:"
                        (property-name property)
                        plist))
+            ;; if optional, fallback to default.
             ((property-default-supplier property) lookup-value))
           value)))
   (make-instance-data
@@ -160,26 +174,38 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (constructor
        (lambda (#!optional property)
          (if (default-object? property)
-             (map car bindings)
+             (map car bindings) ; 1st binding
              (let ((p (assv property bindings)))
                (if (not p)
                    (error "Unknown property:" property))
                (lambda (#!optional new-value)
+                ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Lambda-Expressions.html#index-_0023_0021optional-1
+                ;; > If there are fewer arguments than optional parameters, the unmatched parameters are bound to special objects called default objects.
+                ;; Here `(default-object? new-value)` is #t when no new-value is got.
+
+                ;; IMHO here we need to check new-value with property-predicate
                  (if (default-object? new-value)
                      (cdr p)
                      (set-cdr! p new-value))))))))))
 
 (define instance-data-bindings
+  ;; i.e. `(lambda (#!optional property) ...)`
   (predicate-accessor instance-data?))
 
 (define (instance-data-properties instance-data)
   ((instance-data-bindings instance-data)))
 
+;; returns one one-arg proc which either gets the data or modify.
+;; See `get-property-value`.
 (define (instance-data-binding property instance-data)
   ((instance-data-bindings instance-data) property))
-
+
 ;;;; Methods
 
+;; checked
+;; property may be something like thing:location.
+;; get-property-value -> get-binding extracts instance-data (see type-instantiator, this will have property related infos).
+;; Then call instance-data-binding which will return one proc.
 (define (property-getter property type)
   (let ((procedure
          (most-specific-generic-procedure
@@ -192,6 +218,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (get-property-value property object)))
     procedure))
 
+;; checked
 (define (property-setter property type value-predicate)
   (let ((procedure
          (most-specific-generic-procedure
@@ -201,11 +228,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (define-generic-procedure-handler procedure
       (match-args type value-predicate)
       (lambda (object value)
+        ;; See get-property-value
         (let ((binding (get-binding property object)))
           (%binding-set-prefix property value (binding) object)
           (binding value))))
     procedure))
 
+;; checked
 (define (%binding-set-prefix property new-value old-value object)
   (if debug-output
       (begin
@@ -234,11 +263,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (binding new-value))))
     procedure))
 
+;; here we adds object meeting value-predicate to object meeting type.
 (define (property-adder property type value-predicate)
   (property-modifier property type value-predicate 'adder
                      (lambda (value values)
                        (lset-adjoin eqv? values value))))
 
+;; create proc with name `(property-name property)`-remover.
 (define (property-remover property type value-predicate)
   (property-modifier property type value-predicate 'remover
                      (lambda (value values)
@@ -254,6 +285,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   '(north south east west in out up down skew))
 
 (define (display-to-string object)
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/String-Ports.html#index-call_002dwith_002doutput_002dstring
+  ;; > When procedure returns, call-with-output-string returns the port’s accumulated output as a string.
   (call-with-output-string
     (lambda (port)
       (display object port))))
@@ -264,6 +297,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (list-ref items (random (length items)))))
 
 (define (random-number n)
+  ;; > random-bias chooses a number (in this case 1, 2, or 3)
   (n:+ (random n) 1))
 
 (define (bias? object)
@@ -289,6 +323,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define object?
   (make-type 'object (list object:name object:description)))
 
+;; checked
 (define get-name
   (property-getter object:name object?))
 
@@ -322,18 +357,26 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (most-specific-generic-procedure 'send-message! 2 #f))
 
 (define (narrate! message person-or-place)
+  ;; will call (message? place?) -> (message? avatar?) -> (message? screen?)
+  ;; where the last will add " " between elements of `message`.
+  
+  ;; Here it just display the message for each adjacent person.
   (send-message! message
                  (if (person? person-or-place)
                      (get-location person-or-place)
                      person-or-place))
+  ;; See (enable-debugging) -> screen:port which is (current-output-port).
   (if debug-output
       (send-message! message debug-output)))
 
+;; checked: i.e. tell message to person only
 (define (tell! message person)
+  ;; See (match-args message? avatar?) here we only show message for `person`.
   (send-message! message person)
   (if debug-output
       (send-message! message debug-output)))
 
+;; checked: i.e. person say's message to others nearby.
 (define (say! person message)
   (narrate! (append (list person "says:") message)
             person))
@@ -349,6 +392,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (enable-debugging)
   (if (not debug-output)
+      ;; Here for screen:port we uses (default-supplier), i.e. (current-output-port).
+      ;; See parse-plist
       (set! debug-output (make-screen 'name 'debug))))
 
 (define (disable-debugging)
@@ -382,6 +427,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define screen:port
   (make-property 'port
                  'predicate output-port?
+                 ;; we need to call (current-output-port) https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Ports.html#index-current_002doutput_002dport
+                 ;; > These procedures are parameter objects
                  'default-supplier current-output-port))
 
 (define screen?

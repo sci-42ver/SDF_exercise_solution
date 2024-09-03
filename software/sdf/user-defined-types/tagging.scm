@@ -76,6 +76,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (most-specific-generic-procedure 'tagged-data-description 1
     (constant-generic-procedure-handler #f)))
 
+;; SDF_exercises TODO skipped since I don't care about what pretty-printer returns.
 ;;; MIT/GNU Scheme: integrate with pretty-printer
 (define-pp-describer tagged-data?
   tagged-data-description)
@@ -91,6 +92,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     data)
 
   (define tag
+    ;; predicate just use original data-test
     (make-tag data-test constructor (lambda (object) object)))
 
   tag)
@@ -106,6 +108,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (define (predicate object)
     (and (tagged-data? object)
          (tag<= (tagged-data-tag object) tag)
+         ;; > which is a clever trick for memoizing the result of an expensive predicate
+         ;; TODO why does here we still do the slow test for `(simple-abstract-predicate ’prime-number slow-prime?)`?
+         ;; See prime-number?-test.scm where since we already does this test in `constructor`, we don't need to redo it here.
          (data-test (tagged-data-data object))))
 
   (define tag
@@ -120,19 +125,21 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (error (string "Ill-formed data for " name ":")
                data))
     (if (eq? tag (get-tag data))
-        data
+        data ; already constructed before, i.e. "optional" to add tag.
         (%make-tagged-data tag data)))
 
   (define (predicate object)
     (or (and (tagged-data? object)
              (tag<= (tagged-data-tag object) tag)
              (data-test (tagged-data-data object)))
-        (data-test object)))
+        (data-test object)) ; "optional" to be tested before.
+        )
 
   (define (accessor object)
     (if (tagged-data? object)
         (tagged-data-data object)
-        object))
+        object) ; "optional" to be tested before.
+        )
 
   (define tag
     (make-tag predicate constructor accessor))

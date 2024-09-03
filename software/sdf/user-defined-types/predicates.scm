@@ -28,6 +28,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (tag-data predicate data)
   ((predicate-constructor predicate) data))
 
+;; checked.
 ;; Needed by code in common.
 (define (register-predicate! predicate name)
   (guarantee procedure? predicate)
@@ -51,7 +52,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (simple-abstract-predicate name data-test)
   (make-simple-predicate name data-test tagging-strategy:always))
-
+
 (define have-compound-operator-registrar?)
 (define get-compound-operator-registrar)
 (define define-compound-operator-registrar)
@@ -139,7 +140,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (for-each (lambda (tag)
                         (set-tag<=! joint-tag tag))
                       tags)))))))
-
+
 ;;;; Generic predicate operations
 
 ;; Needed by code in common.
@@ -171,6 +172,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (tag= (predicate->tag predicate1)
         (predicate->tag predicate2)))
 
+;; (superset a) -> (predicate a), but not necessarily vice versa.
 (define (set-predicate<=! predicate superset)
   (set-tag<=! (predicate->tag predicate)
               (predicate->tag superset)))
@@ -239,8 +241,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    data-test
    (lambda (predicate constructor accessor)
      (let ((tag
+            ;; %make-simple-tag for make-simple-tag.
             (maker
-             (make-tag-shared name predicate constructor
+              ;; For `(simple-abstract-predicate ’prime-number slow-prime?)`
+              ;; Here `name` is the original tag set.
+              ;; See `tagging-strategy:always` for the rest args.
+              ;; (name data-test) is (’prime-number slow-prime?)
+              ;; 
+              ;; accessor is `tagged-data-data` which is called to do  something like getting 2 from `(make-prime-number 2)`.
+              (make-tag-shared name predicate constructor
                               accessor))))
        (set-predicate-metadata! predicate tag)
        tag))))
@@ -250,6 +259,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (guarantee procedure? constructor 'make-tag-shared)
   (guarantee procedure? accessor 'make-tag-shared)
   (%make-tag-shared name predicate constructor accessor
+                    ;; accessed by `tag-shared-supersets` which calls with arg `(get-tag-shared tag)`
+                    ;; where `get-tag-shared` -> `get-shared` -(for make-simple-tag)> `simple-tag-shared`
                     (make-weak-eq-set)))
 
 (define-record-type <tag-shared>
@@ -271,6 +282,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     simple-tag?
   (shared simple-tag-shared))
 
+;; So the following `get-tag-shared` will call simple-tag-shared for simple-tag?.
 (define-tag-type simple-tag? simple-tag-shared)
 (define-tag-record-printer <simple-tag>)
 
@@ -330,6 +342,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (tags->predicates tags)
   (map tag->predicate tags))
 
+;; checked
 (define (get-tag-supersets tag)
   (((tag-supersets tag) 'get-elements)))
 
@@ -343,17 +356,23 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                   (get-tag-supersets tag)
                                   supersets)))
             (if (pair? new-sets)
+                ;; similar to DFS where we will check `new-sets` before the rest of `queue`.
                 (loop (append new-sets queue)
                       (append new-sets supersets))
                 (loop queue supersets))))
         supersets)))
-
+
 (define (set-tag<=! tag superset)
   (if (tag>= tag superset)
       (error "Not allowed to create a superset loop:"
              tag superset))
+  ;; > a (non-strict) subset of the set
+  ;; implied by <=.
   (if (not (tag<= tag superset))
+      ;; > modifies the metadata of its argument predicates
       (((tag-supersets tag) 'add-element!) superset))
+  ;; SDF_exercises TODO is there one more efficient way for `add-element!`.
+  ;; IMHO we can directly add the above added to tag<=-cache
   (hash-table-clear! tag<=-cache))
 
 (define (tag= tag1 tag2)
@@ -361,6 +380,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (guarantee tag? tag2)
   (eqv? tag1 tag2))
 
+;; checked.
 (define (tag<= tag1 tag2)
   (guarantee tag? tag1)
   (guarantee tag? tag2)
@@ -375,13 +395,19 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (cached-tag<= tag1 tag2)
   (hash-table-intern! tag<=-cache
                       (cons tag1 tag2)
-                      (lambda () (uncached-tag<= tag1 tag2))))
+                      (lambda () 
+                        (display "use uncached-tag<=.")
+                        (uncached-tag<= tag1 tag2))))
 
 (define (uncached-tag<= tag1 tag2)
   (or (eqv? tag1 tag2)
       (generic-tag<= tag1 tag2)
       (any (lambda (tag)
-             (cached-tag<= tag tag2))
+              (display "check superset.")
+              ;; this may recursively go up level by level.
+              ;; So `get-tag-supersets` only needs supersets one level up.
+              (cached-tag<= tag tag2))
+            ;; implies inheritance.
            (get-tag-supersets tag1))))
 
 (define (cached-tag>= tag1 tag2)
@@ -414,6 +440,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-tag<= non-bottom-tag? bottom-tag? false-tag<=)
 (define-tag<= top-tag? non-top-tag? false-tag<=)
 
+;; SDF_exercises TODO temporarily skipped the following 2 define.
 (define-tag<= parametric-tag? parametric-tag?
   (lambda (tag1 tag2)
     (and (eqv? (parametric-tag-template tag1)

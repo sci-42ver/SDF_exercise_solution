@@ -59,12 +59,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (object applicable-object-metadata-object)
   (applicator applicable-object-metadata-applicator))
 
+;; used by make-simple-function.
 (define (make-object-applicable predicate object applicator)
   (guarantee procedure? applicator)
   ;; The procedure that is the applicable object must not be the
   ;; APPLICATOR argument.  This is so we can have several
   ;; applicable objects that share the same procedure but with
   ;; different metadata.
+
+  ;; TODO why not just use applicator?
   (let ((applicable-object
          (lambda args (apply applicator args))))
     (set-applicable-object-metadata!

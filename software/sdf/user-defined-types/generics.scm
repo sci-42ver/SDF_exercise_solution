@@ -46,16 +46,20 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (simple-function-apply-fit (cdr rule) args)
       (predicates-match? (car rule) args)))
 
+;; see add-handler! using `(cons predicates handler)`. rule:(pred,handler).
 (define (rule< r1 r2)
   (let loop ((ps1 (car r1)) (ps2 (car r2)))
+    ;; See `match-args` where we always use one list.
+    ;; So `(pair? ps1)` implies ps1 is nil.
     (if (pair? ps1)
         (cond ((eqv? (car ps1) (car ps2))
                (loop (cdr ps1) (cdr ps2)))
+              ;; This implies "most-specific" using tag<=.
               ((predicate<= (car ps1) (car ps2))
                #t)
               ((predicate<= (car ps2) (car ps1))
                #f)
-              (else
+              (else ; incomparable for the former 2 predicates.
                (loop (cdr ps1) (cdr ps2))))
         #f)))
 
@@ -73,6 +77,18 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (let ((handler (car handlers))
                  (next-handler (loop (cdr handlers))))
              (lambda args
+              ;; IGNORE: See `(define-generic-procedure-handler set-up! (match-args person?) ...)`
+                ;; where we always try super, so we will try the last handler first (i.e. default-handler).
+                ;; So it will call `(super person)` with super=default-handler.
+                ;; Then 
+              ;; IGNORE: The above example doesn't make sense since `set-up!` doesn't have multiple handlers for one predicate case.
+              ;; For set-up! next-handler will be default-handler.
+              ;; Then (super exit) means (apply next-handler args) which just returns #f due to `(constant-generic-procedure-handler #f)`.
+
+              ;; So based on induction, if there are multiple handlers, `next-handler` is always called before what handler actually does.
+              ;; i.e. we will do all of (apped handlers (list default-handler)) from right to left.
+              ;; This is 
+              ;; > when called causes any handlers defined on the *supersets* of the given object to be called
                (apply handler (cons next-handler args))))
            default-handler)))))
 

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Collections
 
 (define (make-weak-eq-set)
@@ -33,7 +33,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (if (weak-memq element elements) #t #f))
 
     (define (add-element! element)
+      ;; TODO https://github.com/tali713/mit-scheme/blob/6c703a838081fe2418bc0dbfe003bdb429d8c479/src/runtime/list.scm#L445-L455
       (if (not (weak-memq element elements))
+          ;; TODO why use Weak Pairs https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Weak-Pairs.html
           (set! elements (weak-cons element elements))))
 
     (lambda (operator)

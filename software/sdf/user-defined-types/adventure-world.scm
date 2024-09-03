@@ -29,6 +29,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define all-people)
 (define my-avatar)
 
+;; checked
 (define (start-adventure my-name)
   (set! the-clock (make-clock))
   (set! all-places (create-mit))
@@ -50,6 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; User interface
 
+;; checked. Notice only avatar will do "You are in ..." in take-exit!.
 (define (go direction)
   (let ((exit
          (find-exit-in-direction direction
@@ -276,6 +278,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (make-place 'name name))
 
 (define (create-exit from direction to)
+  ;; See `(plist-value plist (property-name property))` so we use 'from for exit:from.
+  ;; -> type-instantiator -> set-up! -> `(add-exit! (get-from exit) exit)`.
   (make-exit 'name 'exit
              'from from
              'direction direction
@@ -310,6 +314,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (create-exit from direction to)
   (create-exit to reverse-direction from))
 
+;; a can-see b
 (define (can-see a b)
   (add-vista! a b))
 

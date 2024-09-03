@@ -58,6 +58,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (hash-table-intern! %constant-generic-procedure-handlers
                       constant
                       (lambda ()
+                        ;; default to be this.
                         (lambda args
                           (declare (ignore args))
                           constant))))

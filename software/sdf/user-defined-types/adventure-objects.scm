@@ -40,6 +40,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler set-up! (match-args thing?)
   (lambda (super thing)
     (super thing)
+    ;; See `type-instantiator` where `(constructor (parse-plist plist properties))` has already put property's in place.
     (add-thing! (get-location thing) thing)))
 
 (define-generic-procedure-handler tear-down! (match-args thing?)
@@ -51,7 +52,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args message? thing?)
   (lambda (message thing)
     #f))
-
+
 ;;; Containers
 
 (define container:things
@@ -102,11 +103,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define get-direction
   (property-getter exit:direction exit?))
 
+;; only this calls add-exit!.
 (define-generic-procedure-handler set-up! (match-args exit?)
   (lambda (super exit)
     (super exit)
     (add-exit! (get-from exit) exit)))
-
+
 ;;; Places
 
 (define place:vistas
@@ -122,6 +124,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  'default-value '()))
 
 (define place?
+  ;; SDF_exercises TODO (list place:vistas place:exits) is skipped due to abstraction
   (make-type 'place (list place:vistas place:exits)))
 (set-predicate<=! place? container?)
 
@@ -181,6 +184,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (type-instantiator mobile-thing?))
 
 (define set-location!
+  ;; notice container? has 2 subset types (see regex "set-predicate<=!.* container\?\)"), place? and bag?.
   (property-setter thing:location mobile-thing? container?))
 
 (define get-origin
@@ -190,6 +194,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (chaining-generic-procedure 'enter-place! 1
     (constant-generic-procedure-handler #f)))
 
+;; there is no `(define-generic-procedure-handler leave-place! ...)`
 (define leave-place!
   (most-specific-generic-procedure 'leave-place! 1
     (constant-generic-procedure-handler #f)))
@@ -205,6 +210,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (make-property 'bag
                  'predicate (lambda (x) (bag? x))
                  'default-supplier
+                 ;; Due to at last we will call %make-tagged-data if using tagging-strategy:always, here it is fine to have conflicting types.
                  (lambda () (make-bag 'name 'my-bag))))
 
 (define person?
@@ -215,6 +221,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (property-getter person:health person?))
 
 (define set-health!
+  ;; Here `property-setter` will use `most-specific-generic-procedure` to create one same name generic proc set-health!.
+  ;; Then define handler and return that proc.
   (property-setter person:health person? any-object?))
 
 (define get-bag
@@ -233,6 +241,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args person?)
   (lambda (super person)
     (super person)
+    ;; (get-location person) is right since we call `(set-location! mobile-thing to)` before `enter-place!`.
     (narrate! (list person "enters" (get-location person))
               person)
     (let ((people (people-here person)))
@@ -243,10 +252,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (lambda (person)
     (if (n:> (get-health person) 0)
         (callback person))))
-
+
+;; checked
 (define (people-here person)
   (delv person (people-in-place (get-location person))))
 
+;; checked
 (define (things-here person)
   (things-in-place (get-location person)))
 
@@ -256,6 +267,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (exits-here person)
   (get-exits (get-location person)))
 
+;; checked
 (define (peoples-things person)
   (append-map get-things (people-here person)))
 
@@ -273,6 +285,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (announce!
    '("An earth-shattering, soul-piercing scream is heard..."))
   (set-health! person 0)
+  ;; See generic-move:person.
   (move! person (get-heaven) person))
 
 (define (resurrect! person health)
@@ -336,8 +349,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (lambda (super agent)
     (unregister-with-clock! agent (get-clock))
     (super agent)))
-
+
+;; checked
 (define (move-and-take-stuff! agent)
+  ;; so if get-restlessness is smaller, it is more possible for agent to move.
   (if (flip-coin (get-restlessness agent))
       (move-somewhere! agent))
   (if (flip-coin (get-acquisitiveness agent))
@@ -419,9 +434,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define make-troll
   (type-instantiator troll?))
 
+;; returns generic-procedure which will  when called with troll.
 (define get-hunger
   (property-getter troll:hunger troll?))
 
+;; only this will call suffer! -> die! (notice each calls is only called by this func).
 (define (eat-people! troll)
   (if (flip-coin (get-hunger troll))
       (let ((people (people-here troll)))
@@ -434,7 +451,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (suffer! (random-number 3) victim))))))
 
 (define-clock-handler troll? eat-people!)
-
+
 ;;; Avatars
 
 (define avatar:screen
@@ -452,6 +469,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (property-getter avatar:screen avatar?))
 
 (define-generic-procedure-handler send-message!
+  ;; > If the actor is the avatar, the message is displayed
+  ;; otherwise we will run the corresponding handler of (match-args message? thing?).
   (match-args message? avatar?)
   (lambda (message avatar)
     (send-message! message (get-screen avatar))))
@@ -461,8 +480,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (lambda (super avatar)
     (super avatar)
     (look-around avatar)
+    ;; > several autonomous agents arrive after the avatar
+    ;; So `clock-tick!` will call move-and-take-stuff!.
+
+    ;; notice (set-predicate<=! student? autonomous-agent?).
+    ;; So for student alyssa-hacker, it will call `register-with-clock!` in `set-up!`.
+    ;; See notes, chaining-generic-procedure set-up! will actually do 3 procs beyond default.
     (tick! (get-clock))))
-
+
 (define (look-around avatar)
   (tell! (list "You are in" (get-location avatar))
          avatar)
@@ -490,6 +515,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Motion
 
+;; See above (get-location thing) is either place? or bag?.
+;; So (mobile-thing? place? bag? person?) or (mobile-thing? bag? bag? person?)
+
+;; If called by (take-thing name), so it may match (thing? container? container? person?) due to not mobile-thing?.
 (define (take-thing! thing person)
   (move! thing (get-bag person) person))
 
@@ -497,12 +526,20 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (move! thing (get-location person) person))
 
 (define (take-exit! exit mobile-thing)
+  ;; (person? place? place? person?)
   (generic-move! mobile-thing
                  (get-from exit)
                  (get-to exit)
                  mobile-thing))
 
 (define (move! thing destination actor)
+  ;; For drop-thing!:
+  ;; either (mobile-thing? place? place? person?)
+  ;; or (mobile-thing? bag? place? person?)
+  ;; or (thing? container? container? person?)
+  ;; See `(set-predicate<=! place? container?)` or `(set-predicate<=! bag? container?)` etc. for relations of predicates.
+  ;; Also see make-subsetting-dispatch-store-maker -> rule< -> predicate<=. So here if mobile-thing?, then that will be chosen.
+  ;; Then `drop-thing!` will probably return bag for `(get-location thing)`.
   (generic-move! thing
                  (get-location thing)
                  destination
@@ -571,7 +608,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (if (not (eqv? actor new-holder))
           (say! new-holder (list "Whoa! Thanks, dude!")))
       (move-internal! mobile-thing from to))))
-
+
 ;; coderef: generic-move:drop
 (define-generic-procedure-handler generic-move!
   (match-args mobile-thing? bag? place? person?)
@@ -638,4 +675,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (remove-thing! from mobile-thing)
   (set-location! mobile-thing to)
   (add-thing! to mobile-thing)
+  ;; For generic-move:drop: searching "thing? avatar?" without results. So this is same as `leave-place!` doing nothing.
+  
+  ;; For generic-move:person: Assume this person is avatar, then since `(set-predicate<=! avatar? person?)`, 
+  ;; handlers are (avatar? person?). Then we will call default-handler -> person? -> avatar?.
+  ;; This is reasonable since obviously we do common things first before specific ones.
+  ;; See `(go ’east)` where we first does `gjs enters lobby-7` then we does `You are in lobby-7`.
   (enter-place! mobile-thing))

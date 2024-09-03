@@ -9,7 +9,7 @@
 (define n:vector vector)
 
 (set! %arithmetic-operator-alist (cons '(vector (domain domain) domain) %arithmetic-operator-alist))
-(load "~/SICP_SDF/SDF_exercises/software/sdf/common/numeric-arith.scm")
+(load "numeric-arith-mod.scm")
 
 (load "general-vector-lib.scm")
 

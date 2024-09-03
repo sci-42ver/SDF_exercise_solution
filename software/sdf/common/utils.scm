@@ -193,16 +193,18 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     (loop (cdr alist))))
         '())))
 
+;; example see `(make-property ’hunger ’predicate bias?)` where plist is (’predicate bias?).
 (define (plist-value plist key)
   (define (loop plist)
     (if (pair? plist)
         (begin
-          (if (not (pair? (cdr plist)))
+          (if (not (pair? (cdr plist))) ; no corresponding value due to length error (see plist?).
               (lose))
           (if (eqv? (car plist) key)
               (car (cdr plist))
               (loop (cdr (cdr plist)))))
         (begin
+          ;; length error.
           (if (not (null? plist))
               (lose))
           (default-object))))
