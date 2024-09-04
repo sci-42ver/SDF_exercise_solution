@@ -396,14 +396,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (hash-table-intern! tag<=-cache
                       (cons tag1 tag2)
                       (lambda () 
-                        (display "use uncached-tag<=.")
+                        ; (display "use uncached-tag<=.")
                         (uncached-tag<= tag1 tag2))))
 
 (define (uncached-tag<= tag1 tag2)
   (or (eqv? tag1 tag2)
       (generic-tag<= tag1 tag2)
       (any (lambda (tag)
-              (display "check superset.")
+              ; (display "check superset.")
               ;; this may recursively go up level by level.
               ;; So `get-tag-supersets` only needs supersets one level up.
               (cached-tag<= tag tag2))

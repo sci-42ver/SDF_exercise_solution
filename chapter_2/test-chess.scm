@@ -16,7 +16,7 @@
 (load "~/SICP_SDF/SDF_exercises/software/sdf/common/testing.scm")
 (load "chess-lib/test-chess-utils.scm")
 
-(load "utils.scm")
+(load "../common-lib/utils.scm")
 (define-test 'chess
              (lambda ()
                (let ((board (make-board chess)))

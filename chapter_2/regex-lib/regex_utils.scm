@@ -13,7 +13,7 @@
 
 ; (load "../software/sdf/common/testing.scm")
 ; (load "../software/sdf/regular-expressions/test-regexp.scm")
-; (load "utils.scm")
+; (load "../common-lib/utils.scm")
 ; ; (include "utils.scm")
 
 ; (displayln tests-file)

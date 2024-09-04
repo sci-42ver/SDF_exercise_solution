@@ -1,5 +1,5 @@
 (load "2_4_chebert_utils.scm")
-(load "utils.scm")
+(load "../common-lib/utils.scm")
 
 (define ((curry-arguments . to_add_arg_indices) . fixed_args)
   (lambda (f)

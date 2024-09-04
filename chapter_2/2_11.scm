@@ -40,7 +40,7 @@
 ;; 1/0.0254*60=2362.2047244094488
 (define mps-to-ipm (make-converter 'mps 'ipm))
 ;; parameter from test-units.scm
-(load "utils.scm")
+(load "../common-lib/utils.scm")
 (define tolerance 1e-4)
 (define (assert-close z1 tolerance z2)
   (assert (close-enuf? z1 z2 tolerance)))

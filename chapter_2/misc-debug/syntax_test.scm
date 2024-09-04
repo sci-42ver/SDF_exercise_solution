@@ -1,5 +1,5 @@
 ;; https://stackoverflow.com/q/78800750/21294350
-(load "utils.scm")
+(load "../common-lib/utils.scm")
 (define (var_arg . lst)
   (if (null? lst)
     (displayln "nothing")

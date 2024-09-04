@@ -81,7 +81,7 @@
                              (cdr exprs))))
     (r:seq)))
 
-(load "utils.scm")
+(load "../common-lib/utils.scm")
 ;; Here the abstraction works since we don't need to change each levels to *add the arg* as 6.945_assignment_solution and chebert do.
 ;; So we don't need `add-args` in 6.945_assignment_solution.
 ;; basic ideas same as 6.945_assignment_solution and chebert.

@@ -4,7 +4,7 @@
 ;; This is not indexed in saved-total-index.
 (load "../software/sdf/common/testing.scm")
 (load "../software/sdf/regular-expressions/test-regexp.scm")
-(load "utils.scm")
+(load "../common-lib/utils.scm")
 (load "regex-lib/regex_utils.scm")
 
 ; (find-scheme-libraries! ".")

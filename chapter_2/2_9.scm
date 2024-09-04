@@ -2,7 +2,7 @@
 (manage 'new 'regular-expressions)
 (load "../software/sdf/common/testing.scm")
 (load "../software/sdf/regular-expressions/test-regexp.scm")
-(load "utils.scm")
+(load "../common-lib/utils.scm")
 (load "regex-lib/regex_utils.scm")
 
 ;; TODO `(load "2_8.scm")` seems to use one env by "../software/sdf/manager/load" and can't pass `r:seq` definition.

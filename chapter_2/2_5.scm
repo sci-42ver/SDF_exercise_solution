@@ -1,5 +1,5 @@
 (load "../software/sdf/combinators/function-combinators.scm")
-(load "utils.scm")
+(load "../common-lib/utils.scm")
 
 ;; https://stackoverflow.com/questions/47048405/removing-n-number-of-elements-from-a-list-in-racket
 (define (list-remove* args_lst idx_lst)
