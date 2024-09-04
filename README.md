@@ -50,9 +50,9 @@ exercise solution for Software Design for Flexibility (SDF)
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # @exercise solutions by *3 references* (i.e. nbardiuk etc.) and *6.945_assignment_solution* checked up to now (sometimes *code base* has sample implementations)
 with check comments in codes.
-- 2, 3.1~3.15
+- 2, 3.1~3.17
 # @exercise tests finished
-- 2, 3.1~3.15
+- 2, 3.1~3.17
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
   - `make-predicate-template`
@@ -169,7 +169,9 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - mbillingr ~~only has automatic-differentiation.~~ has nothing.
 - by `grep "generic" -r .` chebert has nothing for chapter 3 after 3.2 (included).
   Then by searching keywords like `vec-before-func` in exercise 3.1~3.3, it also have no implementations for these.
-- 6.945_assignment_solution has 3.2, 3.5, 3.6, 3.7, 4.0 although they are not same as 2024 version.
+- 6.945_assignment_solution 
+  - ps03 has 3.2, 3.5, 3.6, 3.7, 4.0 although they are not same as 2024 version.
+  - ps04 only has one similar implementation of Exercise 3.16.
 - 2
   - [vector vs list](https://stackoverflow.com/a/27589146/21294350)
 - 11

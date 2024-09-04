@@ -82,6 +82,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;;; Types
 
 ;; checked
+;; notice if this is called multiple times with the same name, it will always return one new `type` implied by %make-simple-tag in `simple-abstract-predicate`.
+;; So the following `%set-type-properties!` will always work without `(not (eqv? metadata* metadata))`.
 (define (make-type name properties)
   (guarantee-list-of property? properties)
   (let ((type (simple-abstract-predicate name instance-data?)))
@@ -128,6 +130,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((constructor (predicate-constructor type)) ; accepts instance-data?
         (properties (type-properties type)))
     (lambda plist
+      ; (display (list (predicate-name type) properties))
+      ; (newline)
       (let ((object
             ;; see `troll?` which uses `instance-data?`
              (constructor (parse-plist plist properties))))
@@ -149,6 +153,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             ;; if optional, fallback to default.
             ((property-default-supplier property) lookup-value))
           value)))
+  ; (display
+  ;   (map (lambda (property)
+  ;         (cons property (lookup-value property)))
+  ;       properties))
+  ; (newline)
   (make-instance-data
    (map (lambda (property)
           (cons property (lookup-value property)))

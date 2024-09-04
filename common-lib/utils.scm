@@ -28,3 +28,8 @@
 ;                 (lambda (x y) (and x y)) 
 ;                 #t 
 ;                 (map condition lst))))))
+
+(define (loop-cnt handler cnt)
+  (do ((i 0 (+ i 1)))
+    ((= i cnt) #f)
+    (handler)))

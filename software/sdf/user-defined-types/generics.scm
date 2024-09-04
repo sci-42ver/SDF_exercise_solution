@@ -47,6 +47,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (predicates-match? (car rule) args)))
 
 ;; see add-handler! using `(cons predicates handler)`. rule:(pred,handler).
+;; Here if ps1 and ps2 are not equal and also have no predicate<= for each corresponding pairs, then it will return #f.
 (define (rule< r1 r2)
   (let loop ((ps1 (car r1)) (ps2 (car r2)))
     ;; See `match-args` where we always use one list.

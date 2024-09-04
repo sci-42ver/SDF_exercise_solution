@@ -223,6 +223,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define set-health!
   ;; Here `property-setter` will use `most-specific-generic-procedure` to create one same name generic proc set-health!.
   ;; Then define handler and return that proc.
+
+  ;; SDF_exercises TODO IMHO here number? is better.
   (property-setter person:health person? any-object?))
 
 (define get-bag
@@ -241,6 +243,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args person?)
   (lambda (super person)
     (super person)
+    (display "run enter-place!")
     ;; (get-location person) is right since we call `(set-location! mobile-thing to)` before `enter-place!`.
     (narrate! (list person "enters" (get-location person))
               person)
