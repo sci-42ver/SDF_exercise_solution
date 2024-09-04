@@ -172,6 +172,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (predicate-constructor instance-data?)))
     (lambda (bindings)
       (constructor
+        ;; > It is an association from the properties of this type to their values.
+        ;; This is different from `make-metadata-association` which is based on hash table.
+        ;; Here it is just based on `bindings` which is one alist which may be similar to hash table implied by `	hash-table->alist`.
        (lambda (#!optional property)
          (if (default-object? property)
              (map car bindings) ; 1st binding
