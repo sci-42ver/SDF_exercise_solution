@@ -488,6 +488,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (chaining-generic-procedure 'clock-tick! 1
     (constant-generic-procedure-handler #f)))
 
+;; See 3_17.scm, it seems "action" object is stored. So later redefined action needs to be reloaded by calling `define-clock-handler` again.
 (define (define-clock-handler type action)
   (define-generic-procedure-handler clock-tick!
     (match-args type)

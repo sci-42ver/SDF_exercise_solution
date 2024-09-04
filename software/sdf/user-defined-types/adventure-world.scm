@@ -280,6 +280,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (create-exit from direction to)
   ;; See `(plist-value plist (property-name property))` so we use 'from for exit:from.
   ;; -> type-instantiator -> set-up! -> `(add-exit! (get-from exit) exit)`.
+  ;; Also see `find-exit-in-direction` which implies we can get to "to" from "from" by going in "direction".
   (make-exit 'name 'exit
              'from from
              'direction direction

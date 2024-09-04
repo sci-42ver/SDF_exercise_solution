@@ -107,6 +107,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (generic-procedure-constructor
    make-cached-most-specific-dispatch-store))
 
+;; uses make-simple-dispatch-store
 (define chaining-generic-procedure
   (generic-procedure-constructor
    make-cached-chaining-dispatch-store))

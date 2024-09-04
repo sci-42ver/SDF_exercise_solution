@@ -243,7 +243,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args person?)
   (lambda (super person)
     (super person)
-    (display "run enter-place!")
+    ; (display "run enter-place!")
     ;; (get-location person) is right since we call `(set-location! mobile-thing to)` before `enter-place!`.
     (narrate! (list person "enters" (get-location person))
               person)
