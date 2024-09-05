@@ -121,7 +121,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (generic-procedure-handlers proc)
   (map cdr (generic-procedure-rules proc)))
 
-;; TODO so interesting, why does outer (generic-procedure? object) is #f but (generic-procedure? candidate) is #t?
+;; SDF_exercises TODO so interesting, why does outer (generic-procedure? object) is #f but (generic-procedure? candidate) is #t?
 ;; See 3_14.scm `(display (generic-procedure-rules +))`.
 (define (generic-procedure-metadata object)
   (define (try-object candidate)

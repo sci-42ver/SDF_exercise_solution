@@ -67,7 +67,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; applicable objects that share the same procedure but with
   ;; different metadata.
 
-  ;; TODO why not just use applicator?
+  ;; SDF_exercises TODO why not just use applicator?
   (let ((applicable-object
          (lambda args (apply applicator args))))
     (set-applicable-object-metadata!

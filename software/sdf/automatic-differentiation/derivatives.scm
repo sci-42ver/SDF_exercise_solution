@@ -187,9 +187,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (uninterned-symbol? object))
 
 (define (diff-factor>? x y)
-  ;; SDF_exercises TODO no definition.
   (symbol>? y x))
-
+
 (define (make-infinitesimal dx)
   (make-differential (list (make-diff-term 1 (list dx)))))
 

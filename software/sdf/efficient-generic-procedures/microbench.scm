@@ -111,7 +111,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; (set! register-compound-predicate! memoized-register-compound-predicate!)
 
-;; TODO I don't know how the following "Rule lists" is got.
+;; SDF_exercises TODO I don't know how the following "Rule lists" is got.
 (set! make-default-dispatch-store make-simple-dispatch-store)
 (define default-microbench-full-generic-arith
   (microbench-full-generic-arith make-default-dispatch-store))

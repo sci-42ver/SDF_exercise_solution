@@ -35,21 +35,23 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; > functions
 ;; SDF_exercises TODO IMHO here we should use `(disjoin base-predicate symbolic?)` since `any-arg ...` (see vector-extender and also see the difference from pure-function-extender.)
 (define (symbolic-extender base-arithmetic)
-  (make-arithmetic 'symbolic symbolic? (list base-arithmetic)
-    ;; IGNORE: TODO this will throw error for `(apply (lambda (x y) (list x y)) 2 '(x y))` but `base-constants` in `make-arithmetic` may be one list.
-    ;;          make-arithmetic-1 corresponding part is even more interesting with only one arg.
-    ;; See "Another difference you may have noticed ..." where we assumes one base have only one corresponding constant for each type.
-    (lambda (name base-constant)
-      base-constant)
-    (let ((base-predicate
-           (arithmetic-domain-predicate  base-arithmetic)))
-      (lambda (operator base-operation)
-        (make-operation operator
-                        (any-arg (operator-arity operator)
-                                 symbolic?
-                                 base-predicate)
-                        ;; define what to do with such an operator. Here we just does `(+ a b)` for `(+ ’a ’b)` 
-                        (lambda args (cons operator args)))))))
+  (let ((base-predicate
+          (arithmetic-domain-predicate base-arithmetic)))
+    (make-arithmetic 'symbolic (disjoin base-predicate symbolic?) (list base-arithmetic)
+      ;; IGNORE: TODO this will throw error for `(apply (lambda (x y) (list x y)) 2 '(x y))` but `base-constants` in `make-arithmetic` may be one list.
+      ;;          make-arithmetic-1 corresponding part is even more interesting with only one arg.
+      ;; See "Another difference you may have noticed ..." where we assumes one base have only one corresponding constant for each type.
+      (lambda (name base-constant)
+        base-constant)
+      (let ((base-predicate
+            (arithmetic-domain-predicate  base-arithmetic)))
+        (lambda (operator base-operation)
+          (make-operation operator
+                          (any-arg (operator-arity operator)
+                                  symbolic?
+                                  base-predicate)
+                          ;; define what to do with such an operator. Here we just does `(+ a b)` for `(+ ’a ’b)` 
+                          (lambda args (cons operator args))))))))
 
 ;;;; Function arithmetic
 

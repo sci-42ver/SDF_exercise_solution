@@ -207,7 +207,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (cond ((pair? x)
          (cons (substitute new old (car x))
                (substitute new old (cdr x))))
-        ;; SDF_exercises TODO when will this be used?
+        ;; See Exercise 3.12 where replace-dx-vector is similar to what here does.
+        ;; But due to convenience, I use `replace-dx` instead of substitute since the former is will do something like sort.
         ((vector? x)
          (make-initialized-vector (vector-length x)
            (lambda (i)

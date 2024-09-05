@@ -115,7 +115,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((boolean-tag (predicate->tag boolean?))
         (null-tag (predicate->tag null?)))
     (lambda (object)
-      (cond ((eq? object #t) boolean-tag) ; TODO why not contain #f?
+      (cond ((eq? object #t) boolean-tag) ; SDF_exercises TODO why not contain #f?
             ((eq? object '()) null-tag)
             (else
              (let ((name (implementation-type-name object)))

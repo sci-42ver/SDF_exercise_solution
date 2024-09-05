@@ -32,7 +32,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (property-list? object)
   (and (plist? object)
-        ;; SDF_exercises TODO when will this be used?
+        ;; we only allows one default keyword to set property value.
        (<= (count (lambda (keyword)
                     (not (default-object?
                            (plist-value object keyword))))

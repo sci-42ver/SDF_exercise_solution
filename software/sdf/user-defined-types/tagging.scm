@@ -109,7 +109,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (and (tagged-data? object)
          (tag<= (tagged-data-tag object) tag)
          ;; > which is a clever trick for memoizing the result of an expensive predicate
-         ;; TODO why does here we still do the slow test for `(simple-abstract-predicate ’prime-number slow-prime?)`?
+         ;; SDF_exercises TODO why does here we still do the slow test for `(simple-abstract-predicate ’prime-number slow-prime?)`?
          ;; See prime-number?-test.scm where since we already does this test in `constructor`, we don't need to redo it here.
          (data-test (tagged-data-data object))))
 

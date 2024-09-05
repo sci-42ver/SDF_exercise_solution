@@ -51,7 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           (make-list-hash eq-hash)
                           ;; ref1
                           ;; > The arg arguments are allowed but are implementation dependent; do not provide them.
-                          ;; TODO #t meaning?
+                          ;; SDF_exercises TODO #t meaning?
                           'rehash-after-gc? #t))
         ((eqv? eqv? elt=)
          (make-hash-table (make-list= eqv?)

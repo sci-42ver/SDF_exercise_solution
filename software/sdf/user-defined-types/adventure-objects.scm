@@ -117,6 +117,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                               (and (n:list? x) (every place? x)))
                  'default-value '()))
 
+;; SDF_exercises TODO See make-exit where exit?<=object? only. So it isn't place?.
+;; But property-predicate is not used. So it is fine.
 (define place:exits
   (make-property 'exits
                  'predicate (lambda (x)
@@ -124,7 +126,6 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  'default-value '()))
 
 (define place?
-  ;; SDF_exercises TODO (list place:vistas place:exits) is skipped due to abstraction
   (make-type 'place (list place:vistas place:exits)))
 (set-predicate<=! place? container?)
 
