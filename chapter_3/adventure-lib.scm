@@ -14,8 +14,14 @@
 (define (tell-health person)
   (tell! (list (local-possessive person) "health is" (get-health person)) person))
 
+(define (find-place-name place-name places)
+  (find 
+    (lambda (place) (equal? (get-name place) place-name))
+    places))
+
 (define (start-adventure-with-troll-place-and-mine my-name troll-place-name my-place-name)
   (define (create-specific-trolls troll-place)
+    (assert troll-place)
     (map (lambda (name)
           (create-troll name
                         troll-place
@@ -27,16 +33,13 @@
     (append (create-students places)
             (create-house-masters places)
             (create-specific-trolls 
-              (find 
-                (lambda (place) (equal? (get-name place) troll-place-name))
-                places))))
+              (find-place-name troll-place-name places))))
   (set! the-clock (make-clock))
   (set! all-places (create-mit))
+  ; (display (map get-name all-places))
   (set! heaven (create-place 'heaven))
   (set! all-people (create-people all-places))
   (set! my-avatar
         (create-avatar my-name
-                       (find 
-                        (lambda (place) (equal? (get-name place) my-place-name))
-                        all-places)))
+                       (find-place-name my-place-name all-places)))
   (whats-here))

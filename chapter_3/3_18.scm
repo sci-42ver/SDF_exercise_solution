@@ -113,7 +113,7 @@
   (go (get-direction
     (find-exit 
       (get-location person) 
-      (find (lambda (place) (equal? (get-name place) 'medical-center)) all-places))))
+      (find-place-name 'medical-center all-places))))
   ;; Here restore is done before tick! -> eat-people!.
   (if (n:> (get-health person) 0)
     (begin
@@ -130,3 +130,11 @@
 (define failure-to-survive #t)
 (start-adventure-with-troll-place-and-mine 'anonymous 'green-building 'green-building)
 (what-to-do my-avatar)
+; Your health is 2
+; ...
+; Your health is restored.
+; Your health is 3
+; ...
+; registrar takes a bite out of anonymous
+; ...
+; Your health is 2

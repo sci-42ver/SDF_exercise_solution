@@ -145,7 +145,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (if (eqv? person my-avatar)
       "Your"
       (possessive person)))
-
+
 (define (create-mit)
   (let ((great-dome (create-place 'great-dome))
         (little-dome (create-place 'little-dome))
@@ -220,7 +220,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           tunnel 32-123 32D 32G
           student-street bldg-54 the-dot
           dorm-row)))
-
+
 (define (create-people places)
   (displayln "call global create-people")
   (append (create-students places)

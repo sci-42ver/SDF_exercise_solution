@@ -494,4 +494,5 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (match-args type)
     (lambda (super object)
       (super object)
+      ; (display (list "clock-tick!" (get-name object)))
       (action object))))

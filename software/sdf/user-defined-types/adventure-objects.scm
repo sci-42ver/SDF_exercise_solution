@@ -346,6 +346,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args autonomous-agent?)
   (lambda (super agent)
     (super agent)
+    ; (display (list "register-with-clock!" (get-name agent)))
     (register-with-clock! agent (get-clock))))
 
 (define-generic-procedure-handler tear-down!

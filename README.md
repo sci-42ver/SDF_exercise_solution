@@ -52,7 +52,7 @@ exercise solution for Software Design for Flexibility (SDF)
 with check comments in codes.
 - 2, 3.1~3.17
 # @exercise tests finished
-- 2, 3.1~3.17
+- 2, 3.1~3.19
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
   - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
