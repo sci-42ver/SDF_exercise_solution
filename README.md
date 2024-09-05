@@ -56,6 +56,7 @@ with check comments in codes.
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
   - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
+    So I skipped checking `SDF_exercises/software/sdf/user-defined-types/vector-arith.scm`.
   - `define-generic-procedure-extractor` (not shown in the SDF book. There is no related funcs even by searching "extractor")
 ## review of "SDF_exercises TODO"
 - From cc09d5b919575d7a27d30d94100d2f12dd8248ef up to .

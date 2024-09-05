@@ -1,6 +1,7 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_3")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'user-defined-types)
+(load "adventure-lib.scm")
 
 ;; See "medical-center" for what is added.
 (define (create-mit)
@@ -97,8 +98,35 @@
     (narrate! (list person "enters" (get-location person))
               person)
     (if (equal? 'medical-center (get-name (get-location person)))
-      (set-health! person *max-health*))
+      (begin
+        (narrate! (list (local-possessive person) "health is restored.")
+              person)
+        (set-health! person *max-health*)
+        (tell-health person)))
     (let ((people (people-here person)))
       (if (n:pair? people)
           (say! person (cons "Hi" people))))))
 
+(load "troll-bite-lib.scm")
+
+(define (what-to-do-when-troll-bite person)
+  (go (get-direction
+    (find-exit 
+      (get-location person) 
+      (find (lambda (place) (equal? (get-name place) 'medical-center)) all-places))))
+  ;; Here restore is done before tick! -> eat-people!.
+  (if (n:> (get-health person) 0)
+    (begin
+      (tell-health person)
+      (set! failure-to-survive #f))
+    (begin
+      (tell! (list person "is unfortunately died after restore.") person)
+      (set! failure-to-survive #t))))
+
+(define (what-to-do person)
+  (wait-for-troll-bite person what-to-do-when-troll-bite)
+  )
+
+(define failure-to-survive #t)
+(start-adventure-with-troll-place-and-mine 'anonymous 'green-building 'green-building)
+(what-to-do my-avatar)

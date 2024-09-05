@@ -118,47 +118,22 @@
 ;   (generic-procedure-rules enter-place!))
 (assert (n:= 2 (length (generic-procedure-rules enter-place!))))
 
-(define (create-trolls places)
-  (map (lambda (name)
-         (create-troll name
-                       (random-choice places)
-                       (random-bias 3)
-                       0 ; Only change. To accelerate eat-people!.
-                       ))
-       '(grendel registrar)))
-
-(define max-hang-out 10)
+(define (what-to-do-when-troll-bite person)
+  (go (get-direction (random-choice (exits-here person))))
+  (if (n:> (get-health person) 0)
+    (begin
+      (loop-cnt (lambda () (rest! person)) 3)
+      (tell-health person)
+      (set! failure-to-survive #f))
+    (set! failure-to-survive #t)))
 
 (define (what-to-do person)
-  (define (tell-health)
-    (tell! (list (local-possessive person) "health is" (get-health person)) person))
-  (tell-health)
-  (do ((i 0 (n:+ i 1)))
-    ((or (n:= i max-hang-out) (n:< (get-health person) *max-health*))
-      (if (n:< (get-health person) *max-health*)
-        (begin
-          (displayln "got eaten")
-          (tell-health)
-          (if (n:> (get-health person) 0)
-            (begin
-              (go (get-direction (random-choice (exits-here person))))
-              (if (n:> (get-health person) 0)
-                (begin
-                  (loop-cnt (lambda () (rest! person)) 3)
-                  (tell-health)
-                  (set! failure-to-survive #f))
-                (set! failure-to-survive #t)))
-            (set! failure-to-survive #t))))
-      )
-    (displayln "wait to be eaten")
-    (hang-out 1))
+  (wait-for-troll-bite person what-to-do-when-troll-bite)
   )
 (define (pred)
   (not (null? (filter troll? (people-here my-avatar)))))
 (load "adventure-lib.scm")
+(load "troll-bite-lib.scm")
+
 (define failure-to-survive #t)
-(do 
-  ; ((failure-to-survive #t)) ; will have ";Unbound variable: failure-to-survive" if no define.
-  ()
-  ((not failure-to-survive) 'done)
-  (restart-game-until-pred pred 'anonymous what-to-do))
+(retry-until-survive pred 'anonymous what-to-do)
