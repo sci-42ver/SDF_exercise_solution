@@ -53,6 +53,19 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           ;; define what to do with such an operator. Here we just does `(+ a b)` for `(+ ’a ’b)` 
                           (lambda args (cons operator args))))))))
 
+(define (old-symbolic-extender base-arithmetic)
+  (make-arithmetic 'symbolic symbolic? (list base-arithmetic)
+    (lambda (name base-constant)
+      base-constant)
+    (let ((base-predicate
+          (arithmetic-domain-predicate  base-arithmetic)))
+      (lambda (operator base-operation)
+        (make-operation operator
+                        (any-arg (operator-arity operator)
+                                symbolic?
+                                base-predicate)
+                        (lambda args (cons operator args)))))))
+
 ;;;; Function arithmetic
 
 (define (function? object)

@@ -86,12 +86,12 @@
 ;; 1. + here obviously supports func due to generic calling any-object?.
 ;; 2. magnitude called in function-extender is again generic. We only need to ensure it has vector implementation.
 
-(pp (pe))
+; (pp (pe))
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
-(pp (pe))
+; (pp (pe))
 (manage 'new 'generic-procedures)
-(pp (pe))
-(manage 'help)
+; (pp (pe))
+; (manage 'help)
 (load "~/SICP_SDF/SDF_exercises/software/sdf/combining-arithmetics/vector-arith.scm")
 
 (define (test-1)
@@ -140,16 +140,17 @@
 (install-specific-generic-arithmetic)
 ;; use numeric-arithmetic to get (vector (cos 3) (sin 3)).
 ;; then again numeric-arithmetic to get the final result.
-((vector cos sin) 3)
-((vector cos 2) 3)
+(load "test-lib.scm")
+(assert-predicate equal? ((vector cos sin) 3) (vector (cos 3) (sin 3)))
+(assert-predicate equal? ((vector cos 2) 3) (vector (cos 3) 2))
+
 
 ;; 6.945_assignment_solution
 ;; all tests in 3.1 (c) are included here.
-(vector 1 2)
+(assert-predicate equal? (vector 1 2) #(1 2))
 
 ;; different from 6.945_assignment_solution since here symbolic-extender will just cons operator.
-((vector sin cos) 'a)
-; (vector (sin a) (cos a))
+(assert-predicate equal? ((vector sin cos) 'a) '(vector (sin a) (cos a)))
 
 (define cos-mult
   (lambda (a)
@@ -162,24 +163,22 @@
       (sin (* a x)))))
 
 ;; different from 6.945_assignment_solution due the the last reason.
-(((vector cos-mult sin-mult) 2) 'a)
+(assert-predicate equal? (((vector cos-mult sin-mult) 2) 'a) '(vector (cos (* 2 a)) (sin (* 2 a))))
 ;; manipulated by function-extender
-; (vector (cos (* 2 a)) (sin (* 2 a)))
 
 ;; just use n:vector due to using numeric-arithmetic
-(* (vector 2 3) (vector 1 2))
+(assert-predicate n:= (* (vector 2 3) (vector 1 2)) 8)
 
 ;; similar to cos-mult part if using vector since `(vector (cos a) (sin a))` is one symbol.
-((* (vector cos sin) (vector cos sin)) 'a)
-; (* (vector (cos a) (sin a)) (vector (cos a) (sin a)))
+(assert-predicate equal? ((* (vector cos sin) (vector cos sin)) 'a) '(* (vector (cos a) (sin a)) (vector (cos a) (sin a))))
+
 ;; if using n:vector, then calls vector-extender first instead of function-extender.
 ;; then it calls (* cos cos) etc. which is one lambda func by function-extender.
 ;; so it then calls ((+ (* cos cos) (* sin sin)) 'a) where 'a is passed by `(apply thing args)` (e.g. (* cos cos) -> cos) to cos and sin.
-((* (n:vector cos sin) (n:vector cos sin)) 'a)
-; (+ (* (cos a) (cos a)) (* (sin a) (sin a)))
+(assert-predicate equal? ((* (n:vector cos sin) (n:vector cos sin)) 'a) '(+ (* (cos a) (cos a)) (* (sin a) (sin a))))
 
 ;; just do the same as 3.3. 
-((magnitude (n:vector cos sin)) 'a)
+(assert-predicate equal? ((magnitude (n:vector cos sin)) 'a) '(sqrt (+ (* (cos a) (cos a)) (* (sin a) (sin a)))))
 
 ;; avoid
 ;; > This only supports fixed-length vectors
@@ -189,6 +188,6 @@
 
 (install-specific-generic-arithmetic-2)
 
-((vector cos sin sqrt) 3)
+(assert-predicate equal? ((vector cos sin sqrt) 3) #(#(-.9899924966004454 .1411200080598672) 1.7320508075688772))
 ;; `(+-like operator identity-name)` makes multiple arguments able to manipulate.
-((+ cos sin sqrt) 3)
+(assert-predicate equal? .883178319028299 ((+ cos sin sqrt) 3))

@@ -53,6 +53,7 @@
                                 (extend-arithmetic 
                                   (lambda (base-arithmetic) 
                                     (symbolic-extender-pred 
+                                      ;; added at last to make literal-matrix-vec be compatible with all other types.
                                       literal-matrix-vec?
                                       base-arithmetic))
                                   ;; here matrix-extender has already domain-predicate including vector.
@@ -60,7 +61,7 @@
                                                      (extend-arithmetic vector-extender 
                                                                         ;; to avoid capturing literal-mat and literal-vec in scalar-matrix-product.
                                                                         (extend-arithmetic 
-                                                                          (lambda (base-arithmetic) (symbolic-extender-pred symbolic-2? base-arithmetic))
+                                                                          (lambda (base-arithmetic) (-pred symbolic-2? base-arithmetic))
                                                                           numeric-arithmetic)))))
     (install-arithmetic! g)))
 (install-specific-generic-arithmetic)
@@ -74,7 +75,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Another way is that we know dimension, then we can do as sym('A', [2 4]) https://www.mathworks.com/help/symbolic/create-symbolic-matrices.html does.
-;; Then all works fine since we do "strict-symbolic-extender" first before vector-extender etc.
+;; Then all works fine since we do "strict-symbolic-extender" (IMHO this means original symbolic-extender in the review when I almost finish chapter 3.) first before vector-extender etc.
 
 ;; literal-vec is similar. I won't mimic to create that.
 (define (literal-mat sym rows cols)

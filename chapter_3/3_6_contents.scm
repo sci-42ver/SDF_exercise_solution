@@ -225,7 +225,8 @@
     (add-to-generic-arithmetic! g
                                 (extend-arithmetic matrix-extender 
                                                    (extend-arithmetic vector-extender 
-                                                                      (extend-arithmetic 
+                                                                      (extend-arithmetic
+                                                                        ;; avoid matching matrix? etc. too early using (any-arg ...).
                                                                         (lambda (base-arithmetic) (symbolic-extender-pred symbolic-1? base-arithmetic))
                                                                         numeric-arithmetic))))
     (install-arithmetic! g)))
