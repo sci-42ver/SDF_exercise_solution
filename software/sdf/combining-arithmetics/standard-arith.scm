@@ -33,7 +33,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; > constant functions, the domain of the new function arithmetic must
 ;; > contain both the functions and the elements of the codomain of the
 ;; > functions
-;; SDF_exercises TODO IMHO here we should use `(disjoin base-predicate symbolic?)` since `any-arg ...` (see vector-extender and also see the difference from pure-function-extender.)
+;; IGNORE: here we should use `(disjoin base-predicate symbolic?)` since `any-arg ...` (see vector-extender and also see the difference from pure-function-extender.)
 ;; If we use `(extend-arithmetic symbolic-extender numeric-arithmetic)`, then it is fine to just use symbolic?.
 ;; Notice this change only has effects when functioning as the base (see add-arithmetics* comment).
 ;; So 3_2.scm (not as base), 3_4.scm (use extend-arithmetic and not as base), 3_12.scm (see code comments and not as base), 

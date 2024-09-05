@@ -3,8 +3,7 @@
 ;; Here "(0) (r:seq)", r:alt implies we better keeping inserting () in (r:seq) to capture the empty string.
 ;; > There are subtle cases here that you have to watch out for.
 ;; > You might consider using a different intermediate representation.
-;; TODO I don't what it wants to say.
-;; 1. I don't know.
+;; 1. TODO I don't know what it wants to say.
 ;; See 6.945_assignment_solution
 ;; 2. nbardiuk, chebert and 6.945_assignment_solution just uses string. mbillingr doesn't have such a implementation.
 

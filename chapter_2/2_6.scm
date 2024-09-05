@@ -31,6 +31,7 @@
 (assert (= (length (r:grep (r:* test_str) tests-file)) 19))
 ;; [09]~[15].
 (r:grep (r:+ test_str) tests-file)
-;; TODO equal*? diff equal?
+;; equal*? diff equal?. See chapter 3.
+;; equal*? default to be same as equal? (see tagged-data= and object-union=. The latter one is not called by others).
 (assert (equal? '("[09]. catdogcat" "[10]. catcatdogdog" "[11]. dogdogcatdogdog" "[12]. catcatcatdogdogdog" "[13]. acatdogdogcats" "[14]. ifacatdogdogs" "[15]. acatdogdogsme")
                 (r:grep (r:+ test_str) tests-file)))

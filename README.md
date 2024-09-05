@@ -55,7 +55,10 @@ with check comments in codes.
 - 2, 3.1~3.17
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
-  - `make-predicate-template`
+  - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
+  - `define-generic-procedure-extractor` (not shown in the SDF book. There is no related funcs even by searching "extractor")
+## review of "SDF_exercises TODO"
+- From cc09d5b919575d7a27d30d94100d2f12dd8248ef up to .
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions based on 5 filenames.
@@ -149,7 +152,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
         > by *any sequence* of legal moves.
         even if we don't consider the *complexity overhead*, the *correct* algorithm is not easy https://chess.stackexchange.com/a/22764.
         - https://chess.stackexchange.com/a/22557 doesn't say any valuable but just show possibility ...
-        - TODO I can't see such a comments for "in the comments user17439".
+          - TODO I can't see such a comments for "in the comments user17439".
     - **what to do beyond "Basic moves"**
       1. Promotion is trivial by checking the type and position (similar to `should-be-crowned?`)
     - En passant: check adjacent piece "on the same rank" ~~whether with flag "advances two squares on its initial move"~~ (only on the move *immediately* following the pawn's advance) and type "pawn".

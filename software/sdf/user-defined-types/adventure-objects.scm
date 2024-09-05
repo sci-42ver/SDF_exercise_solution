@@ -117,7 +117,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                               (and (n:list? x) (every place? x)))
                  'default-value '()))
 
-;; SDF_exercises TODO See make-exit where exit?<=object? only. So it isn't place?.
+;; See make-exit where exit?<=object? only. So it isn't place?.
 ;; But property-predicate is not used. So it is fine.
 (define place:exits
   (make-property 'exits
@@ -226,7 +226,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; Then define handler and return that proc.
 
   ;; SDF_exercises TODO IMHO here number? is better.
-  (property-setter person:health person? any-object?))
+  (property-setter person:health person? number?)) ; changed from any-object? to number?
 
 (define get-bag
   (property-getter person:bag person?))

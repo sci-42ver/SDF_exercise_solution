@@ -33,7 +33,6 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (make-change board piece flags)
   (guarantee board? board)
   (guarantee piece? piece)
-  ;; SDF_exercises TODO no `definers` in `saved-total-index` and also undefined in MIT_Scheme_Reference
   (guarantee list-of-unique-symbols? flags)
   (%make-change board piece flags))
 

@@ -130,5 +130,5 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (unit:invert inch-to-meter)
            (unit:invert inch-to-meter)))
 
-;; SDF_exercises TODO why define as it is.
+;; Why define as it is. See https://stackoverflow.com/q/78815439/21294350
 (close-enuf?  1e4 (+ 1 1e4) 1e-4)

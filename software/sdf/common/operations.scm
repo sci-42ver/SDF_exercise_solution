@@ -62,7 +62,6 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; API
 (define (constant-union name . constants)
-  ;; TODO both not defined in MIT_Scheme_Reference and saved-total-index
   (declare (ignore name))
   (let ((unique
          (remove default-object?

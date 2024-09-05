@@ -5,7 +5,8 @@
 (load "../common-lib/utils.scm")
 (load "regex-lib/regex_utils.scm")
 
-;; TODO `(load "2_8.scm")` seems to use one env by "../software/sdf/manager/load" and can't pass `r:seq` definition.
+;; (Done) TODO `(load "2_8.scm")` seems to use one env by "../software/sdf/manager/load" and can't pass `r:seq` definition.
+;; See 3_7.scm
 (load "regex-lib/regex_grouping_utils.scm")
 ; (define (r:seq . exprs)
 ;   (apply string-append exprs))

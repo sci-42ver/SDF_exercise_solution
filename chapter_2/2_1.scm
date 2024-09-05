@@ -19,14 +19,17 @@
       ;; > a newly allocated list of the actual arguments
 
       ;; We can use `check-arity` in mbillingr.
-      (assert (= (length args) ng)) ; point 2
+      (assert (= (length args) ng)) ; point 2 check n.
+      ;; Here g may return one list as one single value or multiple args. 
+      ;; Here it is better to use values https://stackoverflow.com/q/78830929/21294350 https://stackoverflow.com/a/1581982/21294350. 
+      ;; But how to check values count https://docs.scheme.org/guide/multiple-values/? 
+      ;; So for point 1, I just checked the above one.
       (f (apply g args)))
     (restrict-arity the-composition ng) ; point 3
     the-composition))
 
 ;; test for 3 points
 ;; > they check their components to make sure that the arities are compatible;
-;; TODO here I only check f_arg=1 since n is unknown.
 ;; This is the internal property.
 ((compose-mod (lambda (x) x) (lambda (x) x)) 1)
 ((compose-mod (lambda (x y) x) (lambda (x) x)) 1)

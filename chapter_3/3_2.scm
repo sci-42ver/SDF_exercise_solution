@@ -253,7 +253,6 @@
                                                   (base-* (cadr +*-proc-lst))
                                                   )
                                              (case operator
-                                               ;; TODO here it doesn't check input size similar to `vector-extender` `component-proc`.
                                                ((magnitude)
                                                 ;; it is better to use base-sqrt which allows symbolic.
                                                 ;; See combining-arithmetics/vector-arith.scm `(sqrt (component-proc 'sqrt))`
@@ -338,7 +337,8 @@
                              (else 
                                (simple-operation operator vector?
                                                  (case operator
-                                                   ;; TODO here it doesn't check input size similar to `vector-extender` `component-proc`.
+                                                   ;; IGNORE: TODO here it doesn't check input size similar to `vector-extender` `component-proc`.
+                                                   ;; Here each vector must have one magnitude, so we don't need to "check input size".
                                                    ((magnitude)
                                                     (vector-magnitude-maker base-+ base-* sqrt))
                                                    (else (lambda vecs (apply (vector-element-wise procedure) vecs))))
