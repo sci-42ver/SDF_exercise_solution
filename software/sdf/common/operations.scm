@@ -100,7 +100,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  (is-operation-applicable? operation args))
                operations)))
     (if (not operation)
-        (error "Inapplicable operation:" operator args))
+        (error "Inapplicable operation:" operator args)
+        (display (list args "is applicable for" (operation-applicability operation))))
     (apply-operation operation args)))
 
 ;; helper to make book description clearer

@@ -23,9 +23,12 @@
   (let ((g (make-generic-arithmetic make-simple-dispatch-store)))
     (add-to-generic-arithmetic! g numeric-arithmetic)
     (extend-generic-arithmetic! g function-extender)
+    ;; Here function-extender already has generic as base and (vector-extender numeric-arithmetic) make vector-extender have numeric-arithmetic as the base.
+    ;; So (symbolic-extender numeric-arithmetic) is fine as the base of function-extender if using the mere symbolic?.
     (add-to-generic-arithmetic! g
                                 (vector-extender (function-extender (symbolic-extender numeric-arithmetic))))
-    ;; put after the above to avoid capture vector? symbolic?
+    ;; put after the above to avoid the above to capture (vector? symbolic?) (see the following test).
+    ;; The latter added proc will overload the former one. (see (add-handler!)
     (add-to-generic-arithmetic! g
                                 (symbolic-extender (vector-extender numeric-arithmetic)))
     (numerical-simplifier-wrapper g)))

@@ -149,11 +149,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (car arithmetics)
       (make-arithmetic 'add
                        (disjoin*
+                        ;; This is used when functioning as the base arithmetic but not used for install-arithmetic!.
                         (map arithmetic-domain-predicate
                              arithmetics))
                        arithmetics
                        constant-union
                        ;; at last, each operator will have *one* operation which may be union of operations by `operation-union-dispatch`.
+                       ;; Here operations are ordered by arithmetics (see arithmetic-operations-for). So the left arithmetic is prioritized.
                        operation-union)))
 
 ;; base-arithmetic are prioritized in operation-union.

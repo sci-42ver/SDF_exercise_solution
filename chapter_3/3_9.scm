@@ -59,7 +59,7 @@
 ;; Here atan is not defined in `numerical-simplifier-wrapper`, so all are done by `add-to-generic-arithmetic!` -> ``add-generic-arith-operations!``.
 ;; Then `define-generic-procedure-handler` just calls `add-handler!` which doesn't influence the outer operation interface.
 
-;; NOTICE: `operation-applicability` is only used in operation-union and "add-generic-arith-operations!" handler.
+;; NOTICE: `operation-applicability` is only used in (add-arithmetics -> add-arithmetics* -> operation-union) (here not considering user-defined-types) and "add-generic-arith-operations!" handler.
 ;;          So it *doesn't do any filtering*, i.e. it will always find handler.
 ;; IGNORE: here it doesn't filter any procedure added to operation.
 
