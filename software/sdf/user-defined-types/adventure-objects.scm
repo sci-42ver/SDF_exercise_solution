@@ -40,6 +40,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler set-up! (match-args thing?)
   (lambda (super thing)
     (super thing)
+    ; (display (list "add" (get-name thing) "to" (get-location thing)))
     ;; See `type-instantiator` where `(constructor (parse-plist plist properties))` has already put property's in place.
     (add-thing! (get-location thing) thing)))
 

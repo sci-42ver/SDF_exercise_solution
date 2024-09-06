@@ -43,16 +43,14 @@
 (define set-rest-cycle!
   (property-setter person:rest-cycle person? number?))
 
+(define (update-health person)
+  (set-health! person (n:+ 1 (get-health person)))
+  (narrate!
+    (list person "health is added by 1")
+    person))
+
 (define (increment-rest-cycle! person)
-  (guarantee person? person)
-  (set-rest-cycle! person (n:+ 1 (get-rest-cycle person)))
-  (if (n:= (get-rest-cycle person) *max-rest-cycle*)
-    (begin
-      (set-health! person (n:+ 1 (get-health person)))
-      (set-rest-cycle! person 0)
-      (narrate!
-        (list person "health is added by 1")
-        person))))
+  (increment-property! person? person get-rest-cycle set-rest-cycle! update-health *max-rest-cycle*))
 
 (define person?
   (make-type 'person (list person:scaled-health person:bag person:rest-cycle)))

@@ -266,7 +266,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        (random-bias 3)
                        (random-bias 3)))
        '(grendel registrar)))
-
+
 (define (create-thing name location)
   (make-thing 'name name
               'location location))
