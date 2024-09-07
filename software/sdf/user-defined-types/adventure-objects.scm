@@ -289,16 +289,20 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (drop-thing! thing person))
             (get-things person))
   (announce!
-   '("An earth-shattering, soul-piercing scream is heard..."))
+    (list "An earth-shattering, soul-piercing scream is heard..." person "died"))
   (set-health! person 0)
   ;; See generic-move:person.
-  (move! person (get-heaven) person))
+  ;; this doesn't move person from clock, so tick! will take effects for person.
+  (move! person (get-heaven) person)
+  ;; added
+  (unregister-with-clock! person (get-clock))
+  )
 
 (define (resurrect! person health)
   (guarantee n:exact-positive-integer? health)
   (set-health! person health)
   (move! person (get-origin person) person))
-
+
 ;;; Bags
 
 (define bag:holder
@@ -359,6 +363,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; checked
 (define (move-and-take-stuff! agent)
+  ; (display (list "call move-and-take-stuff! for" (get-name agent)))
   ;; so if get-restlessness is smaller, it is more possible for agent to move.
   (if (flip-coin (get-restlessness agent))
       (move-somewhere! agent))
@@ -366,6 +371,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (take-something! agent)))
 
 (define (move-somewhere! agent)
+; (display (list "call move-somewhere! for" (get-name agent)))
   (let ((exit (random-choice (exits-here agent))))
     (if exit
         (take-exit! exit agent))))
@@ -378,7 +384,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (take-thing! thing agent))))
 
 (define-clock-handler autonomous-agent? move-and-take-stuff!)
-
+
 ;;; Students
 
 (define student?
@@ -413,9 +419,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     '("What are you doing still up?"
                       "Everyone back to their rooms!"))
               (for-each (lambda (student)
-                          (narrate! (list student "goes home to"
-                                          (get-origin student))
-                                    student)
+                          ;; I changed this to announce! since sometimes this will take someone from heaven.
+                          ;; See 3_21.scm.
+                          (announce! (list student "goes home to"
+                                          (get-origin student) "from" (get-location master)))
                           (move! student
                                  (get-origin student)
                                  student))
@@ -534,12 +541,17 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (take-exit! exit mobile-thing)
   ;; (person? place? place? person?)
+; (display (list "call take-exit!" (get-name mobile-thing)))
   (generic-move! mobile-thing
                  (get-from exit)
                  (get-to exit)
                  mobile-thing))
 
 (define (move! thing destination actor)
+; (display (list "call move!" (get-name thing)))
+  ; (if (equal? 'ben-bitdiddle (get-name thing))
+  ;   (bkpt "test" (get-name actor)))
+
   ;; For drop-thing!:
   ;; either (mobile-thing? place? place? person?)
   ;; or (mobile-thing? bag? place? person?)
@@ -547,6 +559,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; See `(set-predicate<=! place? container?)` or `(set-predicate<=! bag? container?)` etc. for relations of predicates.
   ;; Also see make-subsetting-dispatch-store-maker -> rule< -> predicate<=. So here if mobile-thing?, then that will be chosen.
   ;; Then `drop-thing!` will probably return bag for `(get-location thing)`.
+  
+  ;; irritate-students! will match (person? place? place? person?)
   (generic-move! thing
                  (get-location thing)
                  destination
@@ -663,7 +677,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     actor))
             ((eqv? person actor)
              (narrate! (list person "leaves via the"
-                             (get-direction exit) "exit")
+                             (get-direction exit) "exit from" from)
                        from)
              (move-internal! person from to))
             (else
@@ -679,6 +693,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (get-exits from)))
 
 (define (move-internal! mobile-thing from to)
+; (display (list "call move-internal!" (get-name mobile-thing)))
   (leave-place! mobile-thing)
   (remove-thing! from mobile-thing)
   (set-location! mobile-thing to)

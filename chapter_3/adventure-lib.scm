@@ -259,25 +259,31 @@
     places))
 
 ;; updater
-(define (increment-decrement-property! object-pred object get-handler set-handler! update-rest-handler increment-step op #!optional max-value)
+;; (threshold reset-val update-rest-handler) must be offered all or not.
+(define (increment-decrement-property! object-pred object get-handler set-handler! increment? step #!optional threshold reset-val update-rest-handler)
   (guarantee object-pred object)
-  (set-handler! object (op increment-step (get-handler object)))
+  (set-handler! object ((if increment? n:+ n:-) (get-handler object) step))
+  ; (display (list "updated" (get-name object) "property to" (get-handler object)))
   (and
-    (not (default-object? max-value))
-    (n:>= (get-handler object) max-value)
-    (set-handler! object 0)
+    (not (default-object? threshold))
+    ((if increment? n:>= n:<=) (get-handler object) threshold)
+    (set-handler! object reset-val)
     (update-rest-handler object)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; copy of original with small modifications
 (define (pure-take-exit! exit mobile-thing)
+  ;; only used here.
   (pure-move-internal! mobile-thing
                  (get-from exit)
-                 (get-to exit)
-                 mobile-thing))
+                 (get-to exit)))
 
 (define (pure-move-internal! mobile-thing from to)
+  ; (newline)
+  ; (display "pure-move-internal!")
   (leave-place! mobile-thing)
   (remove-thing! from mobile-thing)
   (set-location! mobile-thing to)
-  (add-thing! to mobile-thing))
+  (add-thing! to mobile-thing)
+  (narrate! (list mobile-thing "goes from" from "to" to)
+              mobile-thing))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

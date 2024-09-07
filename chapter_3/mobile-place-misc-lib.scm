@@ -36,7 +36,7 @@
   (apply min (all-floors mobile-place)))
 
 (define (in-range elem range)
-  (n:< (car range) elem (cdr range)))
+  (n:<= (car range) elem (cdr range)))
 
 (define (find-fpde-for-mobile-place dest-name mobile-place)
   (find

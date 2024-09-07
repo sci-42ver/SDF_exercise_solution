@@ -482,6 +482,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                      (delv thing (clock-things clock))))
 
 (define (tick! clock)
+  (newline)
+  (display "tick!")
+  (newline)
   (set-current-time! clock (n:+ (current-time clock) 1))
   (for-each (lambda (thing) (clock-tick! thing))
             (clock-things clock)))
@@ -497,4 +500,5 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (lambda (super object)
       (super object)
       ; (display (list "clock-tick!" (get-name object)))
+      ; (newline)
       (action object))))
