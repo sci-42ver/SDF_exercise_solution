@@ -1,4 +1,5 @@
 (load "../common-lib/utils.scm")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; init func
 (define (restart-game-until-pred pred my-name what-to-do)
   (start-adventure my-name)
   
@@ -10,14 +11,6 @@
       )
     (displayln "start one new adventure")
     (start-adventure my-name)))
-
-(define (tell-health object)
-  (tell! (list (local-possessive object) "health is" (get-health object)) object))
-
-(define (find-place-name place-name places)
-  (find 
-    (lambda (place) (equal? (get-name place) place-name))
-    places))
 
 (define (start-adventure-with-troll-place-and-mine my-name troll-place-name my-place-name)
   (define (create-specific-trolls troll-place)
@@ -63,6 +56,31 @@
   (set! all-places (create-mit-mod))
   (create-things-handler all-places)
   ; (display (map get-name all-places))
+  (set! heaven (create-place 'heaven))
+  (set! all-people (create-people all-places))
+  (set! my-avatar
+        (create-avatar my-name
+                       (find-place-name my-place-name all-places)))
+  (whats-here))
+
+(define (start-adventure-with-troll-place-and-mine** my-name troll-place-name my-place-name create-mit-handler create-places-handler)
+  (define (create-specific-trolls troll-place)
+    (assert troll-place)
+    (map (lambda (name)
+          (create-troll name
+                        troll-place
+                        (random-bias 3)
+                        0))
+        '(registrar)))
+  (define (create-people places)
+    (displayln "call local create-people")
+    (append (create-students places)
+            (create-house-masters places)
+            (create-specific-trolls 
+              (find-place-name troll-place-name places))))
+  (set! the-clock (make-clock))
+  (set! all-places (create-mit-handler))
+  (set! all-places (append all-places (create-places-handler all-places)))
   (set! heaven (create-place 'heaven))
   (set! all-people (create-people all-places))
   (set! my-avatar
@@ -227,6 +245,19 @@
           great-court ; weird not included in the original code.
           dorm-row)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+
+;; helper
+(define (tell-health object)
+  (tell! (list (local-possessive object) "health is" (get-health object)) object))
+
+;; searcher
+(define (find-place-name place-name places)
+  (find 
+    (lambda (place) (equal? (get-name place) place-name))
+    places))
+
+;; updater
 (define (increment-decrement-property! object-pred object get-handler set-handler! update-rest-handler increment-step op #!optional max-value)
   (guarantee object-pred object)
   (set-handler! object (op increment-step (get-handler object)))
@@ -236,6 +267,7 @@
     (set-handler! object 0)
     (update-rest-handler object)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; copy of original with small modifications
 (define (pure-take-exit! exit mobile-thing)
   (pure-move-internal! mobile-thing
                  (get-from exit)
@@ -247,3 +279,4 @@
   (remove-thing! from mobile-thing)
   (set-location! mobile-thing to)
   (add-thing! to mobile-thing))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

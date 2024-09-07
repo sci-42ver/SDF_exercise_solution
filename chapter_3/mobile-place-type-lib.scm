@@ -105,16 +105,16 @@
 (define set-moving-direction!
   (property-setter mobile-place:moving-direction mobile-place? up-down?))
 
-(define mobile-place:accessible-floors
-  (make-property 'accessible-floors
-                 'predicate list-of-number?
-                 'default-value '()))
+; (define mobile-place:accessible-floors
+;   (make-property 'accessible-floors
+;                  'predicate list-of-number?
+;                  'default-value '()))
 
-(define get-accessible-floors
-  (property-getter mobile-place:accessible-floors mobile-place?))
+; (define get-accessible-floors
+;   (property-getter mobile-place:accessible-floors mobile-place?))
 
-(define set-accessible-floors!
-  (property-setter mobile-place:accessible-floors mobile-place? list-of-number?))
+; (define set-accessible-floors!
+;   (property-setter mobile-place:accessible-floors mobile-place? list-of-number?))
 
 (define mobile-place:floor-pds-lst
   (make-property 'floor-pds-lst
@@ -136,7 +136,7 @@
       mobile-place:current-floor
       mobile-place:moving-direction
       mobile-place:speed
-      mobile-place:accessible-floors
+      ; mobile-place:accessible-floors
       mobile-place:floor-pds-lst)))
 
 ;; 1. IGNORE: Here for simplicity, we assume elevator is one enclosed space although we can let it be open with changing vistas based on floor-num.
