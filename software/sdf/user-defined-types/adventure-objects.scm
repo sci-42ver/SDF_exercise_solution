@@ -88,6 +88,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (make-property 'direction
                  'predicate direction?))
 
+;; from -> to by direction.
 (define exit?
   (make-type 'exit (list exit:from exit:to exit:direction)))
 (set-predicate<=! exit? object?)
@@ -558,6 +559,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; Also that the people involved are local.
 
 ;; coderef: generic-move:default
+;; (moved-thing from to actor). See move!.
 (define-generic-procedure-handler generic-move!
   (match-args thing? container? container? person?)
   (lambda (thing from to actor)

@@ -1,3 +1,4 @@
+;; By searching "Cloak" with "*.rkt,*.scm" in VSCode, no sample implementation.
 (cd "~/SICP_SDF/SDF_exercises/chapter_3")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'user-defined-types)
@@ -82,12 +83,14 @@
         holder)
       (tell-health holder)))
   (if (get-cloak-holder invisibility-cloak)
-    (increment-property! 
+    (increment-decrement-property! 
       invisibility-cloak? 
       invisibility-cloak 
       get-held-time 
       set-held-time! 
       update-rest-handler
+      1
+      n:+
       *degrade-time*)))
 
 ;; > must be discarded (dropped) after a short *time*

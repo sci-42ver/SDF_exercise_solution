@@ -469,6 +469,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (current-time current-time set-current-time!)
   (things clock-things set-clock-things!))
 
+;; https://srfi.schemers.org/srfi-1/srfi-1.html#lset-adjoin
+;; Here later addition will be put at the head.
 (define (register-with-clock! thing clock)
   (set-clock-things! clock
                      (lset-adjoin eqv?

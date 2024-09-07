@@ -1,3 +1,4 @@
+;; By searching "palantir" with "*.rkt,*.scm" in VSCode, no sample implementation.
 (cd "~/SICP_SDF/SDF_exercises/chapter_3")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'user-defined-types)
