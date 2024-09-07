@@ -19,12 +19,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
-(define-record-type <person-direction>
-  (%make-person-direction person direction)
-  person-direction?
-  (direction pd-direction)
-  (person pd-person))
-
 ;; TODO how to define one bidirectional relation more elegantly?
 (define (reverse-direction direction)
   (case direction

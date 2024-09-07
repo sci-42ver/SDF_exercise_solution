@@ -45,3 +45,16 @@
               #t)
             #f)))
       (get-floor-pds-lst mobile-place))))
+
+(define (set-go-dest-in-mobile-place person dest-place-name mobile-place-name)
+  (let ((mobile-place (find-place-name mobile-place-name all-places)))
+    (if mobile-place
+      (let ((fpde (find-fpde-for-mobile-place dest-place-name mobile-place)))
+        (if fpde
+          (set-dest-floor-direction! 
+            person 
+            (%make-floor-direction
+              (fpde-floor-num fpde)
+              (reverse-direction (fpde-inward-direction fpde))))
+          (tell! (list dest-place-name "doesn't exist for" mobile-place) person)))
+      (tell! (list mobile-place-name "doesn't exist") person))))

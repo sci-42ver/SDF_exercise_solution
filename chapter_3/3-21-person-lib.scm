@@ -1,10 +1,4 @@
 ;; see 3_17.scm
-(define-record-type <floor-direction>
-  (%make-floor-direction floor-num direction)
-  floor-direction?
-  (direction fd-direction)
-  (floor-num fd-floor-num))
-
 (define person:dest-floor-direction
   (make-property 'dest-floor-direction
                  'predicate floor-direction?

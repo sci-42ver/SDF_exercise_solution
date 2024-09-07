@@ -243,6 +243,7 @@
           tunnel 32-123 32D 32G
           student-street bldg-54 the-dot
           great-court ; weird not included in the original code.
+          32G-library 32G-skywalk 32G-bcp ; added
           dorm-row)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 

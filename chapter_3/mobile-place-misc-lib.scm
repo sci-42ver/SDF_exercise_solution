@@ -22,7 +22,7 @@
 (define (floor-fpdes floor-num mobile-place)
   (filter
     (lambda (fpde) (= floor-num (fpde-floor-num fpde)))
-    (all-possible-dests mobile-place)))
+    (get-possible-fpdes mobile-place)))
 
 (define (random-floor-outward-direction floor-num mobile-place)
   (fpde-outward-direction
@@ -37,3 +37,8 @@
 
 (define (in-range elem range)
   (n:< (car range) elem (cdr range)))
+
+(define (find-fpde-for-mobile-place dest-name mobile-place)
+  (find
+    (lambda (fpde) (equal? (get-name (fpde-place fpde)) dest-name))
+    (get-possible-fpdes mobile-place)))
