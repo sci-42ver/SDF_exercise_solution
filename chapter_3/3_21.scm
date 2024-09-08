@@ -1,3 +1,5 @@
+;; By searching "mobile-pla" with "*.rkt,*.scm" in VSCode, no sample implementation.
+
 ;; IMHO this exercise is more about how to define the logic of elevator.
 ;; It is more about the overall design where we need to consider what data types to use (IMHO this is the difficult part).
 
