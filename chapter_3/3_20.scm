@@ -2,7 +2,7 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_3")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'user-defined-types)
-(load "adventure-lib.scm")
+(load "section-3-5-lib/adventure-lib.scm")
 
 ;; mimic invisibility-cloak?
 (define invisibility-cloak:held-time

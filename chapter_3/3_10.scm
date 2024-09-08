@@ -6,8 +6,8 @@
 (manage 'new 'automatic-differentiation)
 
 ;; covector -> row vector
-(load "vector-arith-row-col.scm")
-(load "test-lib.scm")
+(load "generic-procedure-lib/vector-arith-row-col.scm")
+(load "../common-lib/test-lib.scm")
 
 ;; a
 ;; similar to general-derivative.

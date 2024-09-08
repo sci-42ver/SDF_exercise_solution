@@ -2,7 +2,7 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_3")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'user-defined-types)
-(load "adventure-lib.scm")
+(load "section-3-5-lib/adventure-lib.scm")
 
 (define (find-thing-no-tell name person-or-place)
   (find-object-by-name
@@ -55,7 +55,7 @@
 
 ;; > Can you make an autonomous person other than your avatar use a palantir for some interesting purpose?
 ;; Just tell all students where trolls are to help them survive.
-(load "president-lib.scm")
+(load "section-3-5-lib/president-lib.scm")
 (create-presidents 'the-dot)
 (define (look-around-palantir-for-type! type-pred person)
   (define (notify-person-loc place)

@@ -10,5 +10,5 @@
   (drop-thing 'sicp))
 (define (pred)
   (equal? 'bldg-26 (get-name (get-location my-avatar))))
-(load "adventure-lib.scm")
+(load "section-3-5-lib/adventure-lib.scm")
 (restart-game-until-pred pred 'anonymous what-to-do)

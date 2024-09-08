@@ -55,7 +55,7 @@
 (define person?
   (make-type 'person (list person:scaled-health person:bag person:rest-cycle)))
 
-(load "person-lib.scm")
+(load "section-3-5-lib/person-lib.scm")
 ; ((type-instantiator person?)
 ;   'name 'anonymous
 ;   'location (car (create-mit))
@@ -130,8 +130,8 @@
   )
 (define (pred)
   (not (null? (filter troll? (people-here my-avatar)))))
-(load "adventure-lib.scm")
-(load "troll-bite-lib.scm")
+(load "section-3-5-lib/adventure-lib.scm")
+(load "section-3-5-lib/troll-bite-lib.scm")
 
 (define failure-to-survive #t)
 (retry-until-survive pred 'anonymous what-to-do)

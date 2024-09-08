@@ -2,7 +2,7 @@
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'automatic-differentiation)
 
-(load "performance-tool.scm")
+(load "generic-procedure-lib/performance-tool.scm")
 (install-arithmetic! full-generic-arithmetic)
 (book-fib-test)
 (test-stormer-counts)

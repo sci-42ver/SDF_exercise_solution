@@ -118,7 +118,7 @@ MatA=Matrix(A)
 print(MatA.multiply(B))
 MatA.multiply(C)
 |#
-(load "test-lib.scm")
+(load "../common-lib/test-lib.scm")
 (assert-predicate equal? (* test-literal-matrix test-symbolic-mat1) #(#((+ (* a a00) (* 3 a01)) (+ (* 2 a00) (* b a01))) #((+ (* a a10) (* 3 a11)) (+ (* 2 a10) (* b a11)))))
 (assert-predicate equal? (* test-literal-matrix test-symbolic-vec1) #(#((+ (* 1 a00) (* c a01))) #((+ (* 1 a10) (* c a11)))))
 

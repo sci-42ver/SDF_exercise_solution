@@ -60,7 +60,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (lambda (operator)
       (make-operation operator
                         ;; IGNORE: TODO why this any-arg will throw errors?
-                        ;; See 3_4_general_vector.scm `((vector cos sin sqrt) 3)` will throw "implied by debugger which ...".
+                        ;; See ps03_general_vector.scm `((vector cos sin sqrt) 3)` will throw "implied by debugger which ...".
                         ;; i.e. it chooses one wrong generic proc, but `((vector cos sin sqrt) 3)` should call all primitives.
                         ;; This doesn't avoid calling primitives...
                         

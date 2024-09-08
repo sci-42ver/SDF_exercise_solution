@@ -75,7 +75,7 @@
 
 (install-arithmetic! vector-arithmetic)
 
-(load "test-lib.scm")
+(load "../common-lib/test-lib.scm")
 (define (test)
   ;; > only addition, negation, and subtraction
   ;; >  it works for numerical vectors and for vectors with mixed numerical and symbolic coordinates.

@@ -2,7 +2,7 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_3")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'user-defined-types)
-(load "adventure-lib.scm")
+(load "section-3-5-lib/adventure-lib.scm")
 
 ;; See "medical-center" for what is added.
 (define (create-mit)
@@ -108,7 +108,7 @@
       (if (n:pair? people)
           (say! person (cons "Hi" people))))))
 
-(load "troll-bite-lib.scm")
+(load "section-3-5-lib/troll-bite-lib.scm")
 
 (define (what-to-do-when-troll-bite person)
   (go (get-direction

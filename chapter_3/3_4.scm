@@ -136,11 +136,11 @@
 
 (set! %arithmetic-operator-alist (cons '(vector (domain domain) domain) %arithmetic-operator-alist))
 ;; reload `numeric-arithmetic` to ensure (vector num num) is supported.
-(load "numeric-arith-mod.scm")
+(load "generic-procedure-lib/numeric-arith-mod.scm")
 (install-specific-generic-arithmetic)
 ;; use numeric-arithmetic to get (vector (cos 3) (sin 3)).
 ;; then again numeric-arithmetic to get the final result.
-(load "test-lib.scm")
+(load "../common-lib/test-lib.scm")
 (assert-predicate equal? ((vector cos sin) 3) (vector (cos 3) (sin 3)))
 (assert-predicate equal? ((vector cos 2) 3) (vector (cos 3) 2))
 
@@ -184,7 +184,7 @@
 ;; > This only supports fixed-length vectors
 ;; This is not the case since the book generic + supports multiple args.
 ;; > because we had to define "vector-new" as a generic procedure taking a certain number of arguments
-(load "general-vector-lib.scm")
+(load "generic-procedure-lib/general-vector-lib.scm")
 
 (install-specific-generic-arithmetic-2)
 

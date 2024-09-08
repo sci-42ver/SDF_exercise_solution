@@ -6,12 +6,13 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_3")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'user-defined-types)
-(load "adventure-lib.scm")
+(load "section-3-5-lib/adventure-lib.scm")
 
 ;; Here I only implement "elevator" as one demo.
 
 ;; See updater: We need to update mobile-place properties (moving-direction, current-floor, floor-pds-lst)
 ;; and exits (notice this is bidirectional including the book "entrances and exits") related when necessary.
+(cd "3-21-lib")
 (load "3-21-record-lib.scm")
 (load "mobile-place-type-lib.scm")
 (load "mobile-place-misc-lib.scm")
@@ -42,9 +43,10 @@
     (let ((people (people-here person)))
       (if (n:pair? people)
           (say! person (cons "Hi" people))))))
-(load "3-21-person-lib.scm")
-(load "person-lib.scm")
+(load "3-21-section-3-5-lib/person-lib.scm")
+(load "../section-3-5-lib/person-lib.scm")
 (load "mobile-place-init.scm")
+(cd "..")
 
 (define (press-moving-button-of-mobile-place person mobile-place)
   (let* ((fd (get-dest-floor-direction person))

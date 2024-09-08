@@ -2,7 +2,7 @@
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'automatic-differentiation)
 
-(load "performance-tool.scm")
+(load "generic-procedure-lib/performance-tool.scm")
 
 (define (make-cached-dispatch-store)
   (cache-wrapped-dispatch-store (make-trie-dispatch-store)

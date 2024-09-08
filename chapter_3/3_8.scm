@@ -1,7 +1,7 @@
 ;; by searching "partial", no sample implementation
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
 (manage 'new 'automatic-differentiation)
-(load "test-lib.scm")
+(load "../common-lib/test-lib.scm")
 
 ;; from examples.scm
 (define (foo x y)

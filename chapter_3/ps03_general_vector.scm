@@ -9,9 +9,9 @@
 (define n:vector vector)
 
 (set! %arithmetic-operator-alist (cons '(vector (domain domain) domain) %arithmetic-operator-alist))
-(load "numeric-arith-mod.scm")
+(load "generic-procedure-lib/numeric-arith-mod.scm")
 
-(load "general-vector-lib.scm")
+(load "generic-procedure-lib/general-vector-lib.scm")
 
 (install-specific-generic-arithmetic-2)
 

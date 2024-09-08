@@ -31,7 +31,7 @@
 
 (register-predicate! matrix? 'matrix)
 
-(load "general-symbolic-extender.scm")
+(load "generic-procedure-lib/general-symbolic-extender.scm")
 ;; just mimic matrix-extender
 
 ;; > since matrix multiplication is defined only if the number of columns in the first matrix is equal to the number of rows in the second one.
@@ -47,7 +47,7 @@
 (define (2-level-list->mat-data lst)
   (list->vector (map list->vector lst)))
 
-(load "vector-arith-row-col.scm")
+(load "generic-procedure-lib/vector-arith-row-col.scm")
 ; (define (mat->vec mat)
 ;   (cond 
 ;     ((n:= 1 (mat-row object)) (vector-ref (mat-data object) 0))
@@ -249,7 +249,7 @@ v2= np.array([[1, 2]])
 print(np.matmul(a, v1))
 print(np.matmul(v2, a))
 |#
-(load "test-lib.scm")
+(load "../common-lib/test-lib.scm")
 (assert-predicate equal? (* test-numeric-mat1 test-numeric-mat2) #(#(19 22) #(43 50)))
 
 (define test-numeric-mat3 (make-matrix (vector (vector 5 6 7) (vector 7 8 9))))
