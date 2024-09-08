@@ -43,7 +43,7 @@
     (let ((people (people-here person)))
       (if (n:pair? people)
           (say! person (cons "Hi" people))))))
-(load "3-21-section-3-5-lib/person-lib.scm")
+(load "3-21-person-lib.scm")
 (load "../section-3-5-lib/person-lib.scm")
 (load "mobile-place-init.scm")
 (cd "..")

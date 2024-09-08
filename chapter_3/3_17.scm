@@ -50,7 +50,17 @@
     person))
 
 (define (increment-rest-cycle! person)
-  (increment-decrement-property! person? person get-rest-cycle set-rest-cycle! update-health 1 n:+ *max-rest-cycle*))
+  (increment-decrement-property! 
+    person?
+    person 
+    get-rest-cycle 
+    set-rest-cycle!  
+    #t
+    1 
+    *max-rest-cycle*
+    0
+    update-health
+    ))
 
 (define person?
   (make-type 'person (list person:scaled-health person:bag person:rest-cycle)))

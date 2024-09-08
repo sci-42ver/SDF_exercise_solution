@@ -88,10 +88,12 @@
       invisibility-cloak 
       get-held-time 
       set-held-time! 
-      update-rest-handler
+      #t
       1
-      n:+
-      *degrade-time*)))
+      *degrade-time*
+      0
+      update-rest-handler
+      )))
 
 ;; > must be discarded (dropped) after a short *time*
 (define-generic-procedure-handler set-up!
