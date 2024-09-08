@@ -32,7 +32,6 @@
                        ((1) (car args))
                        (else (pairwise binary args))))))))))
 
-(install-arithmetic! (extend-arithmetic function-extender numeric-arithmetic-without-constant))
-
 ;; if we just want to call (pairwise binary args), it should work. But errors are thrown beforehand.
-((+ cos sin) 2)
+; (install-arithmetic! (extend-arithmetic function-extender numeric-arithmetic-without-constant))
+; ((+ cos sin) 2)

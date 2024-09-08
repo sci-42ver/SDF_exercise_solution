@@ -61,14 +61,16 @@
                                                      (extend-arithmetic vector-extender 
                                                                         ;; to avoid capturing literal-mat and literal-vec in scalar-matrix-product.
                                                                         (extend-arithmetic 
-                                                                          (lambda (base-arithmetic) (-pred symbolic-2? base-arithmetic))
+                                                                          (lambda (base-arithmetic) (symbolic-extender-pred symbolic-2? base-arithmetic))
                                                                           numeric-arithmetic)))))
     (install-arithmetic! g)))
 (install-specific-generic-arithmetic)
 
 (define test-literal-matrix (literal-mat 'A))
 (define test-literal-vec (literal-vec 'A))
-(* test-literal-matrix test-symbolic-mat1)
+(load "../common-lib/test-lib.scm")
+;; trivial since that is just like a symbol but with one different type.
+(assert-predicate equal? '(* (literal-matrix a) (matrix #(#(a 2) #(3 b)) 2 2)) (* test-literal-matrix test-symbolic-mat1))
 (* test-literal-vec test-symbolic-mat1)
 (* test-literal-vec test-symbolic-vec1)
 (* test-literal-matrix test-symbolic-vec1)
@@ -118,7 +120,6 @@ MatA=Matrix(A)
 print(MatA.multiply(B))
 MatA.multiply(C)
 |#
-(load "../common-lib/test-lib.scm")
 (assert-predicate equal? (* test-literal-matrix test-symbolic-mat1) #(#((+ (* a a00) (* 3 a01)) (+ (* 2 a00) (* b a01))) #((+ (* a a10) (* 3 a11)) (+ (* 2 a10) (* b a11)))))
 (assert-predicate equal? (* test-literal-matrix test-symbolic-vec1) #(#((+ (* 1 a00) (* c a01))) #((+ (* 1 a10) (* c a11)))))
 

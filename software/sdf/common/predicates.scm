@@ -130,8 +130,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (conjoin* predicates))
 
 ;; For `(define any-object? (conjoin))`
-;; `(every predicate? operands)` -> #t always, so it is registered.
-;; Then (every ... predicates) -> #t always.
+;; IGNORE: `(every predicate? operands)` -> #t always, so it is registered.
+;; (every ... predicates) when predicates is nil -> #t always.
+;; Similarly `(any number? '())` -> #f.
 (define (conjoin* predicates)
   (maybe-register-compound-predicate!
    (lambda (object)

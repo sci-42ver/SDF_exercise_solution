@@ -25,12 +25,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (literal-function fexp)
   (define (the-function . args)
-    (if (any differential? args)
+    (if (any differential? args) ; See make-differential.
         ;; Think of f(x+Dx,y+Dy,z+Dz) where Dx is general which can be dx or dx*dy, etc.
         ;; Then maximal-factor will only choose one.
-        ;; Assume it chooses Dx, then fxs is f(x,y+Dy,z+Dz) (notice this will again call `(any differential? args)`. Based on induction, assume it returns right.)
+        ;; Assume it chooses Dx, then fxs is f(x,y+Dy,z+Dz) (NOTICE this will again call the-function -> `(any differential? args)`. Based on induction, assume it returns right.)
         ;; Here `(map d:* partials deltargs)` will do the Dx part since all the other `deltargs` are 0's.
-        ;; 
         (let ((n (length args))
               (factor (apply maximal-factor args)))
           (let ((realargs
@@ -42,6 +41,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         (infinitesimal-part arg factor))
                       args)))
             (let ((fxs (apply the-function realargs))
+                  ;; For Dx, it will get f_x(x,y+Dy,z+Dz) where f_x is ((partial 0) f).
                   (partials
                    (map (lambda (i)
                           (apply (literal-function
@@ -50,6 +50,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         (iota n))))
               (fold d:+ fxs
                 (map d:* partials deltargs)))))
+        ;; 1. See `((literal-function 'f) 'x)` in examples.scm
+        ;; 2. See ``(,@(list 1 2))` compared with ``(,(list 1 2))`
+        ;; 3. This does the same as `(cons name args)` in 3.1.4.
         `(,fexp ,@args)))
   the-function)
 

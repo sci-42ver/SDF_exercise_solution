@@ -19,6 +19,7 @@
 (define (book-order-test-mod)
   (* 'b ((+ cos 'c sin) (+ 3 'a))))
 
+;; order "before" means "handler predicate" trying order.
 (define (install-arithmetic-func-before-symbolic)
   (let ((g
           (make-generic-arithmetic make-trie-dispatch-store)))
@@ -32,7 +33,7 @@
 ;; This will fail since 'c will try handler predicates: function? -> symbolic?
 ;; Then it must calls symbolic-extender.
 ; (pp (caar (generic-procedure-rules cos)))
-(book-order-test)
+; (book-order-test)
 
 ;; this will work
 (load "../common-lib/test-lib.scm")
@@ -44,12 +45,12 @@
   (let ((g
           (make-generic-arithmetic make-trie-dispatch-store)))
     (add-to-generic-arithmetic! g numeric-arithmetic)
-    (extend-generic-arithmetic! g function-extender) ;*
+    (extend-generic-arithmetic! g function-extender) ; any-object?, function?
     (extend-generic-arithmetic! g symbolic-extender) ;*
     (install-arithmetic! g)))
 (install-arithmetic-symbolic-before-func)
 ;; it must try symbolic? first.
-(book-order-test) ; this should fail. See `add-edge-to-trie` comment.
+; (book-order-test) ; this should fail. See `add-edge-to-trie` comment.
 
 ;; symbolic? -> function?
 ;; Then the 2nd will match (function? any-object?) together with the 1st arg.
@@ -60,17 +61,19 @@
 (define (any-arg arity predicate base-predicate)
   (if (n:= 0 arity)
     (list)
+    ;; 00,01,10,11 where 0 is changed to predicate -> (predicate predicate)
     (remove
       (lambda (arg) (equal? arg (make-list arity base-predicate)))
       (all-sequences-of arity predicate base-predicate))))
 (install-arithmetic-func-before-symbolic)
 (book-order-test)
 (assert-test-mod)
+;; symbolic? -> any-object? -> function?
 (install-arithmetic-symbolic-before-func)
-(book-order-test)
+; (book-order-test) ; throw errors since "symbolic?" will be matched unexpectedly.
 ;; But this will make the above 2nd predicate fail since here it will try symbolic? -> any-object? for cos.
 ;; Then it will match (any-object? symbolic?).
-(assert-test-mod)
+; (assert-test-mod)
 
 ;; > Does this make any change to the dependence on order that we wrestled with in section 3.2.2?
 ;; Based on the above: Yes.

@@ -470,11 +470,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (compound-tag-components tag1)))
           ;; TODO(cph): add more rules here.
           (else #f))))
-
+
 ;;;; Registrations for this file
 
 ;; These must be the first registrations!
-(define any-object? (conjoin))
+;; See common/predicates comments of conjoin*.
+(define any-object? (conjoin)) ; #t
 (define no-object? (disjoin))
 
 ;; Now that we've got those objects, we can properly set the top
