@@ -73,7 +73,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (call-with-output-string
     (lambda (port)
       (write object port))))
-
+
+;; checked
 (define (is-list-of predicate)
   (guarantee predicate? predicate)
   (register-compound-predicate! (lambda (object)

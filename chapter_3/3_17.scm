@@ -43,8 +43,9 @@
 (define set-rest-cycle!
   (property-setter person:rest-cycle person? number?))
 
+(load "section-3-5-lib/adventure-lib.scm")
 (define (update-health person)
-  (set-health! person (n:+ 1 (get-health person)))
+  (increment-health person 1 *max-health*)
   (narrate!
     (list person "health is added by 1")
     person))
@@ -140,8 +141,8 @@
   )
 (define (pred)
   (not (null? (filter troll? (people-here my-avatar)))))
-(load "section-3-5-lib/adventure-lib.scm")
 (load "section-3-5-lib/troll-bite-lib.scm")
 
+;; Sometimes, anonymous will be bitten once to death. So failure-to-survive.
 (define failure-to-survive #t)
 (retry-until-survive pred 'anonymous what-to-do)

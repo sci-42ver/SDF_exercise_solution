@@ -28,6 +28,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (guarantee property-list? plist)
   (%make-property name
                   (get-predicate-property plist)
+                  ;; See ((property-default-supplier property) lookup-value).
                   (get-default-supplier-property plist)))
 
 (define (property-list? object)
@@ -108,6 +109,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; For autonomous-agent, it may have thing:location.
 ;; IMHO this is similar to OOP Inheritance.
 (define (type-properties type)
+  ; (display (list "types:" (cons type (all-supertypes type))))
+  ; (newline)
   (append-map %type-properties
               (cons type (all-supertypes type))))
 
@@ -127,8 +130,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; create-troll is the following object (tag instance-data) where instance-data is (tag proc) where proc is to modify property.
 (define (type-instantiator type)
+  ; (display (list "type-instantiator" (predicate-name type)))
   (let ((constructor (predicate-constructor type)) ; accepts instance-data?
         (properties (type-properties type)))
+    ; (display (list "properties" properties))
+    (newline)
     (lambda plist
       ; (display (list (predicate-name type) properties))
       ; (newline)
@@ -153,11 +159,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             ;; if optional, fallback to default.
             ((property-default-supplier property) lookup-value))
           value)))
-  ; (display
-  ;   (map (lambda (property)
-  ;         (cons property (lookup-value property)))
-  ;       properties))
-  ; (newline)
+  ; (displayln
+  ;   (list
+  ;     "parse-plist"
+  ;     properties
+  ;     (map (lambda (property)
+  ;           (cons property (lookup-value property)))
+  ;         properties)))
   (make-instance-data
    (map (lambda (property)
           (cons property (lookup-value property)))
@@ -189,7 +197,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (map car bindings) ; 1st binding
              (let ((p (assv property bindings)))
                (if (not p)
-                   (error "Unknown property:" property))
+                  (begin
+                    ; (displayln (list "bindings:" bindings))
+                    (error "Unknown property:" property)))
                (lambda (#!optional new-value)
                 ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Lambda-Expressions.html#index-_0023_0021optional-1
                 ;; > If there are fewer arguments than optional parameters, the unmatched parameters are bound to special objects called default objects.

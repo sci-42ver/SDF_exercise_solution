@@ -11,6 +11,7 @@ I don't know whether it is appropriate. If it is inappropriate and someone knows
     IMHO checkers and then manual implementation of chess are enough.
     - "domain model" as SDF_notes.md shows is about "abstract types".
 - 3.6-c.
+- 3.22-b.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 

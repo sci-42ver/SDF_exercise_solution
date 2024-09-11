@@ -158,6 +158,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (get-tag-supersets (predicate->tag predicate))))
 
 (define (all-predicate-supersets predicate)
+  ; (display (list "all-predicate-supersets" (get-all-tag-supersets (predicate->tag predicate)) (predicate->tag predicate)))
+  ; (newline)
   (map tag->predicate
        (get-all-tag-supersets (predicate->tag predicate))))
 
@@ -344,9 +346,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; checked
 (define (get-tag-supersets tag)
+  ; (display (list "(get-tag-supersets tag)" (((tag-supersets tag) 'get-elements))))
+  ; (newline)
   (((tag-supersets tag) 'get-elements)))
 
 (define (get-all-tag-supersets tag)
+  ; (display (list "get-all-tag-supersets" (get-tag-supersets tag)))
+  ; (newline)
   (let loop ((queue (list tag)) (supersets '()))
     (if (pair? queue)
         (let ((tag (car queue))
@@ -371,6 +377,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (if (not (tag<= tag superset))
       ;; > modifies the metadata of its argument predicates
       (((tag-supersets tag) 'add-element!) superset))
+  ; (display (list "after addition:" tag (((tag-supersets tag) 'get-elements))))
+  ; (newline)
   ;; SDF_exercises TODO is there one more efficient way for `add-element!`.
   ;; IMHO we can directly add the above added to tag<=-cache
   (hash-table-clear! tag<=-cache))
