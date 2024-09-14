@@ -14,11 +14,11 @@
   (simple-abstract-predicate 'prime-number slow-prime?))
 
 (define make-prime-number
-(predicate-constructor prime-number?))
+  (predicate-constructor prime-number?))
 (define short-list-of-primes
-(list (make-prime-number 2)
-(make-prime-number 7)
-(make-prime-number 31)))
+  (list (make-prime-number 2)
+        (make-prime-number 7)
+        (make-prime-number 31)))
 
 ;; fails for `(tagged-data? object)`
 (prime-number? 5)

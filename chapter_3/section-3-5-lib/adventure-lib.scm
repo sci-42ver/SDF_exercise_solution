@@ -2,13 +2,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; init func
 (define (restart-game-until-pred pred my-name what-to-do)
   (start-adventure my-name)
-  
+
   (do ()
     ;; see `(look-around avatar)` -> `(display-message message port)` where `(get-name item)` is to get the string name
     ;; and `(create-mit)`.
     ((pred)
-      (what-to-do my-avatar)
-      )
+     (what-to-do my-avatar)
+     )
     (displayln "start one new adventure")
     (start-adventure my-name)))
 
@@ -16,11 +16,11 @@
   (define (create-specific-trolls troll-place)
     (assert troll-place)
     (map (lambda (name)
-          (create-troll name
-                        troll-place
-                        (random-bias 3)
-                        0))
-        '(registrar)))
+           (create-troll name
+                         troll-place
+                         (random-bias 3)
+                         0))
+         '(registrar)))
   (define (create-people places)
     (displayln "call local create-people")
     (append (create-students places)
@@ -33,19 +33,19 @@
   (set! heaven (create-place 'heaven))
   (set! all-people (create-people all-places))
   (set! my-avatar
-        (create-avatar my-name
-                       (find-place-name my-place-name all-places)))
+    (create-avatar my-name
+                   (find-place-name my-place-name all-places)))
   (whats-here))
 
 (define (start-adventure-with-troll-place-and-mine* my-name troll-place-name my-place-name create-things-handler)
   (define (create-specific-trolls troll-place)
     (assert troll-place)
     (map (lambda (name)
-          (create-troll name
-                        troll-place
-                        (random-bias 3)
-                        0))
-        '(registrar)))
+           (create-troll name
+                         troll-place
+                         (random-bias 3)
+                         0))
+         '(registrar)))
   (define (create-people places)
     (displayln "call local create-people")
     (append (create-students places)
@@ -59,19 +59,19 @@
   (set! heaven (create-place 'heaven))
   (set! all-people (create-people all-places))
   (set! my-avatar
-        (create-avatar my-name
-                       (find-place-name my-place-name all-places)))
+    (create-avatar my-name
+                   (find-place-name my-place-name all-places)))
   (whats-here))
 
 (define (start-adventure-with-troll-place-and-mine** my-name troll-place-name my-place-name create-mit-handler create-places-handler)
   (define (create-specific-trolls troll-place)
     (assert troll-place)
     (map (lambda (name)
-          (create-troll name
-                        troll-place
-                        (random-bias 3)
-                        0))
-        '(registrar)))
+           (create-troll name
+                         troll-place
+                         (random-bias 3)
+                         0))
+         '(registrar)))
   (define (create-people places)
     (displayln "call local create-people")
     (append (create-students places)
@@ -84,8 +84,8 @@
   (set! heaven (create-place 'heaven))
   (set! all-people (create-people all-places))
   (set! my-avatar
-        (create-avatar my-name
-                       (find-place-name my-place-name all-places)))
+    (create-avatar my-name
+                   (find-place-name my-place-name all-places)))
   (whats-here))
 
 (define (create-mit-mod)
@@ -368,8 +368,8 @@
 (define (pure-take-exit! exit mobile-thing)
   ;; only used here.
   (pure-move-internal! mobile-thing
-                 (get-from exit)
-                 (get-to exit)))
+                       (get-from exit)
+                       (get-to exit)))
 
 (define (pure-move-internal! mobile-thing from to)
   ; (newline)
@@ -379,5 +379,5 @@
   (set-location! mobile-thing to)
   (add-thing! to mobile-thing)
   (narrate! (list mobile-thing "goes from" from "to" to)
-              mobile-thing))
+            mobile-thing))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

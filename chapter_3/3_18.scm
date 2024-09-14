@@ -93,28 +93,28 @@
 ;; or by go of avatar -> take-exit! -> generic-move! ...
 (define *max-health* 3)
 (define-generic-procedure-handler enter-place!
-  (match-args person?)
-  (lambda (super person)
-    (super person)
-    (narrate! (list person "enters" (get-location person))
-              person)
-    (if (equal? 'medical-center (get-name (get-location person)))
-      (begin
-        (narrate! (list (local-possessive person) "health is restored.")
-              person)
-        (set-health! person *max-health*)
-        (tell-health person)))
-    (let ((people (people-here person)))
-      (if (n:pair? people)
-          (say! person (cons "Hi" people))))))
+                                  (match-args person?)
+                                  (lambda (super person)
+                                    (super person)
+                                    (narrate! (list person "enters" (get-location person))
+                                              person)
+                                    (if (equal? 'medical-center (get-name (get-location person)))
+                                      (begin
+                                        (narrate! (list (local-possessive person) "health is restored.")
+                                                  person)
+                                        (set-health! person *max-health*)
+                                        (tell-health person)))
+                                    (let ((people (people-here person)))
+                                      (if (n:pair? people)
+                                        (say! person (cons "Hi" people))))))
 
 (load "section-3-5-lib/troll-bite-lib.scm")
 
 (define (what-to-do-when-troll-bite person)
   (go (get-direction
-    (find-exit 
-      (get-location person) 
-      (find-place-name 'medical-center all-places))))
+        (find-exit 
+          (get-location person) 
+          (find-place-name 'medical-center all-places))))
   ;; Here restore is done before tick! -> eat-people!.
   (if (n:> (get-health person) 0)
     (begin

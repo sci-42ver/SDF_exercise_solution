@@ -20,12 +20,12 @@
     ;; here other places have things not including self. So output all things without using things-in-place and people-in-place.
     (let ((things (get-things place)))
       (if (n:pair? things)
-          (tell! (cons "You see:" (append things (list "at" place)))
-                person)))
+        (tell! (cons "You see:" (append things (list "at" place)))
+               person)))
     (let ((vistas (get-vistas place)))
       (if (n:pair? vistas)
-          (tell! (cons "You can see:" (append vistas (list "at" place)))
-                person))))
+        (tell! (cons "You can see:" (append vistas (list "at" place)))
+               person))))
   (general-look-around-palantir person view-place #f))
 (define (general-look-around-palantir person place-handler allow-cur-place)
   (for-each
@@ -63,20 +63,20 @@
     (displayln (list "run notify-person-loc at " (get-name place)))
     (let ((things (filter type-pred (get-things place))))
       (if (n:pair? things)
-          (begin
-            (displayln "find troll")
-            (for-each 
-              (lambda (person) 
-                (tell! 
-                  (list 
-                    "There is a" 
-                    (symbol->string (tag-name (predicate->tag type-pred))) 
-                    "at" 
-                    place) 
-                  person))
-              (filter 
-                (lambda (person) (or (student? person) (avatar? person)))
-                (cons my-avatar all-people)))))))
+        (begin
+          (displayln "find troll")
+          (for-each 
+            (lambda (person) 
+              (tell! 
+                (list 
+                  "There is a" 
+                  (symbol->string (tag-name (predicate->tag type-pred))) 
+                  "at" 
+                  place) 
+                person))
+            (filter 
+              (lambda (person) (or (student? person) (avatar? person)))
+              (cons my-avatar all-people)))))))
   (general-look-around-palantir person notify-person-loc #t))
 (define (check-palantir-for-troll! person)
   (displayln (list "check-palantir-for-troll!" (get-name (get-location person))))

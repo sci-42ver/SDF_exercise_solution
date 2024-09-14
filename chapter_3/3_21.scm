@@ -25,26 +25,26 @@
 ;; put this before using the new person? to avoid adding 2 handlers.
 ;; notice avatar needs to set-dest-floor-direction! explicitly if avatar wants to go to one specific place.
 (define-generic-procedure-handler enter-place!
-  (match-args person?)
-  (lambda (super person)
-    (super person)
-    (let ((cur-loc (get-location person)))
-      (narrate! (list person "enters" cur-loc)
-                person)
-      ;; added
-      (if (mobile-place? cur-loc)
-        (let* ((dest-fd (get-dest-floor-direction person))
-               (dest-floor (fd-floor-num dest-fd)))
-          (if (= 0 dest-floor)
-            (let* ((rand-floor (random-floor cur-loc))
-                   (dir (random-floor-outward-direction rand-floor cur-loc))
-                   (fd (%make-floor-direction rand-floor dir)))
-              (set-dest-floor-direction! person fd)))
-          (press-moving-button person)))
-      )
-    (let ((people (people-here person)))
-      (if (n:pair? people)
-          (say! person (cons "Hi" people))))))
+                                  (match-args person?)
+                                  (lambda (super person)
+                                    (super person)
+                                    (let ((cur-loc (get-location person)))
+                                      (narrate! (list person "enters" cur-loc)
+                                                person)
+                                      ;; added
+                                      (if (mobile-place? cur-loc)
+                                        (let* ((dest-fd (get-dest-floor-direction person))
+                                               (dest-floor (fd-floor-num dest-fd)))
+                                          (if (= 0 dest-floor)
+                                            (let* ((rand-floor (random-floor cur-loc))
+                                                   (dir (random-floor-outward-direction rand-floor cur-loc))
+                                                   (fd (%make-floor-direction rand-floor dir)))
+                                              (set-dest-floor-direction! person fd)))
+                                          (press-moving-button person)))
+                                      )
+                                    (let ((people (people-here person)))
+                                      (if (n:pair? people)
+                                        (say! person (cons "Hi" people))))))
 (load "3-21-person-lib.scm")
 (load "../section-3-5-lib/person-lib.scm")
 (load "mobile-place-init.scm")
@@ -56,9 +56,9 @@
          (fp-lst (get-floor-pds-lst mobile-place))
          (floor-num (fd-floor-num fd))
          (floor-pds-entry
-          (find 
-            (lambda (entry) (= floor-num (fp-floor-num entry))) 
-            fp-lst)))
+           (find 
+             (lambda (entry) (= floor-num (fp-floor-num entry))) 
+             fp-lst)))
     (if floor-pds-entry
       (set-fp-pds! floor-pds-entry (cons pd (fp-pds floor-pds-entry)))
       ;; TODO equal-floor-pds? no use here to differentiate.

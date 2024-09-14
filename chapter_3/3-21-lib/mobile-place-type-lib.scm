@@ -50,15 +50,15 @@
 
 (define mobile-place?
   (make-type 'mobile-place 
-    (list 
-      ; mobile-place:mobile-entrances 
-      ; mobile-place:mobile-destinations
-      mobile-place:possible-fpdes
-      mobile-place:current-floor
-      mobile-place:moving-direction
-      mobile-place:speed
-      ; mobile-place:accessible-floors
-      mobile-place:floor-pds-lst)))
+             (list 
+               ; mobile-place:mobile-entrances 
+               ; mobile-place:mobile-destinations
+               mobile-place:possible-fpdes
+               mobile-place:current-floor
+               mobile-place:moving-direction
+               mobile-place:speed
+               ; mobile-place:accessible-floors
+               mobile-place:floor-pds-lst)))
 
 (define get-possible-fpdes
   (property-getter mobile-place:possible-fpdes mobile-place?))

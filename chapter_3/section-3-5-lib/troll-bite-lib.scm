@@ -1,12 +1,12 @@
 (define (create-trolls places)
   (displayln "call new create-trolls")
   (map (lambda (name)
-        (create-troll name
-                      (random-choice places)
-                      (random-bias 3)
-                      0 ; Only change. To accelerate eat-people!.
-                      ))
-      '(grendel registrar)))
+         (create-troll name
+                       (random-choice places)
+                       (random-bias 3)
+                       0 ; Only change. To accelerate eat-people!.
+                       ))
+       '(grendel registrar)))
 
 ;; notice to call `(define failure-to-survive #t)` before.
 (define (retry-until-survive pred my-name what-to-do)
@@ -23,14 +23,14 @@
   (do ((i 0 (n:+ i 1))
        (max-hang-out 10))
     ((or (n:= i max-hang-out) (n:< (get-health person) *max-health*))
-      (if (n:< (get-health person) *max-health*)
-        (begin
-          (displayln "got eaten")
-          (tell-health person)
-          (if (n:> (get-health person) 0)
-            (what-to-do-when-troll-bite person)
-            (set! failure-to-survive #t))))
-      )
+     (if (n:< (get-health person) *max-health*)
+       (begin
+         (displayln "got eaten")
+         (tell-health person)
+         (if (n:> (get-health person) 0)
+           (what-to-do-when-troll-bite person)
+           (set! failure-to-survive #t))))
+     )
     (displayln "wait to be eaten")
     (hang-out 1))
   )

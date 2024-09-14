@@ -35,8 +35,8 @@
   (map
     (lambda (name) 
       (make-avatar 'name name
-               'location (random-choice places)
-               'screen (make-screen 'name 'the-screen)))
+                   'location (random-choice places)
+                   'screen (make-screen 'name 'the-screen)))
     names))
 
 ;; I only give one demo of one interface

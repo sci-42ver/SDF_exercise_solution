@@ -5,9 +5,9 @@
                     (random-bias 3)))
 (define (create-president name home restlessness acquisitiveness)
   (make-president 'name name
-                'location home
-                'restlessness restlessness
-                'acquisitiveness acquisitiveness))
+                  'location home
+                  'restlessness restlessness
+                  'acquisitiveness acquisitiveness))
 (define president?
   (make-type 'president '()))
 (set-predicate<=! president? autonomous-agent?)

@@ -29,15 +29,15 @@
 
 (define (create-mobile-exit from direction to)
   (make-mobile-exit 'name 'mobile-exit
-             'from from
-             'direction direction
-             'to to))
+                    'from from
+                    'direction direction
+                    'to to))
 
 ;; to explicitly add by add-mobile-place-bidirectional-exit.
 (define-generic-procedure-handler set-up! (match-args mobile-exit?)
-  (lambda (super mobile-exit)
-    (super mobile-exit)
-    (remove-exit! (get-from mobile-exit) mobile-exit)))
+                                  (lambda (super mobile-exit)
+                                    (super mobile-exit)
+                                    (remove-exit! (get-from mobile-exit) mobile-exit)))
 
 ;; TODO how to define one bidirectional relation more elegantly?
 (define (reverse-direction direction)

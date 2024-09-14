@@ -107,18 +107,18 @@
 ;; mimic `enter-place!` with (match-args avatar?).
 (define rest!
   (most-specific-generic-procedure 'rest! 1
-    (constant-generic-procedure-handler #f)))
+                                   (constant-generic-procedure-handler #f)))
 (define-generic-procedure-handler rest!
-  (match-args person?)
-  (lambda (person)
-    (let ((cur-loc (get-location person)))
-      (if (not (equal? 'heaven (get-name cur-loc)))
-        (begin
-          (narrate! (list person "rests at" cur-loc)
-                person)
-          (increment-rest-cycle! person))
-        (tell! (list "You can't rest at" cur-loc)
-                person)))))
+                                  (match-args person?)
+                                  (lambda (person)
+                                    (let ((cur-loc (get-location person)))
+                                      (if (not (equal? 'heaven (get-name cur-loc)))
+                                        (begin
+                                          (narrate! (list person "rests at" cur-loc)
+                                                    person)
+                                          (increment-rest-cycle! person))
+                                        (tell! (list "You can't rest at" cur-loc)
+                                               person)))))
 
 ;; test
 ; (for-each

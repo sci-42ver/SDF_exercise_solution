@@ -63,16 +63,16 @@
 (define *degrade-time* 3)
 
 (define-generic-procedure-handler enter-place!
-  (match-args invisibility-cloak?)
-  (lambda (super cloak)
-    (super cloak)
-    (let ((cur-loc (get-location cloak)))
-      (cond
-        ((bag? cur-loc) 
-          (set-cloak-holder! cloak (get-holder cur-loc)))
-        ((place? cur-loc) 
-          (set-cloak-holder! cloak #f)
-          (set-held-time! cloak 0))))))
+                                  (match-args invisibility-cloak?)
+                                  (lambda (super cloak)
+                                    (super cloak)
+                                    (let ((cur-loc (get-location cloak)))
+                                      (cond
+                                        ((bag? cur-loc) 
+                                         (set-cloak-holder! cloak (get-holder cur-loc)))
+                                        ((place? cur-loc) 
+                                         (set-cloak-holder! cloak #f)
+                                         (set-held-time! cloak 0))))))
 
 (define (invisibility-cloak-degrade! invisibility-cloak)
   (define (update-rest-handler invisibility-cloak)
@@ -97,10 +97,10 @@
 
 ;; > must be discarded (dropped) after a short *time*
 (define-generic-procedure-handler set-up!
-  (match-args invisibility-cloak?)
-  (lambda (super thing)
-    (super thing)
-    (register-with-clock! thing (get-clock))))
+                                  (match-args invisibility-cloak?)
+                                  (lambda (super thing)
+                                    (super thing)
+                                    (register-with-clock! thing (get-clock))))
 (define-clock-handler invisibility-cloak? invisibility-cloak-degrade!)
 
 (start-adventure-with-troll-place-and-mine* 

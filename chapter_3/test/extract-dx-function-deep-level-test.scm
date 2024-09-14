@@ -5,12 +5,12 @@
   =
   1
   ((((derivative
-      (lambda (x)
-        (derivative
-          (lambda (y)
-            (derivative
-              (lambda (z) 
-                (* x y z)))))))
-      'u)
+       (lambda (x)
+         (derivative
+           (lambda (y)
+             (derivative
+               (lambda (z) 
+                 (* x y z)))))))
+     'u)
     'v)
-  'w))
+   'w))

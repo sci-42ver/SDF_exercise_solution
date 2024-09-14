@@ -15,9 +15,9 @@
         (display "update-rest-handler")
         (cond 
           ((n:= (get-current-floor mobile-place) max-floor-num)
-            (set-moving-direction! mobile-place 'down))
+           (set-moving-direction! mobile-place 'down))
           ((n:= (get-current-floor mobile-place) min-floor-num)
-            (set-moving-direction! mobile-place 'up)))
+           (set-moving-direction! mobile-place 'up)))
         ))
     (let ((speed (get-speed mobile-place))
           (old-floor (get-current-floor mobile-place)))
