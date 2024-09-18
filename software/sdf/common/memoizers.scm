@@ -36,6 +36,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    list)))
           (hash-table-intern! table
                               (get-key list)
+                              ;; pass func to avoid unnecessary calculation of this func. 
                               (lambda () (get-datum list))))))))
 
 (define (make-memoizer-table make-list= elt=)
