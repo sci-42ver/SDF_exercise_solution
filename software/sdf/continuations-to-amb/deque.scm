@@ -49,6 +49,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (set-deque-front! stq (cons object (deque-front stq)))
         (set-deque-back! stq (deque-front stq)))))
 
+;; only 2 operations, so not exactly deque. See SICP Exercise 3.23.
 (define (add-to-end! stq object)
   (let ((new (cons object '())))
     (if (pair? (deque-back stq))
