@@ -27,6 +27,8 @@
                                        ;; This corresponds to the book
                                        ;; > self-referential structures
                                        ;; > self reference is cumbersome to arrange
+
+                                       ;; named-lambda can't be used
                                        ((lambda (x) (x x))
                                         (lambda (func)
                                           (lambda things
