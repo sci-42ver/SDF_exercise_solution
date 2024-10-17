@@ -23,7 +23,8 @@
                                        ;; https://stackoverflow.com/a/7719140/21294350
                                        ;; > giving x a reference to itself so now x can refer to itself
                                        ;; here fact-gen is given one func arg, we can think of `(fact-gen fact-gen)` is `((lambda (fact-gen) ...) fact-gen)` which returns the original func `(lambda (n) ...)`.
-                                       ;; Also see CS61A related notes "Y combinator" which shares one similar idea by passing *func* in args.
+                                       ;; Also see CS61A related notes Week 5 "Y combinator" which shares one similar idea by passing *func* in args. (It seems no related notes).
+                                       ;; BETTER see ~/SICP_SDF/exercise_codes/SICP/4/4_8_Y_combinator.scm which avoids using `(fact-gen fact-gen)` inside the *main* func body.
                                        ;; This corresponds to the book
                                        ;; > self-referential structures
                                        ;; > self reference is cumbersome to arrange
