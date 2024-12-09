@@ -182,7 +182,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (symbol? (caddr object))
                 (null? (cdddr object))))))
 
-;; TODO: merge with pattern variable definitions
+;; code_base TODO: merge with pattern variable definitions
 (define (type-variable #!optional root)
   `(? ,(generate-unique-name
         (if (default-object? root)

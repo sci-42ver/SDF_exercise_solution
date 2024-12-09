@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Pattern-matching support
 
 ;;;; Syntax of variables
@@ -109,12 +109,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (match:bindings dict)
   (cdr dict))
 
+;; SDF_exercises TODO dict is unused.
 (define (match:new-bindings dict bindings)
   (cons 'dict bindings))
 
 (define (match:make-binding var value)
   (list (match:var-name var)
         value
+        ;; SDF_exercises TODO when this is used.
         (match:var-type var)))
 
 (define (match:map-binding-value procedure binding)
@@ -123,11 +125,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (caddr binding)))
 
 (define match:binding-name car)
+;; not used
 (define match:binding-type caddr)
 
 (define match:binding-value
+  ;; name is used for error-generic-procedure-handler.
   (simple-generic-procedure 'match:binding-value 1 cadr))
-
+
 (define (match:extend-dict var value dict)
   (match:new-bindings dict
                       (cons (match:make-binding var value)
@@ -140,7 +144,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (match:lookup var dict)
   (let ((name
-         (if (symbol? var)
+         (if (symbol? var) ; SDF_exercises TODO when this occurs.
              var
              (match:var-name var))))
     (find (lambda (binding)
@@ -164,6 +168,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (match:map-binding-value procedure binding))
         (match:bindings dict))))
 
+;; This implies "the same order" 
+;; > The names a and b are repeated: they occur both in the pattern and in the parameter list of the handler, in the same order.
 (define (match:all-values dict)
   (reverse (map match:binding-value (match:bindings dict))))
 

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; File:  rules.scm -- Example of algebraic simplification
 
 ;;; This is the essence of a simplifier.  It recursively simplifies
@@ -64,6 +64,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (try-rules data rules succeed fail)
   (let per-rule ((rules rules))
     (if (null? rules)
+        ;; > if none are forthcoming, the rule is not applicable.
         (fail)
         (try-rule data
                   (car rules)
@@ -71,16 +72,22 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (lambda ()
                     (per-rule (cdr rules)))))))
 
+; (trace try-rules)
+
 (define (try-rule data rule succeed fail)
   (rule data succeed fail))
-
+
 ;;; A simple set of rules.
 
+;; Here rules has no mutual calls or recursive calls, so no need for renaming.
+;; These rules are just *sequentially* run on data.
 (define algebra-1
   (rule-simplifier
    (list
     ;; Associative law of addition
     (rule '(+ (? a) (+ (? b) (? c)))
+          ;; IGNORE: SDF_exercises TODO why use , here and how is rule defined? 
+          ;; See SDF_exercises/software/sdf/term-rewriting/test-rule-implementation.scm
           `(+ (+ ,a ,b) ,c))
 
     ;; Commutative law of multiplication
@@ -103,12 +110,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    ((expr<? (car y) (car x)) #f)
                    (else (lp (cdr x) (cdr y)))))))))
 
+;; null? < number? ...
 (define expr<?
   (let ((types
          `((,null?   . ,(lambda (x y) #f))
            (,number? . ,<)
-           (,symbol? . ,symbol<?)
-           (,list?   . ,list<?))))
+           (,symbol? . ,symbol<?) ; in MIT_Scheme_Reference
+           (,list?   . ,list<?)
+           )))
     (lambda (x y)
       (let per-type ((types types))
         (if (null? types)
@@ -121,7 +130,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                          #t))
                     ((predicate? y) #f)
                     (else (per-type (cdr types))))))))))
-
+
 (define algebra-2
   (rule-simplifier
    (list
@@ -130,10 +139,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
     (rule `(+ (? a)) a)
 
+    ;; This can recursively remove all nested sums until only one + is reserved.
     (rule `(+ (?? a) (+ (?? b)) (?? c))
           `(+ ,@a ,@b ,@c))
 
+    ;; Keep one consistent order.
     (rule `(+ (?? a) (? y) (? x) (?? b))
+          ;; https://en.wikipedia.org/wiki/Bubble_sort#Pseudocode_implementation
+          ;; 0. bubble sort since we swaps adjacent elements recursively.
+          ;; The difference is here we will scan from the start while the wikipedia won't.
+          ;; 1. Both generates the non-decreasing order.
           (and (expr<? x y)
                `(+ ,@a ,x ,y ,@b)))
 
@@ -161,6 +176,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (rule `(+ 0 (?? x)) `(+ ,@x))
 
     (rule `(+ (? x ,number?) (? y ,number?) (?? z))
+          ;; will calculate the value.
           `(+ ,(+ x y) ,@z))
 
 

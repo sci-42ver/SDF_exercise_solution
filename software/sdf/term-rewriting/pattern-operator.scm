@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (make-pattern-operator . rules)
   (let ((rules
          (cons 'rules
@@ -47,6 +47,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (set-pattern-metadata! the-operator rules)
     the-operator))
 
+;; doesn't change default-rule which may exist.
 (define (attach-rule! operator rule)
   (let ((metadata (pattern-metadata operator)))
     (set-cdr! metadata

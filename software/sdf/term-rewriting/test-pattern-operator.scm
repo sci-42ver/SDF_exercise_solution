@@ -20,14 +20,17 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define-test 'factorial-1
   (lambda ()
 
     (define factorial
       (make-pattern-operator
+        ;; Compared with SDF_exercises/chapter_4/term-rewriting/trace-demo.scm
+        ;; Here pattern is also list and data to rule is also list.
        (rule '(0) 1)
        (rule `((? n ,positive?))
+            ;; Here handler has recursive calls.
              (* n (factorial (- n 1))))))
 
     (assert-equal (factorial 10)

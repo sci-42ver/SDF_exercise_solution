@@ -45,7 +45,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (add-generic-arith-constants! generic-arithmetic
                                       arithmetic)
-  ;; TODO: We have a choice here: do we merge constants with
+  ;; code_base TODO: We have a choice here: do we merge constants with
   ;; non-standard names into the generic arithmetic?  For now, we
   ;; will ignore such constants.
   (for-each

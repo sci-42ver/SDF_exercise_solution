@@ -31,6 +31,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define *show-tests?* #f)
 (define *pristine-test-env?* #t)
 
+;; skipped since test is not what this book intends to teach.
 (define (load-tests . filenames)
   (let ((failed 0)
         (all 0)
@@ -75,7 +76,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (name test-name)
   (run test-run))
 
-;; will delete if already existing in `all-tests`.
+;; will delete and re-insert if already existing in `all-tests`.
 (define (define-test name run)
   (let ((existing-test
          (find (lambda (test)
@@ -94,6 +95,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           body
           (lambda () (install-arithmetic! numeric-arithmetic))))))
 
+;; see /home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain/test-checkers.scm for one usage.
 (define (run-tests filename show-tests?)
   (let ((failed 0))
     (for-each (lambda (test)
@@ -123,6 +125,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; n:+ is probably defined in analyze-sections.scm.
   (set! *test-index* (n:+ *test-index* 1)))
 
+;; checked
 (define (fail)
   (set! *test-failed?* #t)
   (warn "test failure:" *test-name* *test-index* (->namestring *test-file*)))

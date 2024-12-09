@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; A rule is a procedure constructed from a pattern and a
 ;;; consequent procedure (the handler).  A rule takes data that
 ;;; the rule may apply to and a success and failure continuation.
@@ -38,11 +38,27 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                      (apply handler
                             (match:all-values dict))))
                 (and result
+                    ;; > If the match succeeds, the rule
+                    ;; > evaluates its consequent in an environment in which the pattern
+                    ;; > variables are bound to their matched data.
                      (succeed result
+                              ;; SDF_exercises TODO when this is used
                               (lambda () #f))))))
+          ;; > The system backtracks into the matcher to look for an alternative match
+          ;; i.e. (per-rule (cdr rules)) which matches between rule and data
+          ;; > if none are forthcoming, the rule is not applicable.
+          ;; IGNORE: when nested (see (map simplify-expression expression) in )
+          ;; SDF_exercises TODO IMHO should be "rules are ..."
           (fail)))
     the-rule))
-
+
+;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Explicit-Renaming.html#index-er_002dmacro_002dtransformer
+;; 0. > The expression is expanded
+;; IGNORE: TODO just one lambda, so what does "expand" mean?
+;; Maybe this https://www.gnu.org/software/guile/docs/docs-2.2/guile-ref/Macro-Expansion.html#Macro-Expansion
+;; where + is one procedure.
+;; 1. transformer environment see https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/SC-Transformer-Definition.html and lecs/6.001_fall_2007_recitation/codes/rec20/amb-defined-by-syntactic-closure-macro-transformer/sc-macro-transformer-demo.scm
+;; 
 (define-syntax rule
   (er-macro-transformer
    (lambda (form rename compare)

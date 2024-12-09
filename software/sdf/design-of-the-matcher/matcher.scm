@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Matcher based on match combinators, CPH/GJS style.
 ;;;     Idea is in Hewitt's PhD thesis (1969).
 
@@ -43,8 +43,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (define (eqv-match data dictionary succeed)
     (and (pair? data)
          (eqv? (car data) pattern-constant)
+         ;; > backtrack into the consequent or pattern-match part of a rule. 
+         ;; When called by match:list, here "backtrack" to "pattern-match part of" the parent part.
          (succeed dictionary 1)))
+  ; (trace eqv-match)
   eqv-match)
+; (trace match:eqv)
 
 (define (match:element variable)
   (define (element-match data dictionary succeed)
@@ -78,7 +82,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (match:segment variable)
   (define (segment-match data dictionary succeed)
-    (and (list? data)
+    (and (list? data) ; can match null list.
          (let ((binding (match:lookup variable dictionary)))
            (if binding
                (match:segment-equal? data 
@@ -87,7 +91,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                        (succeed dictionary n))) 
                (let ((n (length data)))
                  (let lp ((i 0))
+                  ;  (trace lp)
+                  ;  (write-line (list data dictionary))
                    (and (<= i n)
+                        ;; See SDF_exercises/chapter_4/term-rewriting/trace-demo.scm
+                        ;; demo-1 can only find one solution
+                        ;; where (?? x) first matches no data (i.e. i=0)
+                        ;; Then (?? y) will fails (i.e. succeed here returns #f) for i=0~5 (This implies backtracking)
+                        ;; Then (?? y) succeeds for i= 6.
                         (or (succeed (match:extend-dict
                                       variable
                                       (list-head data i)
@@ -114,21 +125,28 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (dictionary dictionary))
            (cond ((pair? matchers)
                   ((car matchers)
+                   ;; SDF_exercises TODO why always list here?
                    data-list
                    dictionary
                    (lambda (new-dictionary n)
+                     ;; SDF_exercises TODO when happens
                      (if (> n (length data-list))
                          (error "Matcher ate too much."
                                 n))
+                    ;  (write-line (list "new-dictionary" new-dictionary))
                      (lp (list-tail data-list n)
                          (cdr matchers)
                          new-dictionary))))
                  ((pair? data-list) #f) ;unmatched data
                  ((null? data-list)
+                  ;; 0. > backtrack into the consequent or pattern-match part of a rule. 
+                  ;; "consequent"
+                  ;; 1. eat one list data like (+ z w) in (+ y (+ z w)).
                   (succeed dictionary 1))
                  (else #f)))))
+  ; (trace list-match)
   list-match)
-
+
 ;;;; Pattern syntax
 
 (define (matcher pattern)
@@ -141,7 +159,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (run-matcher match-procedure datum succeed)
   (match-procedure (list datum)
                    (match:new-dict)
-                   (lambda (dict n)
+                   (lambda (dict n) 
+                    ;; (= n 1) means manipulating with one datum in (list datum)
                      (and (= n 1)
                           (succeed dict)))))
 
@@ -150,6 +169,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; by returning #f we force backtracking.
   #f)
 
+;; trace (match:compile-pattern '(+ (? a) (+ (? b) (? c)))) with (+ y (+ z w)) in '(* (+ y (+ z w)) x).
+;; see SDF_exercises/chapter_4/term-rewriting/trace-demo.scm
 (define (match:compile-pattern pattern)
   (cond ((match:var? pattern)
          (case (match:var-type pattern)
@@ -159,6 +180,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((list? pattern)
          (match:list (map match:compile-pattern pattern)))
         (else
+          ;; SDF_exercises TODO what does this purpose to do?
          (match:eqv pattern))))
 
 

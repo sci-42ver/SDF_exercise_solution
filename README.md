@@ -51,9 +51,11 @@ exercise solution for Software Design for Flexibility (SDF)
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # @exercise solutions by *3 references* (i.e. nbardiuk etc.) and *6.945_assignment_solution* checked up to now (sometimes *code base* has sample implementations)
 with check comments in codes.
-- 2, 3.1~3.22
+- For chapter 4 later, search in this repo by `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm` and code base by ignoring these.
+  - nbardiuk can be skipped.
+- 2, 3, 4.1~3
 # @exercise tests finished
-- 2, 3.1~3.22
+- 2, 3, 4.1~3
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
   - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
@@ -101,8 +103,9 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - 2.7
   - > (ere expr) or (bre expr)
     > multiple references ...
+  - Emm... I have forgotten what I meant when I reviewed this while reading chapter4...
 ## lack
-# internal func description
+# MIT/GNU Scheme internal func description
 - Use `((lambda (x) x) (values 1 2))` to show what `values` returns.
 - `reduce` [diff](https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Folding-of-Lists.html#index-reduce) `fold`
   kw: "right identity"
@@ -121,7 +124,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - list-of-unique-symbols?
   - list-of-type?
     - maybe mean a list of data whose type satisfies `pred` by `(list-of-type? object change?)`.
-# exercise comments
+# @exercise comments
 ## chapter 2
 - 2.9
   - [POSIX_regex]
@@ -182,6 +185,14 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - 11
   - [[111] reference](https://engineering.purdue.edu/~qobi/papers/ifl2005.pdf)
     - ~~TODO why `(D (λy . x + y) 1)` doesn't calculate derivative and gets 2.~~
+## chapter 4
+1~2: search `expr<?`
+3: `sort`
+- [x] 1
+  - same as SICP `(married Mickey ?who)`
+- [x] 2
+  - a. same as 1.
+  - ~~b. This seems to assume ~~
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
 [software-manager-doc]:https://groups.csail.mit.edu/mac/users/gjs/6.945/sdf/manager/software-manager.pdf

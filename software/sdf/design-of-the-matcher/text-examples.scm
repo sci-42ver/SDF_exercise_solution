@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; To fix problem with dict header
 (define (result-receiver dict n-eaten)
   `(success ,(match:bindings dict) ,n-eaten))

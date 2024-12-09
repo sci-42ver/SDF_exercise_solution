@@ -20,10 +20,19 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
+(cd "~/SICP_SDF/SDF_exercises/chapter_4")
+(load "../software/sdf/manager/load.scm")
+(manage 'new 'term-rewriting)
+(load "~/SICP_SDF/SDF_exercises/software/sdf/common/testing.scm")
+
 (define-test 'rules
   (lambda ()
     (assert-equal '(+ (+ (* x y) (* x z)) (* w x))
+                  ;; trace based on SDF_exercises/chapter_4/term-rewriting/trace-demo.scm
+                  ;; (* x (+ y (+ z w))))
+                  ;; (+ (* x y) (* x (+ z w)))))
+                  ;; ...
                   (algebra-1 '(* (+ y (+ z w)) x)))
 
     (assert-equal '(+ (* w x) (* x y) (* x z))
@@ -57,6 +66,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (algebra-2
                    '(* (+ (* a b) (* y z)) (+ (* w x) (* a c)))))
     ))
+
+(run-tests "" #t)
 
 (define-test 'symfib
   (lambda ()
