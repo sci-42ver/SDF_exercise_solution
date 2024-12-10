@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;
 
 (define (c->f c)
@@ -38,7 +38,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
  text-arith
  layered-propagator-projector)
 
-
+
 (initialize-scheduler)
 
 (define-cell C)

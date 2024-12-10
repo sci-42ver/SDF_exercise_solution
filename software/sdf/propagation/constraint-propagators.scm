@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; A constraint propagator is a compound propagator with
 ;;; inputs=outputs.
 
@@ -73,7 +73,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (p:= a b p)
   (p:spst-switch p a b)
   (p:spst-switch p b a))
-
+
 ;;; Logical constraints
 
 (define-c:prop (c:and a b c)
@@ -122,7 +122,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let-cells (mul)
     (p:amb mul '(-1 +1))
     (p:* mul ax x)))
-
+
 ;;; Three boolean values, only one may be true
 
 (define-c:prop (c:choose-exactly-one u v w)

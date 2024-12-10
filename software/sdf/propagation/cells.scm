@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Cells
 
 (define (make-cell name)
@@ -81,7 +81,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (set-predicate<=! cell? relatable?)
 
 (define cell-merge)
-
+
 (define (add-cell-neighbor! cell neighbor)
   (cell 'add-neighbor! neighbor))
 

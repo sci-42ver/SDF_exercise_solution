@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Data modelling
 
 (define get-base-value
@@ -73,7 +73,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define strongest-value
   (simple-generic-procedure 'strongest-value 1
     (lambda (object) object)))
-
+
 ;; Arguments:
 ;; * CONTENT is the current content of the cell
 ;; * INCREMENT is an incremental update to the cell

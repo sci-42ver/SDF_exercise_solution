@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Layers
 
 (define (make-annotation-layer name constructor)
@@ -72,7 +72,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define base-layer-value
   (layer-accessor base-layer))
-
+
 ;;;; Layered data
 
 (define (layered-datum base-value . plist)
@@ -118,7 +118,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                      (layer? (car p))))
               object)))
 (register-predicate! layer-alist? 'layer-alist)
-
+
 ;;;; Layered procedures
 
 (define layered-procedure?)
@@ -188,7 +188,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define layered-metadata?
   (make-bundle-predicate 'layered-metadata))
-
+
 (define (layered-extender base-arith)
   (let ((base-pred
          (conjoin (arithmetic-domain-predicate base-arith)

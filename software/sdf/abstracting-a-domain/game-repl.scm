@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Game REPL
 
 (define try-history)
@@ -67,7 +67,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     (< n (length moves))))
           (error "Bad move:" n))
       (new-board (get-final-board (list-ref moves n))))))
-
+
 ;;; Consider merging this with the one in graph-api/code/chess-board.scm.
 
 (define (show-board board)

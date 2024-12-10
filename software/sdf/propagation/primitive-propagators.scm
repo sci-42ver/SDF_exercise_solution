@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Core unidirectional propagators
 
 (define (install-core-propagators! cell-merge-procedure
@@ -80,7 +80,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (let ((m (n:magnitude x)))
                (n:<= m
                      (n:* flo:ulp-of-one m)))))))
-
+
 ;;; This makes the file analyzer happy, because otherwise it
 ;;; can't see these definitions.
 (define p:*)
@@ -135,7 +135,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define p:tan)
 (define p:truncate)
 (define p:zero?)
-
+
 (define (boolean-propagators projector)
   (primitive-propagators-package
    'boolean
@@ -168,7 +168,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (boolean/dna c x) (if (and (not c) x) #f the-nothing))
 ;;; ro is to or as division is to multiplication
 (define (boolean/ro c x) (if (and c (not x)) #t the-nothing))
-
+
 (define (primitive-propagators-package name alist)
   (make-package
    `(primitive-propagators ,name)
@@ -206,7 +206,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    '(shortcut-boolean-propagators)
    `((p:and . ,p:and)
      (p:or . ,p:or))))
-
+
 (define (control-propagators projector)
 
   (define (conditional p if-true if-false output)

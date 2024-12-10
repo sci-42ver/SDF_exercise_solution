@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Operation abstraction
 
 (define (operation? object)
@@ -59,7 +59,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; API
 (define (operation-components operation)
   (list operation))
-
+
 ;;; API
 (define (constant-union name . constants)
   (declare (ignore name))

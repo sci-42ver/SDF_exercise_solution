@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Chess board
 
 (define chess-board-size 8)
@@ -81,7 +81,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
   (populate-side 'white 0 1)
   (populate-side 'black 7 6))
-
+
 (define (make-chess-board-internal)
   (let ((nodes
          (map (lambda (x)
@@ -138,7 +138,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (bundle #f
               node-at piece-at piece-in address-of
               set-piece-at color next-turn))))
-
+
 (define (simple-move board from to)
   (let ((my-piece (get-piece-to-move board from)))
     ;; A bunch of checks for validity of move:
@@ -187,7 +187,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (if (not (eq? (board 'color) (piece-color my-piece)))
         (error "Can move only one's own pieces:" my-piece from))
     my-piece))
-
+
 ;;;; Chess REPL
 
 (define the-board)
@@ -238,7 +238,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (write (b 'color))
     (display " to move")
     (newline)))
-
+
 ;;;; Chess pieces
 
 (define (make-piece type color)
@@ -282,7 +282,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (case (piece-color piece)
             ((white) #\w)
             ((black) #\b))))
-
+
 ;;;; Addresses of board squares
 
 (define (make-address x y)
@@ -327,7 +327,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        (make-address x y))
                      chess-board-indices))
               chess-board-indices))
-
+
 ;;;; Coordinate transforms
 
 (define (rotate-45 label)
@@ -370,7 +370,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define rotate-180-view
   (make-graph-view 'inverse rotate-180 rotate-180))
-
+
 #|
 (define (giuoco-piano-opening)
   (start-chess-game)

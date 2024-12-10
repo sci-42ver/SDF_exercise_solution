@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; We are dealing with milliarcseconds.
 
 (define (mas->radians mas)
@@ -45,7 +45,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define AU-in-parsecs
   (/ AU-in-meters parsec-in-meters))
-
+
 (setup-propagator-system
  (extend-arithmetic interval-extender
                     numeric-arithmetic))
@@ -93,7 +93,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ((p:/ c:* c:parallax<->distance)
    (au 4.8481e-6)
    (t (interval 3.6361e-7 8.4842e-7)))))
-
+
 ;; coderef: tell:JRussell-etal1982
 (tell! Vega-parallax
        (+->interval (mas->radians 124.3) (mas->radians 4.9))
@@ -210,7 +210,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;    (meters-per-parsec 3.0857e16))))
 
 ;; (assert! 'FvanLeeuwen2007nov)
-
+
 ;;; Relation of distance to magnitudes
 ;;; Let m be apparent magnitude (as measured)
 ;;;     M be absolute magnitude (at 10pc)
@@ -302,7 +302,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
  (because
   ((p:-> c:same)
    (vega-magnitude-distance (interval 7.663e0 7.7e0)))))
-
+
 ;;; All of the measurements have improved.
 
 ;; coderef: improvement1
@@ -358,7 +358,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
  (because
   ((p:atan c:tan c:parallax<->distance)
    (t (interval 6.2963e-7 6.3267e-7)))))
-
+
 #|
 (explain Vega-parallax-distance)
 #|

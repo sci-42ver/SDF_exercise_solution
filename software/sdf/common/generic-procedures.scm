@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Generic procedures
 
 (define generic-procedure?)
@@ -91,7 +91,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define trace-generic-dispatch?
   (make-parameter #f))
-
+
 (define (get-generic-procedure-handler metadata args)
   (or ((generic-metadata-getter metadata) args)
       ((generic-metadata-default-getter metadata))))
@@ -218,7 +218,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((set-default-handler!) set-default-handler!)
         ((get-rules) (lambda () rules))
         (else (error "Unknown message:" message))))))
-
+
 (define (make-trie-dispatch-store)
   (let ((delegate (make-simple-dispatch-store))
         (trie (make-trie)))

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Symbolic arithmetic
 
 (define symbolic-template
@@ -74,7 +74,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                             args)
                        (tagger (cons operator args))
                        (apply base-operation args))))))))))))
-
+
 ;;;; Function arithmetic
 
 (define (make-endo-function-arithmetic base-arithmetic)
@@ -125,7 +125,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                            args)
                                         operation-arg))
                                   operation-args))))))))))))
-
+
 (define (get-object-name object)
   (if (function? object)
       (function-name object)

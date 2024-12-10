@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define-test 'empty
   (lambda ()
     (define foo? (make-bundle-predicate 'foo))
@@ -36,7 +36,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
     (assert-equal '() (bundle-alist foo))
     ))
-
+
 (define-test 'simple
   (lambda ()
 

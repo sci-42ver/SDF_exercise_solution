@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (make-subsetting-dispatch-store-maker choose-handler)
   (lambda ()
     (let ((delegate (make-simple-dispatch-store)))
@@ -63,7 +63,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (else ; incomparable for the former 2 predicates.
                (loop (cdr ps1) (cdr ps2))))
         #f)))
-
+
 (define make-most-specific-dispatch-store
   (make-subsetting-dispatch-store-maker
    (lambda (handlers default-handler)

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (binary-amb cell)
   (let ((premises (make-hypotheticals cell '(#t #f))))
     (let ((true-premise (car premises))
@@ -55,7 +55,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (set! all-amb-propagators
               (cons me all-amb-propagators))
         me))))
-
+
 #|
 (define (binary-amb cell)
   (p:amb cell '(#t #f)))
@@ -105,7 +105,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                           nogood2))
                      nogoods2))
               nogoods1))
-
+
 (define (process-contradictions nogoods complaining-cell)
   (update-failure-count!)
   (for-each save-nogood! nogoods)
@@ -180,7 +180,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (abhor cell)
   (add-cell-content! cell (supported #f (support-set))))
-
+
 ;;; Experiments of different premise-choice strategies.
 
 (define (choose-random-premise-from-strong-nogood nogoods)

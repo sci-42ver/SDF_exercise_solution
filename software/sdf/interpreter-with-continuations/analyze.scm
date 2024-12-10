@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Interpreter that provides call/cc
 
 ;;;  Separating analysis from execution.
@@ -61,7 +61,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (executor env
             (lambda (value)
               (c:advance value continue))))
-
+
 (define (analyze-self-evaluating expression)
   (lambda (environment continue)
     (declare (ignore environment))
@@ -91,7 +91,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler c:analyze
   (match-args quoted?)
   analyze-quoted)
-
+
 ;;; This is a bit more sophisticated... I separated procedures
 ;;; with simple Scheme-like parameter lists from more general
 ;;; procedures with declarations like lazy on the parameters.
@@ -121,7 +121,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler c:analyze
   (match-args lambda?)
   analyze-lambda)
-
+
 (define (analyze-if expression)
   (let ((predicate-exec (analyze (if-predicate expression)))
         (consequent-exec (analyze (if-consequent expression)))
@@ -138,7 +138,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler c:analyze
   (match-args if?)
   analyze-if)
-
+
 (define (analyze-begin expression)
   (reduce-right
    (lambda (exec1 exec2)
@@ -156,7 +156,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler c:analyze
   (match-args begin?)
   analyze-begin)
-
+
 (define (analyze-assignment expression)
   (let ((var
          (assignment-variable expression))
@@ -185,7 +185,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler c:analyze
   (match-args definition?)
   analyze-definition)
-
+
 ;;; Macros (definitions are in syntax.scm)
 
 (define-generic-procedure-handler c:analyze
@@ -217,7 +217,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                              (cdr things)
                              (lambda (vals)
                                (continue (cons val vals))))))))
-
+
 ;;; Application
 
 (define (continuation? x) (procedure? x))
@@ -258,7 +258,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (c:apply-strict procedure
                         args
                         continue)))))
-
+
 ;;; Traditional APPLY, as in Scheme
 (define (c:apply-strict procedure args continue)
   (cond ((strict-primitive-procedure? procedure)
@@ -303,7 +303,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (lambda (args)
              (body-exec (extend-environment names args penv)
                         continue)))))))
-
+
 (define c:handle-operand
   (simple-generic-procedure 'c:handle-operand 4
     (lambda (parameter operand-exec environment continue)
@@ -325,7 +325,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler procedure-parameter-name
   (match-args pair?)
   car)
-
+
 (define c:advance
   (simple-generic-procedure 'c:advance 2
     (lambda (x continue) (continue x))))
@@ -351,7 +351,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args advanced-memo? continuation?)
   (lambda (object continue)
     (continue (advanced-value object))))
-
+
 ;;; Implementation of call/cc: predicate in rtdata-extra; dispatch in
 ;;; c:apply-strict; also modifies primitive-or-simple-procedure?
 

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 #|
 
 Six people, two women and four men are seated at a round card
@@ -39,7 +39,7 @@ equally strong.
 |#
 
 ;;; Needs library.scm
-
+
 ;;; This formulation takes a few minutes on my laptop.
 
 (define (card-table)
@@ -86,7 +86,7 @@ equally strong.
   (amb))
 'expect-write: '(0 3 2 5 1 4)
 'expect-value: 'no-more-alternatives
-
+
 ;;; The following takes too long.  Several hours on a laptop.
 #|
 (define (card-table)

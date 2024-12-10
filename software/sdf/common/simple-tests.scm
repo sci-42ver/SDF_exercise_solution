@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Simple in-line tests
 
 ;;; The idea behind this tester is that it executes a file of
@@ -74,7 +74,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define debug-test-errors?
   (make-settable-parameter #f))
-
+
 (define (read-test-expressions filename)
   (read-file (pathname-default-type filename "scm")))
 
@@ -122,7 +122,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                   expr))
                             args))
                  rest)))))
-
+
 (define (is-quotation? object)
   (and (pair? object)
        (eq? (car object) 'quote)
@@ -162,7 +162,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (any (lambda (expectation)
          (rule-expects-error? (car expectation)))
        expectations))
-
+
 ;;; Lots or hair here to let the test driver deal with
 ;;; "interesting" uses of continuations.  In particular, the
 ;;; state of the driver is moved outside of the control
@@ -209,7 +209,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                 (apply-expectation expectation
                                                    context))
                               (cdr *current-group*)))))))))
-
+
 (define (make-expectation-context output-port value)
   (let* ((output-string (get-output-string! output-port))
          (port (open-input-string output-string)))
@@ -261,7 +261,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (write (car *current-group*) port)
         (write-string "\ngot error: " port)
         (write-condition-report condition port))))
-
+
 (define (skeletal-test-results results)
   (values (count failing-test-result? results)
           (length results)))
@@ -300,7 +300,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (display error)
               (newline))
             (cdr failure)))
-
+
 (define-expectation-rule 'expect-write: 1
   (lambda (context written-value)
     (read-written-value context written-value)))
@@ -339,7 +339,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                          (write-to-string output-string)
                          "\nbut instead saw\n"
                          (write-to-string actual))))))
-
+
 (define-expectation-rule 'expect-value: 1
   (lambda (context value)
     (if (equal? (context 'get-value) value)
@@ -375,7 +375,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (string-append
            "expected an error but instead got a value\n"
            (write-to-string value))))))
-
+
 ;;; General written output expectation.
 (define-expectation-rule 'expect-writes: 2
   (lambda (context pred expected)

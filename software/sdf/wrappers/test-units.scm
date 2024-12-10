@@ -77,7 +77,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define unit-conversion-1
   (make-unit-conversion (lambda (x) (* x 2))
                         (lambda (x) (/ x 2))))
-
+
 (define-test 'units-gas-law-1
   (lambda ()
     (assert-close .02404848592336704 1e-4
@@ -114,7 +114,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                         'fahrenheit
                                         'mole)))
                       (specialized 14.7 68 1))))))
-
+
 (define (gas-law-volume pressure temperature amount)
   (/ (* amount gas-constant temperature) pressure))
 

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Backtracking is missing some assignments!
 
 (unify-test '((?? x))
@@ -57,7 +57,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             '((?? x))
             '(dict (x (3 (?? y)) ??)))
 'expect-value: 'matches-including-expected
-
+
 (unify-test '((?? x) (?? y) (?? x))
             '(a b b a))
 ;; verbose output:

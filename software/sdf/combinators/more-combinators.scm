@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; An unoptimal answer to an exercise
 
 (define (curry-arguments . target-indices)
@@ -51,7 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
  'c 'd)
 ;Value: (foo c a d b)
 |#
-
+
 (define (fan-out-argument . target-indices)
   (lambda (f)
     (let ((n (get-arity f))

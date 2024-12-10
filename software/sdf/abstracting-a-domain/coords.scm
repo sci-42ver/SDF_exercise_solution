@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Coordinates
 
 (define (make-coords column row)
@@ -62,7 +62,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (offset->direction offset)
   (make-coords (sign (get-column offset))
                (sign (get-row offset))))
-
+
 (define forward-direction
   (make-coords 0 1))
 

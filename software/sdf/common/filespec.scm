@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define loaded-spec)
 
 (define (make-load-spec env-name environment filespecs root-dir
@@ -83,7 +83,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     ("testing" from "common" test-only? #t)
     ("simple-tests" from "common" test-only? #t)
     ("trie" from "common")))
-
+
 (define (filespec? spec)
   (and (pair? spec)
        (string? (car spec))

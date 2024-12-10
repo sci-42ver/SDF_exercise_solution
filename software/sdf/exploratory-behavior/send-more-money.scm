@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (distinct l)
   (cond ((null? l) true)
         ((null? (cdr l)) true)
@@ -67,7 +67,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (amb))
 'expect-write: '(9567 1085 10652)
 'expect-value: 'no-more-alternatives
-
+
 (define (donald-gerald-robert)
   (let ((d (amb 1 2 3 4 5 6 7 8 9))
         (g (amb 1 2 3 4 5 6 7 8 9))

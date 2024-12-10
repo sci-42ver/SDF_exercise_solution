@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Functional Combinators
 
 (define (first-compose f g)
@@ -72,7 +72,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (parallel-combine h f g)
   (compose h (parallel-apply f g)))
-
+
 (define (simple-spread-combine h f g)
   (let ((n (get-arity f)) (m (get-arity g)))
     (let ((t (+ n m)))
@@ -135,7 +135,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (let ((n (get-arity f)))
         (assert (= n (length permspec)))
         (restrict-arity the-combination n)))))
-
+
 (define arity-table (make-key-weak-eqv-hash-table)) ; https://www.lispworks.com/documentation/lw445/LWRM/html/lwref-217.htm
 
 (define (restrict-arity proc nargs)

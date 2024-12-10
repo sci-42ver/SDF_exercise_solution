@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (what-is-in cell)
   (write-labeled "cell" (path-of cell))
   (what-is-this (cell-content cell)))
@@ -66,7 +66,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                            get-base-value
                            supported-value-description)))
       supported))
-
+
 ;;; This is required because (run) returns old value if there is
 ;;; nothing to do.  This is a problem if a contradiction is
 ;;; resolved by a kick-out! with no propagation.
@@ -119,7 +119,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (get-premises cell)
   (get-support (cell-content cell)))
-
+
 (define (inquire cell)
   (guarantee cell? cell 'inquire)
   (let ((v (run)))
@@ -165,7 +165,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (layered-datum value
                  support-layer support
                  reason-layer reason))
-
+
 (define (force-failure! cells)
   (let ((nogood
          (reduce support-set-union

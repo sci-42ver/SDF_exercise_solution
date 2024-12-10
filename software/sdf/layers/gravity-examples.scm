@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; The contents of this file is repeated in dependencies/examples.
 ;;; It is here to make the coderefs work for layers/text.tex.
 

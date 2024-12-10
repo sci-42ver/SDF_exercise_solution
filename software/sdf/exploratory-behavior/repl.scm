@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Read-eval-print loop for extended Scheme interpreter
 
 (define input-prompt ";;; Amb-Eval input:\n")
@@ -78,7 +78,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           (error "Failure in loading library"
                                  input)))))))
       'done)))
-
+
 ;;; Output handlers for special runtime objects
 
 ;;; side effects

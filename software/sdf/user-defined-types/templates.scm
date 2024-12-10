@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Templates for parametric predicates
 
 (define-record-type <predicate-template>
@@ -62,7 +62,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (register-predicate! predicate (symbol name '-predicate))
     (set-predicate<=! predicate parametric-predicate?)
     template))
-
+
 (define (make-predicate-template-tag-instantiator
            name pattern make-data-test tagging-strategy
            get-template)
@@ -118,7 +118,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (eqv? name (parameter-binding-name binding)))
                 (parametric-tag-bindings
                  (predicate->tag predicate)))))))))
-
+
 ;;;; Template patterns
 
 (define (template-pattern? object)
@@ -166,7 +166,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (template-pattern->names pattern)
   (map template-pattern-element-name pattern))
-
+
 (define (match-template-pattern pattern values value-predicate)
   (guarantee n:list? values)
   (if (not (n:= (length values) (length pattern)))

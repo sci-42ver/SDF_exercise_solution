@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Vector arithmetic
 
 (define vector-template
@@ -99,7 +99,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (let ((store (make-alist-store equal?)))
   (set! get-matching-vector-handlers (store 'get-matching))
   (set! set-vector-handler! (store 'put!)))
-
+
 (define (define-vector-handler operators domain-index
                                codomain-index extra-operators
                                make-handler-procedure)
@@ -149,7 +149,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  (lambda args
                    (tagger (apply handler-procedure args))))
                handler-procedure)))))))
-
+
 (define-vector-handler '(+ -) 3 1 '()
   (lambda (elt-function)
     (lambda (v1 v2)
@@ -193,7 +193,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       (elt-function (vector-elt v1 i)
                                     (vector-elt v2 i)))
                     (iota limit)))))))
-
+
 (define (v:map1 procedure v)
   (vector-map procedure
               (tagged-data-data v)))

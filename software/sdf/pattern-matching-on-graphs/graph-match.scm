@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Graph pattern matcher
 
 ;;; <edge> = <edge-label> <target>
@@ -70,7 +70,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;;
 ;;; This shouldn't be a major problem since the same behavior can
 ;;; be implemented using code.
-
+
 (define (graph-match path dict object)
   ((gmatch:compile-path path) object dict
    (lambda (object* dict*)
@@ -126,7 +126,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      (eq? '?* (match:binding-type binding))))
   (lambda (binding)
     (reverse (cadr binding))))
-
+
 (define (gmatch:compile-path-elts elts)
   (let ((elt (car elts))
         (rest (cdr elts)))
@@ -169,7 +169,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (gmatch:compile-and elt-lists)
   (gmatch:and (map gmatch:compile-path-elts elt-lists)))
-
+
 (define (gmatch:* matcher)
   (define (match-* object dict succeed)
     (or (matcher object dict
@@ -218,7 +218,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (match-target (object 'edge-value label)
                          dict succeed)))
     match-edge))
-
+
 (define (gmatch:compile-target elt)
   (if (match:var? elt)
       (gmatch:compile-var elt)
@@ -260,7 +260,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     (succeed object dict*)))
              (succeed object dict))))
   match-var)
-
+
 ;;;; Binding
 
 (define (gmatch:bind var-type var-name value dict)

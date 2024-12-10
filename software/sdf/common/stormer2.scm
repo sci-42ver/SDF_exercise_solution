@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (make-initial-history t h xt xt-h xt-2h)
   (list (cons t xt)
         (cons (- t h) xt-h)
@@ -105,7 +105,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (* -2 (negate xt-h)))
          (negate xt-2h))))
 |#
-
+
 (pp (x 0
        ((evolver F 'h stormer-2)
         (make-initial-history 't 'h 4 'xt-h 'xt-2h)

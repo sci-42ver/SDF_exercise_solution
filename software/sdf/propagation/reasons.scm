@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Reasons
 
 (define (absolute-reason name)
@@ -61,7 +61,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define current-reason-source
   (make-parameter #f))
-
+
 ;;;; Reason layer
 
 (define reason-layer
@@ -105,7 +105,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (lambda (merged-value content increment)
     (declare (ignore merged-value))
     (merge-reason (list content increment))))
-
+
 ;;;; Decoding reasons for UI
 
 (define (decode-reason reason
@@ -130,7 +130,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           (elide-reason-merges reason)))))
         (else
          (error "Unknown reason:" reason))))
-
+
 (define show-reason-merges? #f)
 
 (define (show-reason-merges reason

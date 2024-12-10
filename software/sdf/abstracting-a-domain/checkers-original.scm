@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define checkers
   (make-checkers
    (lambda (board)
@@ -79,7 +79,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (loop (cdr summary))
             (cons (car summary) (loop (cdr summary))))
         summary)))
-
+
 (define (generate-moves board)
   (crown-kings
    (mandate-jumps

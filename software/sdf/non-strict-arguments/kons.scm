@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; kons -- the nonstrict version of CONS:
 
 (define the-empty-stream '())
@@ -46,7 +46,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (kons? object)
   (hash-table-exists? kons-registrations object))
-
+
 ;;; Streams
 
 (define (add-streams s1 s2)
@@ -80,7 +80,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (/ (+ 1 (sqrt 5)) 2)
 'expect-value: 1.618033988749895
-
+
 #|
 ;;; This fails, but
 
@@ -114,7 +114,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             1000)
 |#
 ;Unbound variable: dy
-
+
 ;;; This works
 
 (define (map-stream proc (items lazy memo))

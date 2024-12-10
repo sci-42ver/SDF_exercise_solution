@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; call/ccs is a special named procedure
 
 (define call/ccs (list 'call/ccs))
@@ -64,7 +64,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    (lambda (env succeed fail)
      (declare (ignore env))
      (succeed constant fail))))
-
+
 ;; coderef: apply-reified-succeed
 (define-generic-procedure-handler a:apply
   (match-args reified-succeed? executors? environment?

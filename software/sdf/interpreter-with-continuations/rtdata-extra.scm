@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Compound procedures are split into simple ones
 ;;; that have no decorated formal parameters and 
 ;;; complicated ones that have decorations.
@@ -52,7 +52,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (compound-procedure? x)
   (or (simple-compound-procedure? x)
       (complex-compound-procedure? x)))
-
+
 ;;; Allow dotted rest variables:
 
 #|

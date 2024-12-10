@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (make-premise-metadata name)
   (let ((belief-state 'believed)
         (nogoods '())
@@ -107,7 +107,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (make-key-weak-eqv-hash-table))
 
 (define *trace-premise-transitions?* #f)
-
+
 (define (clear-premises!)
   (hash-table/clear! premise-metadata-table))
 
@@ -147,7 +147,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define adjoin-support-with-subsumption
   (subsuming-adjoiner support-set= support-set<=))
-
+
 (define (make-hypotheticals output values)
   (let ((peers
          (parameterize ((*my-parent* output))

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (tester graph)
   (lambda (pattern)
     (let ((dict (graph-match pattern (match:new-dict) graph)))
@@ -68,7 +68,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (assert-eqv cdr2 (result 'z))
           (assert-eqv 'c (result 'w)))
         ;; Continued on next page
-
+
         ;; Continuation from previous page
         (let ((result
                (t

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 #| 
 
 Six people, two women and four men are seated at a round card
@@ -39,7 +39,7 @@ equally strong.
 |#
 
 ;;; Needs library.scm
-
+
 ;;; This formulation takes a few minutes on my laptop.
 
 (define (card-table)
@@ -75,7 +75,7 @@ equally strong.
 	    (require (better-hand? (to-right fred) bill values))
 
 	    (list eva ben alyssa jake fred bill)))))))
-
+
 ;;; Amb-Eval input:
 (card-table)
 
@@ -86,7 +86,7 @@ equally strong.
 ;;; Amb-Eval input:
 try-again
 ;;; There are no more values of (card-table)
-
+
 ;;; The following takes too long.  Several hours on a laptop.
 #|
 (define (card-table)

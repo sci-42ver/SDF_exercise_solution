@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Arithmetic abstraction
 
 (define-record-type <arithmetic>
@@ -96,7 +96,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (filter-map (lambda (base)
                 (find-arithmetic-operation operator base))
               bases))
-
+
 (define (arithmetic-constant-names arithmetic)
   (map car (arithmetic-constant-alist arithmetic)))
 

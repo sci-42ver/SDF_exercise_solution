@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Make scheduler algorithm be the random order algorithm.
 ;;; Times are for compiled code.
 
@@ -444,7 +444,7 @@ choose-strongest-and-least-common-premise
 ;process time: 666380 (666150 RUN + 230 GC); real time: 666430
 ;Unspecified return value
 |#
-
+
 #|
 ;;; On gjs-yoga 16May2020 interpreted
 
@@ -476,7 +476,7 @@ choose-strongest-and-least-common-premise
 ;process time: 244600 (244390 RUN + 210 GC); real time: 244606
 ;Unspecified return value
 |#
-
+
 #|
 (try-all-choosers 1000 yacht-problem '(1 3 4 2 5))
 

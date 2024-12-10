@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Function predicates
 
 (define function-template
@@ -86,7 +86,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       ((domains) (index->booleans domain-index arity))
       ((codomain) (car (index->booleans codomain-index 1)))
       (else (error "Unknown operator:" operator)))))
-
+
 ;;;; Functions
 
 (define (function? object)
@@ -131,7 +131,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (append-map-function procedure function)
   (union-function*
    (append-map procedure (function-components function))))
-
+
 ;;;; Simple functions
 
 (define (simple-function? object)
@@ -180,7 +180,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (simple-function-arity function)
   (length (simple-function-domains function)))
-
+
 (define (simple-function-apply-fit function args)
   (let ((domains (simple-function-domains function)))
     (and (n:= (length domains) (length args))
@@ -215,7 +215,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (and (n:pair? handlers)
            (lambda ()
              (union-function* handlers))))))
-
+
 ;;;; Endo-functions
 
 (define (endo-function-predicate? object)
@@ -246,7 +246,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (simple-endo-function-domain function)
   (endo-function-predicate-domain
    (simple-function-predicate function)))
-
+
 ;;;; Union functions
 
 (define (union-function function . functions)

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (make-interval low high)
   (list 'interval low high))
 
@@ -64,7 +64,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (cond ((not (interval? x)) (within-interval? x y))
           ((not (interval? y)) #f)
           (else (subinterval? x y)))))
-
+
 (define (add-interval x y)
   (make-interval (n:+ (interval-low x) (interval-low y))
                  (n:+ (interval-high x) (interval-high y))))
@@ -104,7 +104,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (error "Bad range log interval" x))
   (make-interval (n:log (interval-low x))
                  (n:log (interval-high x))))
-
+
 ;; Fix this!  These ranges are safe for examples, but really
 ;; should be worked out carefully.
 
@@ -147,7 +147,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (atan-interval x)
   (make-interval (n:atan (interval-low x))
                  (n:atan (interval-high x))))
-
+
 (define (sign-interval x)
   (let ((sl (n:sign (interval-low x)))
         (sh (n:sign (interval-high x))))
@@ -187,7 +187,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (interval>=? x y)
   (n:>= (interval-low x) (interval-high y)))
-
+
 (define (interval-extender base-arithmetic)
   (declare (ignore base-arithmetic))
   (make-arithmetic 'interval interval? (list numeric-arithmetic)
@@ -231,7 +231,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                (apply operation
                                       (map ->interval
                                            args)))))))))
-
+
 (define-generic-procedure-handler merge
   (any-arg 2 interval? real?)
   (lambda (x y)

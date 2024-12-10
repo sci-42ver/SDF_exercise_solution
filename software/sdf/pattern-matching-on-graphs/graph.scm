@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Simple labeled-edge directed graph representation
 
 (define (make-graph-node name)
@@ -66,7 +66,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define graph-node?
   (make-bundle-predicate 'graph-node))
-
+
 (define (make-graph-edge label value)
 
   (define (get-label) label)
@@ -109,7 +109,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (register-predicate! has-value?
                        (cons 'edge-predicate edge-labels))
   has-value?)
-
+
 (define (graph-node-applier node procedure)
   (guarantee graph-node? node 'graph-node-applier)
   (make-entity (lambda (self . args)
@@ -156,7 +156,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (newline))
           (else
            (pp object)))))
-
+
 ;;; Currently not being used.
 (define (disjoint-union-of-graph-nodes node-name node1 node2)
   (let ((labels1
@@ -181,7 +181,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       (edge 'get-value)))
               (node2 'all-edges))
     node))
-
+
 ;;;; Graph views
 
 ;;; A graph view is a reversible mapping from one edge label to
@@ -231,7 +231,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (bundle graph-edge?
           get-label get-value forced?
           get-view summarize-self))
-
+
 (define (graph-node-view delegate view)
 
   (define (get-view) view)

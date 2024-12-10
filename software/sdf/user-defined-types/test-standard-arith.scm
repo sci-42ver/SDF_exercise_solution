@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define numeric+symbolic
   (make-symbolic-arithmetic numeric-arithmetic))
 
@@ -90,7 +90,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (assert-literal-number '(+ a (+ (+ (c b) (cos b)) (sin b)))
                            (+ (literal-number 'a)
                               ((+ (literal-function 'c) cos sin) (literal-number 'b))))))
-
+
 #|
 ;; Most powerful but has issues.  Doesn't work at present.
 
@@ -155,7 +155,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           ((+ (make-simple-function 'cos function? cos)
                               (make-simple-function 'sin function? sin))
                            3))))
-
+
 (define (combined-plus-function-over-combined function?)
   (combined-plus-function-over-numeric function?)
   ;; These tests require symbolic over numeric, and function over both
@@ -222,7 +222,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (combined-plus-function-over-combined-flat
      (make-function-predicate (list any-object?)
                               any-object?))))
-
+
 (define-arith-test 'combined-plus-function-over-combined-flat-prefer-symbolic
   (lambda ()
     (let ((g (make-generic-arithmetic make-default-dispatch-store)))
@@ -249,7 +249,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((+ (literal-number 'c) cos sin)
          (* 2 (literal-number 'b)))))
     (literal-function-tests)))
-
+
 #|
 ;;; Temporarily disabled because extensions over generic arithmetic
 ;;; need predicate algebra to match properly.

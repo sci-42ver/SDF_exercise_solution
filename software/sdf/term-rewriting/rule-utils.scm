@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; utils.scm -- Hairy utility functions for implementing the special
 ;;; rule syntax for pattern-directed invocation.
 ;;;
@@ -55,7 +55,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (if (default-object? default-argl)
                 "No debugging information available for this procedure."
                 default-argl)))))
-
+
 ;;; Magic!
 
 (define (make-lambda bvl use-env generate-body)

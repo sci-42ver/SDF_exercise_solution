@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define-test 'giuoco-piano-opening
   (lambda ()
     (let ((b (make-chess-board)) (s initial-board-summary))
@@ -72,7 +72,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    northwest (? target-node ,maybe-opponent))))
 
       (move '(5 3) '(2 6)))))
-
+
 (define (summarize-board board)
   (sort-summary
    (filter-map (lambda (address)
@@ -122,7 +122,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (cons (invert-address (car s))
                (cdr s)))
        summary))
-
+
 (define initial-board-summary
   '(((0 0) (rook white))
     ((1 0) (knight white))

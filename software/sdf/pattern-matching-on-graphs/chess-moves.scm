@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; A place on the board is represented as
 ;;; a node.  Directions on the board are
 ;;; edges.  In chess there are 8 directions:
@@ -61,7 +61,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         '()))
 
   transformer)
-
+
 ;;; To collect all the appropriate transformations
 (define (symmetrize-move move . transformations)
   (let loop ((xforms transformations) (moves (list move)))
@@ -88,7 +88,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (piece-in place-node dict)
   ((chess-dict:board dict) 'piece-in place-node))
-
+
 ;;; Basic knight move is NNE.
 
 (define basic-knight-move
@@ -118,7 +118,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; piece.
 
 ;;; To be specified...
-
+
 ;;; Basic rook move is N*.
 
 (define basic-rook-move
@@ -154,7 +154,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
  (<source> (* southwest <unoccupied>) southwest <target>)
  (<source> (* northwest <unoccupied>) northwest <target>))
 |#
-
+
 (define basic-king-move
   `((? source-node ,(occupied-by 'king))
     north (? target-node ,maybe-opponent)))

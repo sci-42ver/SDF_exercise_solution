@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Operation abstraction
 
 (define (operation? object)
@@ -62,7 +62,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args installable-operation-procedure? predicate?)
   (lambda (value predicate)
     (value-fit (applicable-object->object value) predicate)))
-
+
 ;;; API
 (define (operation-components operation)
   (function-components operation))
@@ -97,7 +97,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (make-operation (operation-operator operation)
                   (operation-applicability operation)
                   (procedure (operation-procedure operation))))
-
+
 ;;;; Local extensions to API
 
 (define (extend-operation-function operator base-operation extender)

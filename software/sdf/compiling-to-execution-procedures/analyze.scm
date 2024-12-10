@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Separating analysis from execution.
 ;;;   Generic analysis; handles nonstrict operands.
 
@@ -74,7 +74,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler x:analyze
   (match-args quoted?)
   analyze-quoted)
-
+
 (define (analyze-lambda expression)
   (let ((vars (lambda-parameters expression))
         (body-exec (analyze (lambda-body expression))))
@@ -116,7 +116,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler x:analyze
   (match-args begin?)
   analyze-begin)
-
+
 (define (analyze-assignment expression)
   (let ((var (assignment-variable expression))
         (value-exec (analyze (assignment-value expression))))
@@ -156,7 +156,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler x:analyze
   (match-args let*?)
   (compose analyze let*->let-nest))
-
+
 (define (default-apply procedure operand-execs environment)
   (declare (ignore operand-execs environment))
   (error "Unknown procedure type" procedure))
@@ -193,7 +193,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   operand-execs)))
         (body-exec (extend-environment names arguments
                      (procedure-environment procedure)))))))
-
+
 (define x:handle-operand
   (simple-generic-procedure 'x:handle-operand 3
     (lambda (parameter operand-exec environment)
@@ -217,7 +217,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler procedure-parameter-name
   (match-args pair?)
   car)
-
+
 (define x:advance
   (simple-generic-procedure 'x:advance 1 (lambda (x) x)))
 

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Generic unify, generalized to segments.
 ;;;    Summer 2019.  First draft by GJS, improved with help
 ;;;    of Will Byrd and Michael Ballantyne.  Further
@@ -48,7 +48,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (succeed dict))
          (fail)))
    (lambda () #f)))
-
+
 ;;; terms1 and terms2 are lists of terms to be equated.
 
 (define (unify:dispatch terms1 terms2)
@@ -96,7 +96,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args (car-satisfies constant-term?)
               (car-satisfies constant-term?))
   unify:constant-terms)
-
+
 (define (unify:list-terms terms1 terms2)
   (let ((first1 (car terms1)) (rest1 (cdr terms1))
         (first2 (car terms2)) (rest2 (cdr terms2)))
@@ -187,7 +187,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (car-satisfies match:element-var?))
   (lambda (terms var-first)
     (maybe-substitute var-first terms)))
-
+
 ;;; Segment variable extensions
 
 (define (unify:segment-var-var var-first1 var-first2)
@@ -223,7 +223,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (car-satisfies match:segment-var?))
   (lambda (terms var-first)
     (maybe-grab-segment var-first terms)))
-
+
 (define (maybe-grab-segment var-first terms)
   (define (maybe-grab dict succeed fail)
     (let ((var (car var-first)))

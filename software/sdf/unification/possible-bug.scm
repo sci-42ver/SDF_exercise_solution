@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; A student in 6.5150
 ;;;  Andres D Buritica Monroy <andresb@mit.edu>
 ;;; discovered this bug in 2024.  

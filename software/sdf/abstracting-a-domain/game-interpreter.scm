@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;;                The Interpreter
 
 ;; > build a rule executive that captures the control structure without incorporating the specific content of the rules.

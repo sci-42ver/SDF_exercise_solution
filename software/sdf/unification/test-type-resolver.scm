@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; A student in 6.5150
 ;;;  Andres D Buritica Monroy <andresb@mit.edu>
 ;;; discovered this bug in 2024.  
@@ -55,7 +55,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           (= (? type:209) (numeric-type))
                           (= (numeric-type) (numeric-type))
                           (= (? type:208) (numeric-type)))))))
-
+
 (define-test 'simple
   (lambda ()
     (assert-equal
@@ -75,7 +75,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (t (numeric-type) 3)
         (t (numeric-type) 4)))
      (infer-program-types '((lambda (x y) (+ x y)) 3 4)))))
-
+
 (define-test 'fib-recursive
   (lambda ()
 
@@ -136,7 +136,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        (t (numeric-type) n)
                        (t (numeric-type) 2)))))))))))))
      (infer-program-types fib-program))))
-
+
 (define-test 'fib-internal
   (lambda ()
 
@@ -201,7 +201,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                ((t (type:procedure ((numeric-type)) (numeric-type)) fib)
                 (t (numeric-type) m)))))))
      (infer-program-types fib-internal))))
-
+
 (define-test 'fact-iterative
   (lambda ()
 

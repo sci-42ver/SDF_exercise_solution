@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Support layer
 
 (define support-layer
@@ -51,7 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (support:default-procedure base-value . args)
   (declare (ignore base-value))
   (apply support-set-union (map support-layer-value args)))
-
+
 (define (support:* base-value arg1 arg2)
   (declare (ignore base-value))
   (let ((v1 (base-layer-value arg1))

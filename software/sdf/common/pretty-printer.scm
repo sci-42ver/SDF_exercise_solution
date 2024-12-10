@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (pretty-print object #!optional port)
   (print-token (tokenize object)
                (make-cursor (if (default-object? port)
@@ -74,7 +74,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (compound-token-separator-string token))
            space-width)
         (- (length (compound-token-contents token)) 1))))
-
+
 (define (token? object)
   (or (simple-token? object)
       (compound-token? object)))
@@ -115,7 +115,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (with-string-output-port
    (lambda (port)
      (write object port))))
-
+
 (define-generic-procedure-handler tokenize (match-args null?)
   (lambda (n)
     (declare (ignore n))
@@ -167,7 +167,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    (string-length
                     (compound-token-separator-string token))))
               (except-last-pair subtokens))))
-
+
 (define (print-token token cursor)
   (if (or (simple-token? token)
           (= (compound-token-length token) 0)
@@ -227,7 +227,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                (print-separator token cursor)))
                 (cdr subtokens))
           (print-close token cursor)))))
-
+
 (define-record-type <cursor>
     (%make-cursor row column port)
     cursor?

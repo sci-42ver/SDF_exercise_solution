@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Core of extended Scheme interpreter
 
 
@@ -73,7 +73,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      (lambda-parameters expression)
      (lambda-body expression)
      environment)))
-
+
 ;; coderef: if
 (define-generic-procedure-handler g:eval
   (match-args if? environment?)
@@ -131,7 +131,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (set-variable-value! (assignment-variable expression)
       (g:eval (assignment-value expression) environment)
       environment)))
-
+
 ;;; Unlike the traditional Scheme APPLY, this APPLY takes
 ;;; three arguments: the procedure to be applied, the
 ;;; unevaluated operands, and the calling environment.  This

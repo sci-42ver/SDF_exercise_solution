@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Generic tag access
 
 (define get-tag
@@ -34,7 +34,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define get-data
   (simple-generic-procedure 'get-data 1
     (lambda (object) object)))
-
+
 ;;;; Tagged data
 
 (define-record-type <tagged-data>
@@ -80,7 +80,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; MIT/GNU Scheme: integrate with pretty-printer
 (define-pp-describer tagged-data?
   tagged-data-description)
-
+
 ;;;; Tagging strategies
 
 (define (tagging-strategy:never name data-test make-tag)

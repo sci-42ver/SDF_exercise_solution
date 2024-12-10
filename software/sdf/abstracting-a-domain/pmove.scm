@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Change and changes
 
 (define-record-type <change>
@@ -108,7 +108,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (is-flag-set? flag pmove)
   (memq flag (get-flags (final-change pmove))))
-
+
 (define (get-final-board pmove)
   (board-end-turn (current-board pmove)))
 

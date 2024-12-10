@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define text-arith
   (extend-arithmetic
    layered-extender
@@ -32,7 +32,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
  merge-value-sets
  text-arith
  layered-propagator-projector)
-
+
 (initialize-scheduler)
 
 (define-cell vin)

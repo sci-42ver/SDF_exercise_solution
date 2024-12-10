@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 #|
 || SICP Section 4.3.2
 || Logic Puzzles
@@ -75,7 +75,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (amb)
 'expect-value: 'no-more-alternatives
-
+
 ;;; From SICP Section 4.3.2
 ;;; Parsing natural language
 
@@ -109,7 +109,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 		verb-phrase
 		(parse-prepositional-phrase)))))
   (maybe-extend (parse-word verbs)))
-
+
 (define (parse-s-noun-phrase)
   (let* ((article (parse-word articles))
 	 (noun (parse-word nouns)))
@@ -140,7 +140,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define prepositions
   '(prep for to in by with))
-
+
 
 (init-amb)
 
@@ -160,7 +160,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (amb)
 'expect-value: 'no-more-alternatives
-
+
 (init-amb)
 
 (parse

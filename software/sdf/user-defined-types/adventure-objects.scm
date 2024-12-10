@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Object types for Adventure game
 
 (define thing:location
@@ -73,7 +73,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define remove-thing!
   (property-remover container:things container? thing?))
-
+
 ;;; Exits
 
 (define exit:from
@@ -145,7 +145,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define add-exit!
   (property-adder place:exits place? exit?))
-
+
 (define (find-exit-in-direction direction place)
   (find (lambda (exit)
           (eqv? (get-direction exit) direction))
@@ -171,7 +171,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (for-each (lambda (person)
                 (send-message! message person))
               (people-in-place place))))
-
+
 ;;; Mobile things
 
 (define mobile-thing:origin
@@ -201,7 +201,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define leave-place!
   (most-specific-generic-procedure 'leave-place! 1
     (constant-generic-procedure-handler #f)))
-
+
 ;;; People
 
 (define person:health
@@ -323,7 +323,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define set-holder!
   (property-setter bag:holder bag? person?))
-
+
 ;;; Autonomous people (non-player characters)
 
 (define autonomous-agent:restlessness
@@ -393,7 +393,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define make-student
   (type-instantiator student?))
-
+
 ;;; House masters
 
 (define house-master:irritability
@@ -434,7 +434,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   '("I'll let you off this once..."))))))
 
 (define-clock-handler house-master? irritate-students!)
-
+
 ;;; Trolls
 
 (define troll:hunger
@@ -526,7 +526,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                '("There are no exits..."
                  "you are dead and gone to heaven!")))
          avatar))
-
+
 ;;; Motion
 
 ;; See above (get-location thing) is either place? or bag?.
@@ -579,7 +579,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (lambda (thing from to actor)
     (tell! (list thing "is not movable")
            actor)))
-
+
 ;; coderef: generic-move:steal
 (define-generic-procedure-handler generic-move!
   (match-args mobile-thing? bag? bag? person?)
@@ -662,7 +662,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         mobile-thing
                         "without carrying it?")
                   actor)))))
-
+
 ;; coderef: generic-move:person
 (define-generic-procedure-handler generic-move!
   (match-args person? place? place? person?)

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Read-eval-print loop for extended Scheme interpreter
 ;;;; with explicit continuations.
 
@@ -75,7 +75,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         show-result)
                 (do-it))
               'done))))))
-
+
 (define (show-result val)
   (cond ((strict-primitive-procedure? val)
          (display ";Value: ")
@@ -112,7 +112,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (c:advance object
                (lambda (real-object)
                   (effect-procedure real-object)))))
-
+
 (define-generic-procedure-handler write
   (match-args deferred?)
   (doit! write))

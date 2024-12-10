@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define chess
   (make-game 8 8 '(white black) '(pawn rook knight bishop queen king)
              chess-initial-pieces

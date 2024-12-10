@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Extension of Scheme for amb
 ;;;   amb is the ambiguous operator of McCarthy.
 
@@ -64,7 +64,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (force-next
    (lambda () (undoer) (yield)))
   (doer))
-
+
 ;;; Alternative search strategy wrappers
 
 (define (with-depth-first-schedule problem-thunk)
@@ -112,7 +112,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (for-each (lambda (alternative)
               (add-to-end! (*search-schedule*) alternative))
             alternatives))
-
+
 ;;; For incremental interactive experiments from REPL.
 
 (define (init-amb)
@@ -141,7 +141,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (lambda (k)
       (parameterize ((*top-level* k))
         (eval exp env)))))
-
+
 #|
 ;;; AX 1 - Elementary backtrack test.
 
@@ -180,7 +180,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (3 b #t)
 (3 b #f)
 ;Value: #f
-
+
 ;; AX 1.b - Elementary backtrack test.  [Breadth First]
 
 (with-breadth-first-schedule elementary-backtrack-test)
@@ -207,7 +207,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (3 b #f)
 ;Value: #f
 |#
-
+
 ;;; AX 2 - Testing undoable assignment.
 
 (define testing-undoable-assignment
@@ -245,7 +245,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (xset 5.718 3 2.718)
 ;Value: #f
 |#
-
+
 ;;; AX 3 - Pythagorean triples
 
 ;; In breadth-first we get useful results here.
@@ -305,7 +305,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (33 56 65)
 ;Quit!
 |#
-
+
 ;; AX 3.b - A Pythagorean triple between...
 
 ;; For example, for controlling search:

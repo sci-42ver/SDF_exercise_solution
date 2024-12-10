@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define-record-type <trie>
     (%make-trie value edge-alist)
     trie?
@@ -153,7 +153,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (cons (predicate-name (car edge))
                (trie-entries (cdr edge))))
        (trie-edge-alist trie)))
-
+
 #|
 ;;; For example...
 ;;;                      a-trie
@@ -182,7 +182,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define e (add-edge-to-trie a-trie even-number?))
 
 (define sn (add-edge-to-trie s number?))
-
+
 (define ss (add-edge-to-trie s symbol?))
 
 (set-trie-value! s '(symbol))

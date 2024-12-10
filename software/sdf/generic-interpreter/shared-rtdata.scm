@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; -*- Mode:Scheme -*-
 
 (define the-unspecified-value (list 'the-unspecified-value))
@@ -58,7 +58,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     ,(procedure-parameters procedure)
     ,(procedure-body procedure)
     <procedure-environment>))
-
+
 ;;; An ENVIRONMENT is a chain of FRAMES, made of vectors.
 
 (define (environment? x) #t)     ;make better!
@@ -95,7 +95,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((env (the-environment)))
     (named-lambda (lookup-scheme-value var)
       (lexical-reference env var))))
-
+
 (define (define-variable! var val env)
   (let scan
       ((vars (vector-ref env 0))
@@ -133,7 +133,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (extend-environment (map car initial-env-bindings)
                       (map cdr initial-env-bindings)
                       the-empty-environment))
-
+
 ;;; run-time-data extension
 
 (define (postpone expression environment)

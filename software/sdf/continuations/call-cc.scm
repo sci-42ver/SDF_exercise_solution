@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (call/cc receiver)
   (call/ccs (lambda (succeed fail)
               (receiver (lambda (value)
@@ -105,7 +105,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (another-continuation 'ok)
 'expect-value: 4
-
+
 #|
 ;;; Tests from
 ;;;   https://en.wikipedia.org/wiki/Call-with-current-continuation

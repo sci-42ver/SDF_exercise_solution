@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Book examples:
 (unify-test '(* (?? a) (+ (?? b)) (?? c))
             '(* x y (+ z w) m (+ n o) p)
@@ -57,7 +57,7 @@ as-expected
 (succeed (a b b b b b b c) (dict (w () ??) (y () ??) (x (b b b) ??)))
 ;Value: consistent!
 |#
-
+
 ;;; A bunch of tests taken from Oleg@pobox.com, whoever that is.
 
 (unify-test '(M abc) '(M abc) '(dict))
@@ -118,7 +118,7 @@ as-expected
             '(M (f (? b)) (? b))
             '(dict (a (? b) ?)))
 'expect-value: 'matches-including-expected
-
+
 ;;; A few tests from Dan Friedman's "Poor-man's Logic system
 ;;; tutorial"
 
@@ -174,7 +174,7 @@ as-expected
             '(p (? y) (? x))
             '(dict (x (f a) ?) (y (g (f a)) ?)))
 'expect-value: 'matches-including-expected
-
+
 ;;; Tests for a bad unification from Franz Baader, Wayne Snyder,
 ;;; "Unification theory" (1999).  The naive algorithm
 ;;; exponentially explodes on these:
@@ -203,7 +203,7 @@ as-expected
         (x2 (f (f (? x0) (? x0)) (f (? x0) (? x0))) ?)
         (x1 (f (? x0) (? x0)) ?)))
 'expect-value: 'matches-including-expected
-
+
 ;;; More, some restrictions.
 (unify-test '(a ((? b) 2 3) 1 c)
             '(a (1 2 3) 1 c)
@@ -239,7 +239,7 @@ as-expected
             '(a (1 2 3) (? x) c)
             '(dict (x 1 ?) (b 1 ?)))
 'expect-value: 'matches-including-expected
-
+
 ;;; Segments below.
 (unify-test '(a (?? x) c)
             '(a b b b b b b c)
@@ -288,7 +288,7 @@ as-expected
                    (y (b b b b (?? w) b b) ??)
                    (x () ??)))
 'expect-value: 'matches-including-expected
-
+
 (unify-test '(a (?? x) (?? y) (?? x) c (?? u))
             '((? m) b b (?? z) b b (?? w) b b (?? z) c (?? v))
             '(dict (v ((?? y) b b (?? z) b b (?? w) b b (?? z) c c (?? u))
@@ -366,7 +366,7 @@ as-expected
 ;Value: see-bad-results-log
 |#
 
-
+
 ;;; Kenny Chen
 
 (unify-test '((?? y) 3)
@@ -418,7 +418,7 @@ as-expected
             '(dict (y (n) ??) (x n ?) (z (n n) ??))
             #t)
 'expect-value: 'matches-including-expected
-
+
 (unify-test '((?? x) 3)
             '(4 (?? y))
             '(dict (e:1525 (3) ??) (y ((?? o:1526) 3) ??) (x (4 (?? o:1526)) ??)))
@@ -461,7 +461,7 @@ as-expected
                          (dict (x (4 5) ??) (y (5 3) ??)))
 ;Value: see-bad-results-log
 |#
-
+
 (unify-test '((?? x) (?? y))
             '((?? z) (?? w))
             '(dict (w ((?? y)) ??) (x () ??) (z () ??))
@@ -525,7 +525,7 @@ Both GJS and CPH get this one!
             '((?? x) 3)
             #f)
 'expect-value: 'no-matches-as-expected
-
+
 (unify-test '((?? x))
             '((?? y) (?? x))
             '(dict (y () ??))

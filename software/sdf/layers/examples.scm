@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (generic-symbolic)
   (let ((g (make-generic-arithmetic make-simple-dispatch-store)))
     (add-to-generic-arithmetic! g numeric-arithmetic)
@@ -51,7 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-description:
 '((base-layer (* (* 1/2 m) (square v)))
   (unit-layer (unit kilogram 1 meter 2 second -2)))
-
+
 (install-arithmetic! (generic-symbolic))
 
 ;; coderef: square

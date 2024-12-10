@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Tests from examples.scm, derived from 
 ;;;   https://en.wikipedia.org/wiki/Call-with-current-continuation
 
@@ -80,7 +80,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (generate-digit)
 'expect-value 'you-fell-off-the-end
-
+
 ;;;-------------------------------------------------------
 (define the-continuation #f)
 

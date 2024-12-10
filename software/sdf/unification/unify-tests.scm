@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (unify-test p1 p2 expected)
   (let ((dict (unify p1 p2)))
     (if expected
@@ -79,7 +79,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (unify-test '((? x) 4 3) '((? y) (? y) (? x)) #f)
 (unify-test '((? x) 4 3 (? w)) '(3 (? y) (? x) (? z)) '((w (? z)) (y 4) (x 3)))
 (unify-test '(p (? x) (? x)) '(p (? y) (f (? y))) #f)
-
+
 ;;; The next two illustrate that users of the dictionary must
 ;;; substitute all the way through.
 
@@ -125,7 +125,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;;  (x2 (f (f (? x0) (? x0)) (f (? x0) (? x0))))
   ;;  (x1 (f (? x0) (? x0))))
   #t)
-
+
 (define expr1
   '(h (? x1)
       (? x2)

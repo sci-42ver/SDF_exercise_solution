@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Carcinogens for the semicolon part 1: Defining cells
 
 ;;; Here be macros that provide syntactic sugar for playing with
@@ -47,7 +47,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     ((define-cell symbol)
      (define symbol
        (make-cell 'symbol)))))
-
+
 ;; (let-cells ((foo foo-form)
 ;;             (bar bar-form)
 ;;             (baz baz-form))
@@ -97,7 +97,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;             (baz baz-form))
 ;;   stuff)
 ;; in agreement with Scheme's let.
-
+
 (define-syntax let-cells
   (syntax-rules ()
     ((let-cells (cell-binding ...)
@@ -146,7 +146,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        form ...)
      (let-form "done" done-clauses
        form ...))))
-
+
 ;; let-cell is a grammatical convenience if there is only one
 ;; cell.
 ;; (let-cell (foo foo-form) stuff) and (let-cell foo stuff) are
@@ -183,7 +183,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (let ((new-cell (make-cell name)))
         (add-cell-content! new-cell value)
         new-cell)))
-
+
 (define-syntax define-c:prop
   (sc-macro-transformer
    (lambda (form unev)

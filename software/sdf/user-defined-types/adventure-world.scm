@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; An adventure game at MIT
 
 (define the-clock)
@@ -48,7 +48,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (get-clock)
   the-clock)
-
+
 ;;; User interface
 
 ;; checked. Notice only avatar will do "You are in ..." in take-exit!.
@@ -105,7 +105,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       ((not (n:< i ticks)))
     (tick! (get-clock)))
   'done)
-
+
 ;;; Support for UI
 
 (define (here)

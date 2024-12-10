@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; -------------------------------------------------------------
 ;;; Copyright 2008 Alexey Radul and Gerald Jay Sussman.
 ;;; -------------------------------------------------------------
@@ -77,7 +77,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;;   (alert-propagator! prop)    schedules a propagator
 ;;;   (run)                       runs scheduled jobs until done
 ;;;   (abort-process x)           terminates the run returning x
-
+
 (define *last-value-of-run*)
 (define *current-propagator*)
 (define *all-cells*)
@@ -93,7 +93,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (set! *all-cells* '())
   (set! *number-of-calls-to-fail* 0)
   'ok)
-
+
 ;; A propagator set that has a reliable insertion order.
 (define (propagator-set)
   (let ((propagators '()))
@@ -145,7 +145,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (all-cells)
   (list-copy *all-cells*))
-
+
 (define *abort-process*
   (make-parameter
    (lambda (value)

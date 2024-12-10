@@ -85,7 +85,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                            dictionary)
                         1)))))
   element-match)
-
+
 (define (match:segment variable)
   (define (segment-match data dictionary succeed)
     (and (list? data) ; can match null list.

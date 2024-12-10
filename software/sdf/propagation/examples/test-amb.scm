@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Elementary test of amb search.
 
 (install-arithmetic! layered-arith)     ;debugging

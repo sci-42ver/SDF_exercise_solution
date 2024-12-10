@@ -89,7 +89,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (match:vars-equal? v1 v2)
   (and (eqv? (match:var-name v1) (match:var-name v2))
        (eqv? (match:var-type v1) (match:var-type v2))))
-
+
 ;;;; Dictionaries
 
 (define (match:new-dict)
@@ -182,7 +182,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (and binding
                (match:binding-value binding)))
         (match:bindings dict))))
-
+
 ;;;; Substitution
 
 (define (match:dict-substitution dict)

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (heron-step x g h)
   (compound-propagator (list x g)       ;inputs
                        (list h)         ;outputs
@@ -70,7 +70,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (p:abs x-g^2 ax-g^2)
         (p:< ax-g^2 eps done)))
     'good-enuf?))
-
+
 (define layered-arith
   (extend-arithmetic layered-extender
                      numeric-arithmetic))
@@ -80,7 +80,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define :pi (n:* 4 (n:atan 1)))
 (define :pi/2 (n:* 2 (n:atan 1)))
 (define :-pi/2 (n:- :pi/2))
-
+
 #|
 ;; Using binary-amb.
 
@@ -169,7 +169,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (c:abs f-c af-c)
         (p:= one af-c fc)
         (list baker cooper fletcher miller smith)))))
-
+
 (define (killer)
   (let-cells (x y v)
     (p:amb x '(1 2 3 4 5))

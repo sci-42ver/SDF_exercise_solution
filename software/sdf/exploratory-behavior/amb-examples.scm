@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (begin
   (newline)
   (write-line (list (amb 1 2 3) (amb 'a 'b)))

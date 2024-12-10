@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Restriction of values
 
 (define (value-fit value predicate)
@@ -40,7 +40,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (restriction-error value predicate)
   (error "Value doesn't fit predicate:" value predicate))
-
+
 ;;;; Applicable objects
 
 (define applicable-object?)
@@ -103,7 +103,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (if (applicable-object? object)
       (applicable-object->object object)
       object))
-
+
 ;;;; Unions of objects
 
 (define (object-union . components)
@@ -178,7 +178,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler equal*?
   (match-args object-union? object-union?)
   object-union=)
-
+
 ;;;; Various debugging tools for tagged data
 
 (define (pt object)

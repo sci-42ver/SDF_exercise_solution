@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Experimental list generators
 
 (define (list->graph list)
@@ -67,7 +67,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (g:has-cdr? pair)
   (pair 'has-edge? 'cdr))
-
+
 (define (g:last-pair list)
   (if (g:has-cdr? list)
       (let ((cdr (g:cdr list)))

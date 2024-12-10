@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (install-core-propagators!
  merge
  numeric-arithmetic
@@ -50,7 +50,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (cell-strongest answer)
 'expect-value: 1.4142135623746899
-
+
 (install-arithmetic! layered-arith)        ;debugging
 (install-core-propagators! merge-layered
                            layered-arith
@@ -111,7 +111,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         sqrt-network)
    (g+x/g 2.8284271247493797)
    (two 2))))
-
+
 (install-arithmetic! layered-arith)     ;debugging
 ;; coderef: install-layered-propagator-projector
 (install-core-propagators! merge-value-sets
@@ -189,7 +189,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (in 1.4142857142857141
     (gjs1 gjs2)
     ((p:/ heron-step) (g+x/g 2.8285714285714283) (two 2)))
-
+
 (initialize-scheduler)
 
 (define answers (multiple-dwelling))
@@ -218,7 +218,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (alert-propagators! (all-propagators))
           (loop)))))
 |#
-
+
 (initialize-scheduler)
 (define answers (killer))
 (run)

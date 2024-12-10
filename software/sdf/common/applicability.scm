@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Applicability
 
 ;;; An applicability attribute is a list of lists, representing
@@ -61,7 +61,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (predicate arg))
               predicates
               args)))
-
+
 (define (match-args . predicates)
   (list predicates))
 

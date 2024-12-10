@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Predicates
 
 (define predicate?)
@@ -148,7 +148,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (if (every predicate? operands)
       (register-compound-predicate! datum-test operator operands)
       datum-test))
-
+
 (define (equality-predicate-maker name =)
   (lambda (object)
     (let ((predicate

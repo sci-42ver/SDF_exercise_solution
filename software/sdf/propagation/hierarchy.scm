@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Hierarchical organization of objects
 
 (define (make-relations name parent)
@@ -54,7 +54,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define relations?
   (make-bundle-predicate 'relations))
-
+
 ;; Implies a get-relations operation returning a relations.
 (define (relatable? object)
   (and (bundle? object)
@@ -78,7 +78,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (guarantee relatable? child 'add-child!)
   (guarantee relatable? relatable 'add-child!)
   ((relatable 'get-relations) 'add-child! child))
-
+
 (define top-level-parent?
   (make-bundle-predicate 'top-level-parent))
 (set-predicate<=! top-level-parent? relatable?)

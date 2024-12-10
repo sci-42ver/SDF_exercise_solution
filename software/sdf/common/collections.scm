@@ -44,7 +44,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((has-element?) has-element?)
         ((add-element!) add-element!)
         (else (error "Unknown operator:" operator))))))
-
+
 (define (make-alist-store key=?)
   (let ((alist '()))
 
@@ -87,7 +87,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((get-matching) get-matching)
         ((put!) put!)
         (else (error "Unknown operator:" operator))))))
-
+
 (define (make-weak-alist-store key=?)
   (let ((alist '()))
 
@@ -153,7 +153,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((get-matching) get-matching)
         ((put!) put!)
         (else (error "Unknown operator:" operator))))))
-
+
 (define (make-hash-table-store make-table)
   (let ((table (make-table)))
 

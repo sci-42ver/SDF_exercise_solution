@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Games
 
 #|
@@ -43,7 +43,7 @@ Assumptions:
     game is over when no turns are possible;
         there may be additional ending conditions
 |#
-
+
 (define-record-type <game>
     (%make-game width depth colors types initial-pieces-generator
                 moves-generator piece-summarizer

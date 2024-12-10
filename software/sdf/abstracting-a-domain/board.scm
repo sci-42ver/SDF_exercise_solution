@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Boards
 
 (define-record-type <board>
@@ -72,7 +72,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (filter (lambda (piece)
             (eq? (piece-color piece) (current-color board)))
           (board-pieces board)))
-
+
 (define (board-get coords board)
   (find (lambda (piece)
           (coords=? (piece-coords piece)

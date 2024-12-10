@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define test-arith
   (extend-arithmetic layered-extender
                      numeric-arithmetic))
@@ -52,7 +52,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-description:
 '((base-layer 9)
   (support-layer (support-set gjs cph)))
-
+
 ;;; All together now!
 
 (define (generic-symbolic)
@@ -126,7 +126,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 '((base-layer (* 0 (square v)))
   (unit-layer (unit kilogram 1 meter 2 second -2))
   (support-layer (support-set jems)))
-
+
 (define (KE m v)
   (* 1/2 m (square v)))
 
@@ -151,7 +151,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 '((base-layer 0)
   (unit-layer (unit kilogram 1 meter 2 second -2))
   (support-layer (support-set jems)))
-
+
 (define layered-ke
   (make-layered-procedure 'ke 2 ke))
 
@@ -206,7 +206,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-description:
 '((base-layer (* 0 (square v)))
   (support-layer (support-set newton gjs jems)))
-
+
 (define (F m1 m2 r)
   (/ (* G m1 m2)
      (square r)))

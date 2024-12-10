@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Scheme Regular Expression Language Implementation -- regexp.scm
 
 (define (r:dot) ".")
@@ -80,7 +80,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define chars-needing-quoting-in-brackets
   '(#\] #\^ #\-))
-
+
 ;;; Means of combination for patterns
 
 (define (r:seq . exprs)
@@ -106,7 +106,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         (make-list (- max min)
                                    (r:alt expr "")))))))
 (define r:repeat r:repeat-from-text)
-
+
 ;;; Using system's grep.
 (define (write-bourne-shell-grep-command expr filename)
   (display (bourne-shell-grep-command-string expr filename)))

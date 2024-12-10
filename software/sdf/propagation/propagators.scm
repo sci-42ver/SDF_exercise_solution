@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; This file is part of the Layered Propagator Prototype.  It is
 ;;; (by now) loosely derived from the Artistic Propagator
 ;;; Prototype previously developed by Alexey Radul and Gerald Jay
@@ -35,7 +35,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; layered generic arithmetic.  The tracking of the dependencies
 ;;; for multiplication, division, etc. should not be part of this
 ;;; propagator-system code.  The deletions have gone to extra.
-
+
 (define (propagator inputs outputs activate! name)
   (guarantee-list-of cell? inputs 'propagator)
   (guarantee-list-of cell? outputs 'propagator)
@@ -73,7 +73,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (activate-propagator! propagator)
   (parameterize ((current-reason-source propagator))
     (propagator 'activate!)))
-
+
 ;;; A primitive propagator is constructed from a Scheme function.
 ;;; * f is the function that computes the output value from some
 ;;;   given input values.
@@ -93,7 +93,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (add-cell-content! output
                   (apply f input-values)))))
         name))))
-
+
 ;;; Compound propagators must build themselves.
 ;;;  Policy is build if there is a usable input.
 

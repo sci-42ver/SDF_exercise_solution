@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;; This tests a generic arithmetic that has symbolic operations, but
 ;; not purely numerical operations.
 (define-arith-test 'generic+symbolic
@@ -56,7 +56,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       g))
   (lambda ()
     (combined)))
-
+
 (define-arith-test 'combined-flat
   (lambda ()
     (let ((g (make-generic-arithmetic make-default-dispatch-store)))
@@ -113,7 +113,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; over numeric:
   (assert-equal '(+ a -.8488724885405782)
                 (+ 'a ((+ cos sin) 3))))
-
+
 (define-arith-test 'combined-plus-function-over-combined
   (lambda ()
     (let ((g (make-generic-arithmetic make-default-dispatch-store)))
@@ -166,7 +166,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       g))
   (lambda ()
     (combined-plus-function-over-combined-flat)))
-
+
 (define-arith-test 'combined-plus-function-over-combined-flat-prefer-symbolic
   (lambda ()
     (let ((g (make-generic-arithmetic make-default-dispatch-store)))
@@ -203,7 +203,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (+ 'a ((+ 'c cos sin) 'b)))
     (assert-equal '(+ a (+ (+ c (cos (* 2 b))) (sin (* 2 b))))
                   (+ 'a ((+ 'c cos sin) (* 2 'b))))))
-
+
 (define-arith-test 'closed-prefer-symbolic
   (lambda ()
     (let ((g (make-generic-arithmetic make-default-dispatch-store)))

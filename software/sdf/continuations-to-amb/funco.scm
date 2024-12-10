@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Fun with Continuations
 
 #| Adapted from MIT/GNU Scheme Reference Manual [Section 12.4]:
@@ -67,7 +67,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (not-a-number: no)
 ;Value: #f
 |#
-
+
 ;;; Continuations for Proceeding (Suspend/Resume Backtracking)
 
 (define (funco:first-negative-n-proceed list-of-numbers) ;;; **
@@ -100,7 +100,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (funco:first-negative-n-proceed-more/next  smore)
        ((funco:first-negative-n-proceed-more/k     smore)
 	(funco:first-negative-n-proceed-more/found smore)))
-
+
 #|
 ;;;           ------------
 (define funco:first-of-two
@@ -137,7 +137,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 funco:first-of-two
 ;Value: :no-negatives-found
 |#
-
+
 #|
 ;;;           ----
 (define funco:nada
@@ -192,7 +192,7 @@ boo
 funco:nans
 ;Value: :no-negatives-found
 |#
-
+
 ;;; Continuations for Backtracking (Re-entrant 1st-Class Continuations)
 
 (define *k_re-funco*)
@@ -223,7 +223,7 @@ funco
 funco
 ;Value: 7
 |#
-
+
 ;;; Dynamic Contexts and Within-Continuation
 
 (define (funco:test-k-thunk k-thunk)

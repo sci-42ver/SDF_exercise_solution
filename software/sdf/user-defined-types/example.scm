@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (load "tagging/code/load")
 *** output flushed ***
 ;Value: tagging
@@ -57,7 +57,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (number? (make-prime-number 2))
 ;Value: #t
-
+
 (predicate? number?)
 ;Value: #t
 

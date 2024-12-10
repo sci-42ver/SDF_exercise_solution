@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Predicate registration
 
 (define predicate->tag get-predicate-metadata)
@@ -87,7 +87,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define-compound-operator-registrar 'complement
   (make-listish-memoizer))
-
+
 (define (joinish wrap-constructor)
   (let ((memoizer
          (simple-lset-memoizer eq?
@@ -178,7 +178,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (set-predicate<=! predicate superset)
   (set-tag<=! (predicate->tag predicate)
               (predicate->tag superset)))
-
+
 ;;;; Simple predicates
 
 (define (simple-predicate? object)
@@ -213,7 +213,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (parametric-predicate-template predicate)
   (parametric-tag-template (predicate->tag predicate)))
-
+
 ;;;; Basic tag structure
 
 (define tag?
@@ -274,7 +274,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (constructor tag-shared-constructor)
   (accessor tag-shared-accessor)
   (supersets tag-shared-supersets))
-
+
 (define (make-simple-tag name data-test tagging-strategy)
   (%invoke-tagging-strategy tagging-strategy name data-test
                             %make-simple-tag))
@@ -323,7 +323,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define-tag-type parametric-tag? parametric-tag-shared)
 (define-tag-record-printer <parametric-tag>)
-
+
 ;;;; Generic tag operations
 
 (define (tag-name tag)
@@ -420,7 +420,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (cached-tag>= tag1 tag2)
   (cached-tag<= tag2 tag1))
-
+
 (define (false-tag<= tag1 tag2) (declare (ignore tag1 tag2)) #f)
 (define (true-tag<= tag1 tag2) (declare (ignore tag1 tag2)) #t)
 

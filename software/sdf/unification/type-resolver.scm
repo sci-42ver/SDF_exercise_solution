@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (noisy-infer-program-types expr)
   (let ((texpr (annotate-program expr)))
     (pp (simplify-annotated-program texpr))
@@ -104,7 +104,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((tcell (make-type-cell name)))
     (set-car! env (cons tcell (car env)))
     (cdr tcell)))
-
+
 (define (program-constraints texpr)
   (program-constraints-1 (texpr-type texpr)
                          (texpr-expr texpr)))
@@ -147,7 +147,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define simplify-annotated-program-1
   (simple-generic-procedure 'simplify-annotated-program-1 1 #f))
-
+
 ;;;; Typed expressions
 
 (define (make-texpr type expr)
@@ -164,7 +164,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (texpr-expr expr)
   (caddr expr))
-
+
 ;;;; Type Expressions
 
 (define (type-expression? object)
@@ -197,7 +197,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (type-variable-name variable)
   (cadr variable))
-
+
 (define (primitive-type? object)
   (any (lambda (pred)
          (pred object))
@@ -237,7 +237,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (receive (constructor predicate) (primitive-type 'numeric-type)
   (set! numeric-type constructor)
   (set! numeric-type? predicate))
-
+
 (define (parametric-type? object)
   (and (pair? object)
        (memq (car object) parametric-type-operators)
@@ -278,7 +278,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (procedure-type-codomain expr)
   (cadr (parametric-type-operands expr)))
-
+
 ;;;; Expressions
 
 ;; coderef: annotate-boolean
@@ -310,7 +310,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (disjoin boolean? number? symbol?))
   (lambda (type expr)
     expr))
-
+
 (define (if-expr? object)
   (and (list? object)
        (= (length object) 4)
@@ -356,7 +356,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      (simplify-annotated-program (if-predicate expr))
      (simplify-annotated-program (if-consequent expr))
      (simplify-annotated-program (if-alternative expr)))))
-
+
 (define (lambda-expr? object)
   (and (list? object)
        (= (length object) 3)
@@ -402,7 +402,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (procedure-type-domains type))
        ,@(splice-begin
           (simplify-annotated-program (lambda-body expr))))))
-
+
 (define (combination-expr? object)
   (and (list? object)
        (>= (length object) 1)
@@ -446,7 +446,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      (simplify-annotated-program (combination-operator expr))
      (map simplify-annotated-program
           (combination-operands expr)))))
-
+
 (define (define-expr? object)
   (and (list? object)
        (= (length object) 3)
@@ -485,7 +485,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (simplify-annotated-program (define-value expr)))
       (declare-type-expr (define-name expr)
                          (texpr-type (define-value expr)))))))
-
+
 (define (begin-expr? object)
   (and (list? object)
        (> (length object) 2)
@@ -527,7 +527,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (declare-type-expr name type)
   (list 'declare-type name type))
-
+
 ;;; Arithmetic types
 #|
 (define symbolic-type)
@@ -583,7 +583,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (union-type-terms expr)
   (parametric-type-operands expr))
 |#
-
+
 #|
 (define +-type
   (function-type (product-type (numeric-type) (numeric-type))
@@ -653,7 +653,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (<= <v1> <v3>))
 
 |#
-
+
 ;;;; examples:
 
 #|
@@ -685,7 +685,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (t (numeric-type) 4)))
 ;Unspecified return value
 |#
-
+
 #|
 (define fib-program
   '(define fib
@@ -775,7 +775,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  (t (numeric-type) 2)))))))))))))
 ;Unspecified return value
 |#
-
+
 #|
 (define fib-internal
   '(lambda (m)
@@ -850,7 +850,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      (t (numeric-type) ((t (type:procedure (? param:23) ((numeric-type)) (numeric-type)) fib) (t (numeric-type) m)))))))
 ;Unspecified return value
 |#
-
+
 #|
 (define fact-iterative
   '(define fact

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Analyzing interpreter with AMB.
 ;;;   Execution procedures take environment
 ;;;   and two continuations: SUCCEED and FAIL
@@ -102,7 +102,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler a:analyze
   (match-args lambda?)
   analyze-lambda)
-
+
 (define (analyze-if exp)
   (let ((predicate-exec (analyze (if-predicate exp)))
         (consequent-exec (analyze (if-consequent exp)))
@@ -139,7 +139,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler a:analyze
   (match-args begin?)
   analyze-begin)
-
+
 ;;; There are two useful kinds of assignments in AMB
 ;;; interpreters.  Undoable assignments and permanent
 ;;; assignments.
@@ -191,7 +191,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler a:analyze
   (match-args definition?)
   analyze-definition)
-
+
 ;;; Macros (definitions are in syntax.scm)
 
 (define-generic-procedure-handler a:analyze
@@ -221,7 +221,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler a:analyze
   (match-args amb?)
   analyze-amb)
-
+
 (define (default-apply procedure operand-execs env succeed fail)
   (declare (ignore operand-execs env succeed fail))
   (error "Unknown procedure type" procedure)
@@ -288,7 +288,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (succeed (list arg) fail))
               fail)))
       (succeed '() fail)))
-
+
 (define a:handle-operand
   (simple-generic-procedure 'a:handle-operand 5
     (lambda (parameter operand-exec env succeed fail)
@@ -311,7 +311,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler procedure-parameter-name
   (match-args pair?)
   car)
-
+
 (define a:advance
   (simple-generic-procedure 'a:advance 3
     (lambda (x succeed fail)

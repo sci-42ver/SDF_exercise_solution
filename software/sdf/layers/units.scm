@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (unit? object)
   (and (pair? object)
        (eq? (car object) %unit-tag)
@@ -81,7 +81,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (pair? (cdr alist))
        (or (eq? (caar alist) (caadr alist))
            (sorted-alist-repeated-key? (cdr alist)))))
-
+
 (define unit-layer
   (make-annotation-layer 'unit
     (lambda (get-name has-value? get-value)
@@ -112,7 +112,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               get-name has-value? get-value
               get-default-value get-procedure
               summarize-self))))
-
+
 (define (unit-procedure operator)
   (case operator
     ((*) unit:*)
@@ -157,7 +157,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (simple-operation operator
                            unit?
                            (unit-procedure operator)))))))
-
+
 (define (unit:* u1 u2)
   (alist->unit
    (let loop ((u1 (unit->alist u1)) (u2 (unit->alist u2)))
@@ -203,7 +203,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (unit:atan u)
   unit:none)
-
+
 (define (unit:unary-comparison u)
   unit:none)
 
@@ -224,7 +224,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (if (not (every unitless? us))
       (error "Units not allowed in this operation:" us))
   unit:none)
-
+
 #|
 (define test-arith
   (extend-arithmetic layered-extender
@@ -261,7 +261,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 #[layered-datum 4141]
 (base 4141)
 (unit ((kilogram 1) (meter 1) (second -2)))
-
+
 ;; coderef: c-with-units
 (define c
   (layered-datum 299792458

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; x'' = -x
 
 (define (F t x) (- x))
@@ -68,7 +68,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    ((evolver F 'h stormer-2)
                     (make-symbolic-s0)
                     1))))
-
+
 (define-arith-test 'stormer-combined
   (lambda ()
     (extend-arithmetic symbolic-extender

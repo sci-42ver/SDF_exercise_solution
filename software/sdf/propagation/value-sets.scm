@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Sets of values
 
 ;;; The set elements must be distinct according to equivalent?
@@ -60,7 +60,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    (apply map
           procedure
           (map value-set-elements sets))))
-
+
 ;;;; Merge
 
 (define (merge-value-sets content increment)

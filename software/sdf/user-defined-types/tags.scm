@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Standard predicates
 
 ;;; This extends base-predicate to work for tagged data.  The
@@ -106,7 +106,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (set-predicate<=! real? complex?)
 
 (register-predicate! procedure? 'procedure)
-
+
 ;;;; Implementation tags
 
 ;; checked

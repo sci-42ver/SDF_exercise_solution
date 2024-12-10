@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Unit conversions
 
 (define (make-unit-conversion to from)
@@ -83,7 +83,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           (n:negate n)))
           (else
            (positive-case conversion n)))))
-
+
 ;;;; Unit-conversion registry
 
 (define (register-unit-conversion input-unit output-unit unit-conversion)
@@ -140,7 +140,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       specialized-procedure))
 
   specializer)
-
+
 ;;;; Unit converters
 
 (define identity-unit-conversion

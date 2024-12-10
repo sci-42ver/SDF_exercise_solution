@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Support sets
 
 (define (%make-support-set elements)
@@ -61,7 +61,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    (apply lset-union
           eqv?
           (map support-set-elements sets))))
-
+
 (define (support-set= set1 set2)
   (lset= eqv?
          (support-set-elements set1)

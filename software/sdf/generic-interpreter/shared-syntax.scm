@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; -*- Mode:Scheme -*-
 
 ;;; Self-evaluating entities
@@ -67,7 +67,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (assignment-variable assn) (cadr  assn))
 (define (assignment-value    assn) (caddr assn))
-
+
 ;;; Definitions
 
 (define (definition? exp) (tagged-list? exp 'define))
@@ -122,7 +122,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (memq 'lazy (cdr var-decl))
        (memq 'memo (cdr var-decl))))
 (register-predicate! lazy-memo? 'lazy-memo)
-
+
 ;;; If conditionals
 
 (define (if? exp) (tagged-list? exp 'if))
@@ -171,7 +171,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     (cond-clause-consequent (car clauses))
                     (expand (cdr clauses))))))
   (expand (cond-clauses cond-exp)))
-
+
 (define (sequence->begin seq)
   (cond ((null? seq) seq)
         ((null? (cdr seq)) (car seq))
@@ -220,7 +220,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (else
            `(let (,(car specs))
               ,(lp (cdr specs)))))))
-
+
 ;;; Procedure applications -- NO-ARGS? and LAST-OPERAND? added
 
 (define (application? exp) (pair? exp))

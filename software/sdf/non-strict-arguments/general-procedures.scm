@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Modifications to provide for generalized procedures.
 
 ;;; Syntax extension: allow decorated parameter names.
@@ -58,7 +58,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (g:eval body
                 (extend-environment names arguments
                   (procedure-environment procedure)))))))
-
+
 ;;; This handler was replaced to allow ordinary strict parameters
 ;;; to work as before.
 
@@ -101,7 +101,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler g:advance
   (match-args advanced-memo?)
   advanced-value)
-
+
 ;;; For printing output
 
 (define-generic-procedure-handler write

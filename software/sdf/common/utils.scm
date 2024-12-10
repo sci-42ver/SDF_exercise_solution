@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (sign x)
   (cond ((positive? x) 1)
         ((negative? x) -1)
@@ -68,7 +68,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (* 2.0 e)
          (loop (/ e 2.0)))))
 |#
-
+
 ;;;; List utilities
 
 (define (all-permutations-of items)
@@ -123,7 +123,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  (loop (cdr thing))))
           ((eqv? old thing) new)
           (else thing))))
-
+
 (define (subsuming-adjoiner set= set<=)
   (lambda (new-set current-sets)
     (if (any (lambda (current-set)
@@ -168,7 +168,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (cons (if (odd? index) one zero)
                     choices))
         choices)))
-
+
 ;;;; Property lists
 
 (define (plist? object)
@@ -213,7 +213,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (error:not-a plist? plist 'plist-value))
 
   (loop plist))
-
+
 ;;; MIT/GNU Scheme implementation specific:
 
 (define (make-bundle-predicate name)
@@ -253,7 +253,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (load-quietly . args)
   (parameterize ((param:suppress-loading-message? #t))
     (apply load args)))
-
+
 ;;;; Printing
 
 (define (define-record-printer record-type get-parts

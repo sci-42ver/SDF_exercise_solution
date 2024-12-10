@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Properties
 
 (define (make-property name . plist)
@@ -65,7 +65,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define property-keywords
   `(predicate ,@property-default-keywords))
-
+
 (define-record-type <property>
     (%make-property name predicate default-supplier)
     property?
@@ -125,7 +125,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (set! type? (association 'has?))
   (set! %type-properties (association 'get))
   (set! %set-type-properties! (association 'put!)))
-
+
 ;;;; Instantiation
 
 ;; create-troll is the following object (tag instance-data) where instance-data is (tag proc) where proc is to modify property.
@@ -178,7 +178,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define tear-down!
   (chaining-generic-procedure 'tear-down! 1
     (constant-generic-procedure-handler #f)))
-
+
 ;;;; Instance data
 
 (define instance-data?
@@ -266,7 +266,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        debug-output)
         (send-message! (list ";previous value was" old-value)
                        debug-output))))
-
+
 (define (property-modifier property type value-predicate
                            noun modifier)
   (let ((procedure
@@ -296,7 +296,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (property-modifier property type value-predicate 'remover
                      (lambda (value values)
                        (delv value values))))
-
+
 ;;; Misc
 
 (define (direction? object)
@@ -332,7 +332,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (flip-coin bias)
   (n:>= (random 1.0) bias))
-
+
 ;;; Base object type
 
 (define object:name
@@ -372,7 +372,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    ((instance-data-binding property
                                            instance-data))))
            (instance-data-properties instance-data)))))
-
+
 ;;; Messaging
 
 (define send-message!
@@ -421,7 +421,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (disable-debugging)
   (if debug-output
       (set! debug-output #f)))
-
+
 (define (display-message message port)
   (guarantee message? message 'display-message)
   (if (pair? message)
@@ -467,7 +467,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args message? screen?)
   (lambda (message screen)
     (display-message message (get-port screen))))
-
+
 ;;; Clock
 
 (define (make-clock)
