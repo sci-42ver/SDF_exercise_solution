@@ -51,11 +51,15 @@ exercise solution for Software Design for Flexibility (SDF)
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
 # @exercise solutions by *3 references* (i.e. nbardiuk etc.) and *6.945_assignment_solution* checked up to now (sometimes *code base* has sample implementations)
 with check comments in codes.
-- For chapter 4 later, search in this repo by `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm` and code base by ignoring these.
+- For chapter 4 later, search in this repo by `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm` ~~and code base by ignoring these~~.
+  Ignore `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm` which are all codes for former chapters and `sdf/manager/*.scm` which is about software manager.
+  - ~~Here `6.945*/**/*.scm` can be `6.945*/**/*.scm`~~
+    We can also ignore later chapters
+    `sdf/better-layering/*.scm`
   - nbardiuk can be skipped.
-- 2, 3, 4.1~3
-# @exercise tests finished
-- 2, 3, 4.1~3
+- 2, 3, 4.1~4
+# @%exercise tests finished
+- 2, 3, 4.1~6
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
   - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
@@ -185,14 +189,31 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - 11
   - [[111] reference](https://engineering.purdue.edu/~qobi/papers/ifl2005.pdf)
     - ~~TODO why `(D (λy . x + y) 1)` doesn't calculate derivative and gets 2.~~
-## chapter 4
-1~2: search `expr<?`
+## @%chapter 4
+1,4: search `expr<?`
+2: simplification
 3: `sort`
+5: `print-all-matches`
+6: ?:choice
+8: match:vector (assuming following the naming convention)
 - [x] 1
   - same as SICP `(married Mickey ?who)`
 - [x] 2
   - a. same as 1.
   - ~~b. This seems to assume ~~
+- [x] 8
+  - SDF_exercises/chapter_4/4_8.scm
+    is *all* based on generic, but that need to change all the rest matcher API since `data-list` can be vector or "arbitrary sequence".
+    I won't spend time to do that *routine* work.
+  - SDF_exercises/chapter_4/4_8_based_on_transformation.scm
+    is just transforming vector or "arbitrary sequence" to list and *reuse* the original API.
+    That is elegant although this transformation may fail for some corner case.
+    - I give test for nested seq with vector and list (maybe arbitrary).
+      ~~I don't know how to .~~
+### @%TODO
+- 7,9 (Unification match may use env to implement)
+  7 will be done implicitly when 9 is done.
+  9 is similar to SICP 4.79 which needs implement rule based on *unification* with env.
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
 [software-manager-doc]:https://groups.csail.mit.edu/mac/users/gjs/6.945/sdf/manager/software-manager.pdf

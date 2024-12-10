@@ -119,7 +119,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args (car-satisfies list-term?)
               (car-satisfies list-term?))
   unify:list-terms)
-
+
 ;;; This is the syntactic equation solver for element vars.
 
 (define (maybe-substitute var-first terms)

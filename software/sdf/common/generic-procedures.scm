@@ -53,7 +53,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (if (trace-generic-dispatch?)
         (trace-generic-dispatch metadata args handler))
     (apply handler args)))
-
+
 (define (constant-generic-procedure-handler constant)
   (hash-table-intern! %constant-generic-procedure-handlers
                       constant

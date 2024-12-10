@@ -42,6 +42,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (match:eqv pattern-constant)
   (define (eqv-match data dictionary succeed)
     (and (pair? data)
+         ;; IGNORE: Since symbol, eq? is also fine IMHO.
+          ;; Anyway this is just one trivial comparison issue.
+         ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Equivalence-Predicates.html#index-eqv_003f-2
+         ;; > eq?’s behavior on *numbers* and characters is implementation-dependent, but it will always return either true or false
+         ;; > eq? may also behave differently from eqv? on empty vectors and empty strings.
          (eqv? (car data) pattern-constant)
          ;; > backtrack into the consequent or pattern-match part of a rule. 
          ;; When called by match:list, here "backtrack" to "pattern-match part of" the parent part.
@@ -56,6 +61,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (match:satisfies-restriction? variable (car data))
          (let ((binding (match:lookup variable dictionary)))
            (if binding
+               ;; Use equal? since (eqv? (list 1) (list 1)) etc will fail.
                (and (equal? (match:binding-value binding)
                             (car data))
                     (succeed dictionary 1))
@@ -92,6 +98,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                (let ((n (length data)))
                  (let lp ((i 0))
                   ;  (trace lp)
+                  ;  (trace succeed)
                   ;  (write-line (list data dictionary))
                    (and (<= i n)
                         ;; See SDF_exercises/chapter_4/term-rewriting/trace-demo.scm
@@ -105,6 +112,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                       dictionary)
                                      i)
                             (lp (+ i 1))))))))))
+  ; (trace segment-match)
   segment-match)
 
 (define (match:segment-equal? data value ok)
@@ -125,11 +133,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (dictionary dictionary))
            (cond ((pair? matchers)
                   ((car matchers)
-                   ;; SDF_exercises TODO why always list here?
+                   ;; IGNORE: SDF_exercises TODO why always list here?
                    data-list
                    dictionary
                    (lambda (new-dictionary n)
                      ;; SDF_exercises TODO when happens
+                     ;; not in book...
                      (if (> n (length data-list))
                          (error "Matcher ate too much."
                                 n))
@@ -180,7 +189,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((list? pattern)
          (match:list (map match:compile-pattern pattern)))
         (else
-          ;; SDF_exercises TODO what does this purpose to do?
+          ;; IGNORE: SDF_exercises TODO what does this purpose to do?
          (match:eqv pattern))))
 
 

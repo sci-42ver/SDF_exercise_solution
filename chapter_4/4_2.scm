@@ -35,7 +35,7 @@
       (rule `(* (?? a) (+ (?? b)) (?? c))
             `(+ ,@(map (lambda (x) `(* ,@a ,x ,@c)) b)))
 
-      
+
       ;; Numerical simplifications below
 
       (rule `(+ 0 (?? x)) `(+ ,@x))
@@ -73,3 +73,4 @@
 
 ;; I just use + as one demo, * is similar.
 (algebra-2 '(+ (* 3 x) (* 3 1) -3))
+;Value: (+ (* 3 x))

@@ -94,6 +94,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (rule `(+ (?? a) (* (? n ,number?) (? b)) (?? c) (? b) (?? d))
           `(+ ,@a ,@c (* ,(+ n 1) ,b) ,@d))
 
+    ;; see SDF_exercises/chapter_4/4_4.scm
+    ;; IMHO here (?? c) must be empty due to ordering.
     (rule `(+ (?? a)
               (* (? m ,number?) (?? b))
               (?? c)

@@ -34,6 +34,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (simple-generic-procedure 'match:var? 1
     (constant-generic-procedure-handler #f)))
 
+;; checked
 (define (match:var-type var)
   (guarantee match:var? var)
   (car var))
@@ -47,6 +48,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (simple-generic-procedure 'match:var-name 1
     (constant-generic-procedure-handler #f)))
 
+;; checked
 (define (match:named-var? object)
   (and (pair? object)
        (match:var-type? (car object))

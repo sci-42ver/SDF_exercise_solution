@@ -20,70 +20,71 @@
 
 (define algebra-2
   (rule-simplifier
-   (list
+    (list
 
-    ;; Sums
+      ;; Sums
 
-    (rule `(+ (? a)) a)
+      (rule `(+ (? a)) a)
 
-    ;; This can recursively remove all nested sums until only one + is reserved.
-    (rule `(+ (?? a) (+ (?? b)) (?? c))
-          `(+ ,@a ,@b ,@c))
+      ;; This can recursively remove all nested sums until only one + is reserved.
+      (rule `(+ (?? a) (+ (?? b)) (?? c))
+            `(+ ,@a ,@b ,@c))
 
-    ;; modified
-    (rule `(+ (?? a))
-          ;; 0. But each time we need to do quick sort again.
-          ;; Anyway the original one also has this problem where (?? a) may match from 0 to all which implicitly does bubble sort each time.
-          ;; 0.a. Here actually also avoids the overhead of applying rules many times to swap.
-          ;; It just swaps all in one rule invocation.
-          (let ((sorted-a (quick-sort a expr<?)))
-            (and 
-              (not (equal? sorted-a a))
-              `(+ ,@sorted-a)
-              )))
-
-
-    ;; Products
-
-    (rule `(* (? a)) a)
-
-    (rule `(* (?? a) (* (?? b)) (?? c))
-          `(* ,@a ,@b ,@c))
-
-    (rule `(* (?? a))
-          (let ((sorted-a (quick-sort a expr<?)))
-            (and 
-              (not (equal? sorted-a a))
-              `(* ,@sorted-a)
-              )))
-    ; (rule `(* (?? a) (? y) (? x) (?? b))
-    ;       (and (expr<? x y)
-    ;            `(* ,@a ,x ,y ,@b)))
+      ;; modified
+      (rule `(+ (?? a))
+            ;; 0. But each time we need to do quick sort again.
+            ;; Anyway the original one also has this problem where (?? a) may match from 0 to all which implicitly does bubble sort each time.
+            ;; 0.a. Here actually also avoids the overhead of applying rules many times to swap.
+            ;; It just swaps all in one rule invocation.
+            (let ((sorted-a (quick-sort a expr<?)))
+              (and 
+                (not (equal? sorted-a a))
+                `(+ ,@sorted-a)
+                )))
 
 
-    ;; Distributive law
+      ;; Products
 
-    (rule `(* (?? a) (+ (?? b)) (?? c))
-          `(+ ,@(map (lambda (x) `(* ,@a ,x ,@c)) b)))
+      (rule `(* (? a)) a)
+
+      (rule `(* (?? a) (* (?? b)) (?? c))
+            `(* ,@a ,@b ,@c))
+
+      (rule `(* (?? a))
+            (let ((sorted-a (quick-sort a expr<?)))
+              (and 
+                (not (equal? sorted-a a))
+                `(* ,@sorted-a)
+                )))
+      ; (rule `(* (?? a) (? y) (? x) (?? b))
+      ;       (and (expr<? x y)
+      ;            `(* ,@a ,x ,y ,@b)))
 
 
-    ;; Numerical simplifications below
+      ;; Distributive law
 
-    (rule `(+ 0 (?? x)) `(+ ,@x))
-
-    (rule `(+ (? x ,number?) (? y ,number?) (?? z))
-          ;; will calculate the value.
-          `(+ ,(+ x y) ,@z))
+      (rule `(* (?? a) (+ (?? b)) (?? c))
+            `(+ ,@(map (lambda (x) `(* ,@a ,x ,@c)) b)))
 
 
-    (rule `(* 0 (?? x)) 0)
+      ;; Numerical simplifications below
 
-    (rule `(* 1 (?? x)) `(* ,@x))
+      (rule `(+ 0 (?? x)) `(+ ,@x))
 
-    (rule `(* (? x ,number?) (? y ,number?) (?? z))
-          `(* ,(* x y) ,@z))
+      (rule `(+ (? x ,number?) (? y ,number?) (?? z))
+            ;; will calculate the value.
+            `(+ ,(+ x y) ,@z))
 
-    )))
+
+      (rule `(* 0 (?? x)) 0)
+
+      (rule `(* 1 (?? x)) `(* ,@x))
+
+      (rule `(* (? x ,number?) (? y ,number?) (?? z))
+            `(* ,(* x y) ,@z))
+
+      )))
 
 ;; both * and + needs reordering.
 (algebra-2 '(+ (* (+ x 1) 3) -3))
+;Value: (* 3 x)

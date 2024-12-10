@@ -43,6 +43,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     ;; > variables are bound to their matched data.
                      (succeed result
                               ;; SDF_exercises TODO when this is used
+                              ;; See rule-simplifier (result fail) doesn't use fail.
                               (lambda () #f))))))
           ;; > The system backtracks into the matcher to look for an alternative match
           ;; i.e. (per-rule (cdr rules)) which matches between rule and data
