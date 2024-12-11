@@ -44,13 +44,27 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    (lambda (dict fail rest1 rest2)
      (assert (list? rest1))
      (assert (list? rest2))
+     ;; 0. > we will be able to extract multiple
+     ;; > matches by returning #f from succeed, indicating that the result
+     ;; > was not the one wanted.
+     ;; similar to match:segment formerly and also SICP ones which passes fail along.
+     ;; Here is similar to SICP to use fail passed by grab-segment.
+     ;; 1. > The ability to backtrack into the matcher
+     ;; i.e. to some *former* point of the matcher.
+     ;; > algebraic expressions and equation solving
+     ;; allow considering all possibilities like amb in SICP.
+     ;; IMHO at least for (?? ...) which is shown before in book.
      (or (and (null? rest1) (null? rest2)
               (succeed dict))
+         ;; SDF_exercises TODO when this happens.
          (fail)))
+   ;; > If not, unify returns #f, indicating a failure.
    (lambda () #f)))
 
 ;;; terms1 and terms2 are lists of terms to be equated.
 
+;; Here we have 5 data:
+;; 2 term lists, dict, succeed, fail.
 (define (unify:dispatch terms1 terms2)
   (assert (list? terms1))
   (assert (list? terms2))
@@ -59,6 +73,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (succeed dict fail terms1 terms2)
         ((unify:gdispatch terms1 terms2)
          dict
+         ;; Why not pass succeed is same as SICP since we *only* need fail to try the next alternative.
+         ;; The other 3 args are needed for later matches.
          (lambda (dict* fail* rest1 rest2)
            ((unify:dispatch rest1 rest2)
             dict* succeed fail*))
@@ -128,8 +144,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (term (car terms)) (rest2 (cdr terms)))
       (cond ((and (match:element-var? term)
                   (match:vars-equal? var term))
+             ;; similar to the following action for match:vars-equal? in do-substitute.
              (succeed dict fail rest1 rest2))
             ((match:has-binding? var dict)
+             ;; will check consistency later.
              ((unify:dispatch (cons (match:get-value var dict) rest1)
                               terms)
               dict succeed fail))
@@ -156,15 +174,26 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             dict)))))
 |#
 
+;; substitute var with the *value* of term in dict *recursively* when *necessary*.
 (define (do-substitute var term dict)
+  ;; This substitution is needed for `match:satisfies-restriction?`.
   (let ((term* ((match:dict-substitution dict) term)))
     (and (match:satisfies-restriction? var term*)
          (if (and (match:var? term*)
                   (match:vars-equal? var term*))
+             ;; difference
+             ;; No need to replace by itself.
              dict
+             ;; Same as SICP depends-on?
              (and (not (match:occurs-in? var term*))
                   (match:extend-dict var term*
                     (match:map-dict-values
+                     ;; 0. change val to new val.
+                     ;; recursion is done by match:map-vars.
+                     ;; 1. This may be not needed since match:dict-substitution at last will also do this.
+                     ;; This may be put here for efficiency.
+                     ;; The book just says...
+                     ;; > must also be cleaned of references to var .
                      (match:single-substitution var term*)
                      dict)))))))
 
@@ -190,10 +219,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Segment variable extensions
 
+;; Based on unify:gdispatch mechanism, (car var-first1) and (car var-first2) must at the same location from left.
 (define (unify:segment-var-var var-first1 var-first2)
   (define (unify-seg-var-var dict succeed fail)
     (if (match:vars-equal? (car var-first1) (car var-first2))
         (succeed dict fail (cdr var-first1) (cdr var-first2))
+        ;; 0. Here (?? x) in var-first1 can match *part* of (?? y) which is done in (maybe-grab-segment var-first2 var-first1) block.
+        ;; 1. just think based on one-sided, here either (car var-first1) or (car var-first2) must match multiple elems in the other.
         ((maybe-grab-segment var-first1 var-first2)
          dict
          succeed

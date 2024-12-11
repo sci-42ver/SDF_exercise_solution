@@ -143,6 +143,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    'conjoin
    predicates))
 
+;; checked
 (define (maybe-register-compound-predicate! datum-test
                                             operator operands)
   (if (every predicate? operands)

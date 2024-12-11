@@ -65,7 +65,7 @@ with check comments in codes.
   - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
     So I *skipped* checking `SDF_exercises/software/sdf/user-defined-types/vector-arith.scm` (*user-defined-types/vector-arith*).
   - `define-generic-procedure-extractor` (*not shown in the SDF book*. There is no related funcs even by searching "extractor")
-## review of "SDF_exercises TODO"
+## @%review of "SDF_exercises TODO"
 - From cc09d5b919575d7a27d30d94100d2f12dd8248ef up to .
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~

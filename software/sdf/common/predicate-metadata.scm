@@ -30,6 +30,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   predicate)
 
 ;; checked
+;; Just register and then return predicate.
 (define (register-compound-predicate! predicate type components)
   (register-predicate! predicate
                        (cons type
