@@ -22,57 +22,7 @@
 ;   old-unify:dispatch)
 
 (load "4_10_vec_lib.scm")
-
-; (define (unify:dispatch-vec terms1 terms2)
-;   (assert (vector? terms1))
-;   (assert (vector? terms2))
-;   (define (unify-dispatcher dict succeed fail)
-;     (if (and (null? terms1) (null? terms2))
-;         (succeed dict fail terms1 terms2)
-;         ((unify:gdispatch terms1 terms2)
-;          dict
-;          ;; Why not pass succeed is same as SICP since we *only* need fail to try the next alternative.
-;          ;; The other 3 args are needed for later matches.
-;          (lambda (dict* fail* rest1 rest2)
-;            ((unify:dispatch rest1 rest2)
-;             dict* succeed fail*))
-;          fail)))
-;   unify-dispatcher)
-
-; (define-generic-procedure-handler unify:dispatch
-;   (match-args vector? vector?)
-;   unify:dispatch-vec)
-
-;; gdispatch modification
-; (define (vec-car-satisfies pred)
-;   (lambda (terms)
-;     (and (vec-not-null? terms)
-;          (pred (car terms)))))
-; (define-generic-procedure-handler unify:gdispatch
-;   (match-args (car-satisfies constant-term?)
-;               (car-satisfies constant-term?))
-;   unify:constant-terms)
-
-;; all are done by 4_10_vec_lib except for cons.
-(define (maybe-substitute var-first terms)
-  (define (unify-substitute dict succeed fail)
-    (let ((var (car var-first)) (rest1 (cdr var-first))
-          (term (car terms)) (rest2 (cdr terms)))
-      (cond ((and (match:element-var? term)
-                  (match:vars-equal? var term))
-             ;; similar to the following action for match:vars-equal? in do-substitute.
-             (succeed dict fail rest1 rest2))
-            ((match:has-binding? var dict)
-             ;; will check consistency later.
-             ((unify:dispatch (general-cons (match:get-value var dict) rest1)
-                              terms)
-              dict succeed fail))
-            (else
-             (let ((dict* (do-substitute var term dict)))
-               (if dict*
-                   (succeed dict* fail rest1 rest2)
-                   (fail)))))))
-  unify-substitute)
+(load "4_10_unify_lib_generic.scm")
 
 ;; test considering same as 4.8
 ;; 0. all 4 nested cases are considered (i.e. vector/list in vector/list)
@@ -89,7 +39,15 @@
 
 a
 b
-(trace unify:gdispatch)
-(trace unify:dispatch)
+;; This will trace all the-generic-procedure's...
+; (trace unify:gdispatch)
+
+; (trace maybe-substitute)
+; (trace do-substitute)
+; (trace match:dict-substitution)
+; (trace unify:dispatch)
 (unifier a b)
-; (unifier c (unifier a b))
+; (#(ben franklin) ((? bmo) 6 1705) (apr 17 1790))
+(unifier c (unifier a b))
+; ((ben franklin) (jan 6 1705) (apr 17 1790))
+
