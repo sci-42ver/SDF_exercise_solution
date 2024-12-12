@@ -72,6 +72,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   element-match)
 
 ;;; Used in text only
+;; just as naming, the difference from match:element is no "(match:satisfies-restriction? variable (car data))".
 (define (match:element-no-restriction variable)
   (define (element-match data dictionary succeed)
     (and (pair? data)

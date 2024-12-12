@@ -1,6 +1,3 @@
-This is licenced same as [SDF book](https://mitpress.mit.edu/9780262045490/software-design-for-flexibility/) using [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.txt) since most of my codes are based on the course code base and the book. 
-
-I don't know whether it is appropriate. If it is inappropriate and someone knows detailedly about the difference among licences, please tell me the appropriate choice.
 # Skipped exercise
 - 2.14
   - I tried to find one possible example to implement in https://martinfowler.com/dsl.html#:~:text=Domain%2Dspecific%20languages%20have%20been,strut's%20configuration%20file....
@@ -210,10 +207,14 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
     That is elegant although this transformation may fail for some corner case.
     - I give test for nested seq with vector and list (maybe arbitrary).
       ~~I don't know how to .~~
+- [ ] 12
+  - Emm... I think no problems exist here at all.
+- [ ] 13
 ### @%TODO
 - 7,9 (Unification match may use env to implement)
   7 will be done implicitly when 9 is done.
   9 is similar to SICP 4.79 which needs implement rule based on *unification* with env.
+- 11 to be done with 21.
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
 [software-manager-doc]:https://groups.csail.mit.edu/mac/users/gjs/6.945/sdf/manager/software-manager.pdf
