@@ -1,6 +1,11 @@
+;; What to achieve?
+;; > avoids the syntactic analysis of the patterns
+;; i.e. just run matchers like analyzer in SICP to run procs.
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'unification)
+(load "../software/sdf/unification/unify-testing.scm")
+(load "../software/sdf/unification/text-examples.scm")
 (load "4_13_unify_lib_not_using_generic.scm")
 
 ;;; IGNORE the following (I made a mistake that these are all based on both pattern and data...):
@@ -29,6 +34,7 @@
 ;; but uses SDF_exercises/software/sdf/unification/unify.scm to do actual manipulation.
 
 ;;; just modification of matcher.scm
+;; (search "pattern/variable" correspondingly) Here all possible "syntactic analysis" are done in SDF_exercises/chapter_4/4_13_unify_lib_not_using_generic.scm
 (define (match:eqv pattern-constant)
   ;; 0. Here we need to change succeed interface and add fail for matcher.
   ;; 1. Here I won't change unify:constant-terms to avoid passing pattern around.
@@ -43,36 +49,34 @@
     (and (pair? data)
          (check data pattern-constant dictionary succeed fail)
          ))
-  ; (trace eqv-match)
   eqv-match)
-; (trace match:eqv)
 
 (define (match:element variable)
   (define (element-match data dictionary succeed fail)
     (and (pair? data)
-        ;; done in do-substitute
-        ;  (match:satisfies-restriction? variable (car data))
-        ;  (let ((binding (match:lookup variable dictionary)))
-        ;    (if binding
-        ;        ;; Use equal? since (eqv? (list 1) (list 1)) etc will fail.
-        ;        (and (equal? (match:binding-value binding)
-        ;                     (car data))
-        ;             (succeed dictionary 1))
-        ;        (succeed (match:extend-dict variable
-        ;                                    (car data)
-        ;                                    dictionary)
-        ;                 1)))
-        ;; As 4_12.scm shows, when both pattern and (car data) are var's.
-        ;; It doesn't matter
+        ;; 0. the original codes here are done in do-substitute
+        ;; 1. As 4_12.scm shows, when both pattern and (car data) are var's.
+        ;; It doesn't matter which is considered as term.
+        ;; This is due to:
+        ;; Here we only to ensure when var has val, it can be got actually.
+        ;; let the pair be ((? x) (? y)) and (? x) is bound to (? y)
+        ;; 1.a. (? x) is to be bound, then maybe-substitute will then do that for (? y).
+        ;; So both are bound.
+        ;; 1.b. (? y) is to be bound. Then match:map-dict-values will bind both again.
+        ;; 1.c. The above also works for the cases when one of them has already been bound.
         ((maybe-substitute-var-pattern variable data) dictionary succeed fail)
                         ))
   element-match)
 
 ;; segment ignored
 
-(define (match:list matchers)
-  ;; TODO add check.
-  
+(define (match:list matchers pattern)
+  (define (check data dict succeed fail)
+    (cond 
+      (((car-satisfies list-term?) data) 
+        (list-match data dict succeed fail))
+      (((car-satisfies match:element-var?) data) 
+        ((maybe-substitute-var-data pattern data) dict succeed fail))))
   ;; add action to pass around fail.
   (define (list-match data dictionary succeed fail)
     (and (pair? data)
@@ -108,8 +112,7 @@
                   ;; 1. eat one list data like (+ z w) in (+ y (+ z w)).
                   (succeed dictionary 1 fail))
                  (else (fail))))))
-  ; (trace list-match)
-  list-match)
+  check)
 
 ;;;; Pattern syntax
 
@@ -138,7 +141,8 @@
           ;  ((??) (match:segment pattern))
            (else (error "Unknown var type:" pattern))))
         ((list? pattern)
-         (match:list (map match:compile-pattern pattern)))
+         ;; modified
+         (match:list (map match:compile-pattern pattern) pattern))
         (else
           ;; IGNORE: SDF_exercises TODO what does this purpose to do?
          (match:eqv pattern))))
@@ -147,3 +151,28 @@
   (match:compile-pattern '((? a) (? b)))
   '((? b) 1)
   match:bindings)
+;Value: ((b 1 ?) (a 1 ?))
+
+;; a brief test considering all pairs as the above "constant-term? can match constant-term?/match:element-var? ..." shows.
+(run-matcher
+  (match:compile-pattern '(1 3 (4) (5) (? a) (? b) (? y)))
+  '(1 (? x) (4) (? z) (? b) 1 (2))
+  match:bindings)
+;Value: ((y (2) ?) (b 1 ?) (a 1 ?) (z (5) ?) (x 3 ?))
+
+(define (unifier* pattern1)
+  (lambda (data)
+    (let ((dict 
+            (run-matcher
+              (match:compile-pattern pattern1) 
+                data (lambda (x) x))))
+      (and dict
+          ((match:dict-substitution dict) pattern1)))))
+
+(run-matcher
+  (match:compile-pattern a) 
+    b match:bindings)
+((unifier* a) b)
+; ((ben franklin) ((? bmo) 6 1705) (apr 17 1790))
+((unifier* c) ((unifier* a) b))
+; ((ben franklin) (jan 6 1705) (apr 17 1790))
