@@ -21,6 +21,7 @@
 - tests of sample implementations.
 ## miscs clipboard
 - SDF_exercises TODO
+  - SDF_exercises TODO when happens
 - sci-42ver/SDF_exercise_solution
 - "Won't dig into" in SDF_notes.md
 # SDF_exercise_solution
@@ -216,6 +217,8 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - [ ] 13
   - SDF_exercises/chapter_4/4_13.scm is actually not what the exercise expects except for `match:compile-pattern` used in `maybe-substitute`.
     Here the generic overhead is avoided trivially but we still checks `car-satisfies` which can't be avoided since the match depends on *types of both sides*. This is why we need "`match:compile-pattern` used in `maybe-substitute`".
+    - Maybe it is worth with this overhead since
+      > to allow easy extension for new language features
     - IMHO the unification underlying idea "*both* sides" implies we should not use a "match procedure" based on "combinators".
     - > This is hard!
       As the above shows, following the code base original ideas can't do that.

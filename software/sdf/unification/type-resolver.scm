@@ -21,14 +21,25 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
 
+;; just add 2 pp lines.
 (define (noisy-infer-program-types expr)
   (let ((texpr (annotate-program expr)))
+    ;; added
+    (write-line '---)
+    (pp texpr) 
+    (write-line '---)
     (pp (simplify-annotated-program texpr))
     (let ((constraints (program-constraints texpr)))
       (for-each pp constraints)
       (let ((dict (unify-constraints constraints)))
         (if dict
-            ((match:dict-substitution dict) texpr)
+            ;; modified based on p242
+            (let ((res ((match:dict-substitution dict) texpr)))
+              (write-line '---)
+              (pp (simplify-annotated-program res))
+              (write-line '---)
+              res
+              )
             '***type-error***)))))
 
 (define (infer-program-types expr)
@@ -54,6 +65,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (procedure-type (list v v) v)))
         (binary-comparator
          (let ((v (numeric-type)))
+           ;; See `(define-parametric-type-operator operator)` -> (lambda operands ...)
            (procedure-type (list v v) (boolean-type)))))
     (list (cons '+ binary-numerical)
           (cons '- binary-numerical)
@@ -87,6 +99,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (get-var-type name env)
   (cdr (let loop ((env env))
+         ;; 0. For (pp (infer-program-types '(g (< x (f y)))))
+         ;; Based on the above (top-level-env)
+         ;; (car env) will be (make-top-level-env-frame).
+         ;; So here "(pair? (cdr env))" must be false.
          (or (assq name (car env))
              (if (pair? (cdr env))
                  (loop (cdr env))
@@ -141,6 +157,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (unify (map constraint-lhs constraints)
          (map constraint-rhs constraints)))
 
+;; Compared with infer-program-types, just avoids outputting type infos for some trivial cases like
+;; if, begin etc.
 (define (simplify-annotated-program texpr)
   (simplify-annotated-program-1 (texpr-type texpr)
                                 (texpr-expr texpr)))
@@ -178,6 +196,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (pair? (cdr object))
        (symbol? (cadr object))
        (or (null? (cddr object))
+           ;; SDF_exercises TODO when happens
            (and (pair? (cddr object))
                 (symbol? (caddr object))
                 (null? (cdddr object))))))
@@ -189,6 +208,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             'type
             root))))
 
+;; This is similar to SICP implementation for rule unification.
 (define generate-unique-name
   (let ((n 0))
     (lambda (prefix)
@@ -234,6 +254,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define numeric-type)
 (define numeric-type?)
+;; see https://srfi.schemers.org/srfi-8/srfi-8.html (call-with-values (lambda () expression) ...)
 (receive (constructor predicate) (primitive-type 'numeric-type)
   (set! numeric-type constructor)
   (set! numeric-type? predicate))
@@ -313,6 +334,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (if-expr? object)
   (and (list? object)
+       ;; different from SICP which considers the case with no alternative.
        (= (length object) 4)
        (eq? (car object) 'if)))
 
@@ -327,6 +349,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler annotate-expr
   (match-args if-expr? any-object?)
   (lambda (expr env)
+    ;; SDF_exercises TODO if-consequent and if-alternative may return different types.
+    ;; See p249 Critique which is same as the problems here where the type should be "disjoin".
     (make-texpr (type-variable)
                 (make-if-expr
                  (annotate-expr (if-predicate expr) env)
@@ -340,6 +364,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (append
      (list (constrain (boolean-type)
                       (texpr-type (if-predicate expr)))
+           ;; SDF_exercises TODO just as the above shows
+           ;; > if-consequent and if-alternative may return different types.
+           ;; IMHO better to add one disjoin type operation.
            (constrain type
                       (texpr-type (if-consequent expr)))
            (constrain type
@@ -357,6 +384,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      (simplify-annotated-program (if-consequent expr))
      (simplify-annotated-program (if-alternative expr)))))
 
+;; implies using begin
 (define (lambda-expr? object)
   (and (list? object)
        (= (length object) 3)
@@ -367,6 +395,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (list-of-unique-symbols? object))
 
 (define lambda-bvl cadr)
+;; implies using begin
 (define lambda-body caddr)
 
 (define (make-lambda-expr bvl body)
@@ -376,11 +405,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler annotate-expr
   (match-args lambda-expr? any-object?)
   (lambda (expr env)
+    ;; See SICP lambda implementation in chapter 4.
+    ;; Notice the ordering, here nested lambda will check from the innermost to the outermost frames.
     (let ((env* (new-frame (lambda-bvl expr) env)))
       (make-texpr (procedure-type (map (lambda (name)
+                                         ;; will get those values constructed by new-frame.
                                          (get-var-type name env*))
                                        (lambda-bvl expr))
                                   (type-variable))
+                  ;; input has been annotated implicitly by new-frame.
+                  ;; That skips unnecessary checks by get-var-type and directly adds cells.
                   (make-lambda-expr (lambda-bvl expr)
                     (annotate-expr (lambda-body expr) env*))))))
 
@@ -411,10 +445,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define combination-operator car)
 (define combination-operands cdr)
 
+;; similar to SICP chapter 4.
 (define (make-combination-expr operator operands)
   (cons operator operands))
 
 ;; coderef: annotate-combination
+;; compound procedure
 (define-generic-procedure-handler annotate-expr
   (match-args combination-expr? any-object?)
   (lambda (expr env)
@@ -431,8 +467,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (lambda (type expr)
     (cons (constrain (texpr-type (combination-operator expr))
                      (procedure-type 
+                      ;; domain
                       (map texpr-type
                            (combination-operands expr))
+                      ;; codomain
                       type))
           (append (program-constraints (combination-operator expr))
                   (append-map program-constraints
@@ -462,8 +500,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler annotate-expr
   (match-args define-expr? any-object?)
   (lambda (expr env)
+    ;; different from SICP, here not consider (define (proc ...) ...).
     (let ((name (define-name expr)))
       (let ((type (define-var-type name env)))
+        ;; assume define type to be same as variable type.
         (make-texpr type
                     (make-define-expr name
                                       (annotate-expr
@@ -494,6 +534,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define begin-exprs cdr)
 
 (define (make-begin-expr exprs)
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Construction-of-Lists.html#index-cons_002a
+  ;; Here only 2 args, so cons is also fine.
   (cons* 'begin exprs))
 
 (define-generic-procedure-handler annotate-expr
@@ -520,6 +562,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    (splice-begin (simplify-annotated-program x)))
                  (begin-exprs expr)))))
 
+;; based on begin implication for lambda-body
+;; and usage of *append*-map.
 (define (splice-begin s)
   (if (begin-expr? s)
       (begin-exprs s)
