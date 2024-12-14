@@ -42,9 +42,9 @@
   (define (check data pattern dict succeed fail)
     (cond 
       (((car-satisfies constant-term?) data) 
-        ((unify:constant-terms pattern data) dict succeed fail))
+       ((unify:constant-terms pattern data) dict succeed fail))
       (((car-satisfies match:element-var?) data) 
-        ((maybe-substitute-var-data pattern data) dict succeed fail))))
+       ((maybe-substitute-var-data pattern data) dict succeed fail))))
   (define (eqv-match data dictionary succeed fail) ; modified
     (and (pair? data)
          (check data pattern-constant dictionary succeed fail)
@@ -54,18 +54,18 @@
 (define (match:element variable)
   (define (element-match data dictionary succeed fail)
     (and (pair? data)
-        ;; 0. the original codes here are done in do-substitute
-        ;; 1. As 4_12.scm shows, when both pattern and (car data) are var's.
-        ;; It doesn't matter which is considered as term.
-        ;; This is due to:
-        ;; Here we only to ensure when var has val, it can be got actually.
-        ;; let the pair be ((? x) (? y)) and (? x) is bound to (? y)
-        ;; 1.a. (? x) is to be bound, then maybe-substitute will then do that for (? y).
-        ;; So both are bound.
-        ;; 1.b. (? y) is to be bound. Then match:map-dict-values will bind both again.
-        ;; 1.c. The above also works for the cases when one of them has already been bound.
-        ((maybe-substitute-var-pattern variable data) dictionary succeed fail)
-                        ))
+         ;; 0. the original codes here are done in do-substitute
+         ;; 1. As 4_12.scm shows, when both pattern and (car data) are var's.
+         ;; It doesn't matter which is considered as term.
+         ;; This is due to:
+         ;; Here we only to ensure when var has val, it can be got actually.
+         ;; let the pair be ((? x) (? y)) and (? x) is bound to (? y)
+         ;; 1.a. (? x) is to be bound, then maybe-substitute will then do that for (? y).
+         ;; So both are bound.
+         ;; 1.b. (? y) is to be bound. Then match:map-dict-values will bind both again.
+         ;; 1.c. The above also works for the cases when one of them has already been bound.
+         ((maybe-substitute-var-pattern variable data) dictionary succeed fail)
+         ))
   element-match)
 
 ;; segment ignored
@@ -74,9 +74,9 @@
   (define (check data dict succeed fail)
     (cond 
       (((car-satisfies list-term?) data) 
-        (list-match data dict succeed fail))
+       (list-match data dict succeed fail))
       (((car-satisfies match:element-var?) data) 
-        ((maybe-substitute-var-data pattern data) dict succeed fail))))
+       ((maybe-substitute-var-data pattern data) dict succeed fail))))
   ;; add action to pass around fail.
   (define (list-match data dictionary succeed fail)
     (and (pair? data)
@@ -93,17 +93,17 @@
                      ;; SDF_exercises TODO when happens
                      ;; not in book...
                      (if (> n (length data-list))
-                         (error "Matcher ate too much."
-                                n))
-                    ;  (write-line (list "new-dictionary" new-dictionary))
+                       (error "Matcher ate too much."
+                              n))
+                     ;  (write-line (list "new-dictionary" new-dictionary))
                      (lp (list-tail data-list n)
                          (cdr matchers)
                          new-dictionary
                          fail
                          ))
-                    ;; added
-                    fail
-                    ))
+                   ;; added
+                   fail
+                   ))
                  ;; modified
                  ((pair? data-list) (fail)) ;unmatched data
                  ((null? data-list)
@@ -123,7 +123,7 @@
                    (match:new-dict)
                    ;; just finish, so fail is not used.
                    (lambda (dict n fail)
-                    ;; (= n 1) means manipulating with one datum in (list datum)
+                     ;; (= n 1) means manipulating with one datum in (list datum)
                      (and (= n 1)
                           (succeed dict)))
                    ;; added
@@ -138,14 +138,14 @@
   (cond ((match:var? pattern)
          (case (match:var-type pattern)
            ((?) (match:element pattern))
-          ;  ((??) (match:segment pattern))
+           ;  ((??) (match:segment pattern))
            (else (error "Unknown var type:" pattern))))
         ((list? pattern)
          ;; modified
          (match:list (map match:compile-pattern pattern) pattern))
         (else
           ;; IGNORE: SDF_exercises TODO what does this purpose to do?
-         (match:eqv pattern))))
+          (match:eqv pattern))))
 
 (run-matcher
   (match:compile-pattern '((? a) (? b)))
@@ -165,13 +165,13 @@
     (let ((dict 
             (run-matcher
               (match:compile-pattern pattern1) 
-                data (lambda (x) x))))
+              data (lambda (x) x))))
       (and dict
-          ((match:dict-substitution dict) pattern1)))))
+           ((match:dict-substitution dict) pattern1)))))
 
 (run-matcher
   (match:compile-pattern a) 
-    b match:bindings)
+  b match:bindings)
 ((unifier* a) b)
 ; ((ben franklin) ((? bmo) 6 1705) (apr 17 1790))
 ((unifier* c) ((unifier* a) b))

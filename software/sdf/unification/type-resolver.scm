@@ -25,10 +25,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (noisy-infer-program-types expr)
   (let ((texpr (annotate-program expr)))
     ;; added
+    (newline)
     (write-line '---)
     (pp texpr) 
     (write-line '---)
     (pp (simplify-annotated-program texpr))
+    (write-line '---)
     (let ((constraints (program-constraints texpr)))
       (for-each pp constraints)
       (let ((dict (unify-constraints constraints)))

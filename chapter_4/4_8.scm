@@ -36,7 +36,7 @@
     ;   (write-line (list "call match:vector" data matchers))
     ;   ;; unchanged
     ;   )
-    
+
     (and (sequence? data)
          ;; IGNORE: list-tail similar to cdr is inefficient for 
          (let lp ((data-list (match:general-car data))
@@ -57,8 +57,8 @@
                      ;; SDF_exercises TODO when happens
                      ;; not in book...
                      (if (> n (match:general-length data-list))
-                         (error "Matcher ate too much."
-                                n))
+                       (error "Matcher ate too much."
+                              n))
                      (lp (match:general-tail data-list n)
                          (cdr matchers)
                          new-dictionary))))
@@ -69,7 +69,7 @@
                   ;; 1. eat one list data like (+ z w) in (+ y (+ z w)).
                   (succeed dictionary 1))
                  (else #f))))
-      )
+    )
   list-match)
 
 (load "4_8_generic_procs.scm")
@@ -84,7 +84,7 @@
          (match:general-list (match:unary-map match:compile-pattern pattern)))
         (else
           ;; IGNORE: SDF_exercises TODO what does this purpose to do?
-         (match:eqv pattern))))
+          (match:eqv pattern))))
 
 (run-matcher
   (match:compile-pattern (list->vector '(a ((? b) 2 3) (? b) c)))

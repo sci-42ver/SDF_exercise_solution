@@ -223,6 +223,21 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
     - > This is hard!
       As the above shows, following the code base original ideas can't do that.
       So we may need some *extra* ingenious ideas. I won't do that since this should be taught in CRLS. See "Won't dig into" in SDF_notes.md
+- [ ] 14
+  - ~~IMHO this is much harder than latter exercises in this section 4.4.3.~~
+  - The "specific problem" solution should [just use *generic* type](https://cs3110.github.io/textbook/chapters/interp/inference.html#finishing-type-inference) (i.e. `type-variable` IMHO).
+    > the principal type of the identity function fun x -> x would be 'a -> 'a ... the most “lenient”
+  - My original thoughts may be not what the author wants to achieve in this exercise.
+    I tried to derive procedure argument by the body which can be done in the original codes.
+    Then this implies we should not use other types of arg.
+    So we should check `procedure-type-domains` when unify.
+    - But notice if we allow "*generic* type" for input args, then obviously we can't detect errors for input arg...
+      This seems one contradiction...
+    - IMHO this is more appropriate to be done in [Type-checking](https://en.wikipedia.org/wiki/Type_inference#Type-checking_vs._type-inference) since this is one *procedure application error* instead of inference error.
+      TODO after compiler
+- [ ] 17
+  - TODO see md
+    - [non-expansive expression](https://homepages.inf.ed.ac.uk/stg/NOTES/node90.html)
 ### @%TODO
 - 7,9 (Unification match may use env to implement)
   7 will be done implicitly when 9 is done.

@@ -28,8 +28,8 @@
 (?:pletrec ((palindrome
               (?:choice ()
                         ((? x ,symbol?)
-                          (?:ref palindrome)
-                          (? x)))))
+                         (?:ref palindrome)
+                         (? x)))))
            (?:ref palindrome))
 ;; If using the latter, (?:ref palindrome) will have x binding.
 ;; So at last the (? x) sequence will only match the *last* x binding.

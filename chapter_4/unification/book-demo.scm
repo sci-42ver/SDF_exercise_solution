@@ -13,15 +13,15 @@
 ;; from book SDF_exercises/software/sdf/unification/test-type-resolver.scm
 (define fact-iterative
   '(define fact
-      (lambda (n)
-        (begin
-          (define iter
-            (lambda (product counter)
-              (if (> counter n)
-                  product
-                  (iter (* product counter)
-                        (+ counter 1)))))
-          (iter 1 1)))))
+     (lambda (n)
+       (begin
+         (define iter
+           (lambda (product counter)
+             (if (> counter n)
+               product
+               (iter (* product counter)
+                     (+ counter 1)))))
+         (iter 1 1)))))
 
 (pp (noisy-infer-program-types fact-iterative))
 
@@ -45,5 +45,5 @@
 ;; > should not depend on its use in an example
 ;; So "(= (? id:29) (type:procedure ((numeric-type)) (? type:32)))" is wrong.
 (pp (noisy-infer-program-types
-'(begin (define id (lambda (x) x))
-(id 2))))
+      '(begin (define id (lambda (x) x))
+              (id 2))))

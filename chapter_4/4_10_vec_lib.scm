@@ -1,5 +1,5 @@
 ;; IGNORE: I won't write a lot of routine init and setting of generic procedures for simplicity.
-  ;; Anyway the basic ideas are same.
+;; Anyway the basic ideas are same.
 ;; Due to we need to use general car, I will just redefine car to avoid renaming everywhere...
 
 ; (define (vec-null? vec)
@@ -27,16 +27,16 @@
 (define old-list? list?)
 (define list?
   (simple-generic-procedure 'list? 1
-    (lambda (data)
-      (error (list "wrong arg for list?" data))
-      )
-    ))
+                            (lambda (data)
+                              (error (list "wrong arg for list?" data))
+                              )
+                            ))
 (define-generic-procedure-handler list?
-  (match-args not-arbitrary-seq?)
-  old-list?)
+                                  (match-args not-arbitrary-seq?)
+                                  old-list?)
 (define-generic-procedure-handler list?
-  (match-args vector?)
-  vector?)
+                                  (match-args vector?)
+                                  vector?)
 
 (define (general-cons addend data)
   (define (vec-cons addend vec)
@@ -55,16 +55,16 @@
 (define old-null? null?)
 (define null?
   (simple-generic-procedure 'null? 1
-    (lambda (data)
-      (error (list "wrong arg for null?" data))
-      )
-    ))
+                            (lambda (data)
+                              (error (list "wrong arg for null?" data))
+                              )
+                            ))
 (define-generic-procedure-handler null?
-  (match-args not-arbitrary-seq?)
-  old-null?)
+                                  (match-args not-arbitrary-seq?)
+                                  old-null?)
 (define-generic-procedure-handler null?
-  (match-args vector?)
-  (lambda (data) (= 0 (vector-length data))))
+                                  (match-args vector?)
+                                  (lambda (data) (= 0 (vector-length data))))
 
 (define (general-car seq)
   (cond 

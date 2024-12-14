@@ -12,11 +12,11 @@
 (define (unify:constant-terms first1 terms2)
   (define (unify-constants dict succeed fail)
     (if (eqv? first1 (car terms2))
-        ;; Here rest1 rest2 will be manipulated by match:list.
-        ; (succeed dict fail rest1 rest2)
-        ;; compatible with matcher
-        (succeed dict 1 fail)
-        (fail)))
+      ;; Here rest1 rest2 will be manipulated by match:list.
+      ; (succeed dict fail rest1 rest2)
+      ;; compatible with matcher
+      (succeed dict 1 fail)
+      (fail)))
   unify-constants)
 
 ;; already done in match:list
@@ -49,24 +49,24 @@
 (define (maybe-substitute var term succeed dict fail)
   (cond ((and (match:element-var? term)
               (match:vars-equal? var term))
-          ;; similar to the following action for match:vars-equal? in do-substitute.
-          (succeed dict 1 fail))
+         ;; similar to the following action for match:vars-equal? in do-substitute.
+         (succeed dict 1 fail))
         ((match:has-binding? var dict)
-          ;; modified
-          ;; 0. Here var is always as pattern, which is fine due to bidirectional match.
-          ;; This is just how unify:gdispatch does for match:element-var?.
-          ;; 1. *NOTICE* this has problems since it will call match:compile-pattern at runtime which will do "syntactic analysis".
-          ;; IMHO this can't be avoided since 
-          ;; 1.a. we need to decide what matcher to call depending on the var val.
-          ;; the original matcher.scm doesn't need since term must be constant.
-          ;; And the val is also must constant. So we *must* check like match:eqv although using equal?.
-          ;; 1.b. match:get-value can be only done at runtime.
-          ((match:compile-pattern (match:get-value var dict)) term succeed dict fail))
+         ;; modified
+         ;; 0. Here var is always as pattern, which is fine due to bidirectional match.
+         ;; This is just how unify:gdispatch does for match:element-var?.
+         ;; 1. *NOTICE* this has problems since it will call match:compile-pattern at runtime which will do "syntactic analysis".
+         ;; IMHO this can't be avoided since 
+         ;; 1.a. we need to decide what matcher to call depending on the var val.
+         ;; the original matcher.scm doesn't need since term must be constant.
+         ;; And the val is also must constant. So we *must* check like match:eqv although using equal?.
+         ;; 1.b. match:get-value can be only done at runtime.
+         ((match:compile-pattern (match:get-value var dict)) term succeed dict fail))
         (else
           (let ((dict* (do-substitute var term dict)))
             (if dict*
-                (succeed dict* 1 fail)
-                (fail))))))
+              (succeed dict* 1 fail)
+              (fail))))))
 
 (define (maybe-substitute-var-pattern var terms)
   (define (unify-substitute dict succeed fail)

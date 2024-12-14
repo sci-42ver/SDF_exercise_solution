@@ -38,7 +38,7 @@
          (let lp ((data-list (->list (car data)))
                   (matchers (->list matchers))
                   (dictionary dictionary))
-          ;  (write-line (list data-list))
+           ;  (write-line (list data-list))
            (cond ((pair? matchers)
                   ((car matchers)
                    ;; IGNORE: SDF_exercises TODO why always list here?
@@ -48,9 +48,9 @@
                      ;; SDF_exercises TODO when happens
                      ;; not in book...
                      (if (> n (length data-list))
-                         (error "Matcher ate too much."
-                                n))
-                    ;  (write-line (list "new-dictionary" new-dictionary))
+                       (error "Matcher ate too much."
+                              n))
+                     ;  (write-line (list "new-dictionary" new-dictionary))
                      (lp (list-tail data-list n)
                          (cdr matchers)
                          new-dictionary))))
@@ -61,7 +61,7 @@
                   ;; 1. eat one list data like (+ z w) in (+ y (+ z w)).
                   (succeed dictionary 1))
                  (else #f))))
-      )
+    )
   list-match)
 
 (load "4_8_generic_procs.scm")
@@ -76,7 +76,7 @@
          (match:general-list (match:unary-map match:compile-pattern pattern)))
         (else
           ;; IGNORE: SDF_exercises TODO what does this purpose to do?
-         (match:eqv pattern))))
+          (match:eqv pattern))))
 
 ;; test1
 (run-matcher

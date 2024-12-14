@@ -33,27 +33,27 @@
 ;; Fix for the original problems
 ;; Just ignore these constrains for arg.
 (define-generic-procedure-handler program-constraints-1
-  (match-args type-expression? combination-expr?)
-  (lambda (type expr)
-    ;; Here (texpr-type (combination-operator expr)) may be already procedure-type.
-    (cons (constrain (texpr-type (combination-operator expr))
-                     (procedure-type 
-                      ;; modified
-                      ;; just creates new type-variable to imply they are unknown.
-                      ;; Since they must be unknown, I won't put them in env for further constrain manipulation.
-                      ;; Anyway, the types of combination-operands have been considered in env.
-                      (map type-variable
-                           (combination-operands expr))
-                      ;; codomain
-                      type))
-          (append (program-constraints (combination-operator expr))
-                  (append-map program-constraints
-                              (combination-operands expr))))))
+                                  (match-args type-expression? combination-expr?)
+                                  (lambda (type expr)
+                                    ;; Here (texpr-type (combination-operator expr)) may be already procedure-type.
+                                    (cons (constrain (texpr-type (combination-operator expr))
+                                                     (procedure-type 
+                                                       ;; modified
+                                                       ;; just creates new type-variable to imply they are unknown.
+                                                       ;; Since they must be unknown, I won't put them in env for further constrain manipulation.
+                                                       ;; Anyway, the types of combination-operands have been considered in env.
+                                                       (map type-variable
+                                                            (combination-operands expr))
+                                                       ;; codomain
+                                                       type))
+                                          (append (program-constraints (combination-operator expr))
+                                                  (append-map program-constraints
+                                                              (combination-operands expr))))))
 
 (pp (noisy-infer-program-types
-'(begin (define id (lambda (x) x))
-(id 2)
-(id #t))))
+      '(begin (define id (lambda (x) x))
+              (id 2)
+              (id #t))))
 ;; we can only know id returns itself.
 ;; So (type:procedure ((? type:6)) (? type:6))
 ; (t
@@ -63,78 +63,150 @@
 ;         (t (? type:6) ((t (type:procedure ((? type:6)) (? type:6)) id) (t (boolean-type) #t)))))
 
 ;; a bit general
-(define (proc-constrain op-type derived-type)
-  ;; Here we won't allow domain to be non-proc when we have known it *must* be proc.
-  (if (procedure-type? op-type)
-    consequent
-    alternative)
-  body)
+
 (define-generic-procedure-handler program-constraints-1
-  (match-args type-expression? combination-expr?)
-  (lambda (type expr)
-    ;; Here (texpr-type (combination-operator expr)) may be already procedure-type.
-    (cons (constrain (texpr-type (combination-operator expr))
-                     (procedure-type 
-                      ;; Here we assume all non-proc types as one whole, so they can be matched.
-                      ;; For proc, 
-                      (map type-variable
-                           (combination-operands expr))
-                      ;; codomain
-                      type))
-          (append (program-constraints (combination-operator expr))
-                  (append-map program-constraints
-                              (combination-operands expr))))))
+                                  (match-args type-expression? combination-expr?)
+                                  (lambda (type expr)
+                                    ;; Here (texpr-type (combination-operator expr)) may be already procedure-type.
+                                    (cons (constrain (texpr-type (combination-operator expr))
+                                                     (procedure-type 
+                                                       ;; IGNORE: Here we assume all non-proc types as one whole, so they can be matched.
+                                                       ;; For proc, we
+                                                       (map type-variable
+                                                            (combination-operands expr))
+                                                       ;; codomain
+                                                       type))
+                                          (append (program-constraints (combination-operator expr))
+                                                  (append-map program-constraints
+                                                              (combination-operands expr))))))
+
+;; Since domain is got from operands. (see lambda-expr? and combination-expr?)
+;; their numbers should be assumed same.
+; (define (domains-compatible? domain1 domain2)
+;   (assert (n:= (length domain1) (length domain2)))
+;   (cond 
+;     ((and (null? domain1) (null? domain2)) #t)
+;     (else
+;       (let ((op1 (car domain1))
+;             (op2 (car domain2)))
+;         (cond 
+;           ((or ) 'to-check-later)
+;           (predicate2 consequent2)))
+;       )))
+
+;; Better to change all APIs for unify to do these tracking.
+;; IGNORE: For simplicity, I just use global vars here.
+;; This will be messy when procedure-type exists in domain of another procedure-type.
+;; So this can't work.
+
+; (define checking-procedure-type-matching #f)
+; (define checking-procedure-type-matching-stage 0)
+; (define restore-proc (lambda () 'do-nothing))
+
+; (define (unify:constant-terms terms1 terms2)
+;   (let ((first1 (car terms1)) (rest1 (cdr terms1))
+;         (first2 (car terms2)) (rest2 (cdr terms2)))
+;     (define (unify-constants dict succeed fail)
+;       (if (eqv? first1 first2)
+;           (begin
+;             (if (eq? first1 'type:procedure)
+;               (set! checking-procedure-type-matching-stage 1))
+;             (succeed dict fail rest1 rest2)
+;             )
+;           (fail)))
+;     unify-constants))
+
+; (define (unify:list-terms terms1 terms2)
+;   (let ((first1 (car terms1)) (rest1 (cdr terms1))
+;         (first2 (car terms2)) (rest2 (cdr terms2)))
+;     (define (unify-lists dict succeed fail)
+;       ;; TODO it is better to do this checking when we have got the most reduced forms for both.
+;       ;; IGNORE: i.e. in maybe-substitute
+;         ;; But that needs passing arg to show whether we are comparing 2 procedure-type domains
+;         ;; and then we do the final comparison when both are constant/type:procedure's.
+;         ;; I won't do this routine work to change APIs.
+;         ;; Anyway the basic ideas are same.
+;       ;; The above domains-compatible? can be only done once since the next match will have stripped procedure-type tags.
+;       ;; 
+;       (if (and (procedure-type? first1) (procedure-type? first2))
+;         ;; here do explicit compatibility checking.
+;         (set! checking-procedure-type-matching #t))
+;       ((unify:dispatch first1 first2)
+;        dict
+;        ;; Here we only check domain compatibility as the following "So again we should check domain feasibility." shows.
+;        (let ((restore-proc
+;               (if (n:= checking-procedure-type-matching-stage 1)
+;                 (begin
+;                   (set! checking-procedure-type-matching-stage 2)
+;                   (lambda () (set! checking-procedure-type-matching #f))
+;                   )
+;                 (lambda () 'do-nothing)
+;                 )))
+;         (lambda (dict* fail* null1 null2)
+;          (assert (null? null1))
+;          (assert (null? null2))
+;          (restore-proc)
+;          (succeed dict* fail* rest1 rest2)))
+;        fail))
+;     unify-lists))
+
 (define test1 
   '(begin
-    (define demo
-      (lambda (x)
-        (begin
-          (define inner
-            ;; "lexical" context is ensured by annotate-expr for lambda-expr?.
-            ; (lambda (y) (+ (x y) y))
-            (lambda (y) (x y))
-            )
-          inner)
-        )
-      )
-    ;; 0. based on abstraction, we only need to know domain and codomains for passed procedure arg.
-    ;; 1. Notice here (x y) implies the type of the proc returned by demo depends on lexical context.
-    ;; So the passed arg of the outer demo also depends on that.
-    ;; Maybe this is what the author tries to convey by
-    ;; > make it as general as you can.
-    ;; See "passed around expectedly" context.
-    ;; 1.a. IGNORE: Anyway I don't know what is general in "the general case is complicated".
-      ;; Maybe there are cases beyond "procedures passed as arguments and returned as values".
-    (demo (demo (lambda (x) (* x x))))
-    ;; 0. If there are branches in demo, then passing 1 may be allowed.
-    ;; e.g. (or x inner) where x is allowed to be #f or (or (not x) inner) where x has no valid vals.
-    ;; Maybe this is what the author means for "the general case is complicated".
-    ;; 1. If we use original program-constraints-1
-    ;; Otherwise the following can't be connected
-    ; (= (? num:22) (numeric-type))
-    ; (= (? demo:9) (type:procedure ((? |(t (? num:22) num):25|)) (? type:23)))
-    ;; 1.a. If we know the arg must be proc, then we should deny other types.
-    ;; But when constructing constrains, we can *only* know num is one var here since we can't get former constraints in program-constraints-1.
-    ;; So we can't do denial there.
-    ;; 1.a.0. IMHO denial should be done when unify which is just the next step of the above constraint construction.
-    ;; But then we should change the general unify behavior to allow ...
-    (define num 1)
-    (demo num)
-    ;; 1.a.1. Here we have no restriction on codomain since that should be *only decided* by the procedure itself.
-    ;; If there is one error when inference, that is due to *wrong usage* of the returned value instead of that the procedure returned one wrong value.
-    ;; So again we should check domain feasibility.
-    (define codomain-known-proc (lambda (x) #f))
-    (define demo2
-      (lambda (x)
-        (begin
-          (define inner
-            (lambda (y) (< (x y) 1))
-            )
-          inner)
-        )
-      )
-    (demo2 codomain-known-proc)
-    )
+     (define demo
+       (lambda (x)
+         (begin
+           (define inner
+             ;; "lexical" context is ensured by annotate-expr for lambda-expr?.
+             ; (lambda (y) (+ (x y) y))
+             (lambda (y) (x y))
+             )
+           inner)
+         )
+       )
+     ;; 0. based on abstraction, we only need to know domain and codomains for passed procedure arg.
+     ;; 1. Notice here (x y) implies the type of the proc returned by demo depends on lexical context.
+     ;; So the passed arg of the outer demo also depends on that.
+     ;; Maybe this is what the author tries to convey by
+     ;; > make it as general as you can.
+     ;; See "passed around expectedly" context.
+     ;; 1.a. IGNORE: Anyway I don't know what is general in "the general case is complicated".
+     ;; Maybe there are cases beyond "procedures passed as arguments and returned as values".
+     (demo (demo (lambda (x) (* x x))))
+     ;; 0. If there are branches in demo, then passing 1 may be allowed.
+     ;; e.g. (or x inner) where x is allowed to be #f or (or (not x) inner) where x has no valid vals.
+     ;; Maybe this is what the author means for "the general case is complicated".
+     ;; 1. If we use original program-constraints-1
+     ;; Otherwise the following can't be connected
+     ; (= (? num:22) (numeric-type))
+     ; (= (? demo:9) (type:procedure ((? |(t (? num:22) num):25|)) (? type:23)))
+     ;; 1.a. If we know the arg must be proc, then we should deny other types.
+     ;; But when constructing constrains, we can *only* know num is one var here since we can't get former constraints in program-constraints-1.
+     ;; So we can't do denial there.
+     ;; 1.a.0. IMHO denial should be done when unify which is just the next step of the above constraint construction.
+     ;; But then we should change the general unify behavior to allow match like (notice this is after some reduction like (? num:22) -> (numeric-type)):
+     ; (type:procedure (numeric-type) (? type:23))
+     ; (type:procedure (boolean-type) (? type:23))
+     ;; while not allow:
+     ; (type:procedure (numeric-type) (? type:23))
+     ; (type:procedure (type:procedure ...) (? type:23))
+     ;; So change unify to be more specific...
+     (define num 1)
+     (demo num)
+     ;; 1.a.1. Here we have no restriction on codomain since that should be *only decided* by the procedure itself.
+     ;; If there is one error when inference, that is due to *wrong usage* of the returned value instead of that the procedure returned one wrong value.
+     ;; So again we should check domain feasibility.
+     (define codomain-known-proc (lambda (x) #f))
+     (define demo2
+       (lambda (x)
+         (begin
+           (define inner
+             (lambda (y) (< (x y) 1))
+             )
+           inner)
+         )
+       )
+     (demo2 codomain-known-proc)
+     )
   )
 ; (lambda (x) (define inner (lambda (y) (+ ... y))) inner)
 (pp (noisy-infer-program-types test1))

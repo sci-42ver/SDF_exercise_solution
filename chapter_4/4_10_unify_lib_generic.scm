@@ -70,15 +70,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (assert (list? terms2))
   (define (unify-dispatcher dict succeed fail)
     (if (and (null? terms1) (null? terms2))
-        (succeed dict fail terms1 terms2)
-        ((unify:gdispatch terms1 terms2)
-         dict
-         ;; Why not pass succeed is same as SICP since we *only* need fail to try the next alternative.
-         ;; The other 3 args are needed for later matches.
-         (lambda (dict* fail* rest1 rest2)
-           ((unify:dispatch rest1 rest2)
-            dict* succeed fail*))
-         fail)))
+      (succeed dict fail terms1 terms2)
+      ((unify:gdispatch terms1 terms2)
+       dict
+       ;; Why not pass succeed is same as SICP since we *only* need fail to try the next alternative.
+       ;; The other 3 args are needed for later matches.
+       (lambda (dict* fail* rest1 rest2)
+         ((unify:dispatch rest1 rest2)
+          dict* succeed fail*))
+       fail)))
   unify-dispatcher)
 
 (define (unify:fail terms1 terms2)
@@ -96,11 +96,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (unify:constant-terms terms1 terms2)
   (let ((first1 (general-car terms1)) (rest1 (general-cdr terms1))
-        (first2 (general-car terms2)) (rest2 (general-cdr terms2)))
+                                      (first2 (general-car terms2)) (rest2 (general-cdr terms2)))
     (define (unify-constants dict succeed fail)
       (if (eqv? first1 first2)
-          (succeed dict fail rest1 rest2)
-          (fail)))
+        (succeed dict fail rest1 rest2)
+        (fail)))
     unify-constants))
 
 (define (constant-term? term)
@@ -109,13 +109,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; coderef: unify-constant-terms
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (car-satisfies constant-term?)
-              (car-satisfies constant-term?))
-  unify:constant-terms)
+                                  (match-args (car-satisfies constant-term?)
+                                              (car-satisfies constant-term?))
+                                  unify:constant-terms)
 
 (define (unify:list-terms terms1 terms2)
   (let ((first1 (general-car terms1)) (rest1 (general-cdr terms1))
-        (first2 (general-car terms2)) (rest2 (general-cdr terms2)))
+                                      (first2 (general-car terms2)) (rest2 (general-cdr terms2)))
     (define (unify-lists dict succeed fail)
       ((unify:dispatch first1 first2)
        dict
@@ -132,16 +132,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; coderef: unify-list-terms
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (car-satisfies list-term?)
-              (car-satisfies list-term?))
-  unify:list-terms)
+                                  (match-args (car-satisfies list-term?)
+                                              (car-satisfies list-term?))
+                                  unify:list-terms)
 
 ;;; This is the syntactic equation solver for element vars.
 
 (define (maybe-substitute var-first terms)
   (define (unify-substitute dict succeed fail)
     (let ((var (general-car var-first)) (rest1 (general-cdr var-first))
-          (term (general-car terms)) (rest2 (general-cdr terms)))
+                                        (term (general-car terms)) (rest2 (general-cdr terms)))
       (cond ((and (match:element-var? term)
                   (match:vars-equal? var term))
              ;; similar to the following action for match:vars-equal? in do-substitute.
@@ -152,10 +152,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                               terms)
               dict succeed fail))
             (else
-             (let ((dict* (do-substitute var term dict)))
-               (if dict*
-                   (succeed dict* fail rest1 rest2)
-                   (fail)))))))
+              (let ((dict* (do-substitute var term dict)))
+                (if dict*
+                  (succeed dict* fail rest1 rest2)
+                  (fail)))))))
   unify-substitute)
 
 #|
@@ -169,9 +169,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (match:vars-equal? var term*))
              (not (match:occurs-in? var term*)))
          (match:extend-dict var term*
-           (match:map-dict-values
-            (match:single-substitution var term*)
-            dict)))))
+                            (match:map-dict-values
+                              (match:single-substitution var term*)
+                              dict)))))
 |#
 
 ;; substitute var with the *value* of term in dict *recursively* when *necessary*.
@@ -181,21 +181,21 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (and (match:satisfies-restriction? var term*)
          (if (and (match:var? term*)
                   (match:vars-equal? var term*))
-             ;; difference
-             ;; No need to replace by itself.
-             dict
-             ;; Same as SICP depends-on?
-             (and (not (match:occurs-in? var term*))
-                  (match:extend-dict var term*
-                    (match:map-dict-values
-                     ;; 0. change val to new val.
-                     ;; recursion is done by match:map-vars.
-                     ;; 1. This may be not needed since match:dict-substitution at last will also do this.
-                     ;; This may be put here for efficiency.
-                     ;; The book just says...
-                     ;; > must also be cleaned of references to var .
-                     (match:single-substitution var term*)
-                     dict)))))))
+           ;; difference
+           ;; No need to replace by itself.
+           dict
+           ;; Same as SICP depends-on?
+           (and (not (match:occurs-in? var term*))
+                (match:extend-dict var term*
+                                   (match:map-dict-values
+                                     ;; 0. change val to new val.
+                                     ;; recursion is done by match:map-vars.
+                                     ;; 1. This may be not needed since match:dict-substitution at last will also do this.
+                                     ;; This may be put here for efficiency.
+                                     ;; The book just says...
+                                     ;; > must also be cleaned of references to var .
+                                     (match:single-substitution var term*)
+                                     dict)))))))
 
 (define (element-1? term)
   (any-object? term))
@@ -205,17 +205,17 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; coderef: element-var-thing
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (car-satisfies match:element-var?)
-              (car-satisfies element?))
-  (lambda (var-first terms)
-    (maybe-substitute var-first terms)))
+                                  (match-args (car-satisfies match:element-var?)
+                                              (car-satisfies element?))
+                                  (lambda (var-first terms)
+                                    (maybe-substitute var-first terms)))
 
 ;; coderef: thing-element-var
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (car-satisfies element?)
-              (car-satisfies match:element-var?))
-  (lambda (terms var-first)
-    (maybe-substitute var-first terms)))
+                                  (match-args (car-satisfies element?)
+                                              (car-satisfies match:element-var?))
+                                  (lambda (terms var-first)
+                                    (maybe-substitute var-first terms)))
 
 ;;; Segment variable extensions
 
@@ -223,50 +223,50 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (unify:segment-var-var var-first1 var-first2)
   (define (unify-seg-var-var dict succeed fail)
     (if (match:vars-equal? (general-car var-first1) (general-car var-first2))
-        (succeed dict fail (general-cdr var-first1) (general-cdr var-first2))
-        ;; 0. Here (?? x) in var-first1 can match *part* of (?? y) which is done in (maybe-grab-segment var-first2 var-first1) block.
-        ;; 1. just think based on one-sided, here either (general-car var-first1) or (general-car var-first2) must match multiple elems in the other.
-        ((maybe-grab-segment var-first1 var-first2)
-         dict
-         succeed
-         (lambda ()
-           ((maybe-grab-segment var-first2 var-first1)
-            dict
-            succeed
-            fail)))))
+      (succeed dict fail (general-cdr var-first1) (general-cdr var-first2))
+      ;; 0. Here (?? x) in var-first1 can match *part* of (?? y) which is done in (maybe-grab-segment var-first2 var-first1) block.
+      ;; 1. just think based on one-sided, here either (general-car var-first1) or (general-car var-first2) must match multiple elems in the other.
+      ((maybe-grab-segment var-first1 var-first2)
+       dict
+       succeed
+       (lambda ()
+         ((maybe-grab-segment var-first2 var-first1)
+          dict
+          succeed
+          fail)))))
   unify-seg-var-var)
 
 ;; coderef: segment-var-var
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (car-satisfies match:segment-var?)
-              (car-satisfies match:segment-var?))
-  unify:segment-var-var)
+                                  (match-args (car-satisfies match:segment-var?)
+                                              (car-satisfies match:segment-var?))
+                                  unify:segment-var-var)
 
 ;; coderef: segment-var-thing
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (car-satisfies match:segment-var?)
-              (complement (car-satisfies match:segment-var?)))
-  (lambda (var-first terms)
-    (maybe-grab-segment var-first terms)))
+                                  (match-args (car-satisfies match:segment-var?)
+                                              (complement (car-satisfies match:segment-var?)))
+                                  (lambda (var-first terms)
+                                    (maybe-grab-segment var-first terms)))
 
 ;; coderef: thing-segment-var
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (complement (car-satisfies match:segment-var?))
-              (car-satisfies match:segment-var?))
-  (lambda (terms var-first)
-    (maybe-grab-segment var-first terms)))
+                                  (match-args (complement (car-satisfies match:segment-var?))
+                                              (car-satisfies match:segment-var?))
+                                  (lambda (terms var-first)
+                                    (maybe-grab-segment var-first terms)))
 
 (define (maybe-grab-segment var-first terms)
   (define (maybe-grab dict succeed fail)
     (let ((var (general-car var-first)))
       (if (match:has-binding? var dict)
-          ((unify:dispatch
-            (append (match:get-value var dict)
-                    (general-cdr var-first))
-            terms)
-           dict succeed fail)
-          ((grab-segment var-first terms)
-           dict succeed fail))))
+        ((unify:dispatch
+           (append (match:get-value var dict)
+                   (general-cdr var-first))
+           terms)
+         dict succeed fail)
+        ((grab-segment var-first terms)
+         dict succeed fail))))
   maybe-grab)
 
 ;; Try to match against each possible list.  If the last element
@@ -279,11 +279,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (let slp ((initial '()) (terms* terms))
         (define (continue)
           (if (null? terms*)
-              (fail)
-              (slp (append initial (list (general-car terms*)))
-                   (general-cdr terms*))))
+            (fail)
+            (slp (append initial (list (general-car terms*)))
+                 (general-cdr terms*))))
         (let ((dict* (do-substitute var initial dict)))
           (if dict*
-              (succeed dict* continue (general-cdr var-first) terms*)
-              (continue))))))
+            (succeed dict* continue (general-cdr var-first) terms*)
+            (continue))))))
   grab)

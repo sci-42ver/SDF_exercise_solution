@@ -14,9 +14,9 @@
 ;; 0.a.1. the 2nd has no binding
 ;; either same (not checking assertion equality. So assume same vars have the same assertion)
 ;; or use the value of the 1st var, then again "the normal matching between "a restricted variable" and a constant".
-  ;; But here we directly checks "(match:satisfies-restriction? var term*)" instead of calling unify:dispatch.
-  ;; Actually in the former case, unify:dispatch for ""a restricted variable" and a constant" will call "(do-substitute var term dict)".
-  ;; So they did the same thing at all.
+;; But here we directly checks "(match:satisfies-restriction? var term*)" instead of calling unify:dispatch.
+;; Actually in the former case, unify:dispatch for ""a restricted variable" and a constant" will call "(do-substitute var term dict)".
+;; So they did the same thing at all.
 ;; 0.a.n. Here ((? y) (? x)) matched with ((? x) 1) can work to be reduced to (1 1).
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 (load "../software/sdf/manager/load.scm")
