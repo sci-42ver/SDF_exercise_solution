@@ -245,9 +245,13 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
     - > returned as values? ... there may be free variables in a procedure that are lexically bound
       Here "free variables" only matters for inference when it is used as arg so we look up (see SICP exercise_codes/SICP/book-codes/ch4-mceval.scm), (If just return, then ~~the modification in `SDF_exercises/chapter_4/4_14.scm` doesn't~~ the original one just works. See `test3`) so they are ignored similarly.
       Anyway, these "free variables" defined in procedure can be found with the correct source due to `env` mechanism.
+- [ ] 15
+  - TODO union for `(list 1 #f)` etc.
 - [ ] 17
   - TODO see md
     - [non-expansive expression](https://homepages.inf.ed.ac.uk/stg/NOTES/node90.html)
+### other possible type-inference extension
+- [subtype etc](https://nus-cs2030s.github.io/2425-s1/27-inference.html#argument-typing)
 ### @%TODO
 - 7,9 (Unification match may use env to implement)
   7 will be done implicitly when 9 is done.

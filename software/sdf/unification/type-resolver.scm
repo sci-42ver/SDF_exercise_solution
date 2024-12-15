@@ -22,6 +22,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 |#
 
 ;; just add 2 pp lines.
+(define (newline-pp exp)
+  (newline)
+  (pp exp)
+  )
 (define (noisy-infer-program-types expr)
   (let ((texpr (annotate-program expr)))
     ;; added
@@ -167,7 +171,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                 (texpr-expr texpr)))
 
 (define simplify-annotated-program-1
-  (simple-generic-procedure 'simplify-annotated-program-1 1 #f))
+  ;; The original uses 1 for arity. This works since no arity checking in add-handler!...
+  (simple-generic-procedure 'simplify-annotated-program-1 2 #f))
 
 ;;;; Typed expressions
 

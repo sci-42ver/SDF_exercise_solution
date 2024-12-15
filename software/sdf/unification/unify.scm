@@ -57,7 +57,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      (or (and (null? rest1) (null? rest2)
               (succeed dict))
          ;; SDF_exercises TODO when this happens.
-         (fail)))
+         (begin
+          (write-line (list "error for unify:internal" rest1 rest2))
+          (fail))))
    ;; > If not, unify returns #f, indicating a failure.
    (lambda () #f)))
 
@@ -69,6 +71,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (assert (list? terms1))
   (assert (list? terms2))
   (define (unify-dispatcher dict succeed fail)
+    ;; debug dict error
+    ; (write-line '---) (write-line dict) (write-line '---)
     (if (and (null? terms1) (null? terms2))
         (succeed dict fail terms1 terms2)
         ((unify:gdispatch terms1 terms2)
@@ -83,7 +87,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (unify:fail terms1 terms2)
   (define (unify-fail dict succeed fail)
-    (fail))
+    (begin
+      (write-line (list "unify:fail " terms1 terms2))
+      (fail)))
   unify-fail)
 
 (define unify:gdispatch
@@ -100,7 +106,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (define (unify-constants dict succeed fail)
       (if (eqv? first1 first2)
           (succeed dict fail rest1 rest2)
-          (fail)))
+          (begin
+            (write-line (list "error for" first1 first2))
+            (fail))))
     unify-constants))
 
 (define (constant-term? term)
@@ -155,7 +163,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (let ((dict* (do-substitute var term dict)))
                (if dict*
                    (succeed dict* fail rest1 rest2)
-                   (fail)))))))
+                   (begin
+                    (write-line (list "error for do-substitute" var term))
+                    (fail))))))))
   unify-substitute)
 
 #|

@@ -31,7 +31,9 @@
   )
 
 ;;; Fix for the original problems
-;; Just ignore these constrains for arg.
+;; 0. Just ignore these constrains for arg.
+;; 0.a. Same as https://jeremymikkola.com/posts/2018_03_25_understanding_algorithm_w.html
+;; > Its type would be a -> a. We have to write that using the type variable a because we can’t tell what type x has from just reading the definition of the function.
 (define-generic-procedure-handler program-constraints-1
                                   (match-args type-expression? combination-expr?)
                                   (lambda (type expr)
