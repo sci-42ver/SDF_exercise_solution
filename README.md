@@ -9,6 +9,9 @@
     - "domain model" as SDF_notes.md shows is about "abstract types".
 - 3.6-c.
 - 3.22-b.
+- better to do with some basic compiler backgrounds which includes type-inference
+  - 4.14
+    - I even didn't know what to do for that "general case", more specifically I didn't know what problems will have for "procedures passed as arguments and returned as values" when we assume all procedures with generic arguments ~~(so "free variables" are )~~.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
@@ -198,6 +201,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 10: `match-args vector?`
 12: `do-substitute`
 13: 
+- Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1
   - same as SICP `(married Mickey ?who)`
 - [x] 2
@@ -235,6 +239,12 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
       This seems one contradiction...
     - IMHO this is more appropriate to be done in [Type-checking](https://en.wikipedia.org/wiki/Type_inference#Type-checking_vs._type-inference) since this is one *procedure application error* instead of inference error.
       TODO after compiler
+  - If just allow all procedure having general argument types, then
+    > procedures passed as arguments
+    is just allowed forever since with no checking for that.
+    - > returned as values? ... there may be free variables in a procedure that are lexically bound
+      Here "free variables" only matters for inference when it is used as arg so we look up (see SICP exercise_codes/SICP/book-codes/ch4-mceval.scm), (If just return, then ~~the modification in `SDF_exercises/chapter_4/4_14.scm` doesn't~~ the original one just works. See `test3`) so they are ignored similarly.
+      Anyway, these "free variables" defined in procedure can be found with the correct source due to `env` mechanism.
 - [ ] 17
   - TODO see md
     - [non-expansive expression](https://homepages.inf.ed.ac.uk/stg/NOTES/node90.html)

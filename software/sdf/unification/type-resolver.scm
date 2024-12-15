@@ -116,6 +116,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (cons name (type-variable name)))
 
 (define (define-var-type name env)
+  ;; notice only checks car, i.e. the current local bindings
   (let ((p (assq name (car env))))
     (if p
         (error "Can't redefine name:" name)))

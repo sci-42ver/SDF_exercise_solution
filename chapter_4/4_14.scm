@@ -30,7 +30,7 @@
   (y 'ignore)
   )
 
-;; Fix for the original problems
+;;; Fix for the original problems
 ;; Just ignore these constrains for arg.
 (define-generic-procedure-handler program-constraints-1
                                   (match-args type-expression? combination-expr?)
@@ -62,7 +62,7 @@
 ;         (t (? type:6) ((t (type:procedure ((? type:6)) (? type:6)) id) (t (numeric-type) 2)))
 ;         (t (? type:6) ((t (type:procedure ((? type:6)) (? type:6)) id) (t (boolean-type) #t)))))
 
-;; a bit general
+;;; a bit general
 
 (define-generic-procedure-handler program-constraints-1
                                   (match-args type-expression? combination-expr?)
@@ -247,3 +247,55 @@
 ;  (demo (demo (lambda (x) (declare-type x (? x:17)) (* x x))))
 ;  (demo 1))
 
+;;; "free variables" created by define instead of by arg passing.
+(define test2
+  '(begin
+     (define demo
+       (lambda (x)
+         (begin
+           (define z 2)
+           (define inner
+             (lambda (y) (x z y))
+             )
+           inner)
+         )
+       )
+      (demo (demo (lambda (x y) (* x y))))
+      ))
+(pp (noisy-infer-program-types test2))
+
+(define test3
+  '(begin
+     (define demo
+       (lambda (x)
+         (begin
+           (define z 2)
+           (define inner
+             (lambda (y) z)
+             )
+           inner)
+         )
+       )
+      (demo (demo (lambda (x y) (* x y))))
+      ))
+(pp (noisy-infer-program-types test3))
+;; local z can be recognized.
+        ;  (begin (t (? z:72) (define z (t (numeric-type) 2)))
+        ;         (t (? inner:73) (define inner (t (type:procedure ((? y:74)) (? type:75)) (lambda (y) (t (? z:72) z)))))
+        ;         (t (? inner:73) inner)))))))
+
+(define test4
+  '(begin
+     (define demo
+       (lambda (x)
+         (begin
+           (define z (lambda () 2))
+           (define inner
+             (lambda (y) (z))
+             )
+           inner)
+         )
+       )
+      (demo (demo (lambda (x y) (* x y))))
+      ))
+(pp (noisy-infer-program-types test4))
