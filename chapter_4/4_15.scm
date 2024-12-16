@@ -15,6 +15,10 @@
 ;; 1.b. Notice the original code base has already one parametric-type? but only for procedure.
 ;; 2. > Does this extension require us to modify the unifier?
 ;; No.
+;; > If not, explain why it is not necessary.
+;; Since we have one (? type:...) to denote T.
+;; Then just use one tag which is taught in SICP to show List{T}.
+;; Or straightforward reason is that "the original code base has already one parametric-type?".
 ;; 3. > What must be done to extend the system to support parametric types?
 ;; For list, just one new list-type and generic procedures and helpers based on that.
 ;; For others, see point 1.

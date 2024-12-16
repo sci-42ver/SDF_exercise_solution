@@ -12,6 +12,9 @@
 - better to do with some basic compiler backgrounds which includes type-inference
   - 4.14
     - I even didn't know what to do for that "general case", more specifically I didn't know what problems will have for "procedures passed as arguments and returned as values" when we assume all procedures with generic arguments ~~(so "free variables" are )~~.
+## partially done exercises
+- 4.13
+- 4.16
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
@@ -219,9 +222,9 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - [ ] 12
   - Emm... I think no problems exist here at all.
 - [ ] 13
-  - SDF_exercises/chapter_4/4_13.scm is actually not what the exercise expects except for `match:compile-pattern` used in `maybe-substitute`.
+  - SDF_exercises/chapter_4/4_13.scm is *actually not what the exercise expects* except for `match:compile-pattern` used in `maybe-substitute`.
     Here the generic overhead is avoided trivially but we still checks `car-satisfies` which can't be avoided since the match depends on *types of both sides*. This is why we need "`match:compile-pattern` used in `maybe-substitute`".
-    - Maybe it is worth with this overhead since
+    - Maybe it is *worth with this overhead* since
       > to allow easy extension for new language features
     - IMHO the unification underlying idea "*both* sides" implies we should not use a "match procedure" based on "combinators".
     - > This is hard!
@@ -246,7 +249,10 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
       Here "free variables" only matters for inference when it is used as arg so we look up (see SICP exercise_codes/SICP/book-codes/ch4-mceval.scm), (If just return, then ~~the modification in `SDF_exercises/chapter_4/4_14.scm` doesn't~~ the original one just works. See `test3`) so they are ignored similarly.
       Anyway, these "free variables" defined in procedure can be found with the correct source due to `env` mechanism.
 - [ ] 15
-  - TODO union for `(list 1 #f)` etc.
+  - ~~TODO union for `(list 1 #f)` etc.~~
+- [ ] 16
+  - a bit hard related with 4.14.
+    Also I simplify this problems based on some assumption (see codes "assume" contexts).
 - [ ] 17
   - TODO see md
     - [non-expansive expression](https://homepages.inf.ed.ac.uk/stg/NOTES/node90.html)
@@ -257,6 +263,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   7 will be done implicitly when 9 is done.
   9 is similar to SICP 4.79 which needs implement rule based on *unification* with env.
 - 11 to be done with 21.
+- See above TODO.
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
 [software-manager-doc]:https://groups.csail.mit.edu/mac/users/gjs/6.945/sdf/manager/software-manager.pdf

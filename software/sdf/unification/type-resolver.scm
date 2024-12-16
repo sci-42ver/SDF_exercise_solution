@@ -473,6 +473,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler program-constraints-1
   (match-args type-expression? combination-expr?)
   (lambda (type expr)
+    ; (write-line "call combination-expr? for program-constraints")
     (cons (constrain (texpr-type (combination-operator expr))
                      (procedure-type 
                       ;; domain
