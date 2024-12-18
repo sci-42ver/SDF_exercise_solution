@@ -191,8 +191,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       )
                    rules)))
         ; (bkpt 'check-rule rules)
+        ; (write-line rules)
         (and rule
              (cdr rule))))
+    ; (trace get-handler)
 
     (define (add-handler! applicability handler)
       (for-each (lambda (predicates)

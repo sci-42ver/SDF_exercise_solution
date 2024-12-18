@@ -72,4 +72,51 @@
 ;; Anyway this is the same problem as 4.14 where deriving type based on application may have errors.
 
 ;; Implementation based on 1.a.1.
+;; 0. The above assumption about lhs is always at the left part of unify is wrong due to unify may reorder *all later terms* when both terms have var as the first.
+;; IMHO we can add one tag for procedure definition by lambda or make-top-level-env-frame.
+;; Then we can always recognize that expected lhs.
+;; 0.a. lambda may have var which has no binding in union-term (like identity procedure), then it will always succeed for type constraint.
+(load "4_16_union_lib.scm")
+;; TODO weird assoc can't recognize match-args created obj.
+(assoc (match-args (car-satisfies union-term?)
+              (car-satisfies list-term?))
+        (list 
+          (cons 
+            (match-args (car-satisfies union-term?)
+                    (car-satisfies list-term?))
+            'ignored
+            )))
+;Value: #f
+(assoc 1 (list (cons 1 'ignored)))
 
+; (define-generic-procedure-handler unify:gdispatch
+;   (match-args (car-satisfies union-term?)
+;               (car-satisfies list-term?))
+;   unify:left-with-union-term)
+(load "4_16_type_lib.scm")
+
+(define (make-top-level-env-frame)
+  (let ((binary-numerical
+         (let ((v (numeric-type)))
+           (procedure-type (list v v) v)))
+        (binary-comparator
+         (let ((v (numeric-type)))
+           ;; See `(define-parametric-type-operator operator)` -> (lambda operands ...)
+           (procedure-type (list v v) (boolean-type))))
+        ;; added
+        (binary-numerical-string
+         (let ((v (union-term (numeric-type) (string-type))))
+           (procedure-type (list v v) v)))
+        )
+    (list (cons '+ binary-numerical-string)
+          (cons '- binary-numerical)
+          (cons '* binary-numerical)
+          (cons '/ binary-numerical)
+          (cons '= binary-comparator)
+          (cons '< binary-comparator)
+          (cons '> binary-comparator)
+          (cons '<= binary-comparator)
+          (cons '>= binary-comparator))))
+(trace unify)
+(trace unify:list-terms)
+(pp (noisy-infer-program-types '(begin (+ 2 3) (+ "1" "2"))))
