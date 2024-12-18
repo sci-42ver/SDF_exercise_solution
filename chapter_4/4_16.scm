@@ -76,7 +76,9 @@
 ;; IMHO we can add one tag for procedure definition by lambda or make-top-level-env-frame.
 ;; Then we can always recognize that expected lhs.
 ;; 0.a. lambda may have var which has no binding in union-term (like identity procedure), then it will always succeed for type constraint.
+;; TODO add support for lambda with union types.
 (load "4_16_union_lib.scm")
+(load "4_16_type-expression_reload.scm")
 ;; TODO weird assoc can't recognize match-args created obj.
 (assoc (match-args (car-satisfies union-term?)
               (car-satisfies list-term?))
@@ -105,7 +107,7 @@
            (procedure-type (list v v) (boolean-type))))
         ;; added
         (binary-numerical-string
-         (let ((v (union-term (numeric-type) (string-type))))
+         (let ((v (add-procedure-definition-tag (union-term (numeric-type) (string-type)))))
            (procedure-type (list v v) v)))
         )
     (list (cons '+ binary-numerical-string)
@@ -117,6 +119,6 @@
           (cons '> binary-comparator)
           (cons '<= binary-comparator)
           (cons '>= binary-comparator))))
-(trace unify)
-(trace unify:list-terms)
+; (trace unify)
+; (trace unify:list-terms)
 (pp (noisy-infer-program-types '(begin (+ 2 3) (+ "1" "2"))))
