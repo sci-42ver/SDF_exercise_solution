@@ -41,10 +41,10 @@
 ;; 1. Here match:element-var? related procedures will reduce vars to the corresponding type lists.
 ;; 2. See SDF_exercises/chapter_4/4_16.scm "assumption about lhs is always at the left..."
 ;; for why this won't work
-; (define-generic-procedure-handler unify:gdispatch
-;   (match-args (car-satisfies union-term?)
-;               (car-satisfies list-term?))
-;   unify:left-with-union-term)
+(define-generic-procedure-handler unify:gdispatch
+  (match-args (car-satisfies union-term?)
+              (car-satisfies list-term?))
+  unify:left-with-union-term)
 
 ;;; procedure definition tag
 ;; consider lambda definition
@@ -116,7 +116,8 @@
   (define (unify-substitute dict succeed fail)
     (let ((var (car var-first)) (rest1 (cdr var-first))
           ;; remove-procedure-definition-tag is done here since it will always be added when procedure-definition
-          ;; It won't be buried in var 
+          ;; It won't be buried in var.
+          ;; TODO this needs more fine-grained control. We need propagation for if but not for others like (begin (+ 2 3) (+ "1" "2")) etc....
           (term (remove-procedure-definition-tag (car terms))) (rest2 (cdr terms)))
       (cond ((and (match:element-var? term)
                   (match:vars-equal? var term))
@@ -137,3 +138,65 @@
                     (write-line (list "error for do-substitute" var term))
                     (fail))))))))
   unify-substitute)
+
+;;; lambda
+(define-generic-procedure-handler annotate-expr
+  (match-args lambda-expr? any-object?)
+  (lambda (expr env)
+    (let ((env* (new-frame (lambda-bvl expr) env)))
+      (make-texpr (procedure-type (map (lambda (name)
+                                          ;; modified
+                                          ;; Here env bindings doesn't contain procedure-definition-tag, so that won't be propagated.
+                                          (add-procedure-definition-tag (get-var-type name env*)))
+                                       (lambda-bvl expr))
+                                  (type-variable))
+                  (make-lambda-expr (lambda-bvl expr)
+                    (annotate-expr (lambda-body expr) env*))))))
+(define-generic-procedure-handler program-constraints-1
+  (match-args type-expression? if-expr?)
+  (lambda (type expr)
+    (append
+     (list (constrain (boolean-type)
+                      (texpr-type (if-predicate expr)))
+           ;; modified
+           ;; Always use procedure-definition-tag when this type can be decided.
+           (constrain type
+                      (add-procedure-definition-tag (union-term (texpr-type (if-consequent expr)) (texpr-type (if-alternative expr)))))
+           )
+     (program-constraints (if-predicate expr))
+     (program-constraints (if-consequent expr))
+     (program-constraints (if-alternative expr)))))
+;; Here I only give some procedure-definition compound types but incomplete as one demo.
+;; This is one routine work to give one complete implementation for all procedure-definition compound types
+(define (procedure-definition-element-var-type? type)
+  (and 
+    (procedure-definition-type? type)
+    (match:element-var? (cdr type))
+    )
+  )
+(define (procedure-definition-type-first-remove-tag data)
+  (let ((first (car data)))
+    (cons (remove-procedure-definition-tag first) (cdr data))
+    )
+  )
+;; pdt means procedure-definition-term
+(define-generic-procedure-handler unify:gdispatch
+  (match-args (car-satisfies procedure-definition-element-var-type?)
+              (car-satisfies list-term?))
+  (lambda (procedure-definition-type-first list-type) 
+    (maybe-substitute (procedure-definition-type-first-remove-tag procedure-definition-type-first) list-type)
+    ))
+(define-generic-procedure-handler unify:gdispatch
+  (match-args (car-satisfies list-term?)
+    (car-satisfies procedure-definition-element-var-type?))
+  (lambda (list-type procedure-definition-type-first)
+    ; (write-line (list "call (list-type procedure-definition-type-first) with" procedure-definition-type-first))
+    (maybe-substitute (procedure-definition-type-first-remove-tag procedure-definition-type-first) list-type)
+    ))
+; (define (unify:pdt-var procedure-definition-term-first terms2)
+;   (let ((first1 (car procedure-definition-term-first)) (rest1 (cdr procedure-definition-term-first))
+;         (first2 (car terms2)) (rest2 (cdr terms2)))
+;     (define (unify-pdt-var dict succeed fail)
+;       )
+;     unify-pdt-var))
+

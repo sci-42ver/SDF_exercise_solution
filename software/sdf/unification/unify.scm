@@ -107,7 +107,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (if (eqv? first1 first2)
           (succeed dict fail rest1 rest2)
           (begin
-            (write-line (list "error for" first1 first2))
+            (write-line (list "constant-terms error for" first1 first2))
             (fail))))
     unify-constants))
 

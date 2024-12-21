@@ -22,19 +22,24 @@
 ;; Then rhs may also have union types.
 ;; Then we need to ensure lhs>=rhs (*not bidirectional*).
 ;; But the problems is that we may have 2 sides both with var's, so how to know which is lhs?
-(pp (noisy-infer-program-types 
-  '(begin
-    (define demo
-      (lambda (x y)
-        (if y
-          (* x x)
-          ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
-          ; (< x 2)
-          (+ x 2)
-          )
-        ))
-    (demo (demo 3 #t) #t)
-    )))
+(define (lambda-test)
+  (pp (noisy-infer-program-types 
+    '(begin
+      (define demo
+        (lambda (x y)
+          (if y
+            ;; TODO one problem here is that if we constrain for (+ x 2) first, then x is bound to ?:union.
+            ;; But ?:union will be forbidden by (* x x).
+            ;; Anyway this is expected since (* x x) doesn't support string.
+            (* x x)
+            ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
+            ; (< x 2)
+            (+ x 2)
+            )
+          ))
+      (demo (demo 3 #t) #t)
+      ))))
+(lambda-test)
 ;; This is the constraint got by definition.
 ; (= (? demo:2) (type:procedure ((? x:3) (? y:4)) (? type:8)))
 ; ...
@@ -79,7 +84,8 @@
 ;; TODO add support for lambda with union types.
 (load "4_16_union_lib.scm")
 (load "4_16_type-expression_reload.scm")
-;; TODO weird assoc can't recognize match-args created obj.
+;; IGNORE: TODO weird assoc can't recognize match-args created obj.
+;; This may be due to cons always creates one new  data structure.
 (assoc (match-args (car-satisfies union-term?)
               (car-satisfies list-term?))
         (list 
@@ -120,5 +126,24 @@
           (cons '<= binary-comparator)
           (cons '>= binary-comparator))))
 ; (trace unify)
-; (trace unify:list-terms)
+(trace unify:list-terms)
 (pp (noisy-infer-program-types '(begin (+ 2 3) (+ "1" "2"))))
+;; See the 2nd TODO in SDF_exercises/chapter_4/4_16_union_lib.scm.
+; (define (lambda-test-with-union)
+;   (pp (noisy-infer-program-types 
+;     '(begin
+;       (define demo
+;         (lambda (x y)
+;           (if y
+;             ;; TODO one problem here is that if we constrain for (+ x 2) first, then x is bound to ?:union.
+;             ;; But ?:union will .
+;             (* x x)
+;             ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
+;             (< x 2)
+;             ; (+ x 2)
+;             )
+;           ))
+;       (demo (demo 3 #t) #t)
+;       ))))
+; (lambda-test)
+; (lambda-test-with-union)
