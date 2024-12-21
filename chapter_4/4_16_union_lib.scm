@@ -63,7 +63,7 @@
   )
 (define procedure-definition-type-data cdr)
 ;; 0. similar to match:element-var? dispatch.
-;; 1. TODO add dispatcher for procedure-definition-type? with normal types.
+;; 1. IGNORE: TODO add dispatcher for procedure-definition-type? with normal types.
 (define-generic-procedure-handler unify:gdispatch
   (match-args (car-satisfies procedure-definition-union-type?)
               (car-satisfies list-term?))
@@ -112,32 +112,33 @@
     (procedure-definition-type-data data)
     data)
   )
-(define (maybe-substitute var-first terms)
-  (define (unify-substitute dict succeed fail)
-    (let ((var (car var-first)) (rest1 (cdr var-first))
-          ;; remove-procedure-definition-tag is done here since it will always be added when procedure-definition
-          ;; It won't be buried in var.
-          ;; TODO this needs more fine-grained control. We need propagation for if but not for others like (begin (+ 2 3) (+ "1" "2")) etc....
-          (term (remove-procedure-definition-tag (car terms))) (rest2 (cdr terms)))
-      (cond ((and (match:element-var? term)
-                  (match:vars-equal? var term))
-             ;; similar to the following action for match:vars-equal? in do-substitute.
-             (succeed dict fail rest1 rest2))
-            ((match:has-binding? var dict)
-             ;; will check consistency later.
-             ((unify:dispatch (cons (match:get-value var dict) rest1)
-                              ;; no need to change term here, since var won't be bound to procedure-definition.
-                              ;; procedure-definition is needed
-                              terms)
-              dict succeed fail))
-            (else
-             (let ((dict* (do-substitute var term dict)))
-               (if dict*
-                   (succeed dict* fail rest1 rest2)
-                   (begin
-                    (write-line (list "error for do-substitute" var term))
-                    (fail))))))))
-  unify-substitute)
+;; Always propagate to differentiate definition from others.
+; (define (maybe-substitute var-first terms)
+;   (define (unify-substitute dict succeed fail)
+;     (let ((var (car var-first)) (rest1 (cdr var-first))
+;           ;; remove-procedure-definition-tag is done here since it will always be added when procedure-definition
+;           ;; It won't be buried in var.
+;           ;; TODO this needs more fine-grained control. We need propagation for if but not for others like (begin (+ 2 3) (+ "1" "2")) etc....
+;           (term (remove-procedure-definition-tag (car terms))) (rest2 (cdr terms)))
+;       (cond ((and (match:element-var? term)
+;                   (match:vars-equal? var term))
+;              ;; similar to the following action for match:vars-equal? in do-substitute.
+;              (succeed dict fail rest1 rest2))
+;             ((match:has-binding? var dict)
+;              ;; will check consistency later.
+;              ((unify:dispatch (cons (match:get-value var dict) rest1)
+;                               ;; no need to change term here, since var won't be bound to procedure-definition.
+;                               ;; procedure-definition is needed
+;                               terms)
+;               dict succeed fail))
+;             (else
+;              (let ((dict* (do-substitute var term dict)))
+;                (if dict*
+;                    (succeed dict* fail rest1 rest2)
+;                    (begin
+;                     (write-line (list "error for do-substitute" var term))
+;                     (fail))))))))
+;   unify-substitute)
 
 ;;; lambda
 (define-generic-procedure-handler annotate-expr
@@ -166,6 +167,7 @@
      (program-constraints (if-predicate expr))
      (program-constraints (if-consequent expr))
      (program-constraints (if-alternative expr)))))
+
 ;; Here I only give some procedure-definition compound types but incomplete as one demo.
 ;; This is one routine work to give one complete implementation for all procedure-definition compound types
 (define (procedure-definition-element-var-type? type)
@@ -179,24 +181,43 @@
     (cons (remove-procedure-definition-tag first) (cdr data))
     )
   )
-;; pdt means procedure-definition-term
 (define-generic-procedure-handler unify:gdispatch
   (match-args (car-satisfies procedure-definition-element-var-type?)
               (car-satisfies list-term?))
   (lambda (procedure-definition-type-first list-type) 
+    (write-line (list "call procedure-definition-element-var-type? (pl) with" procedure-definition-type-first list-type))
     (maybe-substitute (procedure-definition-type-first-remove-tag procedure-definition-type-first) list-type)
     ))
 (define-generic-procedure-handler unify:gdispatch
   (match-args (car-satisfies list-term?)
     (car-satisfies procedure-definition-element-var-type?))
   (lambda (list-type procedure-definition-type-first)
-    ; (write-line (list "call (list-type procedure-definition-type-first) with" procedure-definition-type-first))
+    (write-line (list "call procedure-definition-element-var-type? (lp) with" procedure-definition-type-first list-type))
     (maybe-substitute (procedure-definition-type-first-remove-tag procedure-definition-type-first) list-type)
     ))
-; (define (unify:pdt-var procedure-definition-term-first terms2)
-;   (let ((first1 (car procedure-definition-term-first)) (rest1 (cdr procedure-definition-term-first))
-;         (first2 (car terms2)) (rest2 (cdr terms2)))
-;     (define (unify-pdt-var dict succeed fail)
-;       )
-;     unify-pdt-var))
 
+;; procedure-definition needs be kept when unify-constraints to make var can get that tag if necessary.
+(define (match:map-vars get-value pattern)
+  (let loop ((pattern pattern))
+    (cond ((match:element-var? pattern)
+           (get-value pattern (lambda () pattern)))
+          ;; This is skipped for 4.16 which doesn't consider segment.
+          ; ((match:segment-var? pattern)
+          ;  (if (get-value pattern (lambda () #f))
+          ;      (error "Ill-formed pattern:" pattern))
+          ;  ;; SDF_exercises TODO why not use substitution.
+          ;  pattern)
+          ;; added before general list.
+          ((procedure-definition-element-var-type? pattern)
+            (let ((var-pattern (remove-procedure-definition-tag pattern)))
+              (get-value var-pattern (lambda () var-pattern))
+              )
+            )
+          ((list? pattern)
+           (append-map (lambda (sub)
+                         (if (match:segment-var? sub)
+                             (get-value sub
+                                        (lambda () (list sub)))
+                             (list (loop sub))))
+                       pattern))
+          (else pattern))))

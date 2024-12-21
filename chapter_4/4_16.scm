@@ -28,9 +28,10 @@
       (define demo
         (lambda (x y)
           (if y
-            ;; TODO one problem here is that if we constrain for (+ x 2) first, then x is bound to ?:union.
-            ;; But ?:union will be forbidden by (* x x).
-            ;; Anyway this is expected since (* x x) doesn't support string.
+            ;; IGNORE: TODO one problem here is that if we constrain for (+ x 2) first, then x is bound to ?:union.
+            ;; IGNORE: But ?:union will be forbidden by (* x x).
+              ;; Anyway this is expected since (* x x) doesn't support string.
+            ;; Here the allowed type for x actually depends on y... This is beyond what this exercise tries to implement.
             (* x x)
             ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
             ; (< x 2)
@@ -81,7 +82,7 @@
 ;; IMHO we can add one tag for procedure definition by lambda or make-top-level-env-frame.
 ;; Then we can always recognize that expected lhs.
 ;; 0.a. lambda may have var which has no binding in union-term (like identity procedure), then it will always succeed for type constraint.
-;; TODO add support for lambda with union types.
+;; IGNORE (support has been added): TODO add support for lambda with union types.
 (load "4_16_union_lib.scm")
 (load "4_16_type-expression_reload.scm")
 ;; IGNORE: TODO weird assoc can't recognize match-args created obj.
@@ -128,22 +129,78 @@
 ; (trace unify)
 (trace unify:list-terms)
 (pp (noisy-infer-program-types '(begin (+ 2 3) (+ "1" "2"))))
-;; See the 2nd TODO in SDF_exercises/chapter_4/4_16_union_lib.scm.
-; (define (lambda-test-with-union)
+; (t
+;  (procedure-definition ?:union (numeric-type) (string-type))
+;  (begin
+;   (t
+;    (procedure-definition ?:union (numeric-type) (string-type))
+;    ((t
+;      (type:procedure ((procedure-definition ?:union (numeric-type) (string-type)) (procedure-definition ?:union (numeric-type) (string-type)))
+;                      (procedure-definition ?:union (numeric-type) (string-type)))
+;      +)
+;     (t (numeric-type) 2)
+;     (t (numeric-type) 3)))
+;   (t
+;    (procedure-definition ?:union (numeric-type) (string-type))
+;    ((t
+;      (type:procedure ((procedure-definition ?:union (numeric-type) (string-type)) (procedure-definition ?:union (numeric-type) (string-type)))
+;                      (procedure-definition ?:union (numeric-type) (string-type)))
+;      +)
+;     (t (string-type) "1")
+;     (t (string-type) "2")))))
+
+;; IGNORE: See the 2nd TODO in SDF_exercises/chapter_4/4_16_union_lib.scm.
+(define (lambda-test-with-union)
+  (pp (noisy-infer-program-types 
+    '(begin
+      (define demo
+        (lambda (x y)
+          (if y
+            (* x x)
+            ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
+            (< x 2)
+            )
+          ))
+      (demo (demo 3 #t) #t)
+      ))))
+;; Skip problems in this test. See above.
+; (lambda-test)
+(lambda-test-with-union)
+;; capture ?:union from if appropriately.
+; (t
+;  (procedure-definition ?:union (numeric-type) (boolean-type))
+;  (begin
+;   (t
+;    (type:procedure ((numeric-type) (boolean-type)) (procedure-definition ?:union (numeric-type) (boolean-type)))
+;    (define demo
+;      (t
+;       (type:procedure ((numeric-type) (boolean-type)) (procedure-definition ?:union (numeric-type) (boolean-type)))
+;       (lambda (x y)
+;         (t
+;          (procedure-definition ?:union (numeric-type) (boolean-type))
+;          (if (t (boolean-type) y)
+;              (t (numeric-type) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) *) (t (numeric-type) x) (t (numeric-type) x)))
+;              (t (boolean-type) ((t (type:procedure ((numeric-type) (numeric-type)) (boolean-type)) <) (t (numeric-type) x) (t (numeric-type) 2)))))))))
+;   (t
+;    (procedure-definition ?:union (numeric-type) (boolean-type))
+;    ((t (type:procedure ((numeric-type) (boolean-type)) (procedure-definition ?:union (numeric-type) (boolean-type))) demo)
+;     (t (numeric-type) ((t (type:procedure ((numeric-type) (boolean-type)) (procedure-definition ?:union (numeric-type) (boolean-type))) demo) (t (numeric-type) 3) (t (boolean-type) #t)))
+;     (t (boolean-type) #t)))))
+
+;; IGNORE: TODO use demo returned type for one procedure accepting something like string to throw errors.
+; (define (lambda-test-with-union-throw-error)
 ;   (pp (noisy-infer-program-types 
 ;     '(begin
 ;       (define demo
 ;         (lambda (x y)
 ;           (if y
-;             ;; TODO one problem here is that if we constrain for (+ x 2) first, then x is bound to ?:union.
-;             ;; But ?:union will .
 ;             (* x x)
-;             ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
 ;             (< x 2)
-;             ; (+ x 2)
 ;             )
 ;           ))
-;       (demo (demo 3 #t) #t)
+;       (demo 2 #t)
 ;       ))))
-; (lambda-test)
-; (lambda-test-with-union)
+; (lambda-test-with-union-throw-error)
+
+;; throw errors.
+(pp (noisy-infer-program-types '(+ "2" #t)))

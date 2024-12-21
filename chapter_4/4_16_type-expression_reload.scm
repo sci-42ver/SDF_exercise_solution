@@ -19,3 +19,10 @@
      (simplify-annotated-program (combination-operator expr))
      (map simplify-annotated-program
           (combination-operands expr)))))
+(define-generic-procedure-handler simplify-annotated-program-1
+  (match-args type-expression? if-expr?)
+  (lambda (type expr)
+    (make-if-expr
+     (simplify-annotated-program (if-predicate expr))
+     (simplify-annotated-program (if-consequent expr))
+     (simplify-annotated-program (if-alternative expr)))))
