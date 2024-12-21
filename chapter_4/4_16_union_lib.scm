@@ -93,6 +93,7 @@
     unify-constants))
 
 ;; no use to reset type-expression? in match-args
+;; As SICP says, these preds in match-args may be shared by others (i.e. pred in the global envs here) or not.
 (set! type-expression?
   (lambda (object) 
     (or (type-variable? object)
