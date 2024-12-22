@@ -20,6 +20,7 @@
   - not consider lazy evaluation ~~and `set-car!` etc~~.
     - But this is fine at least for the book demo since it also doesn't consider that.
     - "term project" may mean the above and other `set!` variants like `set-car!` etc.
+  - See TODO in codes
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 

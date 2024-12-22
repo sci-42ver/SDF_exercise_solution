@@ -14,7 +14,7 @@
 (define y 4)
 (+ y 3) ; application before should work
 (set! y #t)
-(+ y 3) ; should fail
+; (+ y 3) ; should fail
 ((lambda (y) (+ y 3)) 4) ; should work
 ;; expected behavior:
 ;; 0. assignment will influence the local var type *after* its application.
@@ -61,18 +61,72 @@
     (make-texpr (reset-var-type-if-possible expr env type) expr)))
 ;; to make all later search for name type use the new target-type.
 (define restore-env-queue (list 'restore-env-queue))
-(define (enqueue-restore-env-queue proc)
-  (assert (procedure? proc))
-  (set-cdr! (last-pair restore-env-queue) (list proc))
+(define (enqueue queue data assertion?)
+  (assert (assertion? data))
+  (set-cdr! (last-pair queue) (list data))
   )
+
+(define define-name-stack (list 'define-name-stack))
+(define stack-contents cdr)
+(define (stack-empty? stack)
+  (null? (stack-contents stack)))
+(define (pop-stack stack)
+  ;; simplification of https://stackoverflow.com/a/77711423/21294350
+  (if (stack-empty? stack)
+    (error "can't pop")
+    (let loop ((cur-stack stack))
+      (if (null? (cddr cur-stack))
+        (set-cdr! cur-stack '())
+        (loop (cdr cur-stack)))
+      )
+    )
+  ; (set-cdr! (last-pair stack) '())
+  )
+(define (get-stack-top stack)
+  (and (stack-empty? stack)
+    (last stack))
+  )
+(define push-stack enqueue)
+
+;; See exercise_codes/SICP/4/4_34_revc.scm
+(define lambda-reset-env-schedule-table (make-hash-table))
+(define (get-reset-proc name)
+  (let ((proc (hash-table-ref/default lambda-reset-env-schedule-table name #f)))
+    (and 
+      proc
+      (assert 
+        (and (procedure? proc)
+          (equal? (procedure-arity proc) (cons 0 0))
+          ))
+      )
+    proc
+    )
+  )
+(define (set!-reset-proc name proc)
+  (hash-table-set! lambda-reset-env-schedule-table name proc)
+  )
+
 (define (reset-var-type-if-possible name env target-type)
   (cdr (let loop ((env env))
          (let ((search-result (assq name (car env))))
           (if search-result
             (let ((orig-type (cdr search-result)))
               (set-cdr! search-result target-type)
-              ;; Here due to env, when lambda is applied, search-result will automatically point to the above one.
-              (enqueue-restore-env-queue (lambda () (set-cdr! search-result orig-type)))
+              (let ((current-define-name (get-stack-top define-name-stack)))
+                (if current-define-name
+                  (let ((proc (get-reset-proc current-define-name)))
+                    (if proc
+                      (set!-reset-proc current-define-name (lambda () (proc) (set-cdr! search-result target-type)))
+                      (set!-reset-proc current-define-name (lambda () (set-cdr! search-result target-type)))
+                      )
+                    (write-line (list "reset-var-type-if-possible set!-reset-proc" proc current-define-name))    
+                    ;; Here due to env, when lambda is applied, search-result will automatically point to the above one.
+                    (enqueue restore-env-queue (lambda () (set-cdr! search-result orig-type)) procedure?)
+                    )
+                  ;; not in define or lambda
+                  ;; So no need for reset-proc and 
+                  'ignored)
+                )
               search-result
               )
             (if (pair? (cdr env))
@@ -120,8 +174,8 @@
      (simplify-annotated-program (set!-val expr)))))
 
 ;; test1
-(set!-expr? '(set! y #t))
-(pp (noisy-infer-program-types '(+ 3 2)))
+; (set!-expr? '(set! y #t))
+; (pp (noisy-infer-program-types '(+ 3 2)))
 (pp 
   (noisy-infer-program-types 
     '(begin
@@ -153,13 +207,12 @@
       ((lambda (y) (+ y 3)) 4)
       )))
 
-;; test2
+;; test2 preparation
 ;; IGNORE: Notice here it is fine to decide type inside lambda when
-;; Here set! should not be done until that lambda is called. But that needs delay for annotate-expr.
-;; Then we need to change the overall structure.
+  ;; Here set! should not be done until that lambda is called. But that needs delay for annotate-expr.
+  ;; Then we need to change the overall structure.
+;; Here I doesn't use delay but just uses thunk with auto env to do restoration when necessary.
 
-;; See exercise_codes/SICP/4/4_34_revc.scm
-(define lambda-reset-env-schedule-table (make-hash-table))
 (define restore-env-queue-contents cdr)
 (define (reset-restore-env-queue)
   (set! restore-env-queue (list 'restore-env-queue))
@@ -168,22 +221,71 @@
   (for-each (lambda (proc) (proc)) (restore-env-queue-contents restore-env-queue))
   (reset-restore-env-queue)
   )
+;; TODO this assumes each application of procedure will set! for the *same* data.
+;; But that won't be true when used in different nested levels.
+;; To make that work, we need to change the program structure *further* so that combination-expr needs to do annotate-expr for lambda *again*.
+;; That is also related with 4.18.
+;; So that is not "elegantly extended".
 (define-generic-procedure-handler annotate-expr
   (match-args define-expr? any-object?)
   (lambda (expr env)
     ;; different from SICP, here not consider (define (proc ...) ...).
-    (let ((name (define-name expr)))
-      (let* ((type (define-var-type name env))
-             (old-env env))
+    (let ((name (define-name expr))
+          (val (define-value expr)))
+      (let ((type (define-var-type name env))
+            (val-whether-lambda (lambda-expr? val)))
+        ;; modified
+        (if val-whether-lambda
+          (push-stack define-name-stack name symbol?)
+          'ignored)
         (let ((res (make-texpr type
                     (make-define-expr name
                                       (annotate-expr
-                                       (define-value expr)
+                                       val
                                        env)))))
-          (run-restore-env-queue)
+          (if val-whether-lambda
+            (begin
+              (run-restore-env-queue)
+              (pop-stack define-name-stack)
+              )
+            'ignored)
           res
           )
         ))))
+(define-generic-procedure-handler annotate-expr
+  (match-args combination-expr? any-object?)
+  (lambda (expr env)
+    (let* ((proc-name (combination-operator expr))
+           (whether-use-lambda-proc (lambda-expr? proc-name))
+           )
+      ;; proc-name may be lambda, then we don't need to restore set!.
+      (if whether-use-lambda-proc
+        (push-stack define-name-stack proc-name lambda-expr?)
+        ;; has been manipulated by define.
+        'do-nothing-for-symbol-proc-name
+        )
+      (let ((res (make-texpr (type-variable)
+                (make-combination-expr
+                 (annotate-expr proc-name env)
+                 (map (lambda (operand)
+                        (annotate-expr operand env))
+                      (combination-operands expr))))))
+        (if whether-use-lambda-proc
+          (pop-stack define-name-stack)
+          'ignored)
+        (if (not whether-use-lambda-proc)
+          (let ((proc (get-reset-proc proc-name)))
+            (write-line (list "call combination-expr? annotate-expr with symbol proc name" proc-name proc))
+            (and 
+              proc
+              (proc)))
+          'lambda-not-do-restoration)
+        res
+        )
+      )
+    ))
+;; test2
+;; nested define.
 (pp 
   (noisy-infer-program-types 
     '(begin
@@ -209,45 +311,47 @@
             )
           )
         )
-      (+ y 4) ; This will fail when not using delay...
+      (+ y 4) ; This will fail when not using delay or its alternative...
       (test ignored)
       )))
 ;; 0. Here the local y assignments in inner-test won't influence the outside due to new frame.
-;; So `y:22` and `y:17`.
+;; So `y:21` and `y:16`.
 ;; 1. set! same as the above will influence the latter type inferences.
 ;; So (t (boolean-type) y) at last.
-;; 2. (= (? y:17) (numeric-type)) and (= (? y:22) (numeric-type)) won't be influenced by set!.
+;; 2. (= (? y:16) (numeric-type)) and (= (? y:21) (numeric-type)) won't be influenced by set!.
+
 ; (t
 ;  (? type:32)
 ;  (begin
-;   (t (? y:17) (define y (t (numeric-type) 4)))
+;   (t (? y:16) (define y (t (numeric-type) 4)))
 ;   (t
-;    (? test:18)
+;    (? test:17)
 ;    (define test
 ;      (t
-;       (type:procedure ((? x:19)) (? type:29))
+;       (type:procedure ((? x:18)) (? type:28))
 ;       (lambda (x)
 ;         (t
-;          (? type:28)
+;          (? type:27)
 ;          (begin
-;           (t (? type:20) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:17) y) (t (numeric-type) 4)))
+;           (t (? type:19) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:16) y) (t (numeric-type) 4)))
 ;           (t
-;            (? inner-test:21)
+;            (? inner-test:20)
 ;            (define inner-test
 ;              (t
-;               (type:procedure () (? type:25))
+;               (type:procedure () (? type:24))
 ;               (lambda ()
 ;                 (t
-;                  (? type:24)
-;                  (begin (t (? y:22) (define y (t (numeric-type) 5)))
-;                         (t (? type:23) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:22) y) (t (numeric-type) 4)))
-;                         (t (? y:22) (set! (t (boolean-type) y) (t (boolean-type) #t)))
+;                  (? type:23)
+;                  (begin (t (? y:21) (define y (t (numeric-type) 5)))
+;                         (t (? type:22) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:21) y) (t (numeric-type) 4)))
+;                         (t (? y:21) (set! (t (boolean-type) y) (t (boolean-type) #t)))
 ;                         (t (boolean-type) y)))))))
-;           (t (? type:26) ((t (? inner-test:21) inner-test)))
-;           (t (? type:27) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:17) y) (t (numeric-type) 4)))
-;           (t (? y:17) (set! (t (boolean-type) y) (t (boolean-type) #t)))
+;           (t (? type:25) ((t (? inner-test:20) inner-test)))
+;           (t (? type:26) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:16) y) (t (numeric-type) 4)))
+;           (t (? y:16) (set! (t (boolean-type) y) (t (boolean-type) #t)))
 ;           (t (boolean-type) y)))))))
-;   (t (? type:31) ((t (? test:18) test) (t (? ignored:30) ignored)))))
+;   (t (? type:29) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (boolean-type) y) (t (numeric-type) 4)))
+;   (t (? type:31) ((t (? test:17) test) (t (? ignored:30) ignored)))))
 
 ;; test3
 ;; Here y is implicitly not passed by reference when used for the construction of other data types.
@@ -255,3 +359,103 @@
 (define y 3)
 (set-car! (cons y 4) #t)
 y
+
+;; test4
+;; multiple set! inside lambda.
+(pp 
+  (noisy-infer-program-types 
+    '(begin
+      (define y 4)
+      (define z 4)
+      (define test 
+        (lambda (x) 
+          (begin
+            (+ y 4)
+            (define inner-test
+              (lambda () 
+                (begin
+                  (define y 5)
+                  (+ y 4)
+                  (set! y #t)
+                  y
+                  )
+                )
+              )
+            (inner-test)
+            (+ y 4)
+            (set! y #t)
+            (set! z #t)
+            )
+          )
+        )
+      (+ y 4)
+      (test ignored)
+      ;; Here both should be boolean.
+      y
+      z
+      )))
+
+;; test5
+;; set! inside lambda.
+(pp 
+  (noisy-infer-program-types 
+    '(begin
+      (define y 4)
+      (define z 4)
+      ((lambda (x) 
+          (begin
+            (+ y 4)
+            (define inner-test
+              (lambda () 
+                (begin
+                  (define y 5)
+                  (+ y 4)
+                  (set! y #t)
+                  y
+                  )
+                )
+              )
+            (inner-test)
+            (+ y 4) ; should work
+            (set! y #t)
+            (set! z #t)
+            )
+          )
+        ignored
+        )
+      ;; Here both should be boolean.
+      y
+      z
+      )))
+
+; (pp 
+;   (noisy-infer-program-types 
+;     '(begin
+;       (define y 4)
+;       (define z 4)
+;       ((lambda (x) 
+;           (begin
+;             (+ y 4)
+;             (define inner-test
+;               (lambda () 
+;                 (begin
+;                   (define y 5)
+;                   (+ y 4)
+;                   (set! y #t)
+;                   y
+;                   )
+;                 )
+;               )
+;             (inner-test)
+;             (+ y 4) ; should work
+;             (set! y #t)
+;             (set! z #t)
+;             )
+;           )
+;         ignored
+;         )
+;       (+ y 4) ; fail
+;       ;; Here both should be boolean.
+;       y
+;       z
+;       )))
