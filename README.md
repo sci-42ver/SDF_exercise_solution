@@ -19,6 +19,7 @@
 - 4.17
   - not consider lazy evaluation ~~and `set-car!` etc~~.
     - But this is fine at least for the book demo since it also doesn't consider that.
+    - "term project" may mean the above and other `set!` variants like `set-car!` etc.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
@@ -258,8 +259,9 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - a bit hard related with 4.14.
     Also I simplify this problems based on some assumption (see codes "assume" contexts).
 - [ ] 17
-  - TODO see md
+  - ~~TODO see md~~
     - [non-expansive expression](https://homepages.inf.ed.ac.uk/stg/NOTES/node90.html)
+- 
 ### other possible type-inference extension
 - [subtype etc](https://nus-cs2030s.github.io/2425-s1/27-inference.html#argument-typing)
 ### @%TODO

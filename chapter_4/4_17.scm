@@ -60,12 +60,19 @@
   (lambda (expr env type)
     (make-texpr (reset-var-type-if-possible expr env type) expr)))
 ;; to make all later search for name type use the new target-type.
+(define restore-env-queue (list 'restore-env-queue))
+(define (enqueue-restore-env-queue proc)
+  (assert (procedure? proc))
+  (set-cdr! (last-pair restore-env-queue) (list proc))
+  )
 (define (reset-var-type-if-possible name env target-type)
   (cdr (let loop ((env env))
          (let ((search-result (assq name (car env))))
           (if search-result
-            (begin
+            (let ((orig-type (cdr search-result)))
               (set-cdr! search-result target-type)
+              ;; Here due to env, when lambda is applied, search-result will automatically point to the above one.
+              (enqueue-restore-env-queue (lambda () (set-cdr! search-result orig-type)))
               search-result
               )
             (if (pair? (cdr env))
@@ -145,6 +152,38 @@
       ; (+ y 3) ; should fail
       ((lambda (y) (+ y 3)) 4)
       )))
+
+;; test2
+;; IGNORE: Notice here it is fine to decide type inside lambda when
+;; Here set! should not be done until that lambda is called. But that needs delay for annotate-expr.
+;; Then we need to change the overall structure.
+
+;; See exercise_codes/SICP/4/4_34_revc.scm
+(define lambda-reset-env-schedule-table (make-hash-table))
+(define restore-env-queue-contents cdr)
+(define (reset-restore-env-queue)
+  (set! restore-env-queue (list 'restore-env-queue))
+  )
+(define (run-restore-env-queue)
+  (for-each (lambda (proc) (proc)) (restore-env-queue-contents restore-env-queue))
+  (reset-restore-env-queue)
+  )
+(define-generic-procedure-handler annotate-expr
+  (match-args define-expr? any-object?)
+  (lambda (expr env)
+    ;; different from SICP, here not consider (define (proc ...) ...).
+    (let ((name (define-name expr)))
+      (let* ((type (define-var-type name env))
+             (old-env env))
+        (let ((res (make-texpr type
+                    (make-define-expr name
+                                      (annotate-expr
+                                       (define-value expr)
+                                       env)))))
+          (run-restore-env-queue)
+          res
+          )
+        ))))
 (pp 
   (noisy-infer-program-types 
     '(begin
@@ -170,6 +209,7 @@
             )
           )
         )
+      (+ y 4) ; This will fail when not using delay...
       (test ignored)
       )))
 ;; 0. Here the local y assignments in inner-test won't influence the outside due to new frame.
@@ -209,6 +249,7 @@
 ;           (t (boolean-type) y)))))))
 ;   (t (? type:31) ((t (? test:18) test) (t (? ignored:30) ignored)))))
 
+;; test3
 ;; Here y is implicitly not passed by reference when used for the construction of other data types.
 ;; So set-car! actually can't change types if we think list<int> is same as list<double> etc (use cpp syntax here for parametric types. See 4.15).
 (define y 3)
