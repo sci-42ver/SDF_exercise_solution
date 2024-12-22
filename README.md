@@ -16,6 +16,9 @@
 - 4.13
 - related with 4.14
   - 4.16
+- 4.17
+  - not consider lazy evaluation ~~and `set-car!` etc~~.
+    - But this is fine at least for the book demo since it also doesn't consider that.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 

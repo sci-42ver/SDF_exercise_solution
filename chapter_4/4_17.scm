@@ -149,8 +149,68 @@
   (noisy-infer-program-types 
     '(begin
       (define y 4)
-      (+ y 3) ; application before should work
-      (set! y #t)
-      ((lambda (y) (+ y 3)) 4)
-      (+ y 3) ; still fail since `lambda (y)` should not influence outside bindings.
+      (define test 
+        (lambda (x) 
+          (begin
+            (+ y 4)
+            (define inner-test
+              (lambda () 
+                (begin
+                  (define y 5)
+                  (+ y 4)
+                  (set! y #t)
+                  y
+                  )
+                )
+              )
+            (inner-test)
+            (+ y 4) ; should work
+            (set! y #t)
+            y
+            )
+          )
+        )
+      (test ignored)
       )))
+;; 0. Here the local y assignments in inner-test won't influence the outside due to new frame.
+;; So `y:22` and `y:17`.
+;; 1. set! same as the above will influence the latter type inferences.
+;; So (t (boolean-type) y) at last.
+;; 2. (= (? y:17) (numeric-type)) and (= (? y:22) (numeric-type)) won't be influenced by set!.
+; (t
+;  (? type:32)
+;  (begin
+;   (t (? y:17) (define y (t (numeric-type) 4)))
+;   (t
+;    (? test:18)
+;    (define test
+;      (t
+;       (type:procedure ((? x:19)) (? type:29))
+;       (lambda (x)
+;         (t
+;          (? type:28)
+;          (begin
+;           (t (? type:20) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:17) y) (t (numeric-type) 4)))
+;           (t
+;            (? inner-test:21)
+;            (define inner-test
+;              (t
+;               (type:procedure () (? type:25))
+;               (lambda ()
+;                 (t
+;                  (? type:24)
+;                  (begin (t (? y:22) (define y (t (numeric-type) 5)))
+;                         (t (? type:23) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:22) y) (t (numeric-type) 4)))
+;                         (t (? y:22) (set! (t (boolean-type) y) (t (boolean-type) #t)))
+;                         (t (boolean-type) y)))))))
+;           (t (? type:26) ((t (? inner-test:21) inner-test)))
+;           (t (? type:27) ((t (type:procedure ((numeric-type) (numeric-type)) (numeric-type)) +) (t (? y:17) y) (t (numeric-type) 4)))
+;           (t (? y:17) (set! (t (boolean-type) y) (t (boolean-type) #t)))
+;           (t (boolean-type) y)))))))
+;   (t (? type:31) ((t (? test:18) test) (t (? ignored:30) ignored)))))
+
+;; Here y is implicitly not passed by reference when used for the construction of other data types.
+;; So set-car! actually can't change types if we think list<int> is same as list<double> etc (use cpp syntax here for parametric types. See 4.15).
+(define y 3)
+(set-car! (cons y 4) #t)
+y
