@@ -12,6 +12,8 @@
 - better to do with some basic compiler backgrounds which includes type-inference
   - 4.14
     - I even didn't know what to do for that "general case", more specifically I didn't know what problems will have for "procedures passed as arguments and returned as values" when we assume all procedures with generic arguments ~~(so "free variables" are )~~.
+- 4.12 See 0.b.
+  - Also see 4.18 TODO.
 ## partially done exercises
 - 4.13
 - related with 4.14
@@ -21,6 +23,7 @@
     - But this is fine at least for the book demo since it also doesn't consider that.
     - "term project" may mean the above and other `set!` variants like `set-car!` etc.
   - See TODO in codes
+- 4.18 better done after CRLS
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
@@ -226,7 +229,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
     - I give test for nested seq with vector and list (maybe arbitrary).
       ~~I don't know how to .~~
 - [ ] 12
-  - Emm... I think no problems exist here at all.
+  - ~~Emm... I think no problems exist here at all.~~
 - [ ] 13
   - SDF_exercises/chapter_4/4_13.scm is *actually not what the exercise expects* except for `match:compile-pattern` used in `maybe-substitute`.
     Here the generic overhead is avoided trivially but we still checks `car-satisfies` which can't be avoided since the match depends on *types of both sides*. This is why we need "`match:compile-pattern` used in `maybe-substitute`".
