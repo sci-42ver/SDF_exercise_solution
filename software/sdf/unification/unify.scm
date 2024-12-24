@@ -58,7 +58,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (succeed dict))
          ;; SDF_exercises TODO when this happens.
          (begin
-          (write-line (list "error for unify:internal" rest1 rest2))
+          ; (write-line (list "error for unify:internal" rest1 rest2))
           (fail))))
    ;; > If not, unify returns #f, indicating a failure.
    (lambda () #f)))
@@ -88,7 +88,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (unify:fail terms1 terms2)
   (define (unify-fail dict succeed fail)
     (begin
-      (write-line (list "unify:fail " terms1 terms2))
+      ; (write-line (list "unify:fail " terms1 terms2))
       (fail)))
   unify-fail)
 
@@ -107,7 +107,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (if (eqv? first1 first2)
           (succeed dict fail rest1 rest2)
           (begin
-            (write-line (list "constant-terms error for" first1 first2))
+            ; (write-line (list "constant-terms error for" first1 first2))
             (fail))))
     unify-constants))
 
@@ -236,14 +236,20 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (succeed dict fail (cdr var-first1) (cdr var-first2))
         ;; 0. Here (?? x) in var-first1 can match *part* of (?? y) which is done in (maybe-grab-segment var-first2 var-first1) block.
         ;; 1. just think based on one-sided, here either (car var-first1) or (car var-first2) must match multiple elems in the other.
-        ((maybe-grab-segment var-first1 var-first2)
-         dict
-         succeed
-         (lambda ()
-           ((maybe-grab-segment var-first2 var-first1)
+        (begin
+          ; (write-line (list "call the first direction for maybe-grab-segment" var-first2 var-first1 dict))
+          ((maybe-grab-segment var-first1 var-first2)
             dict
             succeed
-            fail)))))
+            (lambda ()
+              ; (write-line (list "call the other direction for maybe-grab-segment" var-first2 var-first1 dict))
+              ((maybe-grab-segment var-first2 var-first1)
+                dict
+                succeed
+                fail)
+              ; (write-line (list "finish maybe-grab-segment for" var-first2 var-first1 dict))
+              )))
+        ))
   unify-seg-var-var)
 
 ;; coderef: segment-var-var
@@ -287,9 +293,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (define (grab dict succeed fail)
     (let ((var (car var-first)))
       (let slp ((initial '()) (terms* terms))
+        ; (trace slp)
+        ; (write-line (list "in slp" var-first "with terms after grab" terms* dict))
         (define (continue)
           (if (null? terms*)
-              (fail)
+              (begin
+                ; (write-line (list "call grab-segment fail for" var-first terms dict))
+                (fail))
               (slp (append initial (list (car terms*)))
                    (cdr terms*))))
         (let ((dict* (do-substitute var initial dict)))
