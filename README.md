@@ -24,6 +24,8 @@
     - "term project" may mean the above and other `set!` variants like `set-car!` etc.
   - See TODO in codes
 - 4.18 better done after CRLS
+- 4.19
+  - a.
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 

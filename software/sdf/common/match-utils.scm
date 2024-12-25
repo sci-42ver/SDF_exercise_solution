@@ -128,6 +128,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define match:binding-name car)
 ;; not used
+;; IMHO we need to use this for the case where (? y) and (?? y) are both used.
+;; Then match:lookup should also check type.
 (define match:binding-type caddr)
 
 (define match:binding-value
