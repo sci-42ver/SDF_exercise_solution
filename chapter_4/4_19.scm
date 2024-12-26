@@ -273,3 +273,28 @@
     (main-test substitution-instance?)
     substitution-instance?
     ))
+
+;;; d.
+;; 0. IMHO this can be done based on 4.20.
+;; So (?? x)->(4 (?? z)) and (?? y)->((?? z) 3)
+(unify:internal '(((?? x) 3) ((?? x)))
+'((4 (?? y)) (4 5))
+(match:new-dict)
+(lambda (dict)
+(pp (match:bindings dict))
+#f))
+; ((x (4 5) ??) (y (5 3) ??))
+;; This is just one special case.
+;; 1. Here we can still use classification by unify:gdispatch (i.e. 3 cases related with match:segment-var?)
+;; 1.a. unify:segment-var-var is same since these 2 vars must have the same *starting loc*.
+;; So either one contains the other or they are same.
+;; 1.b. maybe-grab-segment
+;; Here we can use the above notation in 0. to denote the *intermediate* state which is between 2 states in the original slp.
+;; That is (?? x)->(4 (?? z)) and (?? y)->((?? z) (?? y-internal:1))
+;; Then succeed is called with 2 starting terms 3 and (?? y-internal:1).
+;; 1.b.0. Notice here adjacent terms in one pattern should not have intersection.
+;; So ((?? x) (?? z)) matched with (4 (?? y)) won't make (?? x) and (?? z) both have (?? z) (however notice they may share the same sub-value which are got from different vars).
+;; 1.b.1. IMHO the above are all cases for 2 sub-sequences, i.e. no intersection or partial intersection or total containment.
+;; Here only the last is not one symmetric relation. So we have totally 4 relations.
+
+

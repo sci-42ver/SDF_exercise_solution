@@ -1,5 +1,11 @@
-# Skipped exercise
+# skipped exercise
+## needs big changes to the overall program structure
+- 4.12 See 0.b.
+  > 0.b.0.a. Again, wait implies we need to change the unify internal structure...
+  - Also see 4.18 TODO which also relates with delay/wait.
+## open-ended
 - 2.14
+  - > This is not easy.
   - I tried to find one possible example to implement in https://martinfowler.com/dsl.html#:~:text=Domain%2Dspecific%20languages%20have%20been,strut's%20configuration%20file....
     but only ["ant"](https://news.ycombinator.com/item?id=21840947) and ["graphviz's dot language"](https://www.graphviz.org/pdf/dotguide.pdf) *seem* to be implement as one *demo*.
     But the former is related with Java and the latter is related with drawing one graph.
@@ -7,25 +13,34 @@
   - After all, this exercise is more about how we think about a domain and then program it.
     IMHO checkers and then manual implementation of chess are enough.
     - "domain model" as SDF_notes.md shows is about "abstract types".
-- 3.6-c.
-- 3.22-b.
+## needs knowledge *beyond* what SICP and SDF teach
+- 3.22-b
+  > on different terminals.
+  beyond programming basic strategies.
+## related with compiler
 - better to do with some basic compiler backgrounds which includes type-inference
   - 4.14
+    > make it *as general as you can*
     - I even didn't know what to do for that "general case", more specifically I didn't know what problems will have for "procedures passed as arguments and returned as values" when we assume all procedures with generic arguments ~~(so "free variables" are )~~.
-- 4.12 See 0.b.
-  - Also see 4.18 TODO.
-## partially done exercises
-- 4.13
+### partially done exercises
 - related with 4.14
   - 4.16
+## related with *complexity analysis* (TODO after CRLS. Others: search CRLS here.)
+- 3.6-c
+## ~~unrelated with programming strategies since my goal is "A strong understanding of programming" said in mit_6-046j_2005~~
+# partially done exercises
+- 4.13
+  - > `match:compile-pattern` used in `maybe-substitute`
 - 4.17
   - not consider lazy evaluation ~~and `set-car!` etc~~.
-    - But this is fine at least for the book demo since it also doesn't consider that.
+    - But this is fine at least for the book demo since *it also doesn't consider* that.
     - "term project" may mean the above and other `set!` variants like `set-car!` etc.
   - See TODO in codes
-- 4.18 better done after CRLS
 - 4.19
   - a.
+    > look for a functional solution—but don't try too hard!
+## related with complexity analysis: better done after CRLS
+- 4.18
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
