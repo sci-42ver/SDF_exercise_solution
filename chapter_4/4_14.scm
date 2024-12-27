@@ -262,8 +262,8 @@
            inner)
          )
        )
-      (demo (demo (lambda (x y) (* x y))))
-      ))
+     (demo (demo (lambda (x y) (* x y))))
+     ))
 (pp (noisy-infer-program-types test2))
 
 (define test3
@@ -278,13 +278,13 @@
            inner)
          )
        )
-      (demo (demo (lambda (x y) (* x y))))
-      ))
+     (demo (demo (lambda (x y) (* x y))))
+     ))
 (pp (noisy-infer-program-types test3))
 ;; local z can be recognized.
-        ;  (begin (t (? z:72) (define z (t (numeric-type) 2)))
-        ;         (t (? inner:73) (define inner (t (type:procedure ((? y:74)) (? type:75)) (lambda (y) (t (? z:72) z)))))
-        ;         (t (? inner:73) inner)))))))
+;  (begin (t (? z:72) (define z (t (numeric-type) 2)))
+;         (t (? inner:73) (define inner (t (type:procedure ((? y:74)) (? type:75)) (lambda (y) (t (? z:72) z)))))
+;         (t (? inner:73) inner)))))))
 
 (define test4
   '(begin
@@ -298,6 +298,6 @@
            inner)
          )
        )
-      (demo (demo (lambda (x y) (* x y))))
-      ))
+     (demo (demo (lambda (x y) (* x y))))
+     ))
 (pp (noisy-infer-program-types test4))

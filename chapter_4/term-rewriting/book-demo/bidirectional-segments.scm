@@ -8,21 +8,21 @@
 ;; for tracing the 3rd ((w () ??) (y () ??) (x (b b b) ??))
 (trace do-substitute)
 (let ((p1 '(a (?? x) (?? y) (?? x) c))
-(p2 '(a b b b (?? w) b b b c)))
-(unify:internal p1 p2 (match:new-dict)
-(lambda (dict)
-(pp (match:bindings dict))
-#f)))
+      (p2 '(a b b b (?? w) b b b c)))
+  (unify:internal p1 p2 (match:new-dict)
+                  (lambda (dict)
+                    (pp (match:bindings dict))
+                    #f)))
 ;; Here 3 ((w () ??) (y () ??) (x (b b b) ??))'s occur.
 ;; ((?? y) (?? x) c)->((?? w) b b b c)
-  ;; The 1st is by ((?? x) c)->((?? w) b b b c)
-  ;; then ((?? w) b b b c)->(b b b c)
-  ;; The 2nd is by ((?? w) b b b c)->((?? x) c) due to unify:segment-var-var
-  ;; then ((?? x) c)->(b b b c) which directly matches.
-  ;; Then (?? y)->(?? w)
-  ;; Then we can't proceed
+;; The 1st is by ((?? x) c)->((?? w) b b b c)
+;; then ((?? w) b b b c)->(b b b c)
+;; The 2nd is by ((?? w) b b b c)->((?? x) c) due to unify:segment-var-var
+;; then ((?? x) c)->(b b b c) which directly matches.
+;; Then (?? y)->(?? w)
+;; Then we can't proceed
 ;; ((?? w) b b b c)->((?? y) (?? x) c)
-  ;; So (y () ??) (w () ??) which is the reverse order of the before.
+;; So (y () ??) (w () ??) which is the reverse order of the before.
 ;; The 3rd is due to (fail) called by "("call grab-segment fail for" ((?? w) b b b c) ((?? y) (?? x) c) (dict (x (b b b) ??)))".
 ;; Then (?? x) is matched to new (b b b (?? w)).
 ;; Then "("in slp" ((?? y) (?? x) c) "with terms after grab" (b b b c) (dict (x (b b b (?? w)) ??)))".

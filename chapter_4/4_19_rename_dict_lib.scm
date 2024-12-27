@@ -1,12 +1,12 @@
 (define (match:lookup-corrected var dict)
   (let ((name
-         (if (symbol? var) ; SDF_exercises TODO when this occurs (book doesn't say explicitly).
-             var
-             (match:var-name var))))
+          (if (symbol? var) ; SDF_exercises TODO when this occurs (book doesn't say explicitly).
+            var
+            (match:var-name var))))
     (find (lambda (binding)
             (and (eq? name (match:binding-name binding))
-              (eq? (match:var-type var) (match:binding-type binding))
-              ))
+                 (eq? (match:var-type var) (match:binding-type binding))
+                 ))
           (match:bindings dict))))
 (define match:lookup match:lookup-corrected)
 
@@ -23,31 +23,31 @@
 ;; 1.a. similar to unify:internal
 (define (rename-var-to-idxed-element-var dict succeed)
   ((rename:dispatch (match:bindings dict))
-    (match:new-dict)
-    (lambda (dict* fail* rest1)
-      (assert (list? rest1))
-      (or (and (null? rest1)
+   (match:new-dict)
+   (lambda (dict* fail* rest1)
+     (assert (list? rest1))
+     (or (and (null? rest1)
               (succeed dict*))
          ;; SDF_exercises TODO when this happens.
          (begin
-          ; (write-line (list "error for unify:internal" rest1))
-          (fail)))
-      )
-    (lambda () #f)
-    )
+           ; (write-line (list "error for unify:internal" rest1))
+           (fail)))
+     )
+   (lambda () #f)
+   )
   )
 ;; similar to unify:dispatch
 (define (rename:dispatch bindings)
   (assert (list? bindings))
   (define (rename-dispatcher dict succeed fail)
     (if (null? bindings)
-        (succeed dict fail bindings)
-        ((rename:gdispatch bindings)
-         dict
-         (lambda (dict* fail* rest1)
-           ((rename:dispatch rest1)
-            dict* succeed fail*))
-         fail)))
+      (succeed dict fail bindings)
+      ((rename:gdispatch bindings)
+       dict
+       (lambda (dict* fail* rest1)
+         ((rename:dispatch rest1)
+          dict* succeed fail*))
+       fail)))
   rename-dispatcher)
 (define (rename:fail terms1)
   (define (rename-fail dict succeed fail)
@@ -63,11 +63,11 @@
       (succeed dict fail rest1))
     rename-constants))
 (define-generic-procedure-handler rename:gdispatch
-  (match-args (car-satisfies constant-term?))
-  rename:constant-terms)
+                                  (match-args (car-satisfies constant-term?))
+                                  rename:constant-terms)
 (define (rename:list-terms terms1)
   (let ((first1 (car terms1)) (rest1 (cdr terms1))
-        )
+                              )
     (define (rename-lists dict succeed fail)
       ((rename:dispatch first1)
        dict
@@ -78,8 +78,8 @@
     rename-lists))
 ;; coderef: rename-list-terms
 (define-generic-procedure-handler rename:gdispatch
-  (match-args (car-satisfies list-term?))
-  rename:list-terms)
+                                  (match-args (car-satisfies list-term?))
+                                  rename:list-terms)
 (define (rename-var var-first)
   (define (rename dict succeed fail)
     (let ((var (car var-first)) (rest1 (cdr var-first)))
@@ -90,21 +90,21 @@
               ;; wrap list to be compatible with segment
               (let ((renamed-var 
                       ((if (match:segment-var? var)
-                        list
-                        (lambda (x) x))
-                        (type-variable (match:var-name var)))))
+                         list
+                         (lambda (x) x))
+                       (type-variable (match:var-name var)))))
                 (let ((dict* (do-substitute var renamed-var dict)))
                   (if dict*
-                      (succeed dict* fail rest1)
-                      (begin
-                        (write-line (list "error for do-substitute" var term))
-                        (fail))))
+                    (succeed dict* fail rest1)
+                    (begin
+                      (write-line (list "error for do-substitute" var term))
+                      (fail))))
                 )))))
   rename)
 (define-generic-procedure-handler rename:gdispatch
-  (match-args (car-satisfies match:var?))
-  (lambda (var-first)
-    (rename-var var-first)))
+                                  (match-args (car-satisfies match:var?))
+                                  (lambda (var-first)
+                                    (rename-var var-first)))
 
 (define (same-dict? dict1 dict2)
   ;; Better to still use continuation since we need to check the next list term directly after digging into the former list term.
@@ -129,8 +129,8 @@
         ;   (list dict1-rename-dict dict2-rename-dict)
         ;   (list dict1* dict2*)))
         (and (unify dict1* dict2*)
-          #t
-          )
+             #t
+             )
         )
       )
     )

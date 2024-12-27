@@ -55,11 +55,11 @@
   (cdr (let loop ((env env))
          (or (assq name (car env))
              (if (pair? (cdr env))
-                 (loop (cdr env))
-                 ;; modified
-                 (let ((tcell (make-list-type-cell name)))
-                   (set-car! env (cons tcell (car env)))
-                   tcell))))))
+               (loop (cdr env))
+               ;; modified
+               (let ((tcell (make-list-type-cell name)))
+                 (set-car! env (cons tcell (car env)))
+                 tcell))))))
 (define (make-list-type-cell name)
   ; (write-line (list "debug make-list-type-cell" (type-variable name)))
   (cons name (list-type (type-variable name))))
@@ -70,48 +70,48 @@
 (define list-type)
 (define list-type?)
 (receive (constructor predicate)
-    (define-parametric-type-operator 'type:list)
-  (set! list-type constructor)
-  (set! list-type? predicate))
+         (define-parametric-type-operator 'type:list)
+         (set! list-type constructor)
+         (set! list-type? predicate))
 (define list-type-base cadr)
 
 ;; annotate-list-expr just ensure it returns one list type.
 (define-generic-procedure-handler annotate-list-expr
-  (match-args symbol? any-object?)
-  (lambda (expr env)
-    (let ((type (get-list-var-type expr env)))
-      ; (write-line (list "call annotate-list-expr for symbol?" expr type (list-type? type)))
-      (if (list-type? type)
-        (make-texpr type expr)
-        ; (error '***type-error***)
-        (make-texpr (add-list-var-type expr env) expr)
-        )
-      )))
+                                  (match-args symbol? any-object?)
+                                  (lambda (expr env)
+                                    (let ((type (get-list-var-type expr env)))
+                                      ; (write-line (list "call annotate-list-expr for symbol?" expr type (list-type? type)))
+                                      (if (list-type? type)
+                                        (make-texpr type expr)
+                                        ; (error '***type-error***)
+                                        (make-texpr (add-list-var-type expr env) expr)
+                                        )
+                                      )))
 (define-generic-procedure-handler annotate-list-expr
-  (match-args combination-expr? any-object?)
-  (lambda (expr env)
-    (make-texpr (list-type (type-variable))
-                (make-combination-expr
-                 (annotate-expr (combination-operator expr) env)
-                 (map (lambda (operand)
-                        (annotate-expr operand env))
-                      (combination-operands expr))))))
+                                  (match-args combination-expr? any-object?)
+                                  (lambda (expr env)
+                                    (make-texpr (list-type (type-variable))
+                                                (make-combination-expr
+                                                  (annotate-expr (combination-operator expr) env)
+                                                  (map (lambda (operand)
+                                                         (annotate-expr operand env))
+                                                       (combination-operands expr))))))
 
 ;; 0. generic get-handler will get the latter added procedure if possible.
 ;; 1. Here I didn't constrain car input and outputs, similar to cdr.
 ;; But this can be done similar to cons (TODO), I won't do the routine duplicate work.
 (define-generic-procedure-handler annotate-expr
-  (match-args list-pred-or-selector-combination-expr? any-object?)
-  (lambda (expr env)
-    ; (write-line (list "call list-pred-or-selector-combination-expr? annotate-expr for" expr))
-    (make-texpr (type-variable)
-                ;; This will match program-constraints-1 for combination-expr?.
-                (make-combination-expr
-                 (annotate-expr (combination-operator expr) env)
-                 (map (lambda (operand)
-                        ;; modified
-                        (annotate-list-expr operand env))
-                      (combination-operands expr))))))
+                                  (match-args list-pred-or-selector-combination-expr? any-object?)
+                                  (lambda (expr env)
+                                    ; (write-line (list "call list-pred-or-selector-combination-expr? annotate-expr for" expr))
+                                    (make-texpr (type-variable)
+                                                ;; This will match program-constraints-1 for combination-expr?.
+                                                (make-combination-expr
+                                                  (annotate-expr (combination-operator expr) env)
+                                                  (map (lambda (operand)
+                                                         ;; modified
+                                                         (annotate-list-expr operand env))
+                                                       (combination-operands expr))))))
 ;; Here we only add one tag for operand types.
 ;; So program-constraints-1 and simplify-annotated-program-1 can work as before.
 
@@ -121,15 +121,15 @@
 (define (add-list-var-type name env)
   ;; always add one binding for the local frame (i.e. (car env))
   (cdr (let ((tcell (make-list-type-cell name)))
-          (set-car! env (cons tcell (car env)))
-          tcell)))
+         (set-car! env (cons tcell (car env)))
+         tcell)))
 (define-generic-procedure-handler annotate-expr
-  (match-args null? any-object?)
-  (lambda (expr env)
-    ; (write-line "call annotate-expr for null?")
-    ;; This list type should depends on the context for consistency just as the above shows.
-    (make-texpr (add-list-var-type expr env) expr)
-    ))
+                                  (match-args null? any-object?)
+                                  (lambda (expr env)
+                                    ; (write-line "call annotate-expr for null?")
+                                    ;; This list type should depends on the context for consistency just as the above shows.
+                                    (make-texpr (add-list-var-type expr env) expr)
+                                    ))
 ;; Here we assume all types are same. Otherwise use union in 4.16. Here gives one demo for all numbers.
 (define (list-of? base?)
   (lambda (obj) 
@@ -141,23 +141,23 @@
       )
     ))
 (define-generic-procedure-handler annotate-expr
-  (match-args (list-of? number?) any-object?)
-  (lambda (expr env)
-    ; (write-line (list "call annotate-expr for (list-of? number?):" expr))
-    (make-texpr (list-type (numeric-type)) expr)
-    ))
+                                  (match-args (list-of? number?) any-object?)
+                                  (lambda (expr env)
+                                    ; (write-line (list "call annotate-expr for (list-of? number?):" expr))
+                                    (make-texpr (list-type (numeric-type)) expr)
+                                    ))
 ;; rest trivial settings
 (define-generic-procedure-handler program-constraints-1
-  (match-args type-expression?
-              (disjoin null? (list-of? number?)))
-  (lambda (type expr)
-    '()))
+                                  (match-args type-expression?
+                                              (disjoin null? (list-of? number?)))
+                                  (lambda (type expr)
+                                    '()))
 
 (define-generic-procedure-handler simplify-annotated-program-1
-  (match-args type-expression?
-              (disjoin null? (list-of? number?)))
-  (lambda (type expr)
-    expr))
+                                  (match-args type-expression?
+                                              (disjoin null? (list-of? number?)))
+                                  (lambda (type expr)
+                                    expr))
 
 ;;; cons
 ; (define list-constructor-combination '(cons))
@@ -179,56 +179,56 @@
 (define cons-combination-operands cddr)
 
 (define-generic-procedure-handler annotate-expr
-  (match-args cons-expr? any-object?)
-  (lambda (expr env)
-    (make-texpr (list-type (type-variable)) ; modified
-                ;; IGNORE: This will match program-constraints-1 for combination-expr?.
-                ;; modified to call the specific cons-combination-expr? handler.
-                (make-cons-combination-expr
-                 (annotate-expr (combination-operator expr) env)
-                 ;; modified
-                 (let ((operands (combination-operands expr)))
-                  (list (annotate-expr (car operands) env) (annotate-list-expr (cadr operands) env)))
-                  ))))
+                                  (match-args cons-expr? any-object?)
+                                  (lambda (expr env)
+                                    (make-texpr (list-type (type-variable)) ; modified
+                                                ;; IGNORE: This will match program-constraints-1 for combination-expr?.
+                                                ;; modified to call the specific cons-combination-expr? handler.
+                                                (make-cons-combination-expr
+                                                  (annotate-expr (combination-operator expr) env)
+                                                  ;; modified
+                                                  (let ((operands (combination-operands expr)))
+                                                    (list (annotate-expr (car operands) env) (annotate-list-expr (cadr operands) env)))
+                                                  ))))
 ;; IGNORE: Here assume cons accepts data with the same base type.
 ;; It is better to constrain with union that the result type is union of 2 bases.
 (define-generic-procedure-handler program-constraints-1
-  (match-args type-expression? cons-combination-expr?)
-  (lambda (type expr)
-    ; ; (write-line "call cons-combination-expr? program-constraints-1")
-    (cons (constrain (texpr-type (cons-combination-operator expr))
-                     (procedure-type 
-                      ;; domain
-                      (map texpr-type
-                           (cons-combination-operands expr))
-                      ;; codomain
-                      type))
-          (let ((operands (cons-combination-operands expr)))
-            ; ; (write-line (list "debug" (cadr operands) ";" type))
-            (append 
-              ;; added
-              ;; 0. this is better with 4.16.
-              ; (constrain (list-type-base type) (union (texpr-type (car operands)) (list-type-base (cadr type))))
-              (list
-                (constrain (list-type-base type) (texpr-type (car operands)))
-                (constrain (list-type-base (texpr-type (cadr operands))) (texpr-type (car operands))))
-              ;; The above 
-              ; (constrain (texpr-type (car operands)) (list-type-base (cadr operands)))
-              
-              (program-constraints (cons-combination-operator expr))
-                  (append-map program-constraints
-                              operands)
-              )
-              )
-              )
-            ))
+                                  (match-args type-expression? cons-combination-expr?)
+                                  (lambda (type expr)
+                                    ; ; (write-line "call cons-combination-expr? program-constraints-1")
+                                    (cons (constrain (texpr-type (cons-combination-operator expr))
+                                                     (procedure-type 
+                                                       ;; domain
+                                                       (map texpr-type
+                                                            (cons-combination-operands expr))
+                                                       ;; codomain
+                                                       type))
+                                          (let ((operands (cons-combination-operands expr)))
+                                            ; ; (write-line (list "debug" (cadr operands) ";" type))
+                                            (append 
+                                              ;; added
+                                              ;; 0. this is better with 4.16.
+                                              ; (constrain (list-type-base type) (union (texpr-type (car operands)) (list-type-base (cadr type))))
+                                              (list
+                                                (constrain (list-type-base type) (texpr-type (car operands)))
+                                                (constrain (list-type-base (texpr-type (cadr operands))) (texpr-type (car operands))))
+                                              ;; The above 
+                                              ; (constrain (texpr-type (car operands)) (list-type-base (cadr operands)))
+
+                                              (program-constraints (cons-combination-operator expr))
+                                              (append-map program-constraints
+                                                          operands)
+                                              )
+                                            )
+                                          )
+                                    ))
 (define-generic-procedure-handler simplify-annotated-program-1
-  (match-args type-expression? cons-combination-expr?)
-  (lambda (type expr)
-    (make-combination-expr
-     (simplify-annotated-program (cons-combination-operator expr))
-     (map simplify-annotated-program
-          (cons-combination-operands expr)))))
+                                  (match-args type-expression? cons-combination-expr?)
+                                  (lambda (type expr)
+                                    (make-combination-expr
+                                      (simplify-annotated-program (cons-combination-operator expr))
+                                      (map simplify-annotated-program
+                                           (cons-combination-operands expr)))))
 
 ; (define (make-top-level-env-frame)
 ;   (let ((binary-numerical
@@ -257,16 +257,16 @@
 
 (define map-test
   '(begin
-    (define unary-map
-      (lambda (proc items)
-        (if (null? items)
-          ()
-          (cons (proc (car items))
-                (unary-map proc (cdr items))))))
-    ;; + is binary, so not use it here.
-    ; (unary-map + (1 2 3))
-    (unary-map (lambda (x) (* x x)) (1 2 3))
-    )
+     (define unary-map
+       (lambda (proc items)
+         (if (null? items)
+           ()
+           (cons (proc (car items))
+                 (unary-map proc (cdr items))))))
+     ;; + is binary, so not use it here.
+     ; (unary-map + (1 2 3))
+     (unary-map (lambda (x) (* x x)) (1 2 3))
+     )
   )
 ; (trace unify:dispatch)
 
@@ -288,32 +288,32 @@
 
 (define map-test-with-generic-type
   '(define unary-map
-      (lambda (proc items)
-        (if (null? items)
-          ; '() ; not add one extra quote unexpectedly.
-          ()
-          (cons (proc (car items))
-                (unary-map proc (cdr items))))))
+     (lambda (proc items)
+       (if (null? items)
+         ; '() ; not add one extra quote unexpectedly.
+         ()
+         (cons (proc (car items))
+               (unary-map proc (cdr items))))))
   )
 (pp (noisy-infer-program-types map-test-with-generic-type))
 
 ;; consider the above TODO
 (define map-test-with-generic-type-annotated
   '(t
-      (? unary-map:25)
-      (define unary-map
-        (t
-          (type:procedure ((? proc:26) (type:list (? items:29))) (? type:43))
-          (lambda (proc items)
-            (t
-            (? type:42)
-            (if (t (? type:41) ((t (? null?:40) null?) (t (type:list (? items:29)) items)))
-                (t (type:list (? |():39|)) ())
-                (t
-                  (type:list (? type:37))
-                  (cons (t (? cons:36) cons)
-                        (t (? type:35) ((t (? proc:26) proc) (t (? type:34) ((t (? car:33) car) (t (type:list (? items:29)) items)))))
-                        (t (type:list (? type:32)) ((t (? unary-map:25) unary-map) (t (? proc:26) proc) (t (? type:31) ((t (? cdr:30) cdr) (t (type:list (? items:29)) items)))))))))))))
+     (? unary-map:25)
+     (define unary-map
+       (t
+         (type:procedure ((? proc:26) (type:list (? items:29))) (? type:43))
+         (lambda (proc items)
+           (t
+             (? type:42)
+             (if (t (? type:41) ((t (? null?:40) null?) (t (type:list (? items:29)) items)))
+               (t (type:list (? |():39|)) ())
+               (t
+                 (type:list (? type:37))
+                 (cons (t (? cons:36) cons)
+                       (t (? type:35) ((t (? proc:26) proc) (t (? type:34) ((t (? car:33) car) (t (type:list (? items:29)) items)))))
+                       (t (type:list (? type:32)) ((t (? unary-map:25) unary-map) (t (? proc:26) proc) (t (? type:31) ((t (? cdr:30) cdr) (t (type:list (? items:29)) items)))))))))))))
   )
 (define map-test-with-generic-type-dict
   '((= (? unary-map:25) (type:procedure ((? proc:26) (type:list (? items:29))) (? type:43)))
@@ -344,14 +344,14 @@
 (define (noisy-infer-annotate-program-types-with-constraints annotate-program constraints)
   (let ((dict (unify-constraints constraints)))
     (if dict
-        (let ((res ((match:dict-substitution dict) annotate-program)))
-          (newline)
-          ; (write-line '---)
-          (pp (simplify-annotated-program res))
-          ; (write-line '---)
-          res
-          )
-        '***type-error***)))
+      (let ((res ((match:dict-substitution dict) annotate-program)))
+        (newline)
+        ; (write-line '---)
+        (pp (simplify-annotated-program res))
+        ; (write-line '---)
+        res
+        )
+      '***type-error***)))
 (noisy-infer-annotate-program-types-with-constraints 
   map-test-with-generic-type-annotated
   map-test-with-generic-type-dict-with-car-cdr-constraints)

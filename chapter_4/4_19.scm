@@ -40,9 +40,9 @@
 (let ((p1 '(a (?? x) (?? y) (?? x) c))
       (p2 '(a b b b (?? w) b b b c)))
   (pp (unify:internal-functional-wrapper p1 p2 (match:new-dict)
-                                     (lambda (dict)
-                                       (pp (match:bindings dict))
-                                       #f))))
+                                         (lambda (dict)
+                                           (pp (match:bindings dict))
+                                           #f))))
 ; (collector (dict (w () ??) (y () ??) (x (b b b) ??))
 ;            (dict (w ((?? y)) ??) (x (b b b) ??))
 ;            (dict (y () ??) (w () ??) (x (b b b) ??))
@@ -57,9 +57,9 @@
 (let ((pattern '(* (?? a) (+ (?? b)) (?? c)))
       (expression '(* x y (+ z w) m (+ n o) p)))
   (pp (unify:internal-functional-wrapper pattern expression (match:new-dict)
-                                     (lambda (dict)
-                                       (pp (match:bindings dict))
-                                       #f))))
+                                         (lambda (dict)
+                                           (pp (match:bindings dict))
+                                           #f))))
 ; (collector 
 ;   (dict (c (p) ??) (b (n o) ??) (a (x y (+ z w) m) ??)) 
 ;   (dict (c (m (+ n o) p) ??) (b (z w) ??) (a (x y) ??)))
@@ -92,12 +92,12 @@
         (lambda (dict) 
           ;; same as the above.
           (and dict
-              (let ((subst (match:dict-substitution dict)))
-                (let ((p1* (subst pattern1)) (p2* (subst pattern2)))
-                  ;; > You can check that the results of the two substitutions are equal
-                  (if (not (equal? p1* p2*))
-                    (error "Bad dictionary"))
-                  p1*)))
+               (let ((subst (match:dict-substitution dict)))
+                 (let ((p1* (subst pattern1)) (p2* (subst pattern2)))
+                   ;; > You can check that the results of the two substitutions are equal
+                   (if (not (equal? p1* p2*))
+                     (error "Bad dictionary"))
+                   p1*)))
           ) 
         (tagged-list-data collector)))
     )
@@ -146,21 +146,21 @@
       (lambda (dict) 
         ;; same as the above.
         (and dict
-            (let ((subst (match:dict-substitution dict)))
-              (let ((p1* (subst pattern1)) (p2* (subst pattern2)))
-                ;; > You can check that the results of the two substitutions are equal
-                (if (not (equal? p1* p2*))
-                  (error "Bad dictionary"))
-                ;; modified
-                (let ((solution (make-solution-pair p1* dict)))
-                  ;; Here if same, we keep pair's in (tagged-list-data pairs).
-                  ;; Then based on substitution-instance?, when same we want to keep substitution1.
-                  ;; So we make pair as pair1 for same-pair-for-solution?.
-                  (if (any (lambda (pair) (same-pair-for-solution? pair solution unify-proc)) (tagged-list-data pairs))
-                    'skipped
-                    (add-data-to-tagged-list pairs solution))
-                  )
-                )))
+             (let ((subst (match:dict-substitution dict)))
+               (let ((p1* (subst pattern1)) (p2* (subst pattern2)))
+                 ;; > You can check that the results of the two substitutions are equal
+                 (if (not (equal? p1* p2*))
+                   (error "Bad dictionary"))
+                 ;; modified
+                 (let ((solution (make-solution-pair p1* dict)))
+                   ;; Here if same, we keep pair's in (tagged-list-data pairs).
+                   ;; Then based on substitution-instance?, when same we want to keep substitution1.
+                   ;; So we make pair as pair1 for same-pair-for-solution?.
+                   (if (any (lambda (pair) (same-pair-for-solution? pair solution unify-proc)) (tagged-list-data pairs))
+                     'skipped
+                     (add-data-to-tagged-list pairs solution))
+                   )
+                 )))
         ) 
       (tagged-list-data collector))
     pairs
@@ -171,22 +171,22 @@
 (let ((pattern '(* (?? a) (+ (?? b)) (?? c)))
       (expression '(* x y (+ z w) m (+ n o) p)))
   (pp (unify:internal-functional-wrapper-with-substitution-unique-pairs pattern expression (match:new-dict)
-                                     (lambda (dict)
-                                       (pp (match:bindings dict))
-                                       #f)
-                                      unify
-                                      )))
+                                                                        (lambda (dict)
+                                                                          (pp (match:bindings dict))
+                                                                          #f)
+                                                                        unify
+                                                                        )))
 ;; The above can't be checked for sameness by dict
 ;; since they have non-compatible values for the same var-seq.
 (define (main-test unify-proc)
   (let ((p1 '(a (?? x) (?? y) (?? x) c))
         (p2 '(a b b b (?? w) b b b c)))
     (unify:internal-functional-wrapper-with-substitution-unique-pairs p1 p2 (match:new-dict)
-                                      (lambda (dict)
-                                        (pp (match:bindings dict))
-                                        #f)
-                                      unify-proc
-                                      ))
+                                                                      (lambda (dict)
+                                                                        (pp (match:bindings dict))
+                                                                        #f)
+                                                                      unify-proc
+                                                                      ))
   )
 (pp (main-test unify))
 ;; can recognize (y ((?? w)) ??) with (w ((?? y)) ??).
@@ -248,8 +248,8 @@
 ;; So here it should check between substitutions.
 (define (substitution-instance? substitution1 substitution2)
   (and (general>=? substitution1 substitution2)
-    (unify substitution1 substitution2)
-    )
+       (unify substitution1 substitution2)
+       )
   )
 ; (trace substitution-instance?)
 ; (trace general>=?)
@@ -280,11 +280,11 @@
 ;; 0. IMHO this can be done based on 4.20.
 ;; So (?? x)->(4 (?? z)) and (?? y)->((?? z) 3)
 (unify:internal '(((?? x) 3) ((?? x)))
-'((4 (?? y)) (4 5))
-(match:new-dict)
-(lambda (dict)
-(pp (match:bindings dict))
-#f))
+                '((4 (?? y)) (4 5))
+                (match:new-dict)
+                (lambda (dict)
+                  (pp (match:bindings dict))
+                  #f))
 ; ((x (4 5) ??) (y (5 3) ??))
 ;; This is just one special case.
 ;; 1. Here we can still use classification by unify:gdispatch (i.e. 3 cases related with match:segment-var?)
@@ -301,42 +301,42 @@
 
 ;;; related resources
 ;; skipped
-  ;; google: unification "segment" variable general match
-  ;; 0. https://digitalcommons.bard.edu/cgi/viewcontent.cgi?article=1092&context=senproj_s2021
-  ;; related with knot theory
-  ;; 1. https://pdf.sciencedirectassets.com/272313/1-s2.0-S0747717100X00843/1-s2.0-S074771718371059X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFAaCXVzLWVhc3QtMSJHMEUCIQCB2XbxX%2FNCB6ieJzwW4rP4LwO7r7n3XTEoLlttde25pgIgZJ1RkQmL23%2BvrCMbktWziINHGBalN52XB1K5Gik0dEYqswUIKRAFGgwwNTkwMDM1NDY4NjUiDEUZ6l6AiJhDs1WN3iqQBQGZmxs7taiMoyHgS4QVSpac144xXoIIAUAo3uWb7nH%2FcTHFpHoDzb3R7Gf%2FlOqtWqcGx1O%2FrTySrC%2BlX4E%2FoPDR9FXag6QQcox6%2Fl0fjx6KXqF5ND6bvwrZKAtILSqc%2B2jYlRsKkn4PqVqr4guPZOU3HHMRfqJElQolZ8ZXYcXIyi9ohuxizi7x07ZHaWirygUYstQ6DNcfhm4fJxrYFt1jTNqY6Q4MCGfijobdrFu5P01jlOi3Qg1mB5sP%2BnOQk900BH%2B2OoFCaHxwwTbFbJQ90fzndMZ%2BDwFX4d9FQ8mJDFKUhAAiKQr%2F1EjIOyFkB6BfdLvyO2fvIv0daSRGhkgTPvUBSZ7liFHwLeS0qRmX017BKT%2BZUMEBK5RW90aDMy7yCFybbU8bcpHKvoU96cwiPEaSfhaYW5otlUXFvjb0uf6DrwrBwQNIgvazii2MeCJyVwBLvx5xV8Vzu00%2FV8%2FyLvJWODCW1XPrCiINflsRho4ii6lF%2F2jbhTpJMk4vrJOawy0TB5WgdpaX2TePAmbK%2FpffoyBmnIrUlMGRDnIxTDd6Q%2FcTQhQDGCL1w2C1bWwJt5lecheSkA65NY%2B5ljIG8zxwEcu%2B0zA2xbN6iPnl9ddZWj4AunRwxpvXhx9s5ZTBwCjMj9Qiznc5nBzGgcScofQPWfZ0%2B6x8hQliRz3rebNTdqOkGvirhejnS%2BaGUqyB%2BEr%2B5LTDrgHYjMOeGAVz0vV5pUE74GK2mSyyqcYDxOHuIDhX1c5hF6UZrlE86Jbcg2s%2FWFCcZKVlUsRloXZqwtD0rJ%2BPEl6esGHh8zVUm%2FkMF%2FbfKCIe%2FHhcnKl%2BS699HXU5Al1PILwF8N8SBg7nEgJ5mkiUcgxPMaDx%2FSXwMLqLtLsGOrEBkWPZc7O6S%2BFSGYV0RyFAEqtdauzaOOPQowb6skXd%2B0eBZBGfW5pRK%2FSK7zSow61eDVyeGqUz%2BwRF4dXpopzPRpNBGCllSc27YBl0xVsknodXimgwwcTG2iylBX0rkKPteHHWzvPabdiecF4qXkZiaeS84T5UfENJGvIvhgRvsIOMn0DyZ9Y4lyquB6LPdvbwV7ghfi%2BzJf17PArz8NmbH4XQ3bvj%2F2kwgiXGSguwPz4M&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241226T082749Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYXFG7FHKI%2F20241226%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=75ca1e9a0584f3fc046bf5eec5d37a74e02b9960b7f3c660e4be26c1bdeba4e4&hash=e443c70442bc5c3d0b5099af1cd73d94c1af73d95c60c1045bfb7c95653c540d&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S074771718371059X&tid=spdf-0760b691-ad7a-4d60-8471-d7d7e2a3f335&sid=b659fb6b528244423b980b8819aeb03bd5eegxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0f1558045404065056035c&rr=8f7fb19e3b69f7e5&cc=us
-  ;; only cares about initial segment.
-  ;; 2. https://www3.risc.jku.at/publications/download/risc_5001/proceedings-UNIF2014.pdf
-  ;; border segment
-  ;; 3. https://www.researchgate.net/figure/Relationships-between-segments_fig2_47805814
-  ;; > A segment hp, qi is a pair of positions such that p <= q.
-  ;; > identify positions in terms by their relative address from the root
-  ;; is one different definition.
-  ;; same as https://www.iiia.csic.es/~levy/papers/semCADE.pdf
-  ;; 4. https://legacy.cs.indiana.edu/ftp/techreports/TR566.pdf
-  ;; is about graph "path segment"
-  ;; 5. https://pdf.sciencedirectassets.com/272313/1-s2.0-S0747717189X80117/1-s2.0-S0747717189800124/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFAaCXVzLWVhc3QtMSJIMEYCIQDjznUV6JCtTJKAC9PP057oMG7SO6VDHRmhUYMNs3ElhAIhAJg4hOX%2BeVmY9SW9qXu9yLXIrRUnE8mAEUb%2B3qMBORO6KrMFCCkQBRoMMDU5MDAzNTQ2ODY1Igw49qqskiazyWYpuEEqkAVwQJxAaEzkF%2FivS4Od4EHjXlfQOp%2F9vpNHrVqH0liEC%2FvL55j8KCsP4vZ8njQyMFn9CMJUtwSVXaQ0HxuXbv475YVj3jou3DTNd5yvvqCwgp4rEueIWkqgP9xu7bcsiOXcT9OTRnpvgnX7RzXvI5aBqX%2FdH%2BSjDb04if5FVQoECMKpk3t88wLQUDjBmwoNzfmySFCgJdk8cl4Z9qTvIE86mBFsGLXm4k3rDbDQSVSYxCEPXz61cD2kPbAHcMV%2BpzJjf1DQvHthQlMIqH4u%2Bvm0Ab98LNWhkH2pTWKDlcHMyUig38TZr%2F5DcBKQVJLZ%2B%2FQmq%2BAXJJgpvDznOBPQqyip7oPs%2BQNpaUk4KPwoANEeU0Ij%2BFWkymHdBLuI8meozTDg5DGfSefOsxm7L37Tx44nbyyGPbBxcCaEpBtQI4gexmGlGQs1z5%2FLK0g%2BxnEtcgmOUhCHBx9c70R4fi66EfVhLtxmVXMRhy8tKkD5XTwB59dteNFs3oTAGp6GuxFrXOeDUZQT3ERfmcH4kmQ4MfxaOgzq19MqGsssHTQcInHYZDOocKV63J7I9wt%2Bbn%2FR4y83AybHeDj1VdQUM%2FCnVg9OeOWS4t1xbe4pu%2FawQAoN%2BZ7OSSeWUoxtPNCtf2zL3bm7rH3P9FV6VQOOApxxkzbqU2utED%2BkxwOBeiykSSge%2F8TlNV%2FPxzT%2BLesPL0BIF9xdMrTkaHGoXeU6ODgIOg9umQKCeRlMh%2BZDiLP495rdze1hOtc%2BpoKhrIj0GlZ1MYba1XsHV3zyB0VaTUXV4n53FmMjpmbM5Jxx0TlRZ1vzdWpjxda32eBRQHutA8aUDj7MufykESnjz3xlHORuLszhufiFzuKn4SF8g%2BHGWyfSjTDBlLS7BjqwAYuQl9UuBQFNWdiozgfo6cmzLUYiBVB02bZSoZlUFnO05sHylcSMU0lpSySGQe26Bi3K1EVDP%2Fdybbj8mAR5aqv%2FZuF0qJu6S6A7%2FhQK58hWxpjoJSG4NJR9Nsqg%2F200ELpbfjAQkR4NyUL%2BwIMaEPSrNARPYIvodJXGtCoq5yRa%2Fv2szzv5E4Uyf0rnxEoRWMXpTGl0B2l0XtBb69sg3aFVSyC4dtzJrc1ZeSFKLOM7&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241226T082734Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYYNY4YB2B%2F20241226%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=e2c902495a49e432a8570bc0b83363443c9e5ad87f94595bc7f2c7025064a16f&hash=fe75f058bab42397ba24791250d92bf0445ee99e11eb653027019521dc6e0805&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0747717189800124&tid=spdf-92671763-a075-462f-be7f-5e83a2fde4f7&sid=7327c38d289d734b58590a83e1d88f22471dgxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0f155804540406505b5259&rr=8f7fb1446dd87ca3&cc=us
-  ;; uses one different definition.
-  ;; > A subset U c S is called an (upper) segment or afilter of S, iff for o e S and x e U and x -< t~ we have cre U. 
-  ;; which is related with ordering.
+;; google: unification "segment" variable general match
+;; 0. https://digitalcommons.bard.edu/cgi/viewcontent.cgi?article=1092&context=senproj_s2021
+;; related with knot theory
+;; 1. https://pdf.sciencedirectassets.com/272313/1-s2.0-S0747717100X00843/1-s2.0-S074771718371059X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFAaCXVzLWVhc3QtMSJHMEUCIQCB2XbxX%2FNCB6ieJzwW4rP4LwO7r7n3XTEoLlttde25pgIgZJ1RkQmL23%2BvrCMbktWziINHGBalN52XB1K5Gik0dEYqswUIKRAFGgwwNTkwMDM1NDY4NjUiDEUZ6l6AiJhDs1WN3iqQBQGZmxs7taiMoyHgS4QVSpac144xXoIIAUAo3uWb7nH%2FcTHFpHoDzb3R7Gf%2FlOqtWqcGx1O%2FrTySrC%2BlX4E%2FoPDR9FXag6QQcox6%2Fl0fjx6KXqF5ND6bvwrZKAtILSqc%2B2jYlRsKkn4PqVqr4guPZOU3HHMRfqJElQolZ8ZXYcXIyi9ohuxizi7x07ZHaWirygUYstQ6DNcfhm4fJxrYFt1jTNqY6Q4MCGfijobdrFu5P01jlOi3Qg1mB5sP%2BnOQk900BH%2B2OoFCaHxwwTbFbJQ90fzndMZ%2BDwFX4d9FQ8mJDFKUhAAiKQr%2F1EjIOyFkB6BfdLvyO2fvIv0daSRGhkgTPvUBSZ7liFHwLeS0qRmX017BKT%2BZUMEBK5RW90aDMy7yCFybbU8bcpHKvoU96cwiPEaSfhaYW5otlUXFvjb0uf6DrwrBwQNIgvazii2MeCJyVwBLvx5xV8Vzu00%2FV8%2FyLvJWODCW1XPrCiINflsRho4ii6lF%2F2jbhTpJMk4vrJOawy0TB5WgdpaX2TePAmbK%2FpffoyBmnIrUlMGRDnIxTDd6Q%2FcTQhQDGCL1w2C1bWwJt5lecheSkA65NY%2B5ljIG8zxwEcu%2B0zA2xbN6iPnl9ddZWj4AunRwxpvXhx9s5ZTBwCjMj9Qiznc5nBzGgcScofQPWfZ0%2B6x8hQliRz3rebNTdqOkGvirhejnS%2BaGUqyB%2BEr%2B5LTDrgHYjMOeGAVz0vV5pUE74GK2mSyyqcYDxOHuIDhX1c5hF6UZrlE86Jbcg2s%2FWFCcZKVlUsRloXZqwtD0rJ%2BPEl6esGHh8zVUm%2FkMF%2FbfKCIe%2FHhcnKl%2BS699HXU5Al1PILwF8N8SBg7nEgJ5mkiUcgxPMaDx%2FSXwMLqLtLsGOrEBkWPZc7O6S%2BFSGYV0RyFAEqtdauzaOOPQowb6skXd%2B0eBZBGfW5pRK%2FSK7zSow61eDVyeGqUz%2BwRF4dXpopzPRpNBGCllSc27YBl0xVsknodXimgwwcTG2iylBX0rkKPteHHWzvPabdiecF4qXkZiaeS84T5UfENJGvIvhgRvsIOMn0DyZ9Y4lyquB6LPdvbwV7ghfi%2BzJf17PArz8NmbH4XQ3bvj%2F2kwgiXGSguwPz4M&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241226T082749Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYXFG7FHKI%2F20241226%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=75ca1e9a0584f3fc046bf5eec5d37a74e02b9960b7f3c660e4be26c1bdeba4e4&hash=e443c70442bc5c3d0b5099af1cd73d94c1af73d95c60c1045bfb7c95653c540d&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S074771718371059X&tid=spdf-0760b691-ad7a-4d60-8471-d7d7e2a3f335&sid=b659fb6b528244423b980b8819aeb03bd5eegxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0f1558045404065056035c&rr=8f7fb19e3b69f7e5&cc=us
+;; only cares about initial segment.
+;; 2. https://www3.risc.jku.at/publications/download/risc_5001/proceedings-UNIF2014.pdf
+;; border segment
+;; 3. https://www.researchgate.net/figure/Relationships-between-segments_fig2_47805814
+;; > A segment hp, qi is a pair of positions such that p <= q.
+;; > identify positions in terms by their relative address from the root
+;; is one different definition.
+;; same as https://www.iiia.csic.es/~levy/papers/semCADE.pdf
+;; 4. https://legacy.cs.indiana.edu/ftp/techreports/TR566.pdf
+;; is about graph "path segment"
+;; 5. https://pdf.sciencedirectassets.com/272313/1-s2.0-S0747717189X80117/1-s2.0-S0747717189800124/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFAaCXVzLWVhc3QtMSJIMEYCIQDjznUV6JCtTJKAC9PP057oMG7SO6VDHRmhUYMNs3ElhAIhAJg4hOX%2BeVmY9SW9qXu9yLXIrRUnE8mAEUb%2B3qMBORO6KrMFCCkQBRoMMDU5MDAzNTQ2ODY1Igw49qqskiazyWYpuEEqkAVwQJxAaEzkF%2FivS4Od4EHjXlfQOp%2F9vpNHrVqH0liEC%2FvL55j8KCsP4vZ8njQyMFn9CMJUtwSVXaQ0HxuXbv475YVj3jou3DTNd5yvvqCwgp4rEueIWkqgP9xu7bcsiOXcT9OTRnpvgnX7RzXvI5aBqX%2FdH%2BSjDb04if5FVQoECMKpk3t88wLQUDjBmwoNzfmySFCgJdk8cl4Z9qTvIE86mBFsGLXm4k3rDbDQSVSYxCEPXz61cD2kPbAHcMV%2BpzJjf1DQvHthQlMIqH4u%2Bvm0Ab98LNWhkH2pTWKDlcHMyUig38TZr%2F5DcBKQVJLZ%2B%2FQmq%2BAXJJgpvDznOBPQqyip7oPs%2BQNpaUk4KPwoANEeU0Ij%2BFWkymHdBLuI8meozTDg5DGfSefOsxm7L37Tx44nbyyGPbBxcCaEpBtQI4gexmGlGQs1z5%2FLK0g%2BxnEtcgmOUhCHBx9c70R4fi66EfVhLtxmVXMRhy8tKkD5XTwB59dteNFs3oTAGp6GuxFrXOeDUZQT3ERfmcH4kmQ4MfxaOgzq19MqGsssHTQcInHYZDOocKV63J7I9wt%2Bbn%2FR4y83AybHeDj1VdQUM%2FCnVg9OeOWS4t1xbe4pu%2FawQAoN%2BZ7OSSeWUoxtPNCtf2zL3bm7rH3P9FV6VQOOApxxkzbqU2utED%2BkxwOBeiykSSge%2F8TlNV%2FPxzT%2BLesPL0BIF9xdMrTkaHGoXeU6ODgIOg9umQKCeRlMh%2BZDiLP495rdze1hOtc%2BpoKhrIj0GlZ1MYba1XsHV3zyB0VaTUXV4n53FmMjpmbM5Jxx0TlRZ1vzdWpjxda32eBRQHutA8aUDj7MufykESnjz3xlHORuLszhufiFzuKn4SF8g%2BHGWyfSjTDBlLS7BjqwAYuQl9UuBQFNWdiozgfo6cmzLUYiBVB02bZSoZlUFnO05sHylcSMU0lpSySGQe26Bi3K1EVDP%2Fdybbj8mAR5aqv%2FZuF0qJu6S6A7%2FhQK58hWxpjoJSG4NJR9Nsqg%2F200ELpbfjAQkR4NyUL%2BwIMaEPSrNARPYIvodJXGtCoq5yRa%2Fv2szzv5E4Uyf0rnxEoRWMXpTGl0B2l0XtBb69sg3aFVSyC4dtzJrc1ZeSFKLOM7&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241226T082734Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYYNY4YB2B%2F20241226%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=e2c902495a49e432a8570bc0b83363443c9e5ad87f94595bc7f2c7025064a16f&hash=fe75f058bab42397ba24791250d92bf0445ee99e11eb653027019521dc6e0805&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0747717189800124&tid=spdf-92671763-a075-462f-be7f-5e83a2fde4f7&sid=7327c38d289d734b58590a83e1d88f22471dgxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0f155804540406505b5259&rr=8f7fb1446dd87ca3&cc=us
+;; uses one different definition.
+;; > A subset U c S is called an (upper) segment or afilter of S, iff for o e S and x e U and x -< t~ we have cre U. 
+;; which is related with ordering.
 
-  ;; scholar.google
-  ;; includes the above 5.
-  ;; 0. https://arxiv.org/pdf/1907.10333
-  ;; is about Anti-unification
-  ;; > generalizing two (or more) goals into a single, more general, goal
-  ;; > that captures some of the structure that is *common to all initial goals*
-  ;; 1. https://proceedings.mlr.press/v108/khemakhem20a/khemakhem20a.pdf
-  ;; related with ICA "Independent Component Analysis".
-  ;; > divide the sources into M segments of L samples each
-  ;; 2. https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1004503&type=printable
-  ;; is about "receptor segment".
-  ;; 3. https://www.weizmann.ac.il/math/irani/sites/math.irani/files/publications/good_image_segment.pdf
-  ;; is about "Image Segment".
-  ;; n. https://www.worldscientific.com/doi/epdf/10.1142/S012905419200019X
-  ;; no free pdf.
-  ;; https://www.tesble.com/10.1142/S012905419200019X
-  ;; no "Segment" context.
+;; scholar.google
+;; includes the above 5.
+;; 0. https://arxiv.org/pdf/1907.10333
+;; is about Anti-unification
+;; > generalizing two (or more) goals into a single, more general, goal
+;; > that captures some of the structure that is *common to all initial goals*
+;; 1. https://proceedings.mlr.press/v108/khemakhem20a/khemakhem20a.pdf
+;; related with ICA "Independent Component Analysis".
+;; > divide the sources into M segments of L samples each
+;; 2. https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1004503&type=printable
+;; is about "receptor segment".
+;; 3. https://www.weizmann.ac.il/math/irani/sites/math.irani/files/publications/good_image_segment.pdf
+;; is about "Image Segment".
+;; n. https://www.worldscientific.com/doi/epdf/10.1142/S012905419200019X
+;; no free pdf.
+;; https://www.tesble.com/10.1142/S012905419200019X
+;; no "Segment" context.
 
 ;; As the above says, unify:segment-var-var doesn't need changes.
 ;; IGNORE: maybe-grab-segment is same since we only need to change the grab mechanism.
@@ -346,7 +346,7 @@
 (define (match:sub-segment-var? object)
   (and (match:var? object)
        (let ((type (match:var-type object)))
-        (eq? '??? type))))
+         (eq? '??? type))))
 
 (define match:var-types '(? ?? ???))
 (define match:strict-segment-var? match:segment-var?)
@@ -354,22 +354,22 @@
 (define (match:segment-var? object)
   (and (match:var? object)
        (let ((type (match:var-type object)))
-        (or (eq? '??? type) (eq? '?? type)))))
+         (or (eq? '??? type) (eq? '?? type)))))
 ;; re-register since preds are changed.
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (car-satisfies match:segment-var?)
-              (car-satisfies match:segment-var?))
-  unify:segment-var-var)
+                                  (match-args (car-satisfies match:segment-var?)
+                                              (car-satisfies match:segment-var?))
+                                  unify:segment-var-var)
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (car-satisfies match:segment-var?)
-              (complement (car-satisfies match:segment-var?)))
-  (lambda (var-first terms)
-    (maybe-grab-segment var-first terms)))
+                                  (match-args (car-satisfies match:segment-var?)
+                                              (complement (car-satisfies match:segment-var?)))
+                                  (lambda (var-first terms)
+                                    (maybe-grab-segment var-first terms)))
 (define-generic-procedure-handler unify:gdispatch
-  (match-args (complement (car-satisfies match:segment-var?))
-              (car-satisfies match:segment-var?))
-  (lambda (terms var-first)
-    (maybe-grab-segment var-first terms)))
+                                  (match-args (complement (car-satisfies match:segment-var?))
+                                              (car-satisfies match:segment-var?))
+                                  (lambda (terms var-first)
+                                    (maybe-grab-segment var-first terms)))
 
 ;; similar to generate-unique-name
 (define generate-unique-internal-name
@@ -403,7 +403,7 @@
   (let ((term (car terms)))
     (cond 
       ((null? initial) 
-        (create-initial-terms-binding-list (append initial (list term)) (cdr terms) '()))
+       (create-initial-terms-binding-list (append initial (list term)) (cdr terms) '()))
       ;; 0. for partial intersection, we need to add 2 bindings for each of 2 vars.
       ;; e.g. (?? x)->(4 (?? z)) and (?? y)->((?? z) (?? y-internal:1))
       ;; 0.a. Then terms* needs to use (?? y-internal:1).
@@ -411,13 +411,13 @@
       ;; 1. Here we can assume rhs var has length fixed, then lhs var len can be variant.
       ;; It can have only 2 cases: either intersect or contain rhs var.
       ((match:segment-var? term)
-        (let ((sub-segment-vars-list (segment-var->sub-segment-vars-list term)))
-          (create-initial-terms-binding-list 
-            (append initial (list (left-internal sub-segment-vars-list))) 
-            (cons (right-internal sub-segment-vars-list) (cdr terms))
-            (list (create-var-substitution-binding term sub-segment-vars-list)))
-          )
-        )
+       (let ((sub-segment-vars-list (segment-var->sub-segment-vars-list term)))
+         (create-initial-terms-binding-list 
+           (append initial (list (left-internal sub-segment-vars-list))) 
+           (cons (right-internal sub-segment-vars-list) (cdr terms))
+           (list (create-var-substitution-binding term sub-segment-vars-list)))
+         )
+       )
       ;; manipulated in slp since it is closely related with the possible-term-var-binding-list addition.
       ;; If we check here, we may 
       ; ;; i.e. get 
@@ -440,7 +440,7 @@
     (let ((term (car terms)))
       (if (match:has-binding? term dict)
         (append (match:get-value term dict)
-                  (cdr terms))
+                (cdr terms))
         terms
         )
       ))
@@ -452,11 +452,11 @@
           )
       (cond 
         ((match:has-binding? var dict)
-          ((unify:dispatch
+         ((unify:dispatch
             (append (match:get-value var dict)
                     (cdr var-first))
             terms*)
-           dict succeed fail))
+          dict succeed fail))
         (else 
           ((grab-segment var-first terms*)
            dict succeed fail)))))
@@ -471,34 +471,34 @@
         (assert (n:>= 1 (length possible-term-var-binding-list)))
         (define (continue)
           (if (null? terms*)
-              (begin
-                ; (write-line (list "call grab-segment fail for" var-first terms dict))
-                (fail))
-              ;; modified
-              (if (null? possible-term-var-binding-list)
-                (let ((initial-terms-binding-list (add-term-to-initial initial terms*)))
-                  (slp 
-                    (get-initial initial-terms-binding-list)
-                    (get-terms initial-terms-binding-list)
-                    (get-binding initial-terms-binding-list)
-                    )
+            (begin
+              ; (write-line (list "call grab-segment fail for" var-first terms dict))
+              (fail))
+            ;; modified
+            (if (null? possible-term-var-binding-list)
+              (let ((initial-terms-binding-list (add-term-to-initial initial terms*)))
+                (slp 
+                  (get-initial initial-terms-binding-list)
+                  (get-terms initial-terms-binding-list)
+                  (get-binding initial-terms-binding-list)
                   )
-                (let* ((binding (car possible-term-var-binding-list))
-                       (term-var (get-var-from-binding binding)))
-                  ;; we have just added left-internal, it should occur once.
-                  (let* ((added-left-internal (last initial))
-                         (left-internal-check-pred (lambda (elm) (equal? elm added-left-internal))))
-                    (assert (n:= 1 (elem-cnt initial left-internal-check-pred)))
-                    (slp
-                      ;; same as what the original unify does for segment-var.
-                      (append (remove left-internal-check-pred initial) (list term-var))
-                      (cdr terms*) ; with right-internal removed
-                      '()
-                      )
+                )
+              (let* ((binding (car possible-term-var-binding-list))
+                     (term-var (get-var-from-binding binding)))
+                ;; we have just added left-internal, it should occur once.
+                (let* ((added-left-internal (last initial))
+                       (left-internal-check-pred (lambda (elm) (equal? elm added-left-internal))))
+                  (assert (n:= 1 (elem-cnt initial left-internal-check-pred)))
+                  (slp
+                    ;; same as what the original unify does for segment-var.
+                    (append (remove left-internal-check-pred initial) (list term-var))
+                    (cdr terms*) ; with right-internal removed
+                    '()
                     )
                   )
                 )
-              ))
+              )
+            ))
         (let ((dict* (do-substitute var initial dict)))
           (let ((dict**
                   (if (null? possible-term-var-binding-list)
@@ -519,24 +519,25 @@
 
 ; (trace unify:dispatch)
 (unify:internal '(((?? x) 3) ((?? x)))
-'((4 (?? y)) (4 5))
-(match:new-dict)
-(lambda (dict)
-(pp (match:bindings dict))
-#f))
+                '((4 (?? y)) (4 5))
+                (match:new-dict)
+                (lambda (dict)
+                  (pp (match:bindings dict))
+                  #f))
 
 ;; can only output the 1st cand
 (unifier '((?? x) 3) '(4 (?? y)))
+
 (let ((pattern1 '((?? x) 3)))
   (unify:internal pattern1 '(4 (?? y))
-    (match:new-dict)
-    (lambda (dict)
-      (pp (match:bindings dict))
-      (pp
-        ;; from unifier
-        (and dict
-          ((match:dict-substitution dict) pattern1))
-        )
-      #f)
-    )
+                  (match:new-dict)
+                  (lambda (dict)
+                    (pp (match:bindings dict))
+                    (pp
+                      ;; from unifier
+                      (and dict
+                           ((match:dict-substitution dict) pattern1))
+                      )
+                    #f)
+                  )
   )

@@ -16,8 +16,8 @@
 ;; https://stackoverflow.com/a/35530909/21294350
 ;; TODO better to use filter for var-cnt
 ;; basic ideas: 
-  ;; use one local list to collect filtered elem's in one flattened style
-  ;; Then length.
+;; use one local list to collect filtered elem's in one flattened style
+;; Then length.
 (define (tree-fold* non-base-f base-f n sxp base?)
   (let loop ((sxp sxp) (res n))
     (cond
@@ -32,13 +32,13 @@
 ;; > But, it fails when the item to be replaced is a list.
 (define (replace old new xs)
   (if (null? xs)
-      xs
-      (let ((head (car xs))
-            (tail (cdr xs)))
-        (cond ((equal? head old)
-               (cons new (replace old new tail)))
-              ((atom? head)
-               (cons head (replace old new tail)))
-              (else
-               (cons (replace old new head)
-                     (replace old new tail)))))))
+    xs
+    (let ((head (car xs))
+          (tail (cdr xs)))
+      (cond ((equal? head old)
+             (cons new (replace old new tail)))
+            ((atom? head)
+             (cons head (replace old new tail)))
+            (else
+              (cons (replace old new head)
+                    (replace old new tail)))))))

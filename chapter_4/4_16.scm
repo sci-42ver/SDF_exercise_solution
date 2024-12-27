@@ -24,22 +24,22 @@
 ;; But the problems is that we may have 2 sides both with var's, so how to know which is lhs?
 (define (lambda-test)
   (pp (noisy-infer-program-types 
-    '(begin
-      (define demo
-        (lambda (x y)
-          (if y
-            ;; IGNORE: TODO one problem here is that if we constrain for (+ x 2) first, then x is bound to ?:union.
-            ;; IGNORE: But ?:union will be forbidden by (* x x).
-              ;; Anyway this is expected since (* x x) doesn't support string.
-            ;; Here the allowed type for x actually depends on y... This is beyond what this exercise tries to implement.
-            (* x x)
-            ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
-            ; (< x 2)
-            (+ x 2)
-            )
-          ))
-      (demo (demo 3 #t) #t)
-      ))))
+        '(begin
+           (define demo
+             (lambda (x y)
+               (if y
+                 ;; IGNORE: TODO one problem here is that if we constrain for (+ x 2) first, then x is bound to ?:union.
+                 ;; IGNORE: But ?:union will be forbidden by (* x x).
+                 ;; Anyway this is expected since (* x x) doesn't support string.
+                 ;; Here the allowed type for x actually depends on y... This is beyond what this exercise tries to implement.
+                 (* x x)
+                 ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
+                 ; (< x 2)
+                 (+ x 2)
+                 )
+               ))
+           (demo (demo 3 #t) #t)
+           ))))
 (lambda-test)
 ;; This is the constraint got by definition.
 ; (= (? demo:2) (type:procedure ((? x:3) (? y:4)) (? type:8)))
@@ -88,13 +88,13 @@
 ;; IGNORE: TODO weird assoc can't recognize match-args created obj.
 ;; This may be due to cons always creates one new  data structure.
 (assoc (match-args (car-satisfies union-term?)
-              (car-satisfies list-term?))
-        (list 
-          (cons 
-            (match-args (car-satisfies union-term?)
-                    (car-satisfies list-term?))
-            'ignored
-            )))
+                   (car-satisfies list-term?))
+       (list 
+         (cons 
+           (match-args (car-satisfies union-term?)
+                       (car-satisfies list-term?))
+           'ignored
+           )))
 ;Value: #f
 (assoc 1 (list (cons 1 'ignored)))
 
@@ -106,16 +106,16 @@
 
 (define (make-top-level-env-frame)
   (let ((binary-numerical
-         (let ((v (numeric-type)))
-           (procedure-type (list v v) v)))
+          (let ((v (numeric-type)))
+            (procedure-type (list v v) v)))
         (binary-comparator
-         (let ((v (numeric-type)))
-           ;; See `(define-parametric-type-operator operator)` -> (lambda operands ...)
-           (procedure-type (list v v) (boolean-type))))
+          (let ((v (numeric-type)))
+            ;; See `(define-parametric-type-operator operator)` -> (lambda operands ...)
+            (procedure-type (list v v) (boolean-type))))
         ;; added
         (binary-numerical-string
-         (let ((v (add-procedure-definition-tag (union-term (numeric-type) (string-type)))))
-           (procedure-type (list v v) v)))
+          (let ((v (add-procedure-definition-tag (union-term (numeric-type) (string-type)))))
+            (procedure-type (list v v) v)))
         )
     (list (cons '+ binary-numerical-string)
           (cons '- binary-numerical)
@@ -152,17 +152,17 @@
 ;; IGNORE: See the 2nd TODO in SDF_exercises/chapter_4/4_16_union_lib.scm.
 (define (lambda-test-with-union)
   (pp (noisy-infer-program-types 
-    '(begin
-      (define demo
-        (lambda (x y)
-          (if y
-            (* x x)
-            ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
-            (< x 2)
-            )
-          ))
-      (demo (demo 3 #t) #t)
-      ))))
+        '(begin
+           (define demo
+             (lambda (x y)
+               (if y
+                 (* x x)
+                 ;; use this when with union, so returned type is (?:union (numeric-type) (boolean-type))
+                 (< x 2)
+                 )
+               ))
+           (demo (demo 3 #t) #t)
+           ))))
 ;; Skip problems in this test. See above.
 ; (lambda-test)
 (lambda-test-with-union)
