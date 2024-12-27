@@ -90,7 +90,7 @@ with check comments in codes.
   - nbardiuk can be skipped.
 - 2, 3, 4.1~4
 # @%exercise tests finished
-- 2, 3, 4.1~6
+- 2, 3, 4.1~6, 4.19
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
   - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
@@ -230,6 +230,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 10: `match-args vector?`
 12: `do-substitute`
 13: 
+19: `substitution-instance?`
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1
   - same as SICP `(married Mickey ?who)`
@@ -282,7 +283,6 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - [ ] 17
   - ~~TODO see md~~
     - [non-expansive expression](https://homepages.inf.ed.ac.uk/stg/NOTES/node90.html)
-- 
 ### other possible type-inference extension
 - [subtype etc](https://nus-cs2030s.github.io/2425-s1/27-inference.html#argument-typing)
 ### @%TODO

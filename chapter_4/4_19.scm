@@ -176,6 +176,7 @@
                                                                           #f)
                                                                         unify
                                                                         )))
+
 ;; The above can't be checked for sameness by dict
 ;; since they have non-compatible values for the same var-seq.
 (define (main-test unify-proc)
@@ -275,6 +276,7 @@
     (main-test substitution-instance?)
     substitution-instance?
     ))
+; (pairs ((a b b b (?? y) b b b c) dict (w ((?? y)) ??) (x (b b b) ??)))
 
 ;;; d.
 ;; 0. IMHO this can be done based on 4.20.
@@ -299,9 +301,9 @@
 ;; 1.b.1. IMHO the above are all cases for 2 sub-sequences, i.e. no intersection or partial intersection or total containment.
 ;; Here only the last is not one symmetric relation. So we have totally 4 relations.
 
-;;; related resources
-;; skipped
-;; google: unification "segment" variable general match
+;;;; related resources
+;;; skipped
+;;; google: unification "segment" variable general match
 ;; 0. https://digitalcommons.bard.edu/cgi/viewcontent.cgi?article=1092&context=senproj_s2021
 ;; related with knot theory
 ;; 1. https://pdf.sciencedirectassets.com/272313/1-s2.0-S0747717100X00843/1-s2.0-S074771718371059X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFAaCXVzLWVhc3QtMSJHMEUCIQCB2XbxX%2FNCB6ieJzwW4rP4LwO7r7n3XTEoLlttde25pgIgZJ1RkQmL23%2BvrCMbktWziINHGBalN52XB1K5Gik0dEYqswUIKRAFGgwwNTkwMDM1NDY4NjUiDEUZ6l6AiJhDs1WN3iqQBQGZmxs7taiMoyHgS4QVSpac144xXoIIAUAo3uWb7nH%2FcTHFpHoDzb3R7Gf%2FlOqtWqcGx1O%2FrTySrC%2BlX4E%2FoPDR9FXag6QQcox6%2Fl0fjx6KXqF5ND6bvwrZKAtILSqc%2B2jYlRsKkn4PqVqr4guPZOU3HHMRfqJElQolZ8ZXYcXIyi9ohuxizi7x07ZHaWirygUYstQ6DNcfhm4fJxrYFt1jTNqY6Q4MCGfijobdrFu5P01jlOi3Qg1mB5sP%2BnOQk900BH%2B2OoFCaHxwwTbFbJQ90fzndMZ%2BDwFX4d9FQ8mJDFKUhAAiKQr%2F1EjIOyFkB6BfdLvyO2fvIv0daSRGhkgTPvUBSZ7liFHwLeS0qRmX017BKT%2BZUMEBK5RW90aDMy7yCFybbU8bcpHKvoU96cwiPEaSfhaYW5otlUXFvjb0uf6DrwrBwQNIgvazii2MeCJyVwBLvx5xV8Vzu00%2FV8%2FyLvJWODCW1XPrCiINflsRho4ii6lF%2F2jbhTpJMk4vrJOawy0TB5WgdpaX2TePAmbK%2FpffoyBmnIrUlMGRDnIxTDd6Q%2FcTQhQDGCL1w2C1bWwJt5lecheSkA65NY%2B5ljIG8zxwEcu%2B0zA2xbN6iPnl9ddZWj4AunRwxpvXhx9s5ZTBwCjMj9Qiznc5nBzGgcScofQPWfZ0%2B6x8hQliRz3rebNTdqOkGvirhejnS%2BaGUqyB%2BEr%2B5LTDrgHYjMOeGAVz0vV5pUE74GK2mSyyqcYDxOHuIDhX1c5hF6UZrlE86Jbcg2s%2FWFCcZKVlUsRloXZqwtD0rJ%2BPEl6esGHh8zVUm%2FkMF%2FbfKCIe%2FHhcnKl%2BS699HXU5Al1PILwF8N8SBg7nEgJ5mkiUcgxPMaDx%2FSXwMLqLtLsGOrEBkWPZc7O6S%2BFSGYV0RyFAEqtdauzaOOPQowb6skXd%2B0eBZBGfW5pRK%2FSK7zSow61eDVyeGqUz%2BwRF4dXpopzPRpNBGCllSc27YBl0xVsknodXimgwwcTG2iylBX0rkKPteHHWzvPabdiecF4qXkZiaeS84T5UfENJGvIvhgRvsIOMn0DyZ9Y4lyquB6LPdvbwV7ghfi%2BzJf17PArz8NmbH4XQ3bvj%2F2kwgiXGSguwPz4M&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241226T082749Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYXFG7FHKI%2F20241226%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=75ca1e9a0584f3fc046bf5eec5d37a74e02b9960b7f3c660e4be26c1bdeba4e4&hash=e443c70442bc5c3d0b5099af1cd73d94c1af73d95c60c1045bfb7c95653c540d&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S074771718371059X&tid=spdf-0760b691-ad7a-4d60-8471-d7d7e2a3f335&sid=b659fb6b528244423b980b8819aeb03bd5eegxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0f1558045404065056035c&rr=8f7fb19e3b69f7e5&cc=us
@@ -319,8 +321,7 @@
 ;; uses one different definition.
 ;; > A subset U c S is called an (upper) segment or afilter of S, iff for o e S and x e U and x -< t~ we have cre U. 
 ;; which is related with ordering.
-
-;; scholar.google
+;;; scholar.google
 ;; includes the above 5.
 ;; 0. https://arxiv.org/pdf/1907.10333
 ;; is about Anti-unification
@@ -343,13 +344,13 @@
 (define (make-sub-segment-var name)
   (match:make-var '??? name)
   )
-(define (match:sub-segment-var? object)
-  (and (match:var? object)
-       (let ((type (match:var-type object)))
-         (eq? '??? type))))
+; (define (match:sub-segment-var? object)
+;   (and (match:var? object)
+;        (let ((type (match:var-type object)))
+;          (eq? '??? type))))
 
 (define match:var-types '(? ?? ???))
-(define match:strict-segment-var? match:segment-var?)
+; (define match:strict-segment-var? match:segment-var?)
 ;; Here sub-segment-var can also has nested sub-segment-var inside.
 (define (match:segment-var? object)
   (and (match:var? object)
@@ -378,13 +379,17 @@
       (set! n (+ n 1))
       ;; modified
       (symbol prefix "-internal:" n))))
+(define (add-left-suffix prefix)
+  (symbol prefix "-left"))
+(define (add-right-suffix prefix)
+  (symbol prefix "-right"))
 ;; use list since segment uses that.
 (define (segment-var->sub-segment-vars-list segment-var)
   (assert (match:segment-var? segment-var))
   (let ((name (match:var-name segment-var)))
     (list 
-      (make-sub-segment-var (generate-unique-internal-name name))
-      (make-sub-segment-var (generate-unique-internal-name name))
+      (make-sub-segment-var (add-left-suffix (generate-unique-internal-name name)))
+      (make-sub-segment-var (add-right-suffix (generate-unique-internal-name name)))
       ))
   )
 (define left-internal car)
@@ -423,6 +428,8 @@
       ; ;; i.e. get 
       ; ((match:sub-segment-var? term)
       ;   )
+
+      ;; grab another constant term etc.
       (else 
         ;; same as the 1st clause.
         (create-initial-terms-binding-list (append initial (list term)) (cdr terms) '()))
@@ -518,16 +525,19 @@
   grab)
 
 ; (trace unify:dispatch)
+;; test1
 (unify:internal '(((?? x) 3) ((?? x)))
                 '((4 (?? y)) (4 5))
                 (match:new-dict)
                 (lambda (dict)
                   (pp (match:bindings dict))
                   #f))
+; ((y-internal:2 (5) ???) (y-internal:1 (3) ???) (y (5 3) ??) (x (4 5) ??))
 
 ;; can only output the 1st cand
 (unifier '((?? x) 3) '(4 (?? y)))
 
+;; test2
 (let ((pattern1 '((?? x) 3)))
   (unify:internal pattern1 '(4 (?? y))
                   (match:new-dict)
@@ -541,3 +551,5 @@
                     #f)
                   )
   )
+
+(load "4_19_d_tests.scm")
