@@ -233,7 +233,11 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 10: `match-args vector?`
 12: `do-substitute`
 13: Emm... following the similar naming as `match:compile-pattern`, we search `unify:compile-pattern`. But this naming convention is not ensured to be used by others.
-14: 
+14: `infer-program-types`
+15: `parametric-type` using the book naming convention
+16: `(define-parametric-type-operator 'type:union)`
+17: `set!-expr?`/`set-expr?` similar to `if-expr?`
+18: practical
 19: `substitution-instance?`
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1

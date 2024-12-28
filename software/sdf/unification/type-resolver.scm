@@ -305,6 +305,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (set! procedure-type constructor)
   (set! procedure-type? predicate))
 
+;;  different from function-type which uses "domain" without "s".
 (define (procedure-type-domains expr)
   (car (parametric-type-operands expr)))
 
@@ -650,6 +651,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (function-type (product-type v v)
                    v)))
 
+;; 0. These union-type examples just define the union-type but doesn't show how this type is unified with others.
+;; 1. It also uses tagged list same as SDF_exercises/chapter_4/4_16.scm. 
 (define example-type-1
   (union-type (function-type (numeric-type) (numeric-type))
               (function-type (symbolic-type (numeric-type))
@@ -711,6 +714,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 |#
 
 ;;;; examples:
+;; This seems to be based on the old code base
+;; See SDF_exercises/chapter_4/4_16.scm
+;; where we just have domains and codomain after type:procedure.
 
 #|
 (pp (noisy-infer-program-types '((lambda (x y) (+ x y)) 3 4)))
