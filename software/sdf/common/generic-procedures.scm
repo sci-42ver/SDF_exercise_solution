@@ -121,24 +121,31 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (generic-procedure-handlers proc)
   (map cdr (generic-procedure-rules proc)))
 
-;; SDF_exercises TODO so interesting, why does outer (generic-procedure? object) is #f but (generic-procedure? candidate) is #t?
-;; See 3_14.scm `(display (generic-procedure-rules +))`.
+;; IGNORE: SDF_exercises TODO so interesting, why does outer (generic-procedure? object) is #f but (generic-procedure? candidate) is #t?
+;; 0. See 3_14.scm `(display (generic-procedure-rules +))`.
+;; 0.a. This will call arithmetic-overrides procedure-extractor due to + is one arithmetic-procedure.
+;; See SDF_exercises/software/sdf/generic-procedures/generic-arith.scm
 (define (generic-procedure-metadata object)
   (define (try-object candidate)
+    (pp candidate)
     (if (generic-procedure? candidate)
         (begin
-          ; (display (list (generic-procedure? candidate) "use generic"))
+          (write-line (list (pp candidate) "use generic:" (generic-procedure? candidate)))
           (%generic-procedure-metadata candidate))
-        ;; SDF_exercises TODO why define generic-procedure-extractors which is not used in SDF book.
+        ;; IGNORE: SDF_exercises TODO why define generic-procedure-extractors which is not used in SDF book.
         (let loop ((extractors generic-procedure-extractors))
           (if (not (pair? extractors))
               (error:not-a generic-procedure? candidate))
           (let ((val ((cdar extractors) candidate))) ; call extractor
             (if val
-                (try-object val)
+                (begin
+                  (write-line "call extractors")
+                  (try-object val))
                 (loop (cdr extractors)))))))
-  ; (display (list "generic-procedure-metadata" (generic-procedure? object)))
-  (try-object object))
+  (write-line (list "generic-procedure-metadata" (generic-procedure? object) (pp object)))
+  (pp object)
+  (try-object object)
+  )
 
 (define (define-generic-procedure-extractor name extractor)
   (let ((p (assq name generic-procedure-extractors)))

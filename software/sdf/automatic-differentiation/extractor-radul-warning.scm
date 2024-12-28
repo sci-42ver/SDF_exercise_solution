@@ -34,7 +34,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                             extract-dx-default))
 
 (define (extract-dx-differential-1 value dx)
-  ;; SDF_exercises TODO: since saved-total-index doesn't define it, extract-dx-coefficient-from is just one concept?
+  ;; SKIPPED SDF_exercises TODO: since saved-total-index doesn't define it, extract-dx-coefficient-from is just one concept?
   ;; The following extract-dx-differential just extracts from all diff-terms and then checks whether `(memv dx factors)` to extract from the appropriate terms.
   (extract-dx-coefficient-from (infinitesimal-part value) dx))
 

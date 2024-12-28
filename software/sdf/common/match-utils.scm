@@ -111,7 +111,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (match:bindings dict)
   (cdr dict))
 
-;; SDF_exercises TODO dict is unused.
+;; IGNORE: SDF_exercises TODO dict is unused.
+;; maybe for further extension? Or it is just to notify that we make new-bindings *for* dict arg.
 (define (match:new-bindings dict bindings)
   (cons 'dict bindings))
 

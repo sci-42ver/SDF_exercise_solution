@@ -225,6 +225,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (set! arithmetic-procedure-metadata (association 'get))
   (set! set-arithmetic-procedure-metadata! (association 'put!)))
 
+;; overrides is something like (cons operator ...) in +-like.
 (define (make-installable-procedure operator arithmetic
                                     overrides)
   (let* ((operation

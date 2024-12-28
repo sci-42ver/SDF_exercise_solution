@@ -42,7 +42,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (make-memoizer-table make-list= elt=)
   (cond ((eqv? eq? elt=)
           ;; ref1: https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Construction-of-Hash-Tables.html#index-make_002dhash_002dtable
-          ;; Here make-list= is one proc, so it is not comparator https://srfi.schemers.org/srfi-128/srfi-128.html.
+          ;; Here make-list= is one proc, so it is not comparator got by `make-comparator` https://srfi.schemers.org/srfi-128/srfi-128.html.
           ;; see https://srfi.schemers.org/srfi-69/srfi-69.html
          (make-hash-table (make-list= eq?)
                           ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Address-Hashing.html
@@ -52,7 +52,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           (make-list-hash eq-hash)
                           ;; ref1
                           ;; > The arg arguments are allowed but are implementation dependent; do not provide them.
-                          ;; SDF_exercises TODO #t meaning?
+                          ;; SKIPPED SDF_exercises TODO #t meaning?
+                          ;; > Implementations are allowed to use the rest args for *implementation-specific* extensions. 
+                          ;; > Be warned, though, that using these extensions will make your program less portable.
+                          ;; MIT_Scheme_Reference
+                          ;; > The arg arguments are allowed but are implementation dependent; do not provide them.
                           'rehash-after-gc? #t))
         ((eqv? eqv? elt=)
          (make-hash-table (make-list= eqv?)

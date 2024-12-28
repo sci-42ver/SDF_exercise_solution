@@ -3,6 +3,15 @@
 (manage 'new 'automatic-differentiation)
 
 (load "generic-procedure-lib/performance-tool.scm")
+
+;; 0. Here it will call arithmetic-overrides generic-procedure-extractor
+;; and then get the procedure defined in arithmetic before install.
+;; That is procedure defined in (numerical-simplifier-wrapper g).
+;; 0.a. Notice add-to-generic-arithmetic! calls define-generic-procedure-handler
+;; which doesn't change the arithmetic-operation for that operator.
+;; 0.a.0. But numerical-simplifier-wrapper will create one *new* arithmetic.
+(display (generic-procedure-rules +))
+
 (install-arithmetic! full-generic-arithmetic)
 (book-fib-test)
 (test-stormer-counts)
@@ -50,7 +59,8 @@
 ;; then we go back and try number?.
 ;; Then for the 2nd, we try symbolic? -> number?.
 (display (generic-procedure-rules <))
-(display (generic-procedure-rules +))
+; (display (generic-procedure-rules +))
+; (display (generic-procedure-rules +))
 (generic-procedure? +)
 (with-predicate-counts (lambda () 1))
 (<-fib-test) ; calls for <.

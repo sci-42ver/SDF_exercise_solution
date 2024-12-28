@@ -82,7 +82,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (add-to-generic-arithmetic! generic-arithmetic
                               (extender generic-arithmetic)))
 
-;; SDF_exercises TODO by make-installable-procedure, this seems to return the original proc.
+;; IGNORE: SDF_exercises TODO by make-installable-procedure, this seems to return the original proc.
+;; Yes. See the comments for the 1st (display (generic-procedure-rules +)).
 (define-generic-procedure-extractor 'arithmetic-overrides
   (lambda (object)
     (and (arithmetic-procedure? object)
