@@ -118,7 +118,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (match:make-binding var value)
   (list (match:var-name var)
         value
-        ;; SDF_exercises TODO when this is used.
+        ;; used in match:lookup-corrected
         (match:var-type var)))
 
 (define (match:map-binding-value procedure binding)

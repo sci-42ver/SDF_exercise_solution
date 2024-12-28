@@ -2,7 +2,15 @@
   (let ((n 0))
     (lambda (pattern1 pattern2 dict succeed) 
       (write-line (list "4_19_d_tests test" (begin (set! n (n:+ n 1)) n)))
-      (unify:internal pattern1 pattern2 dict succeed)
+      ; (unify:internal pattern1 pattern2 dict succeed)
+      ; (write-line "---")
+      (pp 
+        (let ((unify-proc substitution-instance?))
+          (sort-and-remove-substitution-instance-for-pairs
+            (unify:collector-wrapper-with-substitution-unique-pairs pattern1 pattern2 dict succeed unify-proc)
+            unify-proc
+            )
+          ))
       (write-line "---")
       )
     )
@@ -18,6 +26,17 @@
 ; (y-internal:6 (5 6) ???) ... (y (5 6 3) ??)
 ; (z-internal:8 (6) ???) ... (z (6 7) ??)
 
+; (pairs
+;  (((4 5 6 3) (4 5 6 7) (6 7)) dict
+;                               (z-internal:8-left (6) ???)
+;                               (z-internal:7-right (7) ???)
+;                               (z (6 7) ??)
+;                               (y-internal:6-left (5 6) ???)
+;                               (y-internal:5-right (3) ???)
+;                               (y (5 6 3) ??)
+;                               (x (4 5 6) ??)))
+
+
 ;; unify:segment-var-var works for y-internal.
 ;; the 1st maybe-grab-segment part has been checked in test1.
 (unify:internal-display-wrapper '(((?? x) 3) ((?? x) 7))
@@ -30,6 +49,8 @@
 ; ((y-internal:10 ((?? z) 6) ???) (y-internal:9 (3) ???) (y ((?? z) 6 3) ??) (x (4 (?? z) 6) ??))
 ;; (?? z) tries to grab y-internal:10 but fails.
 ; ((y-internal:10 (6) ???) (z () ??) (y-internal:9 (3) ???) (y (6 3) ??) (x (4 6) ??))
+;; ((?? z) 6) contains (6)
+; (pairs (((4 (?? z) 6 3) (4 (?? z) 6 7)) dict (y-internal:10-left ((?? z) 6) ???) (y-internal:9-right (3) ???) (y ((?? z) 6 3) ??) (x (4 (?? z) 6) ??)))
 
 ;; the 2nd maybe-grab-segment part
 (unify:internal-display-wrapper '(((?? x) 3) (4 5))
@@ -39,6 +60,7 @@
                   (pp (match:bindings dict))
                   #f))
 ;; results are same as before test1 in SDF_exercises/chapter_4/4_19.scm
+; (pairs (((4 5 3) (4 5)) dict (y-internal:12-left (5) ???) (y-internal:11-right (3) ???) (y (5 3) ??) (x (4 5) ??)))
 
 ;; ensure the original pattern can be matched, e.g. (?? x)->(4 (?? y)).
 ;; That is done in the 2nd slp in continue.
@@ -52,6 +74,8 @@
 ; ((y () ??) (x (4) ??))
 ; ((y-internal:13 () ???) (y ((??? y-internal:14)) ??) (x (4 (??? y-internal:14)) ??))
 ; ((x (4 (?? y)) ??))
+;; the 1st is one specific case of the latter
+; (pairs (((4 (?? y) 3)) dict (x (4 (?? y)) ??)))
 
 ;; ensure the added term binding in dict** can be got appropriately, i.e. that done by check-car-term-binding.
 (unify:internal-display-wrapper '(((?? x) 3 (?? z) 3))
@@ -74,6 +98,15 @@
 ; ((y-internal:22-left (3 (?? z) 3) ???) (y-internal:21-right () ???) (y (3 (?? z) 3) ??) (x (4 3 (?? z) 3) ??))
 ; ...
 
+;; Using unify:collector-wrapper-with-substitution-unique-pairs
+;; we have only
+; (pairs
+;  (((4 3 3)) dict (z () ??) (y-internal:56-left () ???) (y-internal:55-right (3) ???) (y (3) ??) (x (4) ??))
+;  (((4 (??? y-internal:70-left) 3 (?? z) 3 (??? y-internal:70-left) 3 (?? z) 3)) dict
+;                                                                                 (y-internal:69-right (3 (?? z) 3) ???)
+;                                                                                 (y ((??? y-internal:70-left) 3 (?? z) 3) ??)
+;                                                                                 (x (4 (??? y-internal:70-left) 3 (?? z) 3 (??? y-internal:70-left)) ??)))
+;; trivially they are not same by x binding.
 
 ;; ensure (null? initial) in add-term-to-initial to work.
 (unify:internal-display-wrapper '(((?? x)))
@@ -87,6 +120,8 @@
 ; ((x ((?? y)) ??))
 ; ((x () ??) (y () ??))
 ; ((y ((?? x)) ??))
+;; trivially they are same.
+; (pairs ((((?? x))) dict (y ((?? x)) ??)))
 
 ;; ensure else in add-term-to-initial to work.
 (unify:internal-display-wrapper '(((?? x) 5) ((?? y)))
@@ -97,3 +132,4 @@
                   #f))
 ;; (?? x) grabs 4 expectedly.
 ; ((y-internal:40-left (6) ???) (y-internal:39-right (5) ???) (y (6 5) ??) (x (3 4 6) ??))
+; (pairs (((3 4 6 5) (6 5)) dict (y-internal:44-left (6) ???) (y-internal:43-right (5) ???) (y (6 5) ??) (x (3 4 6) ??)))

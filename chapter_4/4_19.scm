@@ -25,7 +25,7 @@
   (set-cdr! lst (cons data (cdr lst)))
   lst
   )
-(define (unify:internal-functional-wrapper pattern1 pattern2 dict succeed)
+(define (unify:collector-wrapper pattern1 pattern2 dict succeed)
   (let ((collector (list 'collector)))
     (unify:internal pattern1 pattern2 dict
                     (lambda (dict)
@@ -39,7 +39,7 @@
 
 (let ((p1 '(a (?? x) (?? y) (?? x) c))
       (p2 '(a b b b (?? w) b b b c)))
-  (pp (unify:internal-functional-wrapper p1 p2 (match:new-dict)
+  (pp (unify:collector-wrapper p1 p2 (match:new-dict)
                                          (lambda (dict)
                                            (pp (match:bindings dict))
                                            #f))))
@@ -56,7 +56,7 @@
 
 (let ((pattern '(* (?? a) (+ (?? b)) (?? c)))
       (expression '(* x y (+ z w) m (+ n o) p)))
-  (pp (unify:internal-functional-wrapper pattern expression (match:new-dict)
+  (pp (unify:collector-wrapper pattern expression (match:new-dict)
                                          (lambda (dict)
                                            (pp (match:bindings dict))
                                            #f))))
@@ -85,8 +85,8 @@
 (define (new-collector data)
   (cons 'collector data))
 (define tagged-list-data cdr)
-(define (unify:internal-functional-wrapper-with-substitution pattern1 pattern2 dict succeed)
-  (let ((collector (unify:internal-functional-wrapper pattern1 pattern2 dict succeed)))
+(define (unify:collector-wrapper-with-substitution pattern1 pattern2 dict succeed)
+  (let ((collector (unify:collector-wrapper pattern1 pattern2 dict succeed)))
     (new-collector 
       (map 
         (lambda (dict) 
@@ -138,8 +138,8 @@
   )
 (define (new-pairs data)
   (cons 'pairs data))
-(define (unify:internal-functional-wrapper-with-substitution-unique-pairs pattern1 pattern2 dict succeed unify-proc)
-  (let ((collector (unify:internal-functional-wrapper pattern1 pattern2 dict succeed))
+(define (unify:collector-wrapper-with-substitution-unique-pairs pattern1 pattern2 dict succeed unify-proc)
+  (let ((collector (unify:collector-wrapper pattern1 pattern2 dict succeed))
         (pairs (new-pairs '()))
         )
     (for-each ; modified 
@@ -170,7 +170,7 @@
 ; (trace same-pair-for-solution?)
 (let ((pattern '(* (?? a) (+ (?? b)) (?? c)))
       (expression '(* x y (+ z w) m (+ n o) p)))
-  (pp (unify:internal-functional-wrapper-with-substitution-unique-pairs pattern expression (match:new-dict)
+  (pp (unify:collector-wrapper-with-substitution-unique-pairs pattern expression (match:new-dict)
                                                                         (lambda (dict)
                                                                           (pp (match:bindings dict))
                                                                           #f)
@@ -182,7 +182,7 @@
 (define (main-test unify-proc)
   (let ((p1 '(a (?? x) (?? y) (?? x) c))
         (p2 '(a b b b (?? w) b b b c)))
-    (unify:internal-functional-wrapper-with-substitution-unique-pairs p1 p2 (match:new-dict)
+    (unify:collector-wrapper-with-substitution-unique-pairs p1 p2 (match:new-dict)
                                                                       (lambda (dict)
                                                                         (pp (match:bindings dict))
                                                                         #f)
@@ -255,8 +255,12 @@
 ; (trace substitution-instance?)
 ; (trace general>=?)
 (pp (main-test substitution-instance?))
+;; Compared with (main-test unify), won't remove the more general (a b b b (?? y) b b b c) part.
+; (pairs 
+;   ((a b b b (?? y) b b b c) dict (w ((?? y)) ??) (x (b b b) ??)) 
+;   ((a b b b b b b c) dict (w () ??) (y () ??) (x (b b b) ??)))
 
-;; similar to unify:internal-functional-wrapper-with-substitution-unique-pairs
+;; similar to unify:collector-wrapper-with-substitution-unique-pairs
 ;; but uses fold.
 (define (sort-and-remove-substitution-instance-for-pairs pairs unify-proc)
   (let ((sorted (new-pairs (sort (tagged-list-data pairs) general>=? car))))
@@ -441,6 +445,10 @@
 ;; The original maybe-substitute and maybe-grab-segment doesn't have this split binding 
 ;; (i.e. seeing the term as one whole un-splitable object), so no need for checking term binding.
 ;; 0.a. anyway whether bounded to term or term value is all fine satisfying consistency.
+;; 0.b. since only segment var can have split binding
+;; and only segment var can have segment var *value* (match:lookup is not bidirectional since it is one dict. Otherwise it will be a bit messy),
+;; So we only need to check for parts related with segment var, which are all done in maybe-grab-segment.
+;; IGNORE: (temporarily I just did this for segment var part in my implementation. But this can be done similarly for the rest parts)
 (define (check-car-term-binding terms dict)
   (if (null? terms)
     terms
