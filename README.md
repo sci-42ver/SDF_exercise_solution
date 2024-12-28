@@ -119,6 +119,8 @@ with check comments in codes.
     - *better* to [allow filenames with spaces](https://unix.stackexchange.com/a/658969/568529)
       `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -print0 | xargs -0 grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} --color=always | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
       - I also excludes `./.git` and `\*.{md,rkt,sample}`.
+      - https://unix.stackexchange.com/questions/493723/grep-exclude-dir-dont-work/493909?noredirect=1#comment1512591_493909
+        `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec bash -c 'grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} --color=always | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"' {} +`
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions based on 5 filenames.
