@@ -148,7 +148,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (match:lookup var dict)
   (let ((name
-         (if (symbol? var) ; SDF_exercises TODO when this occurs (book doesn't say explicitly).
+         ;; IGNORE: SDF_exercises TODO when this occurs (book doesn't say explicitly).
+         ;; maybe just for the general case where we also allow accepting var name instead of the whole var.
+         (if (symbol? var)
              var
              (match:var-name var))))
     (find (lambda (binding)
@@ -208,11 +210,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let loop ((pattern pattern))
     (cond ((match:element-var? pattern)
            (get-value pattern (lambda () pattern)))
-          ;; SDF_exercises TODO when this happens since `(list (loop sub))` part has already checked this.
+          ;; (codes not included by the book) SDF_exercises TODO when this happens since `(list (loop sub))` part has already checked this.
           ((match:segment-var? pattern)
            (if (get-value pattern (lambda () #f))
                (error "Ill-formed pattern:" pattern))
-           ;; SDF_exercises TODO why not use substitution.
+           ;; (codes not included by the book) SDF_exercises TODO why not use substitution.
            pattern)
           ((list? pattern)
            (append-map (lambda (sub)

@@ -56,7 +56,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      ;; IMHO at least for (?? ...) which is shown before in book.
      (or (and (null? rest1) (null? rest2)
               (succeed dict))
-         ;; SDF_exercises TODO when this happens.
+         ;; IGNORE: SDF_exercises TODO when this happens.
          (fail)))
    ;; > If not, unify returns #f, indicating a failure.
    (lambda () #f)))

@@ -1,6 +1,6 @@
 (define (match:lookup-corrected var dict)
   (let ((name
-          (if (symbol? var) ; SDF_exercises TODO when this occurs (book doesn't say explicitly).
+          (if (symbol? var)
             var
             (match:var-name var))))
     (find (lambda (binding)
@@ -28,7 +28,7 @@
      (assert (list? rest1))
      (or (and (null? rest1)
               (succeed dict*))
-         ;; SDF_exercises TODO when this happens.
+         ;; IGNORE: SDF_exercises TODO when this happens.
          (begin
            ; (write-line (list "error for unify:internal" rest1))
            (fail)))

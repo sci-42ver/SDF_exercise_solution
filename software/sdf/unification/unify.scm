@@ -56,7 +56,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
      ;; IMHO at least for (?? ...) which is shown before in book.
      (or (and (null? rest1) (null? rest2)
               (succeed dict))
-         ;; SDF_exercises TODO when this happens.
+         ;; IGNORE: SDF_exercises TODO when this happens.
+         ;; See book p254 example.
          (begin
           ; (write-line (list "error for unify:internal" rest1 rest2))
           (fail))))

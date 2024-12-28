@@ -205,7 +205,7 @@
           ; ((match:segment-var? pattern)
           ;  (if (get-value pattern (lambda () #f))
           ;      (error "Ill-formed pattern:" pattern))
-          ;  ;; SDF_exercises TODO why not use substitution.
+          ;  ;; (codes not included by the book) SDF_exercises TODO why not use substitution.
           ;  pattern)
           ;; added before general list.
           ((procedure-definition-element-var-type? pattern)

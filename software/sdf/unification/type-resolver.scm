@@ -204,7 +204,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (pair? (cdr object))
        (symbol? (cadr object))
        (or (null? (cddr object))
-           ;; SDF_exercises TODO when happens
+           ;; SDF_exercises TODO when happens (idx-0. with idx here since it is copied from SDF_exercises/README.md)
+           ;; 0. not in book
+           ;; 1. Maybe match:var-restriction: but why symbol?.
            (and (pair? (cddr object))
                 (symbol? (caddr object))
                 (null? (cdddr object))))))

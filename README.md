@@ -1,3 +1,4 @@
+`-exec` will fail for the case where we use pipe `|` in the command. We can use one  alternative method with the same effects `-print0 | xargs -0` https://unix.stackexchange.com/a/658969/568529.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
@@ -54,6 +55,8 @@
 ## miscs clipboard
 - SDF_exercises TODO
   - SDF_exercises TODO when happens
+  - (codes not included by the book)
+  - IGNORE:
 - sci-42ver/SDF_exercise_solution
 - "Won't dig into" in SDF_notes.md
 # SDF_exercise_solution
@@ -100,7 +103,22 @@ with check comments in codes.
     So I *skipped* checking `SDF_exercises/software/sdf/user-defined-types/vector-arith.scm` (*user-defined-types/vector-arith*).
   - `define-generic-procedure-extractor` (*not shown in the SDF book*. There is no related funcs even by searching "extractor")
 ## @%review of "SDF_exercises TODO"
+`grep "SDF_exercises TODO" -r ./**/*.scm | grep -v "IGNORE\|(cph)\|SKIPPED\|when happens\|(codes not included by the book)"` (notice here the piped results have esc color codes, so "SDF_exercises TODO when happens" won't work).
 - From cc09d5b919575d7a27d30d94100d2f12dd8248ef up to .
+## @%review of mere TODO
+`grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" -r ./**/*.scm | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
+1. I didn't check for md/rkt but just for my written codes (mostly are with scm suffix).
+2. Here IGNORE means that has been finished while SKIPPED means it hasn't been finished but skipped for some reason.
+3. See [this](https://stackoverflow.com/a/221929/21294350) for how glob is used.
+4. I skipped SICP related paths using [this](https://unix.stackexchange.com/a/493909/568529)
+  `find . \( -type d \( -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec 'grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"' {} +`
+  - ~~Use [this](https://stackoverflow.com/a/60425338/21294350) to allow pipe~~
+    `find . \( -type d \( -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f 2>&1 | grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
+  - Use this to allow pipe
+    `find . \( -type d \( -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -printf '"%p" ' | grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
+    - *better* to [allow filenames with spaces](https://unix.stackexchange.com/a/658969/568529)
+      `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -print0 | xargs -0 grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} --color=always | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
+      - I also excludes `./.git` and `\*.{md,rkt,sample}`.
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions based on 5 filenames.
