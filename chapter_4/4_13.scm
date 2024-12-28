@@ -160,18 +160,23 @@
   match:bindings)
 ;Value: ((y (2) ?) (b 1 ?) (a 1 ?) (z (5) ?) (x 3 ?))
 
+;; use match:compile-pattern for unifier
 (define (unifier* pattern1)
   (lambda (data)
     (let ((dict 
             (run-matcher
               (match:compile-pattern pattern1) 
-              data (lambda (x) x))))
+              data 
+              (lambda (x) x))))
       (and dict
            ((match:dict-substitution dict) pattern1)))))
 
 (run-matcher
   (match:compile-pattern a) 
   b match:bindings)
+;Value: ((dyear 1790 ?) (dday 17 ?) (dmo apr ?) (bdate ((? bmo) 6 1705) ?) (gn ben ?))
+
+;; book test
 ((unifier* a) b)
 ; ((ben franklin) ((? bmo) 6 1705) (apr 17 1790))
 ((unifier* c) ((unifier* a) b))

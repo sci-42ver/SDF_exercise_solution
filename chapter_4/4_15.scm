@@ -297,7 +297,7 @@
   )
 (pp (noisy-infer-program-types map-test-with-generic-type))
 
-;; consider the above TODO
+;; consider the above TODO about car and cdr.
 (define map-test-with-generic-type-annotated
   '(t
      (? unary-map:25)

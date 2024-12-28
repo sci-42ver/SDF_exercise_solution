@@ -128,6 +128,8 @@
           (cons '>= binary-comparator))))
 ; (trace unify)
 (trace unify:list-terms)
+
+;; test1
 (pp (noisy-infer-program-types '(begin (+ 2 3) (+ "1" "2"))))
 ; (t
 ;  (procedure-definition ?:union (numeric-type) (string-type))
@@ -202,5 +204,6 @@
 ;       ))))
 ; (lambda-test-with-union-throw-error)
 
+;; test-n
 ;; throw errors.
 (pp (noisy-infer-program-types '(+ "2" #t)))

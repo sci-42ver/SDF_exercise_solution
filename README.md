@@ -1,9 +1,10 @@
 # skipped exercise
-## needs big changes to the overall program structure
+## You can do if you are interested without extra background knowledge assumption
+### needs big changes to the overall program structure
 - 4.12 See 0.b.
   > 0.b.0.a. Again, wait implies we need to change the unify internal structure...
   - Also see 4.18 TODO which also relates with delay/wait.
-## open-ended
+### open-ended
 - 2.14
   - > This is not easy.
   - I tried to find one possible example to implement in https://martinfowler.com/dsl.html#:~:text=Domain%2Dspecific%20languages%20have%20been,strut's%20configuration%20file....
@@ -17,14 +18,6 @@
 - 3.22-b
   > on different terminals.
   beyond programming basic strategies.
-## related with compiler
-- better to do with some basic compiler backgrounds which includes type-inference
-  - 4.14
-    > make it *as general as you can*
-    - I even didn't know what to do for that "general case", more specifically I didn't know what problems will have for "procedures passed as arguments and returned as values" when we assume all procedures with generic arguments ~~(so "free variables" are )~~.
-### partially done exercises
-- related with 4.14
-  - 4.16
 ## related with *complexity analysis* (TODO after CRLS. Others: search CRLS here.)
 - 3.6-c
 ## ~~unrelated with programming strategies since my goal is "A strong understanding of programming" said in mit_6-046j_2005~~
@@ -39,6 +32,13 @@
 - 4.19
   - a.
     > look for a functional solution—but don't try too hard!
+## related with compiler
+- better to do with some basic compiler backgrounds which includes type-inference
+  - 4.14
+    > make it *as general as you can*
+    - I even didn't know what to do for that "general case", more specifically I didn't know what problems will have for "procedures passed as arguments and returned as values" when we assume all procedures with generic arguments ~~(so "free variables" are )~~.
+    - related
+      - 4.16
 ## related with complexity analysis: better done after CRLS
 - 4.18
 # Notice
@@ -88,9 +88,12 @@ with check comments in codes.
     We can also ignore later chapters
     `sdf/better-layering/*.scm`
   - nbardiuk can be skipped.
-- 2, 3, 4.1~4
-# @%exercise tests finished
-- 2, 3, 4.1~6, 4.19
+- 2, 3, 4 (see "chapter 4" section where all exercises with reference search methods have been checked)
+# @%exercise tests finished (obviously not considering skipped exercises)
+- 2, 3, 4.1~6, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.10, 4.13~17, 4.19
+## no need for tests
+### due to about complexity analysis
+- 4.18
 # @TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
   - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
@@ -229,7 +232,8 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 8: match:vector (assuming following the naming convention)
 10: `match-args vector?`
 12: `do-substitute`
-13: 
+13: Emm... following the similar naming as `match:compile-pattern`, we search `unify:compile-pattern`. But this naming convention is not ensured to be used by others.
+14: 
 19: `substitution-instance?`
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1
