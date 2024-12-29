@@ -22,9 +22,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 |#
 
 (define (make-initial-history t h xt xt-h xt-2h)
+  ; (write-line "in make-initial-history")
   (list (cons t xt)
         (cons (- t h) xt-h)
-        (cons (- t (* 2 h)) xt-2h)))
+        (cons (- t (* 2 h)) xt-2h))
+  )
 
 (define (extend-history t+h xt+h history)
   (cons (cons t+h xt+h) history))
@@ -37,6 +39,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (stormer-2 F h)
   (lambda (history)
+    ; (write-line (list "x's:" (x 0 history)))
     (+ (* 2 (x 0 history))
        (* -1 (x 1 history))
        (* (/ (expt h 2) 12)

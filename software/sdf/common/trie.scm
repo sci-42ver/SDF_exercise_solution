@@ -78,6 +78,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (apply-predicate predicate feature)
   (increment-predicate-count! predicate)
+  (if (eq? predicate any-object?)
+    (write-line (list "trie check any-object? for" feature ". After addition, count:" (get-predicate-count predicate))))
   (predicate feature))
 
 (define (get-all-values trie features)

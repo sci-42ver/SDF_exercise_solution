@@ -46,6 +46,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (microbench-full-generic-arith dispatcher)
   (let ((g (make-generic-arithmetic dispatcher)))
+    ;; 0. define-generic-procedure-handler->add-handler! is *first* called here.
+    ;; The above make-generic-arithmetic just creates that generic-procedure.
+    ;; So number? is added before any-object?.
     (add-to-generic-arithmetic! g numeric-arithmetic)
     (extend-generic-arithmetic! g function-extender)
     (add-to-generic-arithmetic! g (symbolic-extender numeric-arithmetic))
@@ -120,23 +123,23 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (set! make-default-dispatch-store make-simple-dispatch-store)
 (define default-microbench-full-generic-arith
   (microbench-full-generic-arith make-default-dispatch-store))
-(install-arithmetic! default-microbench-full-generic-arith)
-(test-fib-counts)
+; (install-arithmetic! default-microbench-full-generic-arith)
+; (test-fib-counts)
 
-;;; 0. "filter" and "search" are used by get-a-value-by-filtering etc.
-;; 1. Here BFS should still use all predicates before getting one cand, while DFS may not.
+; ;;; 0. "filter" and "search" are used by get-a-value-by-filtering etc.
+; ;; 1. Here BFS should still use all predicates before getting one cand, while DFS may not.
 
 (define get-a-value-old get-a-value)
-;; Tries (filtered)
-(define (get-a-value trie features)
-  ; (write-line "calls new get-a-value")
-  (get-a-value-by-filtering trie features))
-(install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
-(test-fib-counts)
-;; Tries (searched)
-(define get-a-value get-a-value-old)
-(install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
-(test-fib-counts)
+; ;; Tries (filtered)
+; (define (get-a-value trie features)
+;   ; (write-line "calls new get-a-value")
+;   (get-a-value-by-filtering trie features))
+; (install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
+; (test-fib-counts)
+; ;; Tries (searched)
+; (define get-a-value get-a-value-old)
+; (install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
+; (test-fib-counts)
 
 #|
 ;; Rule lists
@@ -170,38 +173,76 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (test-stormer-counts)
   (define (F t x) (- x))
+  ;; This will also add to %predicate-counts.
   (define numeric-s0
     (make-initial-history 0 .01 (sin 0) (sin -.01) (sin -.02)))
   (with-predicate-counts
    (lambda ()
-     (x 0 ((evolver F 'h stormer-2) numeric-s0 1)))))
+     (let ((history ((evolver F 'h stormer-2) numeric-s0 1)))
+      ; (* 2 (x 0 history))
+      ; (write-line (list "after history" numeric-s0 (get-predicate-count any-object?)))
+      (x 0 history)
+      ))))
 
-(define (tests-for-rule-list-and-trie test-proc)
-  (install-arithmetic! default-microbench-full-generic-arith)
-  (test-proc)
-  ;; Tries (filtered)
-  (define (get-a-value trie features)
-    ; (write-line "calls new get-a-value")
-    (get-a-value-by-filtering trie features))
-  (install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
-  (test-proc)
-  ;; Tries (searched)
-  (define get-a-value get-a-value-old)
-  (install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
-  (test-proc)
-  )
-(tests-for-rule-list-and-trie test-stormer-counts)
+;; not created one new (test test-proc) due to 
+;; > ;duplicate internal definitions for (#[uninterned-symbol .get-a-value.1]) in tests-for-rule-list-and-trie
+(define test-proc test-stormer-counts)
+(install-arithmetic! default-microbench-full-generic-arith)
+(test-proc)
+
+(define (stormer-2 F h)
+  (lambda (history)
+    (let ((sub-sum1 
+            (+ (* 2 (x 0 history))
+              (* -1 (x 1 history))))
+          (sub-sum2
+            (+ (* 13 (F (t 0 history) (x 0 history)))
+             (* -2 (F (t 1 history) (x 1 history)))
+             (F (t 2 history) (x 2 history)))
+            )
+          )
+      (write-line (list "sub-sum1,2" (list sub-sum1 sub-sum2)))
+      (+ sub-sum1
+       (* (/ (expt h 2) 12)
+          sub-sum2))
+      )))
+; (trace get-a-value)
+; (trace %try-edges)
+;; Tries (filtered)
+(define (get-a-value trie features)
+  ; (write-line "calls new get-a-value")
+  (get-a-value-by-filtering trie features))
+(install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
+(test-proc)
+;; Tries (searched)
+(define get-a-value get-a-value-old)
+(install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
+(test-proc)
 ;; 24<27<29 implied every which has possibly short circuit in predicates-match?.
 ; (29 #[compiled-procedure ("arith" #xf0) #x1c #xb75eb4])
 ; (24 #[compound-procedure function?])
 ; (7 #[compound-procedure any-object?])
 ; (39 #[compound-procedure symbolic?])
+;; any-object? trace
+; ("rule-list check any-object? for" -2 "in (predicates args)" ((#[compound-procedure any-object?] #[compound-procedure function?]) (-2 9.999833334166664e-3)) ". now count:" 1)
+; ("rule-list check any-object? for" 13 "in (predicates args)" ((#[compound-procedure any-object?] #[compound-procedure function?]) (13 0)) ". now count:" 2)
+; ("rule-list check any-object? for" 0 "in (predicates args)" ((#[compound-procedure any-object?] #[compound-procedure function?]) (0 -.01999966666833333)) ". now count:" 3)
+; ("rule-list check any-object? for" -.01999966666833333 "in (predicates args)" ((#[compound-procedure any-object?] #[compound-procedure function?]) (-.01999966666833333 .01999866669333308)) ". now count:" 4)
+; ("rule-list check any-object? for" -1 "in (predicates args)" ((#[compound-procedure any-object?] #[compound-procedure function?]) (-1 -9.999833334166664e-3)) ". now count:" 5)
+; ("rule-list check any-object? for" 2 "in (predicates args)" ((#[compound-procedure any-object?] #[compound-procedure function?]) (2 0)) ". now count:" 6)
+; ("rule-list check any-object? for" 0 "in (predicates args)" ((#[compound-procedure any-object?] #[compound-procedure function?]) (0 9.999833334166664e-3)) ". now count:" 7)
+
 ;; implied by BFS, 3 same 27's.
 ; (27 #[compiled-procedure ("arith" #xf0) #x1c #xb75eb4])
 ; (27 #[compound-procedure function?])
 ; (12 #[compound-procedure any-object?])
 ; (27 #[compound-procedure symbolic?])
-;; at least better than BFS, but any-object? is worse than the normal one due to the latter having also short circuit.
+;; 0. at least better than BFS (for all counts), but any-object? is worse than the normal one due to the latter having also short circuit.
+;; 1. 2 more any-object?'s are due to something like (+ 9.999833334166664e-3 (* (/ (expt h 2) 12) -9.999750002487318e-7)).
+;; i.e. (number? symbolic?)
+;; For the normal case, it will be matched with the latter added (number? symbolic?).
+;; But for trie, it will try matching the 1st elem.
+;; Then based on comments in microbench-full-generic-arith, we will try any-object? before number?...
 ; (22 #[compiled-procedure ("arith" #xf0) #x1c #xb75eb4])
 ; (21 #[compound-procedure function?])
 ; (9 #[compound-procedure any-object?])

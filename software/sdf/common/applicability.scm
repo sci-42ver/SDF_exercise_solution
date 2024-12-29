@@ -56,7 +56,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        ;; > If this application returns false, every immediately returns false.
        ;; short circuit if one predicate fails.
        (every (lambda (predicate arg)
+                ; (if (eq? predicate any-object?)
+                ;   (write-line 
+                ;     (list "before count:" (get-predicate-count predicate))))
                 (increment-predicate-count! predicate)
+                (if (eq? predicate any-object?)
+                  (write-line 
+                    (list "rule-list check any-object? for" arg "in (predicates args)" (list predicates args) ". now count:" (get-predicate-count predicate))))
                 ; (display predicate)
                 ; (display (get-predicate-count predicate))
                 ; (newline)
