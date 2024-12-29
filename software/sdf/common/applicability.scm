@@ -52,7 +52,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (predicates-match? predicates args)
   (and (n:= (length predicates) (length args))
-        ;; short circuit if one predicate fails.
+       ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Mapping-of-Lists.html#index-every
+       ;; > If this application returns false, every immediately returns false.
+       ;; short circuit if one predicate fails.
        (every (lambda (predicate arg)
                 (increment-predicate-count! predicate)
                 ; (display predicate)

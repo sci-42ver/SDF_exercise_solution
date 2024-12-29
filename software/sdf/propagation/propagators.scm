@@ -107,7 +107,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           (map cell-strongest inputs))))
           'do-nothing
           (begin
-            ;; TODO: consider passing the parent into the
+            ;; code_base TODO consider passing the parent into the
             ;; builder.
             (parameterize ((*my-parent* me))
               (to-build))

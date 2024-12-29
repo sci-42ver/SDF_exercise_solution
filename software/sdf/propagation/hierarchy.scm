@@ -103,7 +103,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (path-of object)
   (cond ((symbol? object) object)
         ((relatable? object)
-         ;; TODO: nothing handles name conflicts for a given
+         ;; code_base TODO nothing handles name conflicts for a given
          ;; container.
          (map get-name (ancestry object)))
         (else

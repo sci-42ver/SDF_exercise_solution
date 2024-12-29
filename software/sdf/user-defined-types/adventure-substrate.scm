@@ -145,7 +145,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (set-up! object)
         object))))
 
-;;; TODO: use properties as the keys in the plist.
+;;; code_base TODO: use properties as the keys in the plist.
 (define (parse-plist plist properties)
   (define (lookup-value property)
     ;; For troll, property is troll:hunger and property-name is hunger.

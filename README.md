@@ -117,10 +117,26 @@ with check comments in codes.
   - Use this to allow pipe
     `find . \( -type d \( -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -printf '"%p" ' | grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
     - *better* to [allow filenames with spaces](https://unix.stackexchange.com/a/658969/568529)
-      `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -print0 | xargs -0 grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} --color=always | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
+      `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -print0 | xargs -0 grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} --color=always | grep -v "SDF_exercises TODO" | grep -v "IGNORE\|(cph)\|SKIPPED"` (notice not to use the mere `SDF_exercises` since for grep'ing many files file path is also included in the output)
       - I also excludes `./.git` and `\*.{md,rkt,sample}`.
       - https://unix.stackexchange.com/questions/493723/grep-exclude-dir-dont-work/493909?noredirect=1#comment1512591_493909
-        `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec bash -c 'grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} --color=always | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"' {} +`
+        `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec sh -c 'grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} -v "\(SDF_exercises TODO\)\|IGNORE\|(cph)\|SKIPPED" "$@" --color=always' sh {} +` (Here I want to keep both color and pipe. But that may be in conflict).
+        - [see](https://stackoverflow.com/a/66061678/21294350) (notice `||` is used there for shor circuit so that "no issue" will return true without checking the latter and "issue" will check the latter. Using && will reject "no issue") and [this for `!`](https://superuser.com/a/397325/1658455) (`{}` [won't work for `-name`](https://unix.stackexchange.com/a/351167/568529) for name)
+          Here I skipped all sub-files in paths `SDF_exercises/chapter_*` since they are in homework which TODO won't be probably helped by reading the book further.
+          Here `*` can match dir prefix like `./fubar3` in `man`.
+          `find . \( -type d \( -path ./SDF_exercises/chapter_\* -o -path \*/.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o \( -type f \( ! -path "./6.945_assignment_solution/ps[0-9]*/code/*.scm" -a ! -name "*.md" -a ! -name "*.rkt" -a ! -name "*.sample" \) \) -exec awk '/TODO/ && !/SDF_exercises TODO/ && !/IGNORE/ && !/IGNORE/ && !/\(cph\)/ && !/SKIPPED/ {match($0,/TODO/); printf "\033[1;31m" FILENAME "\033[0m: " substr($0,1,RSTART-1) "\033[1;31m" substr($0,RSTART,RLENGTH) "\033[0m: " substr($0,RSTART+RLENGTH) "\n"}' {} +`
+          - we need [explicit print](https://unix.stackexchange.com/q/658029/568529)
+          - [`match`](https://unix.stackexchange.com/a/193254/568529)
+          ```bash
+          $ find . \
+            \( -type d \( -path ./SDF_exercises/chapter_\* \
+              -o -path \*/.git \
+              -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o \
+            \( -type f \( ! -path "./6.945_assignment_solution/ps[0-9]*/code/*.scm" \
+              -a ! -name "*.md" -a ! -name "*.rkt" -a ! -name "*.sample" \) \) \
+            -exec awk '/TODO/ && !/SDF_exercises TODO/ && !/IGNORE/ && !/\(cph\)/ && !/SKIPPED/ && !/code_base TODO/ {match($0,/TODO/); printf "\033[1;31m" FILENAME "\033[0m: " substr($0,1,RSTART-1) "\033[1;31m" substr($0,RSTART,RLENGTH) "\033[0m: " substr($0,RSTART+RLENGTH) "\n"}' {} +
+          ```
+          - most of codes in the code base uses "TODO:" instead of only "TODO".
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions based on 5 filenames.

@@ -127,10 +127,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; See SDF_exercises/software/sdf/generic-procedures/generic-arith.scm
 (define (generic-procedure-metadata object)
   (define (try-object candidate)
-    (pp candidate)
+    ; (pp candidate)
     (if (generic-procedure? candidate)
         (begin
-          (write-line (list (pp candidate) "use generic:" (generic-procedure? candidate)))
+          ; (write-line (list (pp candidate) "use generic:" (generic-procedure? candidate)))
           (%generic-procedure-metadata candidate))
         ;; IGNORE: SDF_exercises TODO why define generic-procedure-extractors which is not used in SDF book.
         (let loop ((extractors generic-procedure-extractors))
@@ -142,8 +142,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (write-line "call extractors")
                   (try-object val))
                 (loop (cdr extractors)))))))
-  (write-line (list "generic-procedure-metadata" (generic-procedure? object) (pp object)))
-  (pp object)
+  ; (write-line (list "generic-procedure-metadata" (generic-procedure? object) (pp object)))
+  ; (pp object)
   (try-object object)
   )
 

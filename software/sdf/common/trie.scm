@@ -86,6 +86,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (get-a-value trie features)
   (get-a-value-by-searching trie features))
 
+;; checked
 (define (get-a-value-by-filtering trie features)
   (let ((nodes
          (filter trie-has-value?
@@ -94,6 +95,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (trie-value (car nodes))
         (error "Unable to match features:" features))))
 
+;; The basic ideas are same as get-a-value-by-filtering.
+;; IMHO filtering does BFS by %find-all-edges iterating through all edges at one level
+;; while searching does DFS by (%try-edges (cdr edges) ...).
 (define (get-a-value-by-searching trie features)
   (let loop
       ((trie trie)
@@ -120,6 +124,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (fail)))))
 
 ;; checked
+;; See add-edge-to-trie for trie-edge-alist structure.
+;; So here we try the 1st predicate in predicate seq and then get those successor tries satisfying the requirements.
 (define (%find-all-edges trie feature)
   (map cdr
        (filter (lambda (p)

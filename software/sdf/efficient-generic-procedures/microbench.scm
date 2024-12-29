@@ -21,8 +21,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
 
-(load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")
+(cd "~/SICP_SDF/SDF_exercises/")
+(load "software/sdf/manager/load.scm")
 (manage 'new 'efficient-generic-procedures:trie)
+(load "software/sdf/common/stormer2.scm")
 
 (define (run-test test)
   (test)                                ;warm up
@@ -111,11 +113,29 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; (set! register-compound-predicate! memoized-register-compound-predicate!)
 
-;; SDF_exercises TODO I don't know how the following "Rule lists" is got.
+;;; IGNORE: SDF_exercises TODO I don't know how the following "Rule lists" is got.
+;; Rule list is the normal make-simple-dispatch-store.
+;;; IGNORE: When run, no results with 'procedure? "uproc"'
+;; #[compound-procedure 95 symbolic?] etc are shown when using mere car in with-predicate-counts.
 (set! make-default-dispatch-store make-simple-dispatch-store)
 (define default-microbench-full-generic-arith
   (microbench-full-generic-arith make-default-dispatch-store))
 (install-arithmetic! default-microbench-full-generic-arith)
+(test-fib-counts)
+
+;;; 0. "filter" and "search" are used by get-a-value-by-filtering etc.
+;; 1. Here BFS should still use all predicates before getting one cand, while DFS may not.
+
+(define get-a-value-old get-a-value)
+;; Tries (filtered)
+(define (get-a-value trie features)
+  ; (write-line "calls new get-a-value")
+  (get-a-value-by-filtering trie features))
+(install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
+(test-fib-counts)
+;; Tries (searched)
+(define get-a-value get-a-value-old)
+(install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
 (test-fib-counts)
 
 #|
@@ -155,6 +175,37 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (with-predicate-counts
    (lambda ()
      (x 0 ((evolver F 'h stormer-2) numeric-s0 1)))))
+
+(define (tests-for-rule-list-and-trie test-proc)
+  (install-arithmetic! default-microbench-full-generic-arith)
+  (test-proc)
+  ;; Tries (filtered)
+  (define (get-a-value trie features)
+    ; (write-line "calls new get-a-value")
+    (get-a-value-by-filtering trie features))
+  (install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
+  (test-proc)
+  ;; Tries (searched)
+  (define get-a-value get-a-value-old)
+  (install-arithmetic! (microbench-full-generic-arith make-trie-dispatch-store))
+  (test-proc)
+  )
+(tests-for-rule-list-and-trie test-stormer-counts)
+;; 24<27<29 implied every which has possibly short circuit in predicates-match?.
+; (29 #[compiled-procedure ("arith" #xf0) #x1c #xb75eb4])
+; (24 #[compound-procedure function?])
+; (7 #[compound-procedure any-object?])
+; (39 #[compound-procedure symbolic?])
+;; implied by BFS, 3 same 27's.
+; (27 #[compiled-procedure ("arith" #xf0) #x1c #xb75eb4])
+; (27 #[compound-procedure function?])
+; (12 #[compound-procedure any-object?])
+; (27 #[compound-procedure symbolic?])
+;; at least better than BFS, but any-object? is worse than the normal one due to the latter having also short circuit.
+; (22 #[compiled-procedure ("arith" #xf0) #x1c #xb75eb4])
+; (21 #[compound-procedure function?])
+; (9 #[compound-procedure any-object?])
+; (27 #[compound-procedure symbolic?])
 
 #|
 ;; Rule lists

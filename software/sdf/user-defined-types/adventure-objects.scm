@@ -569,7 +569,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define generic-move!
   (most-specific-generic-procedure 'generic-move! 4 #f))
 
-;;; TODO: guarantee that THING is in FROM.
+;;; code_base TODO: guarantee that THING is in FROM.
 ;;; Also that the people involved are local.
 
 ;; coderef: generic-move:default
