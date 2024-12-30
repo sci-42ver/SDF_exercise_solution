@@ -232,6 +232,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                     (match-args predicate)
     get-shared))
 
+;; see SDF_exercises/software/sdf/common/utils.scm
+;; returns record-type-name (like <simple-tag>)
 (define (define-tag-record-printer record-type)
   (define-record-printer record-type
     (lambda (tag) (list (tag-name tag)))))
@@ -279,6 +281,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (%invoke-tagging-strategy tagging-strategy name data-test
                             %make-simple-tag))
 
+;; 0. https://srfi.schemers.org/srfi-9/srfi-9.html
+;; Here <simple-tag> is created by make-record-type which 
+;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Records.html#index-record_002dtype_002ddescriptor
+;; is "record-type descriptor".
+;; 1. https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Records.html#index-record_002dconstructor
+;; %make-simple-tag is constructor for
+;; > constructing new members of the type represented by record-type
+;; so it returns object of type <simple-tag>.
 (define-record-type <simple-tag>
     (%make-simple-tag shared)
     simple-tag?
@@ -379,9 +389,17 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (((tag-supersets tag) 'add-element!) superset))
   ; (display (list "after addition:" tag (((tag-supersets tag) 'get-elements))))
   ; (newline)
-  ;; SDF_exercises TODO is there one more efficient way for `add-element!`.
+  ;; 0. IGNORE (see SDF_exercises/chapter_3/test/prime-number?-test.scm): SDF_exercises TODO is there one more efficient way for `add-element!`.
   ;; IMHO we can directly add the above added to tag<=-cache
-  (hash-table-clear! tag<=-cache))
+  ;; 0.a. Here tag<=-cache is only modified by cached-tag<=
+  ;; which then is called only by tag<= or itself.
+  ;; the former is then called only by generic-tag<= (only called by uncached-tag<= which is only called by cached-tag<=) 
+  ;; or predicate<= which is called in SICP_SDF/SDF_exercises/software/sdf/user-defined-types/generics.scm etc.
+  ;; or here.
+  ;; 0.a.0. So here only tag<= can modify tag<=-cache here.
+  ;; So why we reset cache after addition possibly by tag<=?
+  (hash-table-clear! tag<=-cache)
+  )
 
 (define (tag= tag1 tag2)
   (guarantee tag? tag1)
@@ -448,7 +466,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-tag<= non-bottom-tag? bottom-tag? false-tag<=)
 (define-tag<= top-tag? non-top-tag? false-tag<=)
 
-;; SDF_exercises TODO temporarily skipped the following 2 define.
+;; WAITED SDF_exercises TODO temporarily skipped the following 2 define.
 (define-tag<= parametric-tag? parametric-tag?
   (lambda (tag1 tag2)
     (and (eqv? (parametric-tag-template tag1)

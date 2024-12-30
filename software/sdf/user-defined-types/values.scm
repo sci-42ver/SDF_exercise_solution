@@ -59,7 +59,20 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (object applicable-object-metadata-object)
   (applicator applicable-object-metadata-applicator))
 
-;; used by make-simple-function.
+;; SKIPPED This SDF_exercises TODO is added in 283de13 where I am doing Exercise 3.15. 
+;; 0. used by make-simple-function in SDF_exercises/software/sdf/user-defined-types/functions.scm.
+;; 0.a. make-simple-function is called by make-simple-operation or simple-operation in /home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/user-defined-types/operations.scm
+;; 0.a.0. make-simple-operation is related with /home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/user-defined-types/vector-arith.scm
+;;; 0.a.1. simple-operation (9 results) is related with 
+;; combining-arithmetics (2 results. 3_1.scm) but it doesn't use user-defined-types
+;; common (3 results) should use common defined simple-operation including "boolean-arithmetic.scm but not used when I read up to chapter 4"
+;; generic-arith is used by automatic-differentiation (1 result. 3_8.scm).
+;; layer, wrappers are skipped.
+;; 0.a.1.a. So we need to check what uses user-defined-types in load-spec
+;; But that is only called by itself or /home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/propagation/load-spec
+;; So only 3.16~3.22 uses that.
+;; But adventure games doesn't use make-simple-function...
+;; SKIPPED SDF_exercises TODO: I forgot where I got to this procedure...
 (define (make-object-applicable predicate object applicator)
   (guarantee procedure? applicator)
   ;; The procedure that is the applicable object must not be the
@@ -67,7 +80,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; applicable objects that share the same procedure but with
   ;; different metadata.
 
-  ;; SDF_exercises TODO why not just use applicator?
+  ;; SKIPPED SDF_exercises TODO why not just use applicator?
   (let ((applicable-object
          (lambda args (apply applicator args))))
     (set-applicable-object-metadata!

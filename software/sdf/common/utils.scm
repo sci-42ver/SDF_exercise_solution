@@ -258,6 +258,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (define-record-printer record-type get-parts
           #!optional get-name)
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Custom-Output.html#index-standard_002dprint_002dmethod
+  ;; > #[<name> <hash> <part>…]
+  ;; SKIPPED SDF_exercises TODO see SDF_exercises/chapter_3/test/implementation-tag-test.scm why hash is not outputted?
   (define-print-method (record-predicate record-type)
     (standard-print-method
         (if (default-object? get-name)

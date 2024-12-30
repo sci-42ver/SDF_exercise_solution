@@ -363,6 +363,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (append (super object)
             (list (get-name object)))))
 
+;; I reviewed this while reading SDF chapter 4
+;; So I just checked this based on abstraction and my memory about what these procedures do.
+;; This just get data of object (tag is related with pred)
+;; Then print property name and property value for each property like screen:port etc.
 (define-generic-procedure-handler tagged-data-description
   (match-args object?)
   (lambda (object)

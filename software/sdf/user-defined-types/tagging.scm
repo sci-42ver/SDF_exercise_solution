@@ -76,7 +76,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (most-specific-generic-procedure 'tagged-data-description 1
     (constant-generic-procedure-handler #f)))
 
-;; SDF_exercises TODO skipped since I don't care about what pretty-printer returns.
+;; IGNORE (see SDF_exercises/chapter_3/test/pp-object.scm): SDF_exercises TODO skipped since I don't care about what pretty-printer returns.
 ;;; MIT/GNU Scheme: integrate with pretty-printer
 (define-pp-describer tagged-data?
   tagged-data-description)
@@ -109,8 +109,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (and (tagged-data? object)
          (tag<= (tagged-data-tag object) tag)
          ;; > which is a clever trick for memoizing the result of an expensive predicate
-         ;; SDF_exercises TODO why does here we still do the slow test for `(simple-abstract-predicate ’prime-number slow-prime?)`?
-         ;; See prime-number?-test.scm where since we already does this test in `constructor`, we don't need to redo it here.
+         ;; IGNORE: SDF_exercises TODO why does here we still do the slow test for `(simple-abstract-predicate ’prime-number slow-prime?)`?
+         ;; See prime-number?-test.scm `(prime-number? (make-prime-number 4))` where since we already does this test in `constructor`, we don't need to redo it here.
          (data-test (tagged-data-data object))))
 
   (define tag

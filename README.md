@@ -1,18 +1,4 @@
-1. Here `sub` is same as `match` to return the "leftmost" substring. Anyway this is enough for my situation since my search pattern "TODO" can at most exist once in one line. 1.a. So maybe Kusalananda's workaround is better and more general (similar for Stéphane Chazelas's). But anyway this answer replies to my question about `awk` more appropriately.
-
-1. Sorry for my inconsistency. I added one sample demonstration. You can just use that and ignore those inconsistency. Anyway, I want to emphasize `&&` can't be used directly in `match`. If `!/bar/` or `!/foo bar/` confused you, sorry for that. 2. "at *other times* still it sounds like you *only* want to highlight the part": Actually I just want the  behavior same as `grep`, i.e. only highlighting the matched pattern. Sorry for not saying that explicitly.
-
-Complement for 1: `gsub` mentioned by Ed Morton will work for the case where "TODO" occurs more than once which is explicitly shown by the edit of Stéphane Chazelas's answer.
-
-Thanks so much for the so detailed edit. Small questions:  1. Is `-e '^'` in `grep --color -e '^' -e foo` necessary? IMHO that just grep those lines with the beginning "empty string" and different `-e`s doesn't influence with each other as `man` says. 2. IMHO "To discard all the lines that contain foo bar and *all that don't contain foo* and highlight foo in the remaining ones:" is same as "To discard the lines that contain foo bar and highlight occurrences of foo in remaining lines," since `if ! a && b` is same as `unless a{b}` based on short circuit of `&&` for `perl` (Continued)
-
-which is also said by your last paragraph. Similarly `sed -n` doesn't print by default as `perl -n` and we use `p` modifier, so still same (Similar for the rest). Is it that case?
-
-Some references for the edit:  1. `$'...'`: https://unix.stackexchange.com/q/371827/568529. 2. ast-open's sed: https://github.com/att/ast/blob/master/lib/package/ast-open.README 3. `<` used at the beginning of line: https://superuser.com/a/843143/1658455 where `<` influences the command before control operator `|`
-
-Some references for someone unfamiliar with `perl` same as me: 1. `-p` https://learnbyexample.github.io/learn_perl_oneliners/one-liner-introduction.html#substitution seems to ensure outputting the results "$_ is automatically printed". 2. options like `-e`: see `man perlrun` 3. `$&`: `man perlretut` 4. `unless`: `man perlsyn`
-
-`-exec` will fail for the case where we use pipe `|` in the command. We can use one  alternative method with the same effects `-print0 | xargs -0` https://unix.stackexchange.com/a/658969/568529.
+Thanks. With that `printf` demo, I also found that `?!` seems to consume checked string, so `'foo(?! bar)'` won't filter out "foo foo bar". This seems to be implied implicitly by python re doc https://stackoverflow.com/a/11430936/21294350 and also in `man perlre` "the lookaheads are zero-width expressions--they only look, but don't consume any of the string".
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
@@ -117,12 +103,12 @@ with check comments in codes.
     So I *skipped* checking `SDF_exercises/software/sdf/user-defined-types/vector-arith.scm` (*user-defined-types/vector-arith*).
   - `define-generic-procedure-extractor` (*not shown in the SDF book*. There is no related funcs even by searching "extractor")
 ## @%review of "SDF_exercises TODO"
-`grep "SDF_exercises TODO" -r ./**/*.scm | grep -v "IGNORE\|(cph)\|SKIPPED\|when happens\|(codes not included by the book)"` (notice here the piped results have esc color codes, so "SDF_exercises TODO when happens" won't work).
+`grep -v "IGNORE\|(cph)\|SKIPPED\|when happens\|(codes not included by the book)" -r ./**/*.scm | grep "SDF_exercises TODO" --color=always` (notice here the piped results have esc color codes, so "SDF_exercises TODO when happens" won't work).
 - From cc09d5b919575d7a27d30d94100d2f12dd8248ef up to .
 ## @%review of mere TODO
 `grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" -r ./**/*.scm | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
 1. I didn't check for md/rkt but just for my written codes (mostly are with scm suffix).
-2. Here IGNORE means that has been finished while SKIPPED means it hasn't been finished but skipped for some reason.
+2. Here IGNORE means that has been finished, SKIPPED means it hasn't been finished but skipped forever for some reason (e.g. it is not related with what this book intends to teach like `weak-memq`) and WAITED means it will be done in the future.
 3. See [this](https://stackoverflow.com/a/221929/21294350) for how glob is used.
 4. I skipped SICP related paths using [this](https://unix.stackexchange.com/a/493909/568529)
   `find . \( -type d \( -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec 'grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"' {} +`
@@ -171,6 +157,10 @@ with check comments in codes.
                 > To discard the lines that contain foo bar and highlight occurrences of foo in remaining lines, you could do:
                 - `awk` automatically print, so same.
                 - TODO IMHO `-e '^'` is redundant.
+              - https://unix.stackexchange.com/questions/788816/how-to-highlight-the-matched-regex-pattern-got-by-many-regex-exps-disjoined-with/788821?noredirect=1#comment1512739_788821
+                - `printf '%s\n' foo 'foo bar' 'foo foo bar' 'bar foo' bar | perl -ne 'print if ! /foo bar/ && s/foo/\e[1;31m$&\e[m/g'`
+                  or `printf '%s\n' foo 'foo bar' 'foo foo bar' 'bar foo' bar | xargs -I{} echo {}`
+                - Here `?!` may consume some string
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions based on 5 filenames.

@@ -115,12 +115,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((boolean-tag (predicate->tag boolean?))
         (null-tag (predicate->tag null?)))
     (lambda (object)
-      (cond ((eq? object #t) boolean-tag) ; SDF_exercises TODO why not contain #f?
+      ;; IGNORE: SDF_exercises TODO why not contain #f?
+      ;; see (%predefine-tags boolean? 'boolean 'false)
+      (cond ((eq? object #t) boolean-tag)
             ((eq? object '()) null-tag)
             (else
              (let ((name (implementation-type-name object)))
+               (write-line (list "will call hash-table-intern! for" object))
                (hash-table-intern! %object-tag-map name
                  (lambda ()
+                   (write-line (list "call thunk in hash-table-intern! for" object))
                    (predicate->tag
                     (register-predicate!
                      (implementation-type-predicate name)

@@ -227,7 +227,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; Here `property-setter` will use `most-specific-generic-procedure` to create one same name generic proc set-health!.
   ;; Then define handler and return that proc.
 
-  ;; SDF_exercises TODO IMHO here number? is better.
+  ;; IGNORE: SDF_exercises TODO IMHO here number? is better.
+  ;; Implied in (- (get-health person) hits), for generic procedure, - accepts any-object?.
   (property-setter person:health person? number?)) ; changed from any-object? to number?
 
 (define get-bag

@@ -222,7 +222,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           dorm-row)))
 
 (define (create-people places)
-  (displayln "call global create-people")
+  (write-line "call global create-people")
   (append (create-students places)
           ;;(create-profs places)
           ;;(create-president places)
