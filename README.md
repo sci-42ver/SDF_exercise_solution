@@ -1,3 +1,17 @@
+1. Here `sub` is same as `match` to return the "leftmost" substring. Anyway this is enough for my situation since my search pattern "TODO" can at most exist once in one line. 1.a. So maybe Kusalananda's workaround is better and more general (similar for Stéphane Chazelas's). But anyway this answer replies to my question about `awk` more appropriately.
+
+1. Sorry for my inconsistency. I added one sample demonstration. You can just use that and ignore those inconsistency. Anyway, I want to emphasize `&&` can't be used directly in `match`. If `!/bar/` or `!/foo bar/` confused you, sorry for that. 2. "at *other times* still it sounds like you *only* want to highlight the part": Actually I just want the  behavior same as `grep`, i.e. only highlighting the matched pattern. Sorry for not saying that explicitly.
+
+Complement for 1: `gsub` mentioned by Ed Morton will work for the case where "TODO" occurs more than once which is explicitly shown by the edit of Stéphane Chazelas's answer.
+
+Thanks so much for the so detailed edit. Small questions:  1. Is `-e '^'` in `grep --color -e '^' -e foo` necessary? IMHO that just grep those lines with the beginning "empty string" and different `-e`s doesn't influence with each other as `man` says. 2. IMHO "To discard all the lines that contain foo bar and *all that don't contain foo* and highlight foo in the remaining ones:" is same as "To discard the lines that contain foo bar and highlight occurrences of foo in remaining lines," since `if ! a && b` is same as `unless a{b}` based on short circuit of `&&` for `perl` (Continued)
+
+which is also said by your last paragraph. Similarly `sed -n` doesn't print by default as `perl -n` and we use `p` modifier, so still same (Similar for the rest). Is it that case?
+
+Some references for the edit:  1. `$'...'`: https://unix.stackexchange.com/q/371827/568529. 2. ast-open's sed: https://github.com/att/ast/blob/master/lib/package/ast-open.README 3. `<` used at the beginning of line: https://superuser.com/a/843143/1658455 where `<` influences the command before control operator `|`
+
+Some references for someone unfamiliar with `perl` same as me: 1. `-p` https://learnbyexample.github.io/learn_perl_oneliners/one-liner-introduction.html#substitution seems to ensure outputting the results "$_ is automatically printed". 2. options like `-e`: see `man perlrun` 3. `$&`: `man perlretut` 4. `unless`: `man perlsyn`
+
 `-exec` will fail for the case where we use pipe `|` in the command. We can use one  alternative method with the same effects `-print0 | xargs -0` https://unix.stackexchange.com/a/658969/568529.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
@@ -120,7 +134,7 @@ with check comments in codes.
       `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -print0 | xargs -0 grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} --color=always | grep -v "SDF_exercises TODO" | grep -v "IGNORE\|(cph)\|SKIPPED"` (notice not to use the mere `SDF_exercises` since for grep'ing many files file path is also included in the output)
       - I also excludes `./.git` and `\*.{md,rkt,sample}`.
       - https://unix.stackexchange.com/questions/493723/grep-exclude-dir-dont-work/493909?noredirect=1#comment1512591_493909
-        `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec sh -c 'grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} -v "\(SDF_exercises TODO\)\|IGNORE\|(cph)\|SKIPPED" "$@" --color=always' sh {} +` (Here I want to keep both color and pipe. But that may be in conflict).
+        `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec sh -c 'grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} -v "\(SDF_exercises TODO\)\|IGNORE\|(cph)\|SKIPPED" "$@" --color=always' sh {} +` (This won't work. Here I want to keep both color and pipe. But that may be in conflict). Use `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec sh -c 'grep -v "\(SDF_exercises TODO\)\|IGNORE\|(cph)\|SKIPPED" --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} "$@" | grep TODO --color=always' sh {} +` (not use `find . \( -type d \( -path ./.git -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec sh -c 'grep TODO --exclude={"6.945_assignment_solution/ps[0-9]*/code/*.scm",\*.{md,rkt,sample}} "$@" | grep -v "\(SDF_exercises TODO\)\|IGNORE\|(cph)\|SKIPPED" --color=always' sh {} +`)
         - [see](https://stackoverflow.com/a/66061678/21294350) (notice `||` is used there for shor circuit so that "no issue" will return true without checking the latter and "issue" will check the latter. Using && will reject "no issue") and [this for `!`](https://superuser.com/a/397325/1658455) (`{}` [won't work for `-name`](https://unix.stackexchange.com/a/351167/568529) for name)
           Here I skipped all sub-files in paths `SDF_exercises/chapter_*` since they are in homework which TODO won't be probably helped by reading the book further.
           Here `*` can match dir prefix like `./fubar3` in `man`.
@@ -137,6 +151,26 @@ with check comments in codes.
             -exec awk '/TODO/ && !/SDF_exercises TODO/ && !/IGNORE/ && !/\(cph\)/ && !/SKIPPED/ && !/code_base TODO/ {match($0,/TODO/); printf "\033[1;31m" FILENAME "\033[0m: " substr($0,1,RSTART-1) "\033[1;31m" substr($0,RSTART,RLENGTH) "\033[0m: " substr($0,RSTART+RLENGTH) "\n"}' {} +
           ```
           - most of codes in the code base uses "TODO:" instead of only "TODO".
+          - **Use [this](https://unix.stackexchange.com/a/788823/568529) after many improvements** (use `gsub` as Stéphane Chazelas shows )
+            ```bash
+            find . \
+            \( -type d \( -path ./SDF_exercises/chapter_\* \
+              -o -path \*/.git \
+              -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o \
+            \( -type f \( ! -path "./6.945_assignment_solution/ps[0-9]*/code/*.scm" \
+              -a ! -name "*.md" -a ! -name "*.rkt" -a ! -name "*.sample" \) \) \
+            -exec awk '!/SDF_exercises TODO/ && !/IGNORE/ && !/\(cph\)/ && !/SKIPPED/ && !/code_base TODO/ && gsub(/TODO/,"\033[1;31m" "&" "\033[0m: ") {printf "\033[1;31m" FILENAME "\033[0m: " $0 "\n"}' {} +
+            ```
+            - [perl](https://unix.stackexchange.com/a/788821/568529)
+              - [`-p`](https://learnbyexample.github.io/learn_perl_oneliners/one-liner-introduction.html#substitution)
+              - test:
+                `echo "TODO foo\nTODO TODO" | perl -pe 's/TODO(?! foo)/\e[31;1m$&\e[m/g'`
+                `echo "TODO foo\nTODO TODO" | perl -pe 's/TODO/\e[31;1m$&\e[m/g unless /TODO foo/'`
+              - > To discard all the lines that contain foo bar and all that don't contain foo and highlight foo in the remaining ones:
+                compared with
+                > To discard the lines that contain foo bar and highlight occurrences of foo in remaining lines, you could do:
+                - `awk` automatically print, so same.
+                - TODO IMHO `-e '^'` is redundant.
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions based on 5 filenames.
