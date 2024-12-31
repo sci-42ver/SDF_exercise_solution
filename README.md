@@ -160,7 +160,11 @@ with check comments in codes.
               - https://unix.stackexchange.com/questions/788816/how-to-highlight-the-matched-regex-pattern-got-by-many-regex-exps-disjoined-with/788821?noredirect=1#comment1512739_788821
                 - `printf '%s\n' foo 'foo bar' 'foo foo bar' 'bar foo' bar | perl -ne 'print if ! /foo bar/ && s/foo/\e[1;31m$&\e[m/g'`
                   or `printf '%s\n' foo 'foo bar' 'foo foo bar' 'bar foo' bar | xargs -I{} echo {}`
-                - Here `?!` may consume some string
+                - ~~Here `?!` may consume some string~~
+                - `printf '%s\n' foo 'foo bar' 'foo foo bar' 'bar foo' bar | grep -v 'foo bar' | grep --color -e '^' -e foo`
+                  Here `-e '^'` ~~may not~~ won't be colored since it matches with the starting *empty string*. It just keeps something like `bar`.
+                - `printf '%s\n' foo 'foo bar' 'foo foo bar' 'bar foo' bar | grep -P --color 'foo(?! bar)' -`
+                  won't remove "foo foo bar" since it has some *sub-string* matched although also with some *sub-string* un-matched.
 # nbardiuk solution comment
 ~~By https://github.com/search?q=repo%3Anbardiuk%2Fsoftware-design-for-flexibility%20exercise&type=code it probably only has 3 exercise solutions.~~
 It only have solutions up to chapter 2 regular-expressions based on 5 filenames.

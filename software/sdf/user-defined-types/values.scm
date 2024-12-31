@@ -72,7 +72,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; But that is only called by itself or /home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/propagation/load-spec
 ;; So only 3.16~3.22 uses that.
 ;; But adventure games doesn't use make-simple-function...
-;; SKIPPED SDF_exercises TODO: I forgot where I got to this procedure...
+;; SKIPPED SDF_exercises TODO: I forgot where I got to this procedure... Anyway in my memory up to chapter 4 no contents need this procedure.
+;; Maybe this is need by ./SDF_exercises/software/sdf/user-defined-types/vector-arith.scm?
 (define (make-object-applicable predicate object applicator)
   (guarantee procedure? applicator)
   ;; The procedure that is the applicable object must not be the

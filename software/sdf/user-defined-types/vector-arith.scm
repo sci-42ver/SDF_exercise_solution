@@ -42,7 +42,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define vector-predicate-element
   (predicate-template-accessor 'element vector-template))
 
-;; SDF_exercises TODO I skipped checking the above detailed implementation
+;; SKIPPED SDF_exercises TODO I skipped checking the above detailed implementation
 
 (define (vector-constructor elt-predicate)
   (let ((constructor
@@ -69,7 +69,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (make-vector-arithmetic elt-arithmetic)
   (make-arithmetic 'vector
-                    ;; SDF_exercises TODO predicate is not the main part, skipped.
+                    ;; SKIPPED SDF_exercises TODO predicate is not the main part, skipped.
                    (make-vector-predicate
                     (arithmetic-domain-predicate elt-arithmetic))
                    (list elt-arithmetic)
@@ -78,7 +78,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (lambda (operator elt-operation)
       (let ((handlers (get-vector-handlers operator)))
         (if (n:pair? handlers)
-            ;; SDF_exercises TODO It uses `union-function` instead of operation-union, how does this relate with operation object?
+            ;; SKIPPED SDF_exercises TODO It uses `union-function` instead of operation-union, how does this relate with operation object?
             (extend-operation-function operator elt-operation
               (lambda (elt-function)
                 (operation-union*
@@ -123,7 +123,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (lambda (elt-arithmetic elt-operation)
       ;; TODO(cph): revise this to use operation abstraction.
       (let ((codomain
-              ;; SDF_exercises TODO -> function-predicate-codomain what does this do?
+              ;; SKIPPED SDF_exercises TODO -> function-predicate-codomain what does this do?
              (let ((codomain (operation-codomain elt-operation)))
                (if (selector 'codomain)
                    (make-vector-predicate codomain)
