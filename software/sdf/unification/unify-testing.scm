@@ -25,6 +25,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define *results-from-last-test*)
 
+;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Lambda-Expressions.html#index-_0023_0021optional-1
+;; expected-bindings verbose? are all optional
 (define (unify-test p1 p2 #!optional expected-bindings verbose?)
   (define (result-dict result) (list-ref result 0))
   (define (result-ok? result) (list-ref result 3))
@@ -34,6 +36,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (let ((subst (match:dict-substitution expected-bindings)))
         (let ((p1* (subst p1))
               (p2* (subst p2)))
+          (write-line (list "expected-bindings results:" p1* p2*))
           (if (not (equal? p1* p2*))
               (error "Expected dictionary is invalid:"
                      p1* p2* expected-bindings)))))

@@ -1,3 +1,12 @@
+;;; modification based on SDF_exercises/chapter_4/4_19_lib_for_4_20.scm
+;; see SDF_exercises/chapter_4/4_20.scm and 4_20_loop.log
+;; loop is due to
+; ("equal splitted-var var:" (?? x) (?? x) "to get dicts** from" ((??? x-internal:10-left) (??? x-internal:9-right)) ((?? y) (??? x-internal:10-left)))
+;; Then we can do this again for (??? x-internal:10-left)...
+;; 0. one workaround: just use the original grab-segment for the inner sub-matches...
+;; 1. another workaround: just skip this subtle match ((?? x)) with ((?? y) (?? x))...
+;; All the above workarounds aren't correct exactly.
+
 ;;; 3 problems
 ;; > We may miss some matches; 
 ;; See d.
@@ -30,6 +39,15 @@
                       #f ; to ensure collector can get all solutions.
                       ))
     collector
+    )
+  )
+(define (all-dicts pattern1 pattern2 dict)
+  (let ((collector-data 
+          (unify:collector-wrapper pattern1 pattern2 dict
+                                  (lambda (dict)
+                                    (pp (match:bindings dict))
+                                    #f))))
+    (tagged-list-data collector-data)
     )
   )
 
@@ -347,7 +365,6 @@
 ;; IGNORE: maybe-grab-segment is same since we only need to change the grab mechanism.
 (define (make-sub-segment-var name)
   (match:make-var '??? name)
-  ; (match:make-var '?? name)
   )
 ; (define (match:sub-segment-var? object)
 ;   (and (match:var? object)
@@ -515,15 +532,59 @@
                 )
               )
             ))
+        (define old-continue continue) ; to allow possible further extension.
         (let ((dict* (do-substitute var initial dict)))
           (let ((dict**
                   (if (null? possible-term-var-binding-list)
                     dict*
                     (let ((binding (car possible-term-var-binding-list)))
-                      (do-substitute 
-                        (get-var-from-binding binding)
-                        (get-substitution-from-binding binding)
-                        dict*)
+                      (let ((splitted-var (get-var-from-binding binding)))
+                        ; (write-line (list "splitted-var var:" splitted-var var))
+                        (if (equal? splitted-var var)
+                          ;; TODO I found this problem when using tests in 4.20
+                          ;; The problem is that this unify may return many possible dicts...
+                          ;; But here we only need 1
+                          ;; 0. one solution: change continue so that we iterate through these dicts.
+                          ;; 1. we just choose the most general (but I can't ensure there is only one. Maybe some are equally most general for some specific criterion but not for others.)
+                          (begin
+                            (write-line 
+                              (list 
+                                "equal splitted-var var:" splitted-var var 
+                                "to get dicts** from" (get-substitution-from-binding binding) initial
+                                "with dict*" dict*
+                                ))
+                            (let ((dicts** (all-dicts (get-substitution-from-binding binding) initial dict*)))
+                              (write-line (list "equal splitted-var var:" splitted-var var))
+                              ; (write-line (list "with dicts**" dicts**))
+                              (and dicts**
+                                ;; (and 1 (begin (define test (lambda () #f)) 3))) fails for ;Definition may not be used as an expression: #[defn-item 14 test #[expr-item 15]]
+                                ;; but (begin (define test (lambda () #f)) 3)) works
+                                ((lambda ()
+                                  (define new-continue
+                                    (lambda ()
+                                      (if (null? dicts**)
+                                        (old-continue)
+                                        (begin
+                                          (set! dicts** (cdr dicts**))
+                                          (let ((new-dict** (car dicts**)))
+                                            (succeed 
+                                              new-dict** 
+                                              new-continue 
+                                              (cdr var-first) 
+                                              (check-car-term-binding terms* new-dict**))    
+                                            )
+                                          ))
+                                      )
+                                    )
+                                  (set! continue new-continue)
+                                  (car dicts**)
+                                  )))
+                              )
+                            )
+                          (do-substitute 
+                            splitted-var
+                            (get-substitution-from-binding binding)
+                            dict*)))
                       ))
                   ))
             (if dict**
@@ -546,7 +607,7 @@
 ;; can only output the 1st cand
 (unifier '((?? x) 3) '(4 (?? y)))
 
-;; test2 same as SDF_exercises/software/sdf/unification/gjs-test.scm first ((?? x) 3)
+;; test2
 (let ((pattern1 '((?? x) 3)))
   (unify:internal pattern1 '(4 (?? y))
                   (match:new-dict)
@@ -561,4 +622,29 @@
                   )
   )
 
-(load "4_19_d_tests.scm")
+; (load "4_19_d_tests.scm")
+
+; (define unify:internal-display-wrapper 
+;   (let ((n 0))
+;     (lambda (pattern1 pattern2 dict succeed) 
+;       (write-line (list "4_19_d_tests test" (begin (set! n (n:+ n 1)) n)))
+;       ; (unify:internal pattern1 pattern2 dict succeed)
+;       ; (write-line "---")
+;       (pp 
+;         (let ((unify-proc substitution-instance?))
+;           (sort-and-remove-substitution-instance-for-pairs
+;             (unify:collector-wrapper-with-substitution-unique-pairs pattern1 pattern2 dict succeed unify-proc)
+;             unify-proc
+;             )
+;           ))
+;       (write-line "---")
+;       )
+;     )
+;   )
+;; TODO loop with new-continue modification
+; (unify:internal-display-wrapper '(((?? x) 3 (?? z) 3))
+;                 '((4 (?? y) (?? y)))
+;                 (match:new-dict)
+;                 (lambda (dict)
+;                   (pp (match:bindings dict))
+;                   #f))

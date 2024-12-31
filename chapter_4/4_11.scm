@@ -2,9 +2,10 @@
 ;; > but you need to invent a syntactic mechanism for representing
 ;; > string variables inside a string. This is pretty delicate, because you
 ;; > may have to represent a string variable with a string expression.
-;; Python uses {} to mean possible var *implicitly* https://stackoverflow.com/a/52155770/21294350.
-;; https://stackoverflow.com/a/2962966/21294350 also shows % similarly.
-;; So similarly we can use (?/?? ...) to *implicitly*
+;; 0. delicate  means subtle.
+;; 1. Python uses {} like {num} to mean possible var *implicitly* https://stackoverflow.com/a/52155770/21294350.
+;; https://stackoverflow.com/a/2962966/21294350 also shows % similarly like %(num).
+;; So similarly we can use (?/?? ...) to *implicitly* denote that var.
 ;; > This gets into quotation problems
 ;; IMHO just use string comparison with string.
 ;; > please try not to invent a baroque mechanism.

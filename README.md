@@ -93,7 +93,7 @@ with check comments in codes.
   - nbardiuk can be skipped.
 - 2, 3, 4 (see "chapter 4" section where all exercises with reference search methods have been checked)
 # @%exercise tests finished (obviously not considering skipped exercises)
-- 2, 3, 4.1~6, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.10, 4.13~17, 4.19
+- 2, 3, 4.1~6, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.10, 4.13~17, 4.19~20.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
@@ -303,6 +303,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 17: `set!-expr?`/`set-expr?` similar to `if-expr?`
 18: practical
 19: `substitution-instance?`
+20: `((?? x) 3)` (with tests in `SDF_exercises/software/sdf/unification/gjs-test.scm` but not reference implementation)
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1
   - same as SICP `(married Mickey ?who)`

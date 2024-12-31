@@ -419,6 +419,7 @@ as-expected
             #t)
 'expect-value: 'matches-including-expected
 
+;; Here just means the general pattern can match the expected data with expected_dict
 (unify-test '((?? x) 3)
             '(4 (?? y))
             '(dict (e:1525 (3) ??) (y ((?? o:1526) 3) ??) (x (4 (?? o:1526)) ??)))
