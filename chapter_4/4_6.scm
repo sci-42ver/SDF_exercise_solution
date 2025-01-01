@@ -56,6 +56,7 @@
           (match:eqv pattern))))
 
 ;; results just as the book shows.
+;; They arer also shown in SICP_SDF/SDF_exercises/software/sdf/design-of-the-matcher/text-examples.scm
 (run-matcher
   (match:compile-pattern '(?:choice a b (? x) c))
   'z

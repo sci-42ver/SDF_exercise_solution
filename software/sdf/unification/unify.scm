@@ -291,6 +291,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; you have to worry about partial containment.
 
 (define (grab-segment var-first terms)
+  ;; assume dict is not #f which is implied in (if dict* ...) etc.
   (define (grab dict succeed fail)
     (let ((var (car var-first)))
       (let slp ((initial '()) (terms* terms))

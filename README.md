@@ -90,6 +90,9 @@ with check comments in codes.
   - ~~Here `6.945*/**/*.scm` can be `6.945*/**/*.scm`~~
     We can also ignore later chapters
     `sdf/better-layering/*.scm`
+    - So `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm`
+      - we can add some
+        `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/pattern-matching-on-graphs/*.scm,sdf/propagation`
   - nbardiuk can be skipped.
 - 2, 3, 4 (see "chapter 4" section where all exercises with reference search methods have been checked)
 # @%exercise tests finished (obviously not considering skipped exercises)
@@ -288,17 +291,18 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - [[111] reference](https://engineering.purdue.edu/~qobi/papers/ifl2005.pdf)
     - ~~TODO why `(D (λy . x + y) 1)` doesn't calculate derivative and gets 2.~~
 ## @%chapter 4
-1,4: search `expr<?`
+1: search `algebra-2` (no codes with explanation)
 2: simplification
 3: `sort`
-5: `print-all-matches`
+4: `algebra-3`
+5: `print-all-matches` (just codes in `SICP_SDF/SDF_exercises/software/sdf/design-of-the-matcher/text-examples.scm` without explanation)
 6: ?:choice
 8: match:vector (assuming following the naming convention)
-10: `match-args vector?`
+10: `match-args vector?` (no use: SICP_SDF/SDF_exercises/software/sdf/combining-arithmetics/vector-arith.scm and SICP_SDF/SDF_exercises/software/sdf/common/pretty-printer.scm)
 12: `do-substitute`
 13: Emm... following the similar naming as `match:compile-pattern`, we search `unify:compile-pattern`. But this naming convention is not ensured to be used by others.
-14: `infer-program-types`
-15: `parametric-type` using the book naming convention
+14: `infer-program-types` then `procedure` (only 1 original implementation file and one test file in code base)
+15: `parametric-type` using the book naming convention (then search for `map` there)
 16: `(define-parametric-type-operator 'type:union)`
 17: `set!-expr?`/`set-expr?` similar to `if-expr?`
 18: practical

@@ -25,8 +25,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define *results-from-last-test*)
 
-;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Lambda-Expressions.html#index-_0023_0021optional-1
+;; 0. https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Lambda-Expressions.html#index-_0023_0021optional-1
 ;; expected-bindings verbose? are all optional
+;; 1. checked briefly since this is just one testing helper.
 (define (unify-test p1 p2 #!optional expected-bindings verbose?)
   (define (result-dict result) (list-ref result 0))
   (define (result-ok? result) (list-ref result 3))

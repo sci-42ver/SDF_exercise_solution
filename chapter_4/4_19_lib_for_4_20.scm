@@ -147,7 +147,11 @@
                (let ((p1* (subst pattern1)) (p2* (subst pattern2)))
                  ;; > You can check that the results of the two substitutions are equal
                  (if (not (equal? p1* p2*))
-                   (error (list "Bad dictionary" p1* p2*)))
+                   (begin
+                    (pp p1*)
+                    (pp p2*)
+                    (pp dict)
+                    (error (list "Bad dictionary" p1* p2* dict))))
                  ;; modified
                  (let ((solution (make-solution-pair p1* dict)))
                    ;; Here if same, we keep pair's in (tagged-list-data pairs).
@@ -505,11 +509,16 @@
                 (let* ((added-left-internal (last initial))
                        (left-internal-check-pred (lambda (elm) (equal? elm added-left-internal))))
                   (assert (n:= 1 (elem-cnt initial left-internal-check-pred)))
-                  (slp
-                    ;; same as what the original unify does for segment-var.
-                    (append (remove left-internal-check-pred initial) (list term-var))
-                    (cdr terms*) ; with right-internal removed
-                    '()
+                  (let ((new-initial 
+                          ;; same as what the original unify does for segment-var.
+                          (append (remove left-internal-check-pred initial) (list term-var))
+                          ))
+                    ; (write-line (list "call after split for var" var "with initial" new-initial))
+                    (slp
+                      new-initial
+                      (cdr terms*) ; with right-internal removed
+                      '()
+                      )
                     )
                   )
                 )
@@ -519,12 +528,14 @@
           (let ((dict**
                   (if (null? possible-term-var-binding-list)
                     dict*
-                    (let ((binding (car possible-term-var-binding-list)))
-                      (do-substitute 
-                        (get-var-from-binding binding)
-                        (get-substitution-from-binding binding)
-                        dict*)
-                      ))
+                    (and
+                      dict*
+                      (let ((binding (car possible-term-var-binding-list)))
+                        (do-substitute 
+                          (get-var-from-binding binding)
+                          (get-substitution-from-binding binding)
+                          dict*)
+                        )))
                   ))
             (if dict**
               ;; Use dict** to inclued possible split binding.
