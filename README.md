@@ -1,4 +1,3 @@
-Thanks. With that `printf` demo, I also found that `?!` seems to consume checked string, so `'foo(?! bar)'` won't filter out "foo foo bar". This seems to be implied implicitly by python re doc https://stackoverflow.com/a/11430936/21294350 and also in `man perlre` "the lookaheads are zero-width expressions--they only look, but don't consume any of the string".
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
@@ -96,7 +95,7 @@ with check comments in codes.
   - nbardiuk can be skipped.
 - 2, 3, 4 (see "chapter 4" section where all exercises with reference search methods have been checked)
 # @%exercise tests finished (obviously not considering skipped exercises)
-- 2, 3, 4.1~6, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.10, 4.13~17, 4.19~20.
+- 2, 3, 4.1~6, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.10~4.11, 4.13~17, 4.19~20.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
@@ -299,6 +298,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 6: ?:choice
 8: match:vector (assuming following the naming convention)
 10: `match-args vector?` (no use: SICP_SDF/SDF_exercises/software/sdf/combining-arithmetics/vector-arith.scm and SICP_SDF/SDF_exercises/software/sdf/common/pretty-printer.scm)
+11,21: `string?` (all sdf/common/ files are no use.)
 12: `do-substitute`
 13: Emm... following the similar naming as `match:compile-pattern`, we search `unify:compile-pattern`. But this naming convention is not ensured to be used by others.
 14: `infer-program-types` then `procedure` (only 1 original implementation file and one test file in code base)
@@ -366,7 +366,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - 7,9 (Unification match may use env to implement)
   7 will be done implicitly when 9 is done.
   9 is similar to SICP 4.79 which needs implement rule based on *unification* with env.
-- 11 to be done with 21.
+- ~~11 to be done with 21.~~
 - See above TODO.
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
