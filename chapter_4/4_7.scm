@@ -148,6 +148,14 @@
   ;   bindings
   ;   )
   )
+
+;;; For test-pat1, 
+;; here (?:ref odd-even-etc) means (?:choice () (1 (?:ref even-odd-etc))) which then may mean ()
+;; So we should just 
+;; 0. not wrap (?:ref odd-even-etc) in match:pletrec-body.
+;; 1. just pass data intact around in match:ref.
+
+;; Here we do all match:compile-pattern outside the created matcher procedure as Exercise 4.13 says.
 (define (match:pletrec pattern)
   (let* ((bindings (match:pletrec-bindings pattern))
          (dict*-proc (match:pletrec-add-bindings-to-dict bindings))

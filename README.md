@@ -1,6 +1,3 @@
-For (2), 1. If someone don't know what `--` means since `help declare` doesn't show about that, in `info bash` it says "each builtin command documented as accepting options preceded by '-' accepts '--' to signify the end of the options". 2. The doc also says "If a variable name is followed by =VALUE, the value of the variable is set to VALUE" which may implicitly mean if not, then not set.
-Such one good explanation! Thanks. References for future readers: 1. "scalar assignment" is shown in zsh doc `man ZSHPARAM` (related contents in `info bash` is not found.) "In scalar assignment, value is expanded as a single string, in which the elements of arrays are joined together". 2. "contiguous ones starting from 0" is also shown in `info bash` "the index of the element assigned is the last index assigned to by the statement plus one.  Indexing starts at zero.". That is not same as `zsh`.
-@EdMorton Yes. Sorry for my lacking rigorousness. I used double-quote somewhere while not elsewhere. Here double-quote is needed if some filename contain "whitespace or wildcard characters" as the well-known wiki says.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
@@ -299,7 +296,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 4: `algebra-3`
 5: `print-all-matches` (just codes in `SICP_SDF/SDF_exercises/software/sdf/design-of-the-matcher/text-examples.scm` without explanation)
 6: ?:choice
-- 7,9: 
+- 7,9: ?:pletrec
   - See in SDF_notes.md
     > The above is different from SICP 4.79...
     Here binding is just var->value where value *can't be also var*. So we can just use the normal env mechanism.
@@ -321,66 +318,66 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
       So use `grep "string" chebert*/**/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm | awk -F ':' '{print $1}' | sort -u | xargs -I%% sh -c 'if OUTPUT=$(grep "??" %% --color=always);then echo "in file:%%" "$OUTPUT";fi' sh`
       - In results, only one having relation with "unification".
     - or with one procedure
-```bash
-FILES="chebert*/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm"
-## find can't recognize ** for empty string which is different from VSCode.
-# for j in $FILES ; do           # glob, matches in current dir!
-#   printf "%s:\n%s\n\n" $j $(find . -path $j) ; done
-## ls can't parse str...
-## and it also returns one string instead of list
-# for j in $(ls $FILES) ; do           # glob, matches in current dir!
-#   printf "%s\n" $j ; done
-## 0. https://stackoverflow.com/a/918931/21294350
-# Here I use zsh https://stackoverflow.com/a/36476068/21294350 see `man zshbuiltins`
-# use declare to check the result https://stackoverflow.com/a/10527046/21294350
-## 1. IGNORE: Here find can't use glob at all
-# IFS=' ' read -rA ADDR <<< "$FILES"
-# for FILE_STR in ${ADDR[@]}; do           # glob, matches in current dir!
-#   printf "FILE_STR: %s\n" $FILE_STR
-#   for FILE in $(find . -path "$FILE_STR"); do
-#     printf "%s\n" $FILE ; done
-#   ; done
-## https://unix.stackexchange.com/a/34012/568529
-FILES=(chebert*/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm)
-## grep can't accept many files at once. See https://unix.stackexchange.com/q/788987/568529
-# grep "string" $FILES | awk -F ':' '{print $1}' | sort -u | xargs -I%% sh -c 'if OUTPUT=$(grep "??" %% --color=always);then echo "in file:%%" "$OUTPUT";fi' sh
-grep_seq () {
-  # https://stackoverflow.com/a/42319729/21294350
-  # https://unix.stackexchange.com/q/788987/568529
-  # SUBFILES=$(echo $FILES | tr ' ' '\n')
-  ## man zshexpn
-  ## > "${array[@]}" or "${(@)array}" for arrays
-  SUBFILES=("$FILES[@]")
-  # SUBFILES=("${FILES}") # this will become one str
-  ## explicitly split
-  # SUBFILES=("${(s: :)FILES}")
-  # SUBFILES=("${=FILES}")
+      ```bash
+      FILES="chebert*/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm"
+          ## find can't recognize ** for empty string which is different from VSCode.
+          # for j in $FILES ; do           # glob, matches in current dir!
+          #   printf "%s:\n%s\n\n" $j $(find . -path $j) ; done
+          ## ls can't parse str...
+          ## and it also returns one string instead of list
+          # for j in $(ls $FILES) ; do           # glob, matches in current dir!
+          #   printf "%s\n" $j ; done
+          ## 0. https://stackoverflow.com/a/918931/21294350
+          # Here I use zsh https://stackoverflow.com/a/36476068/21294350 see `man zshbuiltins`
+          # use declare to check the result https://stackoverflow.com/a/10527046/21294350
+          ## 1. IGNORE: Here find can't use glob at all
+          # IFS=' ' read -rA ADDR <<< "$FILES"
+          # for FILE_STR in ${ADDR[@]}; do           # glob, matches in current dir!
+          #   printf "FILE_STR: %s\n" $FILE_STR
+          #   for FILE in $(find . -path "$FILE_STR"); do
+          #     printf "%s\n" $FILE ; done
+          #   ; done
+          ## https://unix.stackexchange.com/a/34012/568529
+      FILES=(chebert*/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm)
+          ## grep can't accept many files at once. See https://unix.stackexchange.com/q/788987/568529
+          # grep "string" $FILES | awk -F ':' '{print $1}' | sort -u | xargs -I%% sh -c 'if OUTPUT=$(grep "??" %% --color=always);then echo "in file:%%" "$OUTPUT";fi' sh
+      grep_seq () {
+        # https://stackoverflow.com/a/42319729/21294350
+        # https://unix.stackexchange.com/q/788987/568529
+        # SUBFILES=$(echo $FILES | tr ' ' '\n')
+        ## man zshexpn
+        ## > "${array[@]}" or "${(@)array}" for arrays
+        SUBFILES=("$FILES[@]")
+        # SUBFILES=("${FILES}") # this will become one str
+        ## explicitly split
+        # SUBFILES=("${(s: :)FILES}")
+        # SUBFILES=("${=FILES}")
 
-  # https://stackoverflow.com/a/22432604/21294350
-  # we can also avoid using i https://unix.stackexchange.com/a/278503/568529
-  for ((idx=1;idx<=$#;idx++)); do
-    # https://stackoverflow.com/a/10750038/21294350 https://stackoverflow.com/a/8515492/21294350
-    # for zsh https://unix.stackexchange.com/a/119442/568529
-    pat="${(P)idx}"
-    ## https://unix.stackexchange.com/a/742010/568529 and google AI says $# may be not one number
-    ## So ($#-1) may be weird
-    # echo "pat:" $pat "param_num" $# "param_num-1:" $(( ($#-1) )) $(( 1==($#-1) ))
-    declare -p pat
-    declare -p SUBFILES
+        # https://stackoverflow.com/a/22432604/21294350
+        # we can also avoid using i https://unix.stackexchange.com/a/278503/568529
+        for ((idx=1;idx<=$#;idx++)); do
+          # https://stackoverflow.com/a/10750038/21294350 https://stackoverflow.com/a/8515492/21294350
+          # for zsh https://unix.stackexchange.com/a/119442/568529
+          pat="${(P)idx}"
+          ## https://unix.stackexchange.com/a/742010/568529 and google AI says $# may be not one number
+          ## So ($#-1) may be weird
+          # echo "pat:" $pat "param_num" $# "param_num-1:" $(( ($#-1) )) $(( 1==($#-1) ))
+          declare -p pat
+          declare -p SUBFILES
 
-    # if (( ($idx+1)==$# ));then
-    if (( $idx==$# ));then
-      grep $pat $SUBFILES --color=always;
-    else
-      # consider possible space in pathname
-      local TMP="$(grep $pat $SUBFILES | awk -F ':' '{print $1}' | sort -u)"
-      declare -p TMP
-      SUBFILES=("${(ps:\n:)TMP}");
-    fi
-  ;done
-}
-grep_seq "string" "??" "string"
-```
+          # if (( ($idx+1)==$# ));then
+          if (( $idx==$# ));then
+            grep $pat $SUBFILES --color=always;
+          else
+            # consider possible space in pathname
+            local TMP="$(grep $pat $SUBFILES | awk -F ':' '{print $1}' | sort -u)"
+            declare -p TMP
+            SUBFILES=("${(ps:\n:)TMP}");
+          fi
+        ;done
+      }
+      grep_seq "string" "??" "string"
+      ```
       - https://unix.stackexchange.com/a/350012/568529
         Here we can either use nameref for reference.
         - `declare -a arr0=("'1 2 3'" "'4 5 6'")` -> `declare -p arr0` with `typeset -a arr0=( \''1 2 3'\' \''4 5 6'\' )`: [`\'` meaning](https://askubuntu.com/a/605440) and see `info bash` ANSI-C Quoting.
