@@ -74,6 +74,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 #|
 ;;; Alternate implementation:
 
+;; IMHO similar to SDF_exercises/chapter_4/tests/capture-syntactic-environment.scm
+;; make-rule may be rebound in one outer lambda for rule. So we also need to do the similar thing for that to lambda.
+;; Anyway this is not taught in SDF, I won't dig into that.
 (define-syntax rule
   (sc-macro-transformer
    (lambda (form use-env)

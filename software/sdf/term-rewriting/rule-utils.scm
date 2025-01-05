@@ -58,12 +58,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Magic!
 
+;; see SDF_exercises/chapter_4/tests/capture-syntactic-environment.scm
 (define (make-lambda bvl use-env generate-body)
+  ;; use the original lambda.
   (capture-syntactic-environment
    (lambda (transform-env)
      (close-syntax
       `(,(close-syntax 'lambda transform-env)
         ,bvl
+        ;; allow capture bvl
         ,(capture-syntactic-environment
           (lambda (use-env*)
             (close-syntax (generate-body use-env*)

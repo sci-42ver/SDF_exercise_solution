@@ -147,10 +147,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       (map procedure
                            (match:bindings dict))))
 
+;; also see match:lookup-corrected
 (define (match:lookup var dict)
   (let ((name
          ;; IGNORE: SDF_exercises TODO when this occurs (book doesn't say explicitly).
          ;; maybe just for the general case where we also allow accepting var name instead of the whole var.
+         ;; See SDF_exercises/chapter_4/4_7.scm where we can directly use 'odd-even-etc to lookup.
          (if (symbol? var)
              var
              (match:var-name var))))

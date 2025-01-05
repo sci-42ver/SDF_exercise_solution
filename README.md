@@ -1,3 +1,6 @@
+For (2), 1. If someone don't know what `--` means since `help declare` doesn't show about that, in `info bash` it says "each builtin command documented as accepting options preceded by '-' accepts '--' to signify the end of the options". 2. The doc also says "If a variable name is followed by =VALUE, the value of the variable is set to VALUE" which may implicitly mean if not, then not set.
+Such one good explanation! Thanks. References for future readers: 1. "scalar assignment" is shown in zsh doc `man ZSHPARAM` (related contents in `info bash` is not found.) "In scalar assignment, value is expanded as a single string, in which the elements of arrays are joined together". 2. "contiguous ones starting from 0" is also shown in `info bash` "the index of the element assigned is the last index assigned to by the statement plus one.  Indexing starts at zero.". That is not same as `zsh`.
+@EdMorton Yes. Sorry for my lacking rigorousness. I used double-quote somewhere while not elsewhere. Here double-quote is needed if some filename contain "whitespace or wildcard characters" as the well-known wiki says.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
@@ -296,9 +299,120 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 4: `algebra-3`
 5: `print-all-matches` (just codes in `SICP_SDF/SDF_exercises/software/sdf/design-of-the-matcher/text-examples.scm` without explanation)
 6: ?:choice
+- 7,9: 
+  - See in SDF_notes.md
+    > The above is different from SICP 4.79...
+    Here binding is just var->value where value *can't be also var*. So we can just use the normal env mechanism.
+  - Here the former 3 are related with `define-syntax`. The last is said in the above quote context.
+    ```bash
+    # https://unix.stackexchange.com/a/721889/568529
+    $ grep "env" -r ~/SICP_SDF/SDF_exercises/software/sdf/(term-rewriting|unification) --files-with-matches | grep -oP "(?<=$HOME/).*"
+    SICP_SDF/SDF_exercises/software/sdf/term-rewriting/rule-implementation.scm
+    SICP_SDF/SDF_exercises/software/sdf/term-rewriting/test-rule-implementation.scm
+    SICP_SDF/SDF_exercises/software/sdf/term-rewriting/rule-utils.scm
+    SICP_SDF/SDF_exercises/software/sdf/unification/type-resolver.scm
+    ```
 8: match:vector (assuming following the naming convention)
 10: `match-args vector?` (no use: SICP_SDF/SDF_exercises/software/sdf/combining-arithmetics/vector-arith.scm and SICP_SDF/SDF_exercises/software/sdf/common/pretty-printer.scm)
-11,21: `string?` (all sdf/common/ files are no use.)
+- 11,21: `string?` (all sdf/common/ files are no use.)
+  `grep "string" chebert*/**/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm | awk -F ':' '{print $1}' | sort -u | xargs -I%% sh -c 'if [[ OUTPUT=$(grep "??" %% --color) ]];then echo "in file:%%" "$OUTPUT";fi' sh` is *wrong* since `OUTPUT=...` returns 0 if success instead of `$OUTPUT`.
+  - `grep "string" chebert*/**/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm | awk -F ':' '{print $1}' | sort -u | xargs -I%% sh -c 'OUTPUT=$(grep "??" %% --color);if [[ 0 -eq $? ]];then echo "in file:%%" "$OUTPUT";fi' sh` is right to use `$?` to check.
+    - Actually that is unnecessary. See [reference](https://unix.stackexchange.com/a/373334/568529)
+      So use `grep "string" chebert*/**/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm | awk -F ':' '{print $1}' | sort -u | xargs -I%% sh -c 'if OUTPUT=$(grep "??" %% --color=always);then echo "in file:%%" "$OUTPUT";fi' sh`
+      - In results, only one having relation with "unification".
+    - or with one procedure
+```bash
+FILES="chebert*/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm"
+## find can't recognize ** for empty string which is different from VSCode.
+# for j in $FILES ; do           # glob, matches in current dir!
+#   printf "%s:\n%s\n\n" $j $(find . -path $j) ; done
+## ls can't parse str...
+## and it also returns one string instead of list
+# for j in $(ls $FILES) ; do           # glob, matches in current dir!
+#   printf "%s\n" $j ; done
+## 0. https://stackoverflow.com/a/918931/21294350
+# Here I use zsh https://stackoverflow.com/a/36476068/21294350 see `man zshbuiltins`
+# use declare to check the result https://stackoverflow.com/a/10527046/21294350
+## 1. IGNORE: Here find can't use glob at all
+# IFS=' ' read -rA ADDR <<< "$FILES"
+# for FILE_STR in ${ADDR[@]}; do           # glob, matches in current dir!
+#   printf "FILE_STR: %s\n" $FILE_STR
+#   for FILE in $(find . -path "$FILE_STR"); do
+#     printf "%s\n" $FILE ; done
+#   ; done
+## https://unix.stackexchange.com/a/34012/568529
+FILES=(chebert*/*.rkt 6.945*/**/*.scm sdf_mbillingr*/**/*.scm SDF_exercises/software/sdf/**/*.scm)
+## grep can't accept many files at once. See https://unix.stackexchange.com/q/788987/568529
+# grep "string" $FILES | awk -F ':' '{print $1}' | sort -u | xargs -I%% sh -c 'if OUTPUT=$(grep "??" %% --color=always);then echo "in file:%%" "$OUTPUT";fi' sh
+grep_seq () {
+  # https://stackoverflow.com/a/42319729/21294350
+  # https://unix.stackexchange.com/q/788987/568529
+  # SUBFILES=$(echo $FILES | tr ' ' '\n')
+  ## man zshexpn
+  ## > "${array[@]}" or "${(@)array}" for arrays
+  SUBFILES=("$FILES[@]")
+  # SUBFILES=("${FILES}") # this will become one str
+  ## explicitly split
+  # SUBFILES=("${(s: :)FILES}")
+  # SUBFILES=("${=FILES}")
+
+  # https://stackoverflow.com/a/22432604/21294350
+  # we can also avoid using i https://unix.stackexchange.com/a/278503/568529
+  for ((idx=1;idx<=$#;idx++)); do
+    # https://stackoverflow.com/a/10750038/21294350 https://stackoverflow.com/a/8515492/21294350
+    # for zsh https://unix.stackexchange.com/a/119442/568529
+    pat="${(P)idx}"
+    ## https://unix.stackexchange.com/a/742010/568529 and google AI says $# may be not one number
+    ## So ($#-1) may be weird
+    # echo "pat:" $pat "param_num" $# "param_num-1:" $(( ($#-1) )) $(( 1==($#-1) ))
+    declare -p pat
+    declare -p SUBFILES
+
+    # if (( ($idx+1)==$# ));then
+    if (( $idx==$# ));then
+      grep $pat $SUBFILES --color=always;
+    else
+      # consider possible space in pathname
+      local TMP="$(grep $pat $SUBFILES | awk -F ':' '{print $1}' | sort -u)"
+      declare -p TMP
+      SUBFILES=("${(ps:\n:)TMP}");
+    fi
+  ;done
+}
+grep_seq "string" "??" "string"
+```
+      - https://unix.stackexchange.com/a/350012/568529
+        Here we can either use nameref for reference.
+        - `declare -a arr0=("'1 2 3'" "'4 5 6'")` -> `declare -p arr0` with `typeset -a arr0=( \''1 2 3'\' \''4 5 6'\' )`: [`\'` meaning](https://askubuntu.com/a/605440) and see `info bash` ANSI-C Quoting.
+          - similarly `'"$2"'=()` is to end quote first and get `$2` expanded.
+        - `man zshparam`
+          > To reference the value of a parameter, write ‘$name' or ‘${name}'
+          so $array[@] or ${array[@]} are both ok for zsh.
+          - see `man zshexpn`
+            > If name is an array parameter...
+            so $array is also fine if not with qoute.
+            > No field splitting is done on the result unless the SH_WORD_SPLIT option is set
+            so "$array" won't work.
+      - better to [quote variable expansion](https://stackoverflow.com/a/10067297/21294350)
+      - https://unix.stackexchange.com/a/788995/568529
+        - `man ZSHPARAM`
+          > In scalar assignment, value is expanded as a single string, in which the elements of arrays are joined together
+        - > the assignment creating new, contiguous ones starting from 0
+          this is not that case for `zsh`
+          - For bash, see `info bash`
+            > the index of the element assigned is the last index assigned to by the statement plus one.  Indexing starts at zero.
+        - export attribute
+          See https://unix.stackexchange.com/a/522379/568529 and https://stackoverflow.com/q/53364895/21294350
+        - [@A](https://stackoverflow.com/q/65233512/21294350)
+        - [`declare --`](https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash#comment1513138_510342) in `declare -p d_repr`.
+        - `[*]` diff from `[@]` (`man zshparam`)
+          > ‘"$foo[*]"' eval‐uates to ‘"$foo[1] $foo[2] ..."', whereas ‘"$foo[@]"' evaluates to ‘"$foo[1]" "$foo[2]" ...'
+          Due to join, `b="${a[*]}"` and `b="${a[@]}"` are same.
+  - notice [what is considered as false](https://stackoverflow.com/a/2933877/21294350) in shell (also see man "a status of  0  (true)  if  successful...").
+  - what `...=$(...)` [returns](https://unix.stackexchange.com/a/270831/568529)
+    - Here no command name like $0, i.e. /bin/zsh etc.
+    - so `...=$(...2)` returns same as `...2`.
+  - TODO I don't know why [group command can't be directly used for `xargs`](https://stackoverflow.com/a/6958957/21294350)
 12: `do-substitute`
 13: Emm... following the similar naming as `match:compile-pattern`, we search `unify:compile-pattern`. But this naming convention is not ensured to be used by others.
 14: `infer-program-types` then `procedure` (only 1 original implementation file and one test file in code base)
@@ -368,6 +482,14 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   9 is similar to SICP 4.79 which needs implement rule based on *unification* with env.
 - ~~11 to be done with 21.~~
 - See above TODO.
+## @% reference implementation checked
+chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
+- For chapter 4, 4.1~21 (not for 4.7&9) have been checked with 
+  include: `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm`
+  exclude: `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/pattern-matching-on-graphs/*.scm,sdf/propagation`
+## related helper files describing useful things
+- `sc-macro-transformer`
+  - capture-syntactic-environment.scm
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
 [software-manager-doc]:https://groups.csail.mit.edu/mac/users/gjs/6.945/sdf/manager/software-manager.pdf

@@ -350,6 +350,8 @@
 ;; As the above says, unify:segment-var-var doesn't need changes.
 ;; IGNORE: maybe-grab-segment is same since we only need to change the grab mechanism.
 (define (make-sub-segment-var name)
+  ;; Here we can also use the naming convention like ?:ref used in 4.7 to
+  ;; > distinguish such references from literal symbols like a and from pattern variables like (? x)
   (match:make-var '??? name)
   ; (match:make-var '?? name)
   )
