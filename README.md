@@ -425,6 +425,9 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - [x] 2
   - a. same as 1.
   - ~~b. This seems to assume ~~
+- [ ] 7,9
+  - Here we have no something like `begin` in pattern language, so val is assumed to just len-1.
+    And also for let-body.
 - [x] 8
   - SDF_exercises/chapter_4/4_8.scm
     is *all* based on generic, but that need to change all the rest matcher API since `data-list` can be vector or "arbitrary sequence".

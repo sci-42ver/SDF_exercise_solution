@@ -51,7 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          ;; > backtrack into the consequent or pattern-match part of a rule. 
          ;; When called by match:list, here "backtrack" to "pattern-match part of" the parent part.
          (succeed dictionary 1)))
-  ; (trace eqv-match)
+  (trace eqv-match)
   eqv-match)
 ; (trace match:eqv)
 
@@ -128,6 +128,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (match:list matchers)
   (define (list-match data dictionary succeed)
+    ; (write-line (list "call list-match with matchers" matchers))
     (and (pair? data)
          (let lp ((data-list (car data))
                   (matchers matchers)
@@ -197,6 +198,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; Nice pattern inspection procedure that will be used by the
 ;;; pattern-directed invocation system.
 
+;; just return pattern-names list.
 (define (match:pattern-names pattern)
   (reverse
    (let loop ((pattern pattern) (names '()))

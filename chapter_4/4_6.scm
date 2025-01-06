@@ -21,3 +21,17 @@
   (match:compile-pattern `(?:choice b (? x ,symbol?)))
   'b
   print-all-matches)
+
+;;; test1
+;; check (list? data) which is compatible with seg.
+(run-matcher
+  (match:compile-pattern '(z (?:choice a (?? x))))
+  '(z)
+  match:bindings)
+; ((x () ??))
+(run-matcher
+  (match:compile-pattern '(z (?:choice a (?? x))))
+  '(z a)
+  print-all-matches)
+; ()
+; ((x (a) ??))
