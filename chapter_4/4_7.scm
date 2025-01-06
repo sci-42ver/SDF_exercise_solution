@@ -197,3 +197,64 @@
   (match:compile-pattern test-pat1)
   '(1 (2 (1 (2 (1 ())))))
   match:bindings)
+
+;; (?/?? x) in ?:choice are shown in 4.9.
+;; Test that here may be inappropriate since all (? x) etc are the *same* thing...
+;; Anyway we can show that
+(define test-pat2
+  `(?:pletrec ((odd-even-etc (?:choice () ((? x) (?:ref even-odd-etc))))
+               (even-odd-etc (?:choice () ((? y) (?:ref odd-even-etc)))))
+    ;; Here the mere (?:ref odd-even-etc) matches () etc instead of ((?:ref odd-even-etc)).
+    (?:ref odd-even-etc))
+  )
+(run-matcher
+  (match:compile-pattern test-pat2)
+  '(1 (2 (1 (2 (1 ())))))
+  match:bindings)
+
+;; use print-all-matches for ??.
+(define test-pat3
+  `(?:pletrec ((odd-even-etc (?:choice () ((? x) (?:ref even-odd-etc))))
+               (even-odd-etc (?:choice () ((?? y) (?:ref odd-even-etc)))))
+    ;; Here the mere (?:ref odd-even-etc) matches () etc instead of ((?:ref odd-even-etc)).
+    (?:ref odd-even-etc))
+  )
+(run-matcher
+  (match:compile-pattern test-pat3)
+  '(1 (2 (1 (2 (1 ())))))
+  print-all-matches)
+
+;; fail
+(run-matcher
+  (match:compile-pattern test-pat3)
+  '(1 (2 (1 (4 (1 ())))))
+  print-all-matches)
+
+;; nested
+(define test-pat4
+  `(?:pletrec ((odd-even-etc* (?:choice () (5 (?:ref even-odd-etc*))))
+               (even-odd-etc* (?:choice () (4 (?:ref odd-even-etc*)))))
+    (,test-pat3
+      (?:ref odd-even-etc*)))
+  )
+(run-matcher
+  (match:compile-pattern test-pat4)
+  '((1 (2 (1 (2 (1 ()))))) (5 (4 (5 ()))))
+  print-all-matches)
+
+;; Here (?? y) is got from test-pat3, so really messed up due to "flat global namespace".
+(define test-pat5
+  `(?:pletrec ((odd-even-etc* (?:choice () (5 (?:ref even-odd-etc*))))
+               (even-odd-etc* (?:choice () ((?? y) (?:ref odd-even-etc*)))))
+    (,test-pat3
+      (?:ref odd-even-etc*)))
+  )
+(run-matcher
+  (match:compile-pattern test-pat5)
+  '((1 (2 (1 (2 (1 ()))))) (5 (2 (5 ()))))
+  print-all-matches)
+;; fail
+(run-matcher
+  (match:compile-pattern test-pat5)
+  '((1 (2 (1 (2 (1 ()))))) (5 (4 (5 ()))))
+  print-all-matches)
