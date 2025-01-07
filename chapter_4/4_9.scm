@@ -63,6 +63,7 @@
   )
 (define increment-pnew-level (do-op-on-pnew-level n:+))
 (define decrement-pnew-level (do-op-on-pnew-level n:-))
+(define (reset-pnew-level) (set! *pnew-level* 0))
 
 (define (match:pnew? object)
   (and
@@ -82,6 +83,7 @@
       (let ((pe* (pe*-proc pattern-environment)))
         ; (write-line (list "pe*:" pe*))
         (increment-pnew-level)
+        ; (write-line (list "pnew-match called with" data pattern-environment "and updates increment-pnew-level to" *pnew-level*))
         (body-proc data pe*
           ;; similar to match:list
           (lambda (new-pe n)

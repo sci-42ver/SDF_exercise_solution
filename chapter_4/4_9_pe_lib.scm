@@ -74,16 +74,15 @@
           binding
           (dicts-loop (rest-dicts dicts)))
         ))
-    (if (null? dicts)
-        (error "Unbound variable" var)
+    ;; same as match:lookup to return #f if failure.
+    (and (not (null? dicts))
         (let ((dict (first-dict dicts)))
           (scan dict))))
   (dicts-loop (match:pe-dicts pe)))
 ;; maybe better to use let loop. Anyway the basic ideas are same.
 (define (match:pe-lookup var pe)
   (let lp ((dicts (match:pe-dicts pe)))
-     (if (null? dicts)
-        (error "Unbound variable" var)
+     (and (not (null? dicts))
         (let ((dict (first-dict dicts)))
           (let ((binding (match:lookup var dict)))
             (if binding
@@ -103,9 +102,17 @@
   (set-car! (cddr binding) type))
 (define (update-binding! binding var val)
   (set-binding-val! binding val)
-  (if (eq? '?/?? (match:binding-type binding))
-    (set-binding-type! binding (match:var-type var))
-    (error "can't modify binding for non-pnew-init"))
+  (let ((type (match:binding-type binding)))
+    (if (eq? '?/?? type)
+      (set-binding-type! binding (match:var-type var))
+      (if (eq? '?? type)
+        (begin
+          ; (write-line (list "segment tries new binding" (list var val)))
+          ;; this cancels the before binding, so we need to restore something if necessary.
+          (decrement-pnew-level)
+          )
+        (error "can't modify binding for non-pnew-init"))
+      ))
   )
 
 (define base-dict-pair last-pair)

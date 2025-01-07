@@ -1,5 +1,11 @@
-;; test1
+(define (run-matcher-wrapper match-procedure datum succeed)
+  (newline)
+  (write-line '---)
+  (pp (run-matcher match-procedure datum succeed))
+  (write-line '---)
+  )
 
+;; test1
 (define test-pat1
   `(?:pletrec ((palindrome
               (?:pnew (x)
@@ -8,6 +14,10 @@
                                  (?:ref palindrome)
                                  (? x))))))
            (?:ref palindrome)))
+(run-matcher-wrapper
+  (match:compile-pattern test-pat1)
+  '(a (f (u (t () t) u) f) a)
+  print-all-matches)
 
 (define test-pat1*
   `(?:pletrec ((palindrome
@@ -17,12 +27,6 @@
                                  (?:ref palindrome)
                                  (? x))))))
            (?:ref palindrome)))
-(define (run-matcher-wrapper match-procedure datum succeed)
-  (newline)
-  (write-line '---)
-  (run-matcher match-procedure datum succeed)
-  (write-line '---)
-  )
 (run-matcher-wrapper
   (match:compile-pattern test-pat1*)
   '(1 () 1)
@@ -43,6 +47,10 @@
                                  (?:ref palindrome)
                                  (?? x))))))
            (?:ref palindrome)))
+(run-matcher-wrapper
+  (match:compile-pattern test-pat1**)
+  '(a (f (u (t () t) u) f) a)
+  print-all-matches)
 
 ;; test2
 ;; y is shared
@@ -54,6 +62,20 @@
                                  (?:ref palindrome)
                                  (? y))))))
            (?:ref palindrome)))
+(run-matcher-wrapper
+  (match:compile-pattern test-pat2)
+  '(a (f (u (t () t) u) f) a)
+  print-all-matches)
+; #f
+(run-matcher-wrapper
+  (match:compile-pattern test-pat2)
+  '(a (a () a) a)
+  print-all-matches)
+; ("level" 3 "constructs pnew-dict" (pnew-dict (x *unassigned* ?/??)) "with new-pe" (pattern-environment (pnew-dict (x *unassigned* ?/??)) (pnew-dict (x *unassigned* ?/??)) (pnew-dict (x *unassigned* ?/??)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref))))
+; ("level" 2 "constructs pnew-dict" (pnew-dict (x *unassigned* ?/??)) "with new-pe" (pattern-environment (pnew-dict (x *unassigned* ?/??)) (pnew-dict (x *unassigned* ?/??)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref))))
+; ("level" 1 "constructs pnew-dict" (pnew-dict (x *unassigned* ?/??)) "with new-pe" (pattern-environment (pnew-dict (x *unassigned* ?/??)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref))))
+; ((dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref)))
+; #f
 
 ;; test3
 (define test-pat3
@@ -73,6 +95,18 @@
                                  (? x)))))
             )
            (?:ref palindrome)))
+(run-matcher-wrapper
+  (match:compile-pattern test-pat3)
+  '(a (f (u (t () t) u) f) a)
+  print-all-matches)
+;; notice here level-1 has no binding for x as expected but binding for y.
+; ("level" 5 "constructs pnew-dict" (pnew-dict (x *unassigned* ?/??)) "with new-pe" (pattern-environment (pnew-dict (x *unassigned* ?/??)) (pnew-dict (x t ?)) (pnew-dict (x u ?)) (pnew-dict (x f ?)) (pnew-dict (x *unassigned* ?/??)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure pnew-match] ?:ref))))
+; ("level" 4 "constructs pnew-dict" (pnew-dict (x t ?)) "with new-pe" (pattern-environment (pnew-dict (x t ?)) (pnew-dict (x u ?)) (pnew-dict (x f ?)) (pnew-dict (x *unassigned* ?/??)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure pnew-match] ?:ref))))
+; ("level" 3 "constructs pnew-dict" (pnew-dict (x u ?)) "with new-pe" (pattern-environment (pnew-dict (x u ?)) (pnew-dict (x f ?)) (pnew-dict (x *unassigned* ?/??)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure pnew-match] ?:ref))))
+; ("level" 2 "constructs pnew-dict" (pnew-dict (x f ?)) "with new-pe" (pattern-environment (pnew-dict (x f ?)) (pnew-dict (x *unassigned* ?/??)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure pnew-match] ?:ref))))
+; ("level" 1 "constructs pnew-dict" (pnew-dict (x *unassigned* ?/??)) "with new-pe" (pattern-environment (pnew-dict (x *unassigned* ?/??)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure pnew-match] ?:ref))))
+; ((dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure pnew-match] ?:ref)))
+; #f
 
 ;; test4
 ;;; IGNORE: Based on lexically scope, here palindrome1 can't access the variable introduced by palindrome
@@ -94,6 +128,20 @@
                          (? x))))
             )
            (?:ref palindrome)))
+(run-matcher-wrapper
+  (match:compile-pattern test-pat4)
+  '(a (f (f () f) f) a)
+  print-all-matches)
+;; 0. only one level since only one pnew call.
+;; 1. Here x is passed along to palindrome1
+; ("level" 1 "constructs pnew-dict" (pnew-dict (x f ?)) "with new-pe" (pattern-environment (pnew-dict (x f ?)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure choices-match] ?:ref))))
+; ((dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure choices-match] ?:ref)))
+; #f
+(run-matcher-wrapper
+  (match:compile-pattern test-pat4)
+  '(a (f (e () e) f) a)
+  print-all-matches)
+; #f
 
 ;; test5
 ;; allow multiple parameters
@@ -109,3 +157,12 @@
                                     ))))
                 )
               (?:ref palindrome)))
+(run-matcher-wrapper
+  (match:compile-pattern test-pat5)
+  '(a a (t t () d d) f f)
+  print-all-matches)
+; ("level" 3 "constructs pnew-dict" (pnew-dict (x *unassigned* ?/??) (y *unassigned* ?/??)) "with new-pe" (pattern-environment (pnew-dict (x *unassigned* ?/??) (y *unassigned* ?/??)) (pnew-dict (x *unassigned* ?/??) (y t ?)) (pnew-dict (x *unassigned* ?/??) (y a ?)) (dict (palindrome #[compound-procedure pnew-match] ?:ref))))
+; ("level" 2 "constructs pnew-dict" (pnew-dict (x d ?) (y t ?)) "with new-pe" (pattern-environment (pnew-dict (x d ?) (y t ?)) (pnew-dict (x *unassigned* ?/??) (y a ?)) (dict (palindrome #[compound-procedure pnew-match] ?:ref))))
+; ("level" 1 "constructs pnew-dict" (pnew-dict (x f ?) (y a ?)) "with new-pe" (pattern-environment (pnew-dict (x f ?) (y a ?)) (dict (palindrome #[compound-procedure pnew-match] ?:ref))))
+; ((dict (palindrome #[compound-procedure pnew-match] ?:ref)))
+; #f

@@ -38,6 +38,7 @@
         (and (<= i n)
             (or (let ((val-to-bind (list-head data i)))
                   (if (default-object? binding)
+                    ;; since "called by non-pnew", no restoration is needed.
                     (succeed 
                       (pe-add-binding-to-base-dict! 
                         pattern-environment 
@@ -45,6 +46,8 @@
                         val-to-bind) 
                       i)
                     (begin
+                      ; (write-line (list "match:segment update binding" binding "to" (list variable val-to-bind)))
+                      ;; restoration is done in update-binding! when necessary.
                       (update-binding! binding variable val-to-bind)
                       ;; always succeed at last.
                       (succeed pattern-environment i)
@@ -56,13 +59,16 @@
            (if binding
                ;; similar to match:element
                (if (reserved-init-binding? binding)
+                ;; called by pnew
                 (try-add-binding data succeed variable pattern-environment binding)
                 (match:segment-equal? data 
                                      (match:binding-value binding)
                                      (lambda (n)
                                        (succeed pattern-environment n))) )
+               ;; called by non-pnew
                (try-add-binding data succeed variable pattern-environment)
                ))))
+  ; (trace segment-match)
   segment-match)
 
 ;; match:segment-equal? same since it just compares segment *values* without caring about dict.
@@ -76,6 +82,7 @@
 
 (define (run-matcher match-procedure datum succeed)
   ; (write-line (list "use new run-matcher" (match:pe-with-base-dict)))
+  (reset-pnew-level)
   (match-procedure (list datum)
                    ;; modified
                    (match:pe-with-base-dict)
