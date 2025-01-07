@@ -157,9 +157,10 @@
   )
 
 (define (str-unifier pattern1 pattern2)
+  (newline)
   (let ((lst1 (string->list-terms pattern1))
         (lst2 (string->list-terms pattern2)))
-    (write-line (list "str-lsts:" lst1 lst2))
+    ; (write-line (list "str-lsts:" lst1 lst2))
     (let ((dict (unify lst1 lst2)))
       (write-line (list "dict:" dict))
       (and dict
@@ -169,11 +170,13 @@
     ))
 (str-unifier "(? seg1)(? seg1)" "aa")
 (str-unifier "(? seg1)(? seg1)" "gctgct")
+; ("dict:" #f)
 
 ; (trace unify:dispatch)
 ; (trace maybe-grab-segment)
 (str-unifier "(?? seg1)(?? seg1)" "aa")
 (str-unifier "(?? seg1)(?? seg1)" "gctgct")
+; ("dict:" (dict (seg1 (#\g #\c #\t) ??)))
 
 (str-unifier
   "test1(?? seg1)abc(?? seg1)(?? seg2)bc(? var1)(?? seg3)"

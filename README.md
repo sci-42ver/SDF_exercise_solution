@@ -95,7 +95,9 @@ with check comments in codes.
   - nbardiuk can be skipped.
 - 2, 3, 4 (see "chapter 4" section where all exercises with reference search methods have been checked)
 # @%exercise tests finished (obviously not considering skipped exercises)
-- 2, 3, 4.1~6, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.10~4.11, 4.13~17, 4.19~20.
+- 2, 3, 
+- 4 (4.12 skipped)
+  - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~21.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
@@ -477,14 +479,14 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 ### other possible type-inference extension
 - [subtype etc](https://nus-cs2030s.github.io/2425-s1/27-inference.html#argument-typing)
 ### @%TODO
-- 7,9 (Unification match may use env to implement)
+- ~~7,9 (Unification match may use env to implement)~~
   7 will be done implicitly when 9 is done.
-  9 is similar to SICP 4.79 which needs implement rule based on *unification* with env.
+  9 is ~~similar to SICP 4.79 which needs implement rule based on *unification* with env~~.
 - ~~11 to be done with 21.~~
-- See above TODO.
+- ~~See above TODO.~~
 ## @% reference implementation checked
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
-- For chapter 4, 4.1~21 (not for 4.7&9) have been checked with 
+- For chapter 4, 4.1~21 have been checked with 
   include: `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm`
   exclude: `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/pattern-matching-on-graphs/*.scm,sdf/propagation`
 ## related helper files describing useful things
