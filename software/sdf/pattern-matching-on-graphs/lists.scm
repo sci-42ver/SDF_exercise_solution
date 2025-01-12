@@ -34,6 +34,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (delay (list->lazy-graph (cdr list))))
       (g:null)))
 
+;;; IGNORE: IMHO this is just same as list->lazy-graph but
+;; 0. not allow null list (and then also skipped the end null for each list).
+;; 1. no abstraction of g:cons.
+;;; See g:append! for how this is extensible.
 (define (list->extensible-lazy-graph list)
   (if (not (pair? list))
       (error "Can't implement empty extensible list."))
@@ -47,6 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define nil
   (make-graph-node 'nil))
 
+;; eqv? & eq? returns #t https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Equivalence-Predicates.html
 (define (g:null)
   nil)
 

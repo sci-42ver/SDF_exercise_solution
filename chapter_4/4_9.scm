@@ -1,3 +1,6 @@
+;; full meaning
+;; unrelated: https://patterns.eecs.berkeley.edu/?page_id=98 which is about *design* pattern.
+
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'term-rewriting)

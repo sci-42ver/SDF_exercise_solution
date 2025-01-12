@@ -51,7 +51,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          ;; > backtrack into the consequent or pattern-match part of a rule. 
          ;; When called by match:list, here "backtrack" to "pattern-match part of" the parent part.
          (succeed dictionary 1)))
-  (trace eqv-match)
+  ; (trace eqv-match)
   eqv-match)
 ; (trace match:eqv)
 

@@ -27,6 +27,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((edges '()))
 
     (define (get-name) name)
+    ;; Also see SICP_SDF/exercise_codes/SICP/4/4_77.scm
     (define (all-edges) (list-copy edges))
 
     (define (%find-edge label)
@@ -73,6 +74,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
   (define (get-value)
     (if (promise? value)
+        ;; no duplicate calculation as SICP taught in one version of force exercise_codes/SICP/book-codes/ch4-leval.scm
+        ;; and doc https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Promises.html
         (force value)
         value))
 
@@ -93,9 +96,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define graph-edge?
   (make-bundle-predicate 'graph-edge))
 
+;; SDF_exercises TODO When it is used
 (define (graph-node . plist)
   (let ((node (make-graph-node #f)))
     (for-each (lambda (p)
+                ;; SDF_exercises TODO 
+                ;; IGNORE: What is the purpose if cdr is default-object?
+                ;; Here (cdr p) can be default-object by (default-object) (see SDF_exercises/chapter_4/tests/bundle-tests/default-object-test.scm).
                 (node 'maybe-connect! (car p) (cdr p)))
               (plist->alist plist))
     node))

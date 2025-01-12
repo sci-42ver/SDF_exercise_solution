@@ -488,7 +488,8 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
 - For chapter 4, 4.1~21 have been checked with 
   include: `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm`
-  exclude: `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/pattern-matching-on-graphs/*.scm,sdf/propagation`
+  exclude: `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/propagation,sdf/pattern-matching-on-graphs/*.scm`
+  - later, exclude remove `sdf/pattern-matching-on-graphs/*.scm`
 ## related helper files describing useful things
 - `sc-macro-transformer`
   - capture-syntactic-environment.scm
