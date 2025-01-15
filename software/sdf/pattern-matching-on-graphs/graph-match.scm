@@ -99,6 +99,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (and (pair? object)
        (gmatch:var-type? (car object))
        (or (null? (cdr object))
+           ;; SDF_exercises TODO when happens
            (and (pair? (cdr object))
                 (not (symbol? (cadr object)))))))
 

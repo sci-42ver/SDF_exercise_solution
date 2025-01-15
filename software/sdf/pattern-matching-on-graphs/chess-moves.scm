@@ -63,6 +63,61 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   transformer)
 
 ;;; To collect all the appropriate transformations
+;; 0. whether the order matters
+;; 0.a. Reflection matrix derivation https://math.stackexchange.com/questions/3865442/reflection-in-the-line-y-mxc-via-matrices/3865554#3865554
+;; Also see Discrete_Mathematics_and_Its_Applications/DMIA_Exercises_2.md
+;; 0.b. We can think as the following:
+;;; IGNORE: Assume after some transformations, we get moves1 which are distinct.
+;; If with one new transformation we get moves1* and moves1-0 becomes same as some in moves1*,
+;; then we must have Mat1*move.
+;;; For n transformations, we have 2^n results if not removing duplication.
+;; We can index these by binary number.
+;; Then 2 results' difference may differ by k digits with 0<=k<=n.
+;; If they are same, we may have Mat1*Mat2^{-1}*...*move1=move1.
+;; Based on associative property of matrix multiplication https://stackoverflow.com/q/16952546/21294350
+;; When calculating from right to left, we can always calculate the left matrix product and leave the move1 vector unchanged.
+;; So we need to check whether Mat1*Mat2^{-1}*...*Matk=I (here the exponent can be only 1 or -1 or 0 which can be checked by 4 cases of 0/1 pairs) is impossible.
+;;;; IGNORE
+;; 0.b.0. We can think of reflection matrix as one special rotation matrix whose angle varies based on the move.
+;; So we just think about the special case for knight-move.
+;; Denote alpha as the angle that tan(alpha)=1/2, 0<alpha<pi/2
+;; 0.b.0.a. reflection as the leftmost matrix or the rightmost matrix
+;;; IGNORE the following
+;; 0.b.0.a.0. only 2 mat's in total
+;; +/-90 or +/-180 all can't be a multiple of 360 degrees minus 2*alpha.
+;; 0.b.0.a.1. only 1 mat, trivially not a multiple of 360 degrees minus 2*alpha.
+;; 0.b.0.a.2. 3 mats
+;; similar to 0, we have +/-270, again unable to be a multiple of 360 degrees minus 2*alpha.
+;;; Here we need to multiple rotation matrix (the inverse of rotation matrix is also one rotation matrix https://en.wikipedia.org/wiki/Rotations_and_reflections_in_two_dimensions#Mathematical_expression) 
+;; to get one reflection matrix Mat1^{-1}
+;; But we can assume Rot(Theta1)=Ref(Theta2/2) where Theta2 is pi here.
+;; Then we find cos(Theta1)=cos(Theta2) => Theta1=Theta2+2k_1*pi or Theta1=2k_1*pi-Theta2
+;; sin(Theta1)=sin(Theta2) => Theta1=Theta2+2k_2*pi or Theta1=2k_2*pi+pi-Theta2
+;;; So 
+;; Theta1=Theta2+2k_1*pi (k_1=k_2) or 
+;; Theta2+2k_1*pi=2k_2*pi+pi-Theta2 => Theta2=(k_2-k_1)*pi+pi/2 (impossible) or
+;; Theta2=(k_1-k_2)*pi (so k_1-k_2=1) or
+;; 2k_1*pi=2k_2*pi+pi (impossible)
+;;; sin(Theta1)=-sin(Theta2)
+;;; cos(Theta1)=-cos(Theta2) (impossible which implies the above can't hold for the case when Theta2=pi).
+;; Actually here we have sin(Theta2)=cos(Theta2)=0 which can't hold for all Theta2's.
+;;; 0.b.0.b. reflection as the middle matrix
+;;;; IGNORE ended
+;; Here I just uses knight-move as one demo.
+;; 0.b.0. If 0 denotes no matrix, we can actually think this as one rotation matrix of 0 degree.
+;; the inverse of rotation matrix is also one rotation matrix https://en.wikipedia.org/wiki/Rotations_and_reflections_in_two_dimensions#Mathematical_expression
+;; 0.b.1. Whatever location the reflection matrix is in, the result must be 2 cases.
+;; 0.b.1.0. no reflection matrix (3!*3^2 situations in 0.b.2.). Then the results are all just one rotation matrix.
+;; trivially (0 or 1)*+/-90+(0 or 1)*+/-180 can't be a multiple of 360 degrees.
+;; 0.b.1.1. one reflection matrix (reflection matrix inverse is itself)
+;; (3!*3^2*2 situations in 0.b.2.)
+;; Here I uses the 3rd and 4th identities in the above wikipedia link.
+;; So finally we will have one Ref matrix as the multiplication result for 3 cases where Ref is at.
+;; But cos(Theta2)=-cos(Theta2)=0 can't be one identity matrix.
+;; 0.b.2. considered in 0.b.1., we considered at most P_{3}^{3}*3^3 situations where (0,0,0) is considered duplicately etc.
+;; Here P_{3}^{3}=3! considers the possible permutation for 3 transformations.
+;; 0.b.3. Based on the above contexts of "can't", no duplication in 2^n results at least for knight-move.
+;; IGNORE 0.b.0.c. reflection as the rightmost matrix
 (define (symmetrize-move move . transformations)
   (let loop ((xforms transformations) (moves (list move)))
     (if (null? xforms)

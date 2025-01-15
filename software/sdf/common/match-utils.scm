@@ -48,7 +48,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (simple-generic-procedure 'match:var-name 1
     (constant-generic-procedure-handler #f)))
 
-;; checked
+;; 0. checked
 (define (match:named-var? object)
   (and (pair? object)
        (match:var-type? (car object))
