@@ -83,6 +83,19 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (populate-side 'black 7 6))
 
 (define (make-chess-board-internal)
+  ;; > The procedure make-chess-board-internal makes the array of
+  ;; > nodes for squares as a list of rows, each of which is a list of columns
+  ;; > for that row.
+  ;; IGNORE: Here the book assumes x as the row-index which is different from the normal xOy convention.
+  ; (define chess-board-indices (iota 8))
+  ; (map (lambda (x)
+  ;     (map (lambda (y)
+  ;             (string x "," y))
+  ;           chess-board-indices))
+  ;   chess-board-indices)
+  ;; It will be (("0,0" "0,1" "0,2" "0,3" "0,4" "0,5" "0,6" "0,7") ("1,0" "1,1" "1,2" "1,3" "1,4" "1,5" "1,6" "1,7") ("2,0" "2,1" "2,2" "2,3" "2,4" "2,5" "2,6" "2,7") ("3,0" "3,1" "3,2" "3,3" "3,4" "3,5" "3,6" "3,7") ("4,0" "4,1" "4,2" "4,3" "4,4" "4,5" "4,6" "4,7") ("5,0" "5,1" "5,2" "5,3" "5,4" "5,5" "5,6" "5,7") ("6,0" "6,1" "6,2" "6,3" "6,4" "6,5" "6,6" "6,7") ("7,0" "7,1" "7,2" "7,3" "7,4" "7,5" "7,6" "7,7")).
+  ;;; SDF_exercises TODO here it is (0-?-lst 1-?-lst ...). Then based on (add-piece col row type), it means (col-0 col-1 ...)
+  ;; That is not "a list of rows".
   (let ((nodes
          (map (lambda (x)
                 (map (lambda (y)
@@ -98,6 +111,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (list-ref (list-ref nodes (address-x address))
                     (address-y address)))
 
+        ;; > White will see a node directly and Black will see the same node projected through the rotate-180-view.
         (if (white-move?)
             (get-node address)
             (graph-node-view (get-node (invert-address address))
@@ -135,6 +149,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (define (next-turn)
         (loop (+ turn 1)))
 
+      ;; > If a predicate is not needed, bundle alternatively accepts #f as a
+      ;; > first argument. In that case there will be no way to distinguish the
+      ;; > created bundle procedure from other procedures
       (bundle #f
               node-at piece-at piece-in address-of
               set-piece-at color next-turn))))
@@ -149,6 +166,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (board 'set-piece-at to my-piece)
     ;; Now update all the unaffected pieces to the next state of
     ;; the board:
+    ;;; i.e. just update those pieces to exist in the next turn.
     (for-each (lambda (address)
                 (if (not (or (address= from address)
                              (address= to address)))
@@ -169,6 +187,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (and dict
          (let* ((target (match:get-value 'target-node dict))
                 (captured (board 'piece-in target)))
+           ;; either empty (#f) or have one piece.
            (and captured
                 `(capture ,my-piece
                           ,captured

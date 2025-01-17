@@ -43,7 +43,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (error:not-a predicate object #!optional caller)
   ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Taxonomy.html#index-error_003awrong_002dtype_002dargument
   ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Taxonomy.html#index-condition_002dtype_003awrong_002dtype_002dargument-1
-  ;; compared with (list-copy 3), here object is 3, (predicate-description predicate) is list, caller is list-copy.
+  ;; compared with (list-copy 3), here object is 3, (predicate-description predicate) is string "list", caller is list-copy.
   ;; For (+ 'a 3), operand means "first".
   (error:wrong-type-argument object
                              (predicate-description predicate)
@@ -68,7 +68,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (string-append "object satisfying "
                      (object->description predicate))))
 
-;; number? will return one not readable description "#[compiled-procedure 12 (\"arith\" #xf0) #x1c #xb75eb4]"
+;; 0. number? will return one not readable description "#[compiled-procedure 12 (\"arith\" #xf0) #x1c #xb75eb4]"
+;; 0.a. For those registered by register-predicate! (see above predicate-name), object is one symbol.
+;; Anyway, both will return "string" which may be needed by error:wrong-type-argument.
+;; > call-with-output-string returns the port’s accumulated output as a string.
 (define (object->description object)
   (call-with-output-string
     (lambda (port)

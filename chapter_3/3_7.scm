@@ -103,7 +103,7 @@
            (every symbol? row))
          (mat-data->2-level-list object))))
 
-;; See section 3.3. We can use `generate-uninterned-symbol` to avoid conflicts.
+;; See section 3.3 SDF_exercises/software/sdf/automatic-differentiation/derivatives.scm. We can use `generate-uninterned-symbol` to avoid conflicts.
 (define test-literal-matrix (literal-mat 'A 2 2))
 #|
 from sympy import *

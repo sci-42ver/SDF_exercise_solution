@@ -180,6 +180,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (else #f)))))
 
 ;;; This will be a unique \delta{x}
+;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Symbols.html#index-generate_002duninterned_002dsymbol
+;; > any two interned symbols whose names are the same, in the sense of string=?, are the same object (i.e. they are eq? to one another). 
+;; > The term interned refers to the process of interning by which this is accomplished. 
+;; > Uninterned symbols do not share this property.
+;; See
+; (eq? (intern "bitBlt") (intern "bitBlt"))
+;Value: #t
+; (eq? (string->uninterned-symbol "foo") (string->uninterned-symbol "foo"))
+;Value: #f
 (define (make-new-dx)
   (generate-uninterned-symbol "delta-"))
 

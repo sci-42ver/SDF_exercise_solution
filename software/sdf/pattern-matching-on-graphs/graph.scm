@@ -200,6 +200,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (make-graph-view name forward backward)
     graph-view?
   (name graph-view-name)
+  ;; SDF_exercises TODO why forward and backward instead of just one for rotate-180-view. 
   (forward graph-view-forward)
   (backward graph-view-backward))
 
@@ -249,6 +250,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (graph-edge-view edge view))
          (delegate 'all-edges)))
 
+  ;; > If the player playing White sees a north edge from (the node
+  ;; > representing) square A to square B we want the player playing Black
+  ;; > to see a north edge from square B to square A.
+  ;; Also for (all-edges) modification for (get-label).
   (define (has-edge? label)
     (delegate 'has-edge? ((graph-view-backward view) label)))
 

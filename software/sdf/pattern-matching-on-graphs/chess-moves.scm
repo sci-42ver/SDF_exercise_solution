@@ -37,9 +37,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (symbol? (car path-elts))
                 (pair? (cdr path-elts))
                 (match:var? (cadr path-elts)))
+           ;; different from SDF_exercises/software/sdf/unification/type-resolver.scm
+           ;; more than 2, we need cons.
            (cons* (transform-edge-label (car path-elts))
                   (cadr path-elts)
                   (transform-tail (cddr path-elts))))
+          ;; SDF_exercises TODO when happens
           ((and (pair? path-elts)
                 (pair? (car path-elts))
                 (memq (caar path-elts) '(* + opt)))
@@ -55,6 +58,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (else
            (error "Unknown path elements:" path-elts))))
 
+  ;; not combined into transform-elts since path-elts is not allowed to be empty.
+  ;; For simple graph https://math.stackexchange.com/a/3260124/1059606, the mere vertex can't be one edge, also for path https://en.wikipedia.org/wiki/Path_(graph_theory).
   (define (transform-tail tail)
     (if (pair? tail)
         (transform-elts tail)
@@ -123,6 +128,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (if (null? xforms)
         moves
         (loop (cdr xforms)
+              ;; at each time, map multiplies the number of moves.
               (append moves
                       (map (rewrite-path-edges (car xforms))
                            moves))))))
@@ -236,6 +242,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (* north (?* ,unoccupied))
     north (? target-node ,maybe-opponent)))
 
+;; similar to knight-move, the absolute of the maximum angle is less than 360 degrees, so no duplication caused by identity.
 (define all-queen-moves
   (symmetrize-move basic-queen-move
                    rotate-45 rotate-90 rotate-180))

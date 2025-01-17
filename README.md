@@ -97,7 +97,7 @@ with check comments in codes.
 # @%exercise tests finished (obviously not considering skipped exercises)
 - 2, 3, 
 - 4 (4.12 skipped)
-  - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~21.
+  - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~22.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
@@ -111,8 +111,9 @@ with check comments in codes.
 - From cc09d5b919575d7a27d30d94100d2f12dd8248ef up to .
 ## @%review of mere TODO
 `grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" -r ./**/*.scm | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
+up to 30b5ddceb074ac5fe8928cde0764eb91980c93d6.
 1. I didn't check for md/rkt but just for my written codes (mostly are with scm suffix).
-2. Here IGNORE means that has been finished, SKIPPED means it hasn't been finished but skipped forever for some reason (e.g. it is not related with what this book intends to teach like `weak-memq`) and WAITED means it will be done in the future.
+2. Here IGNORE means that *has been finished*, SKIPPED means it hasn't been finished but skipped *forever* for some reason (e.g. it is not related with what this book intends to teach like `weak-memq`) and WAITED means it will be done in the future.
 3. See [this](https://stackoverflow.com/a/221929/21294350) for how glob is used.
 4. I skipped SICP related paths using [this](https://unix.stackexchange.com/a/493909/568529)
   `find . \( -type d \( -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec 'grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"' {} +`
@@ -141,7 +142,9 @@ with check comments in codes.
             -exec awk '/TODO/ && !/SDF_exercises TODO/ && !/IGNORE/ && !/\(cph\)/ && !/SKIPPED/ && !/code_base TODO/ {match($0,/TODO/); printf "\033[1;31m" FILENAME "\033[0m: " substr($0,1,RSTART-1) "\033[1;31m" substr($0,RSTART,RLENGTH) "\033[0m: " substr($0,RSTART+RLENGTH) "\n"}' {} +
           ```
           - most of codes in the code base uses "TODO:" instead of only "TODO".
-          - **Use [this](https://unix.stackexchange.com/a/788823/568529) after many improvements** (use `gsub` as Stéphane Chazelas shows )
+          - **Use [this](https://unix.stackexchange.com/a/788823/568529) after many improvements** (use `gsub` as Stéphane Chazelas shows)
+            I skipped SDF exercise codes, SICP codes, *.rkt, 6.945_assignment_solution code base codes, 
+            "code_base TODO"/"cph" means TODO originally in the code base.
             ```bash
             find . \
             \( -type d \( -path ./SDF_exercises/chapter_\* \
@@ -421,6 +424,9 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 18: practical
 19: `substitution-instance?`
 20: `((?? x) 3)` (with tests in `SDF_exercises/software/sdf/unification/gjs-test.scm` but not reference implementation)
+21: see the above
+22: `tree->lazy-graph` based on the code base naming conventions.
+23: `all-rook-moves`
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1
   - same as SICP `(married Mickey ?who)`
@@ -484,9 +490,10 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   9 is ~~similar to SICP 4.79 which needs implement rule based on *unification* with env~~.
 - ~~11 to be done with 21.~~
 - ~~See above TODO.~~
+- 23 TODOs after all related graph implementation understanding.
 ## @% reference implementation checked
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
-- For chapter 4, 4.1~21 have been checked with 
+- For chapter 4, 4.1~23 have been checked with 
   include: `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm`
   exclude: `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/propagation,sdf/pattern-matching-on-graphs/*.scm`
   - later, exclude remove `sdf/pattern-matching-on-graphs/*.scm`
