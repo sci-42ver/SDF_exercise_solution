@@ -25,7 +25,7 @@
               board-addresses)
     (board 'next-turn)))
 
-;; Here the exercise seems to let us not use graph-match
+;; Here the exercise seems to let us not use graph-match since it is before 4.5.6.
 (define (get-moves type)
   ;; similar to piece->string
   ;; regex: \(([^(]*)\) #\\. -> ($1) all-$1-moves

@@ -97,7 +97,7 @@ with check comments in codes.
 # @%exercise tests finished (obviously not considering skipped exercises)
 - 2, 3, 
 - 4 (4.12 skipped)
-  - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~22.
+  - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~22,24.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
@@ -427,6 +427,8 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 21: see the above
 22: `tree->lazy-graph` based on the code base naming conventions.
 23: `all-rook-moves`
+24: `simple-move` (SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain can be ignored)
+### comments
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1
   - same as SICP `(married Mickey ?who)`
@@ -491,9 +493,11 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - ~~11 to be done with 21.~~
 - ~~See above TODO.~~
 - 23 TODOs after all related graph implementation understanding.
+  - 24 similarly needs some predicate implementations.
+    But this predicate should be done in `match`... So this maybe have been implemented in SDF_exercises/software/sdf/pattern-matching-on-graphs/graph-match.scm.
 ## @% reference implementation checked
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
-- For chapter 4, 4.1~23 have been checked with 
+- For chapter 4, 4.1~24 have been checked with 
   include: `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm`
   exclude: `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/propagation,sdf/pattern-matching-on-graphs/*.scm`
   - later, exclude remove `sdf/pattern-matching-on-graphs/*.scm`

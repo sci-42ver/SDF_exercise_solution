@@ -92,6 +92,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (gmatch:finish-compile-path rest-elts matcher)
   (if (null? rest-elts)
       matcher
+      ;; similar to match:list and SICP exercise_codes/SICP/book-codes/ch4-ambeval.scm analyze-sequence.
       (gmatch:seq2 matcher
                    (gmatch:compile-path-elts rest-elts))))
 
@@ -109,6 +110,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (eq? '?* (car object))
        (symbol? (cadr object))))
 
+;; added based on SDF_exercises/software/sdf/common/match-utils.scm
 (define-generic-procedure-handler match:var?
   (match-args gmatch:anonymous-var?)
   (constant-generic-procedure-handler #t))
@@ -132,6 +134,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let ((elt (car elts))
         (rest (cdr elts)))
     (cond ((and (symbol? elt) (pair? rest))
+           ;; > An edge may be labeled by any symbol that is not one of the special
+           ;; > symbols (*, + , opt, or, and) used by graph-matcher patterns.
+           ;; SDF_exercises TODO IMHO ((?) * (?)) can be differentiated from ((?) (* ...)).
+           ;; So why must "not one of the special symbols"?
            (gmatch:finish-compile-path (cdr rest)
              (gmatch:compile-edge elt (car rest))))
           ((pair? elt)
@@ -151,6 +157,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       ((and) (gmatch:compile-and args))
       (else (error "Ill-formed path element:" elt)))))
 
+;; calls gmatch:compile-edge at last.
 (define (gmatch:compile-* elts)
   (gmatch:* (gmatch:compile-path-elts elts)))
 
@@ -173,12 +180,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (gmatch:* matcher)
   (define (match-* object dict succeed)
+    ;; match as more as possible
     (or (matcher object dict
                  (lambda (object* dict*)
                    (match-* object* dict* succeed)))
         (succeed object dict)))
   match-*)
 
+;; SDF_exercises TODO what does this comment mean?
 ;;; Each element-list must be parenthesized, but this means
 ;;; there's an ambiguity with an edge-like construct of the form
 ;;; (* (?)), which will be interpreted as an edge with label *
@@ -209,13 +218,18 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (if (null? (cdr matchers))
                succeed
                (lambda (object* dict*)
+                 ;; 0. trivially here we call matchers on object instead of object* since we continues to check object.
+                 ;; 1. Similar to exercise_codes/SICP/book-codes/ch4-query.scm conjoin, here former bindings may be used later.
                  (loop (cdr matchers) dict*))))))))
 
+;; > starting with the edge object*
+;; SDF_exercises TODO IMHO here object is node instead of edge.
 (define (gmatch:compile-edge label target)
   (let ((match-target (gmatch:compile-target target)))
     (define (match-edge object dict succeed)
       (and (graph-node? object)
            (object 'has-edge? label)
+           ;; Update to the next node object.
            (match-target (object 'edge-value label)
                          dict succeed)))
     match-edge))
@@ -223,7 +237,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (gmatch:compile-target elt)
   (if (match:var? elt)
       (gmatch:compile-var elt)
+      ;; SDF_exercises TODO why not use begin?
       (let ()
+        ;; compared with SDF_exercises/software/sdf/design-of-the-matcher/matcher.scm
+        ;; Here object structure is not one list since we are using *graph* which is connected by bundle.
         (define (match-constant object dict succeed)
           (and (eqv? elt object)
                (succeed object dict)))
@@ -247,6 +264,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (and (pair? datum)
              ((car preds) (car datum))
              (loop (cdr preds) (cdr datum)))
+        ;; better to ensure preds are also empty.
         (null? datum))))
 
 (define (gmatch:var-matcher var-type var-name restriction)
@@ -267,7 +285,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (gmatch:bind var-type var-name value dict)
   (let* ((var (match:make-var var-type var-name))
          (binding (match:lookup var dict)))
+    ;; These 2 "not" predicates seem to just ensure (eq? ...) able to work.
     (if (not (or (not binding)
+                 ;; 0. SDF_exercises TODO when this will be #t...
+                 ;; See gmatch:compile-var where only var-name can be #f but it is avoided by the predicate var-name.
                  (not (match:var-type var))
                  (eq? (match:var-type var)
                       (match:binding-type binding))))
@@ -275,6 +296,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (case (match:var-type var)
       ((?)
        (if binding
+           ;; > bind returns #f to indicate a match failure.
            (and (eqv? value (match:binding-value binding))
                 dict)
            (match:extend-dict var value dict)))
@@ -284,6 +306,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (lambda (binding)
               (if (eq? (match:binding-name binding)
                        (match:var-name var))
+                  ;; SDF_exercises TODO just as * does, we add one more element.
                   (match:map-binding-value
                    (lambda (values) (cons value values))
                    binding)
