@@ -26,13 +26,14 @@
 ;; > The king and rook involved in castling must *not have previously moved*
 
 ;; > the rule that a king cannot be moved into check
-;; i.e. wikipedia where leaves means "the opposing player"'s recent move can check king.
+;; i.e. the following wikipedia where leaves means "the opposing player"'s recent move can check king and then we leave "king in check" without doing some action to avoid that.
 ;; > It is illegal to make a move that places or leaves one's king in check.
 ;; leave corresponds to where we need to avoid capture at the next move
 ;; > The king can be *put in check* but cannot be captured
 
-;;; > We have shown how to make patterns ...
+;;; > We have shown how to make *patterns* ...
 ;; So we can ignore the implementation for initial?, check?.
+;; This is just how the book does for occupied-by etc whose related codes aren't shown in the book.
 ;;; compared with SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-moves.scm
 ;; Here we add
 ;; 0. Castling
@@ -77,11 +78,12 @@
   (list
     ;; point 0
     `((? source-node ,(occupied-by 'pawn))
-      north (? ,unoccupied))
+      ;; Use target-node at last always to ensure capture? work.
+      north (? ,target-node))
     ;; point 1
     `((? source-node ,(occupied-by-and-initial 'pawn))
       north (? ,unoccupied)
-      north (? ,unoccupied)
+      north (? ,target-node)
       )))
 (define all-pawn-moves
   (append pawn-capture-moves basic-pawn-moves))
@@ -133,41 +135,47 @@
    (piece-in (match:get-value 'source-node dict) dict)))
 (define (piece-is-same-color? piece my-piece)
   (not (piece-is-opponent? piece my-piece)))
-(define white-castling-king-moves
-  ;; TODO occupied-by-and-initial-and-white-and-a1-white-rook-initial...
+(define castling-king-moves
+  ;; TODO occupied-by-and-initial-and-a1-rook-initial...
   (list
-    `((? source-node ,(occupied-by-and-initial-and-white-and-h1-white-rook-initial 'king))
+    `((? source-node ,(occupied-by-and-initial-and-h1-rook-initial 'king))
       ;; TODO unoccupied-and-unchecked.
       east (? ,unoccupied-and-unchecked)
-      east (? ,unoccupied-and-unchecked)
+      east (? target-node ,unoccupied-and-unchecked)
       )
-    `((? source-node ,(occupied-by-and-initial-and-white-and-a1-white-rook-initial 'king))
-      ;; TODO unoccupied-and-unchecked.
+    `((? source-node ,(occupied-by-and-initial-and-a1-rook-initial 'king))
       west (? ,unoccupied-and-unchecked)
-      west (? ,unoccupied-and-unchecked)
+      west (? target-node ,unoccupied-and-unchecked)
       )))
-;; TODO white-king-castling
-(define (white-king-castling-with_a1 parameters)
+;; TODO king-castling
+(define (king-castling-with_a1 parameters)
   body)
+
+;; white-br-rook moves 2 steps west but black-br-rook is 3.
 (define white-castling-rook-moves
-  ;; TODO occupied-by-and-initial-and-white-and-white-king-castling...
+  ;; TODO occupied-by-and-initial-and-king-castling...
   (list
-    `((? source-node ,(occupied-by-and-initial-and-white-and-white-king-castling-with_a1-and-a1 'rook))
+    `((? source-node ,(occupied-by-and-initial-and-white-and-king-castling-with_a1-and-a1 'rook))
+      ;; > There must be no pieces between the king and the rook;
       east (? ,unoccupied)
       east (? ,unoccupied)
-      east (? ,unoccupied)
+      east (? target-node ,unoccupied)
       )
-    `((? source-node ,(occupied-by-and-initial-and-white-and-white-king-castling-with_h1-and-h1 'rook))
+    `((? source-node ,(occupied-by-and-initial-and-white-and-king-castling-with_h1-and-h1 'rook))
       west (? ,unoccupied)
-      west (? ,unoccupied)
-      west (? ,unoccupied)
+      west (? target-node ,unoccupied)
       )))
 
 ;; black is similar.
+;; Notice white king goes east 2 steps but black king goes east 2 steps
+;;; IGNORE: See SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-board.scm
+;; where black will automatically use the reverse directions.
 
 (define all-king-moves
-  (append white-castling-king-moves black-castling-king-moves simple-king-moves)
+  (append castling-king-moves simple-king-moves)
   )
 (define all-rook-moves
   (append white-castling-rook-moves black-castling-rook-moves simple-rook-moves)
   )
+
+;;; Here all Movement in wikipedia have been checked with SDF_exercises/chapter_4/4_25.scm addition about En passant etc.

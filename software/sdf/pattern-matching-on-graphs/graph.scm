@@ -100,9 +100,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (graph-node . plist)
   (let ((node (make-graph-node #f)))
     (for-each (lambda (p)
-                ;; SDF_exercises TODO 
-                ;; IGNORE: What is the purpose if cdr is default-object?
-                ;; Here (cdr p) can be default-object by (default-object) (see SDF_exercises/chapter_4/tests/bundle-tests/default-object-test.scm).
+                ;; IGNORE SDF_exercises TODO 
+                ;;; IGNORE: What is the purpose if cdr is default-object?
+                ;; i.e. do nothing.
+                ;;; Here (cdr p) can be default-object by (default-object) (see SDF_exercises/chapter_4/tests/bundle-tests/default-object-test.scm).
                 (node 'maybe-connect! (car p) (cdr p)))
               (plist->alist plist))
     node))

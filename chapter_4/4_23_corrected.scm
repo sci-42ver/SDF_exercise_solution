@@ -1,0 +1,23 @@
+(cd "~/SICP_SDF/SDF_exercises/chapter_4")
+(load "../software/sdf/manager/load.scm")
+(manage 'new 'pattern-matching-on-graphs)
+
+;; https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_16.html
+(for-each 
+  (lambda (filename) 
+    (load filename)) 
+  ;; remove . and ..
+  (cddr (map ->namestring (directory-read "./4_23_graph_match_lib/"))))
+
+(load "4_23.scm")
+;; Just use SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-moves.scm
+;; 0. all-bishop-moves
+
+(define simple-rook-moves all-rook-moves)
+(define simple-king-moves all-king-moves)
+(define all-king-moves
+  (append castling-king-moves simple-king-moves)
+  )
+(define all-rook-moves
+  (append white-castling-rook-moves black-castling-rook-moves simple-rook-moves)
+  )

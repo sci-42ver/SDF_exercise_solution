@@ -428,7 +428,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 22: `tree->lazy-graph` based on the code base naming conventions.
 23: `all-rook-moves`
 24: `simple-move` (SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain can be ignored)
-### comments
+### @%comments (see the above)
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1
   - same as SICP `(married Mickey ?who)`

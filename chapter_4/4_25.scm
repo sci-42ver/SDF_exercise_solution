@@ -45,3 +45,12 @@
 ;; Here segment is a bit different from match:segment in SDF_exercises/software/sdf/design-of-the-matcher/matcher.scm
 ;; since graph is not 1d.
 ;; Normally segment is denoted with (start (?? ...) end), so we need to check all possibilities between "start" and "end". 
+
+;;; related with 4.23
+;; 0. En passant
+;; We can add more tags to piece like (advances-two-squares-initial)
+;; so pawn can do path ((? source... (occupied-by-and-west/east-occupied-by-advances-two-squares-initial-just-now pawn)) northwest/northeast (? unoccupied)) 
+;; Here unoccupied is implied the recent pawn enemy move (i.e. advances two squares).
+;; 1. promotion can be done by change-piece-type which can be used with set-piece-at.
+;; So we uses set-piece-at* which checks whether address is "eighth rank" and piece type is pawn.
+;; If so, we do promotion depending one the (read) result.

@@ -174,12 +174,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       (if p
                           (board 'set-piece-at address p)))))
               board-addresses)
+    ;; just update turn
     (board 'next-turn)))
 
 (define (capture? board from path)
   (let* ((my-piece (get-piece-to-move board from))
          (dict
           (graph-match path
+                       ;; > used by some pattern restrictions that need to interrogate the board.
+                       ;; Used by `unoccupied` etc.
                        (match:extend-dict chess-board:var
                                           board
                                           (match:new-dict))

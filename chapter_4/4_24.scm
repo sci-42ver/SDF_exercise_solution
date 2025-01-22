@@ -38,36 +38,19 @@
     ((king) all-king-moves)
     ))
 
-(define (make-address-shift x y)
-  (guarantee shift? x 'make-address)
-  (guarantee shift? y 'make-address)
-  (list x y))
-(define (shift? object)
-  (and (integer? object)
-       (exact? object)
-       ))
-(register-predicate! shift? 'shift)
+(load "./graph_match_lib/addr_lib.scm")
 
-(define (shift-address address x-shift y-shift)
-  (make-address-shift (n:+ (address-x address) x-shift) (n:+ (address-y address) y-shift)))
-(define (shift-address* address shift op)
-  (make-address-shift 
-    (op (address-x address) (address-x shift)) 
-    (op (address-y address) (address-y shift))))
-(define (add-address address shift)
-  (shift-address* address shift n:+)
-  )
 (define (step-address address step)
   ;; similar to rotate-45
   (case step
-    ((east) (shift-address address 1 0))
-    ((north) (shift-address address 0 1))
-    ((northeast) (shift-address address 1 1))
-    ((northwest) (shift-address address -1 1))
-    ((south) (shift-address address 0 -1))
-    ((southeast) (shift-address address 1 -1))
-    ((southwest) (shift-address address -1 -1))
-    ((west) (shift-address address -1 0))
+    ((east) (add-address-by-shifts address 1 0))
+    ((north) (add-address-by-shifts address 0 1))
+    ((northeast) (add-address-by-shifts address 1 1))
+    ((northwest) (add-address-by-shifts address -1 1))
+    ((south) (add-address-by-shifts address 0 -1))
+    ((southeast) (add-address-by-shifts address 1 -1))
+    ((southwest) (add-address-by-shifts address -1 -1))
+    ((west) (add-address-by-shifts address -1 0))
     (else (error (list "unknown dir" step))))
   )
 (define zero-address (make-address 0 0))
@@ -127,32 +110,6 @@
 (path->coordinate-shift basic-knight-move)
 (path->coordinate-shift basic-queen-move)
 
-;; https://en.wikipedia.org/wiki/Subtraction#Notation_and_terminology
-(define (address-diff minuend subtrahend)
-  (shift-address* minuend subtrahend n:-))
-(define (list-op lst1 lst2 op)
-  (list
-    (op (car lst1) (car lst2)) 
-    (op (cadr lst1) (cadr lst2))))
-(define (address-division dividend divisor)
-  ;; no need to be still one address
-  (list-op dividend divisor
-    (lambda (a b)
-      (if (n:= b 0)
-        (if (n:= a 0)
-          1
-          +inf.0
-          )
-        (n:/ a b))
-      )
-    ))
-(define (address-divisible dividend divisor)
-  (let ((division (address-division dividend divisor)))
-    (and 
-      (apply n:= division)
-      (every exact? division)))
-  )
-
 (define (in-board? address)
   (and (<= 0 (address-x address) chess-board-last-index)
        (<= 0 (address-y address) chess-board-last-index)))
@@ -161,7 +118,7 @@
     (and
       (in-board? to)
       (or 
-        (address= (add-address from (get-normal-shift shifts)) to)
+        (address= (address-sum from (get-normal-shift shifts)) to)
         (address-divisible (address-diff to from) (get-*-shift shifts))
         ))
     )
@@ -172,14 +129,20 @@
     (get-moves type)))
 
 ;; tests
-(check-move-for-type 'queen '(0 0) '(1 1))
+(assert (check-move-for-type 'queen '(0 0) '(1 1)))
+(trace valid-path-origin-end?)
+(trace address-divisible)
 (check-move-for-type 'queen '(3 4) '(5 4))
-; (trace valid-path-origin-end?)
-; (trace address-divisible)
-(check-move-for-type 'queen '(3 4) '(5 5))
+(untrace valid-path-origin-end?)
+(untrace address-divisible)
+(assert (check-move-for-type 'queen '(3 4) '(5 4)))
 
-(check-move-for-type 'knight '(3 4) '(5 5))
-(check-move-for-type 'knight '(3 4) '(5 4))
+(define (assert-not pred)
+  (assert (not pred)))
+(assert-not (check-move-for-type 'queen '(3 4) '(5 5)))
+
+(assert (check-move-for-type 'knight '(3 4) '(5 5)))
+(assert-not (check-move-for-type 'knight '(3 4) '(5 4)))
 
 ;; castling has the same structure as basic-knight-move.
 ;; Also for all-pawn-moves.
