@@ -1,6 +1,6 @@
 (define (make-address-shift x y)
-  (guarantee shift? x 'make-address)
-  (guarantee shift? y 'make-address)
+  (guarantee shift? x 'make-address-shift)
+  (guarantee shift? y 'make-address-shift)
   (list x y))
 (define (shift? object)
   (and (integer? object)
