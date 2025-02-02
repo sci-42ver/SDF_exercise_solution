@@ -14,3 +14,8 @@
   (eq? (piece-type piece) 'pawn))
 (define (rook_piece? piece)
   (eq? (piece-type piece) 'rook))
+
+(define (opponent place-node dict)
+  (piece-is-opponent?
+   (piece-in place-node dict)
+   (piece-in (match:get-value 'source-node dict) dict)))

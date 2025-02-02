@@ -1,5 +1,5 @@
 ;;;; needs SDF_exercises/chapter_4/4_23_graph_match_lib/base_lib.scm
-(cd "~/SICP_SDF/SDF_exercises/chapter_4/graph_match_lib/")
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
 ;; occupied-by-and-initial, 
 (load "./initial_piece_lib.scm")
 
@@ -45,9 +45,11 @@
       (make-address 3 7)))
   )
 ; (load "../pred_lib.scm")
-(define get-bl-castling-king-move cadr)
-(define get-br-castling-king-move car)
 (define (king-castling-with_bl board)
+  (king-castling-check board get-bl-castling-king-move))
+(define (king-castling-with_br board)
+  (king-castling-check board get-br-castling-king-move))
+(define (king-castling-check board accessor)
   ;; since we can only move the current color piece, so assume "(board 'color)".
   (let ((king-pos (get-initial-king-pos board (board 'color))))
     ((lambda (path)
@@ -62,21 +64,58 @@
             )
           )
         )
-      (get-bl-castling-king-move castling-king-moves)
+      (accessor castling-king-moves)
       ))
   )
 
-(load "board_lib.scm")
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
+(load "common/board_lib.scm")
 (define (bl? node board)
   (address= (make-address 0 0) (board 'address-of node)))
-(define (occupied-by-and-initial-and-white-and-king-castling-with_bl-and-bl type)
+(define (br? node board)
+  (address= (make-address 7 0) (board 'address-of node)))
+(define (occupied-by-and-initial-and-king-castling-with_bl-and-bl type color)
   (lambda (place-node dict) 
-    (let ((board chess-dict:board dict))
+    (let ((board (chess-dict:board dict))
+          (pred
+            (if (eq? 'white color)
+              white?
+              black?)
+            ))
       (and 
         ((occupied-by-and-initial type) place-node dict)
-        (white? board)
+        ;; ensure we moved the same color as the current.
+        (eq? (board 'color) color)
+        (pred board)
         (king-castling-with_bl board)
         (bl? place-node)
         )
       )
     ))
+;; similar
+(define (occupied-by-and-initial-and-king-castling-with_br-and-br type color)
+  (lambda (place-node dict) 
+    (let ((board (chess-dict:board dict))
+          (pred
+            (if (eq? 'white color)
+              white?
+              black?)
+            ))
+      (and 
+        ((occupied-by-and-initial type) place-node dict)
+        ;; ensure we moved the same color as the current.
+        (eq? (board 'color) color)
+        (pred board)
+        (king-castling-with_br board)
+        (br? place-node)
+        )
+      )
+    ))
+(define (occupied-by-and-initial-and-black-and-king-castling-with_bl-and-bl type)
+  (occupied-by-and-initial-and-king-castling-with_bl-and-bl type 'black))
+(define (occupied-by-and-initial-and-black-and-king-castling-with_br-and-br type)
+  (occupied-by-and-initial-and-king-castling-with_br-and-br type 'black))
+(define (occupied-by-and-initial-and-white-and-king-castling-with_bl-and-bl type)
+  (occupied-by-and-initial-and-king-castling-with_bl-and-bl type 'white))
+(define (occupied-by-and-initial-and-white-and-king-castling-with_br-and-br type)
+  (occupied-by-and-initial-and-king-castling-with_br-and-br type 'white))

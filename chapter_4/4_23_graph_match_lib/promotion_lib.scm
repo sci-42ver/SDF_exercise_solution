@@ -1,7 +1,7 @@
 ;;; finished
 
 ;; See SDF_exercises/chapter_4/4_25.scm
-(cd "~/SICP_SDF/SDF_exercises/chapter_4/graph_match_lib/")
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
 (load "common/base_lib.scm")
 (define (promotion? address piece)
   (and

@@ -134,7 +134,7 @@
       #f)
     piece))
 
-(load "board_lib.scm")
+(load "common/board_lib.scm")
 (define (initial-pawn-advance-two? board from to)
   ;; > Pawns cannot move backwards.
   (n:= 1 (address-y (address-transform board from)))

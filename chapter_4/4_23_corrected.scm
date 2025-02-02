@@ -3,11 +3,18 @@
 (manage 'new 'pattern-matching-on-graphs)
 
 ;; https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_16.html
-(for-each 
-  (lambda (filename) 
-    (load filename)) 
-  ;; remove . and ..
-  (cddr (map ->namestring (directory-read "./4_23_graph_match_lib/"))))
+; (for-each 
+;   (lambda (filename) 
+;     (load filename)) 
+;   ;; remove . and ..
+;   (cddr (map ->namestring (directory-read "./4_23_graph_match_lib/"))))
+(cd "./4_23_graph_match_lib")
+(load "promotion_lib.scm")
+;; load initial_piece_lib.scm->common/base_lib.scm
+(load "simple_move_mod.scm")
+;; load common/board_lib.scm
+(load "castling_lib.scm")
+(cd "..")
 
 (load "4_23.scm")
 ;; Just use SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-moves.scm

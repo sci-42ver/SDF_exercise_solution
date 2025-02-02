@@ -121,6 +121,8 @@
   (populate-side 'white 0 1)
   (populate-side 'black 7 6))
 ;; based on SDF_exercises/chapter_4/4_23_graph_match_lib/en_passant_lib.scm
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
+(load "en_passant_lib.scm")
 ;; since it needs to check what piece is captured.
 (define (simple-move board from to)
   (let* ((my-piece (get-piece-to-move board from))

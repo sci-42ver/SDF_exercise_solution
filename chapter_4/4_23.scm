@@ -52,10 +52,8 @@
 
 ;;; b. For the above point 1, we need to check the next move's row (but that is unsupported by make-graph-node. So add initial?).
 ;; For the above point 2, we use piece-is-opponent?.
-(define (opponent place-node dict)
-  (piece-is-opponent?
-   (piece-in place-node dict)
-   (piece-in (match:get-value 'source-node dict) dict)))
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/common")
+(load "base_lib.scm")
 (define pawn-capture-moves
   (map
     (lambda (direction)
@@ -148,6 +146,10 @@
       west (? ,unoccupied-and-unchecked)
       west (? target-node ,unoccupied-and-unchecked)
       )))
+;; See SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm for usage.
+(define get-bl-castling-king-move cadr)
+(define get-br-castling-king-move car)
+
 ;; TODO king-castling
 (define (king-castling-with_bl parameters)
   body)
@@ -168,9 +170,23 @@
       )))
 
 ;; black is similar.
-;; Notice white king goes east 2 steps and black king *also* goes east 2 steps
+;; 0. Notice white king goes east 2 steps and black king *also* goes east 2 steps
 ;;; IGNORE: See SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-board.scm
 ;; where black will automatically use the reverse directions.
+;; So we need just *one* castling-king-moves for both white and black.
+;; 1. black-castling-rook-moves is not that case.
+(define black-castling-rook-moves
+  (list
+    `((? source-node ,(occupied-by-and-initial-and-black-and-king-castling-with_bl-and-bl 'rook))
+      ;; > There must be no pieces between the king and the rook;
+      east (? ,unoccupied)
+      east (? target-node ,unoccupied)
+      )
+    `((? source-node ,(occupied-by-and-initial-and-black-and-king-castling-with_br-and-br 'rook))
+      west (? ,unoccupied)
+      west (? ,unoccupied)
+      west (? target-node ,unoccupied)
+      )))
 
 (define all-king-moves
   (append castling-king-moves simple-king-moves)

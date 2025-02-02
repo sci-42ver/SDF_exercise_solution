@@ -1,7 +1,7 @@
 ;;; finished
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 ;; Load procedure: opponent
-(load "4_23.scm")
+(load "4_23_graph_match_lib/common/base_lib.scm")
 
 ;; See capture? where graph-match uses node from (board 'node-at from)
 ;; So black place-node will automatically use the inverted direction.
@@ -11,10 +11,11 @@
   )
 (load "./4_23_graph_match_lib/initial_piece_lib.scm")
 ;; see SDF_exercises/chapter_4/4_25.scm
-(define (occupied-by-pawn-advanced-two-initially-just-now direction place-node dict)
+(define (occupied-by-opponent-pawn-advanced-two-initially-just-now direction place-node dict)
   (let* ((board (chess-dict:board dict))
          (west/east-piece (board 'piece-at (west/east-addr direction place-node))))
     (and
+      (opponent place-node dict)
       (pawn_piece? west/east-piece)
       ;; This tag needs clear when moved after that "advances-two-squares"
       ;; and markded when "advances-two-squares".
@@ -85,11 +86,19 @@
     ;; just update turn
     (board 'next-turn)))
 
+(define (occupied-by-and-east-occupied-by-opponent-pawn-advanced-two-initially-just-now type)
+  (lambda (place-node dict)
+    (occupied-by-opponent-pawn-advanced-two-initially-just-now 'east place-node dict)
+    ))
+(define (occupied-by-and-west-occupied-by-opponent-pawn-advanced-two-initially-just-now type)
+  (lambda (place-node dict)
+    (occupied-by-opponent-pawn-advanced-two-initially-just-now 'west place-node dict)
+    ))
 (define en-passant-moves
   (list
-    `((? source-node ,(occupied-by-and-west-occupied-by-pawn-advanced-two-initially-just-now 'pawn))
+    `((? source-node ,(occupied-by-and-west-occupied-by-opponent-pawn-advanced-two-initially-just-now 'pawn))
       northwest (? target-node ,unoccupied))
-    `((? source-node ,(occupied-by-and-east-occupied-by-pawn-advanced-two-initially-just-now 'pawn))
+    `((? source-node ,(occupied-by-and-east-occupied-by-opponent-pawn-advanced-two-initially-just-now 'pawn))
       northeast (? target-node ,unoccupied))
     )
   )
