@@ -5,5 +5,12 @@
     (invert-address addr))
   )
 (define (board-address board x y)
-  
+  (address-transform board (make-address x y))
+  )
+
+(define (white? board)
+  (eq? 'white (board 'color))
+  )
+(define (black? board)
+  (eq? 'black (board 'color))
   )

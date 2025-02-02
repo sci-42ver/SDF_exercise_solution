@@ -493,8 +493,11 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - ~~11 to be done with 21.~~
 - ~~See above TODO.~~
 - 23 TODOs after all related graph implementation understanding.
-  - 24 similarly needs some predicate implementations.
+  - ~~24 similarly needs some graph implementations, predicate implementations more specifically.~~
     But this predicate should be done in `match`... So this maybe have been implemented in SDF_exercises/software/sdf/pattern-matching-on-graphs/graph-match.scm.
+  1. ~~SDF_exercises/chapter_4/4_23_graph_match_lib/check_lib.scm checked_positions update~~
+  2. SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm after check_lib.scm
+  3. SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm combining all other `simple-move` implementations.
 ## @% reference implementation checked
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
 - For chapter 4, 4.1~24 have been checked with 

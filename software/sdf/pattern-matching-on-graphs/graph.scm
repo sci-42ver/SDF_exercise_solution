@@ -201,7 +201,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (make-graph-view name forward backward)
     graph-view?
   (name graph-view-name)
-  ;; SDF_exercises TODO why forward and backward instead of just one for rotate-180-view. 
+  ;; IGNORE: SDF_exercises TODO why forward and backward instead of just one for rotate-180-view. 
+  ;; No book context. So these are my comprehension.
+  ;; See graph-node-view->all-edges & has-edge? comments.
   (forward graph-view-forward)
   (backward graph-view-backward))
 
@@ -224,6 +226,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (define (get-value)
     (let ((value (delegate 'get-value)))
       (if (graph-node? value)
+          ;; propagate view
           (graph-node-view value view)
           value)))
 
@@ -241,12 +244,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           get-label get-value forced?
           get-view summarize-self))
 
+;; checked
 (define (graph-node-view delegate view)
 
   (define (get-view) view)
   (define (get-name) (delegate 'get-name))
 
   (define (all-edges)
+    ;; Here graph-view-forward means we transform all data from delegate to the target ones.
     (map (lambda (edge)
            (graph-edge-view edge view))
          (delegate 'all-edges)))
@@ -256,6 +261,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; > to see a north edge from square B to square A.
   ;; Also for (all-edges) modification for (get-label).
   (define (has-edge? label)
+    ;; Here graph-view-backward means we transform all data from the target back to the delegate corresponding ones.
     (delegate 'has-edge? ((graph-view-backward view) label)))
 
   (define (get-edge label)
@@ -270,6 +276,23 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (delegate 'connect!
               ((graph-view-backward view) label)
               (if (graph-node? value)
+                  ;; 0. Among the contexts for connect!:
+                  ;; only (node 'connect! label ...) in connect-up-square in SICP_SDF/SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-board.scm
+                  ;; uses graph-node? for value.
+                  ;; 0.a.
+                  ;; graph-node doesn't uses graph-node? always.
+                  ;; disjoint-union-of-graph-nodes is not used.
+                  ;; SICP_SDF/SDF_exercises/software/sdf/pattern-matching-on-graphs/lists.scm is not considered.
+                  ;; 0.b. 
+                  ;; graph-node-view is only used in node-at, graph-edge-view and itself
+                  ;; where graph-edge-view is only used in graph-node-view.
+                  ;; So graph-node-view is only used when black-move.
+                  ;; If so, we assume connect-up-square is inited with black color.
+                  ;; So all nodes are inverted. For consistency, we need to ensure all nodes are based on white, 
+                  ;; otherwise graph-node-view may be used messily.
+                  ;; 0.b.0.
+                  ;; Based on the above interpretation about graph-view-forward and graph-view-backward,
+                  ;; we just invert-graph-view to do that insurance (https://www.merriam-webster.com/dictionary/insure).
                   (graph-node-view value
                                    (invert-graph-view view))
                   value)))

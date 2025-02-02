@@ -1,54 +1,82 @@
-;; bottom-right piece depends on color.
-(define (br-rook-initial board)
-  (and 
-    (rook? (board 'piece-at (make-address 0 7)))
-    ((board 'node-at (make-address 0 7)) 'edge-value 'initial)
-    )
-  )
-;; occupied-by-and-initial-and-a1-rook-initial similar
-(define (occupied-by-and-initial-and-br-rook-initial type)
-  (and 
-    (occupied-by-and-initial type)
-    
-    ))
+;;;; needs SDF_exercises/chapter_4/4_23_graph_match_lib/base_lib.scm
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/graph_match_lib/")
+;; occupied-by-and-initial, 
+(load "./initial_piece_lib.scm")
 
-(define (capture?* board from path)
-  (let* ((my-piece (get-piece-to-move board from))
-         (dict
-          (graph-match path
-                       ;; > used by some pattern restrictions that need to interrogate the board.
-                       ;; Used by `unoccupied` etc.
-                       (match:extend-dict chess-board:var
-                                          board
-                                          (match:new-dict))
-                       (board 'node-at from))))
-    (and dict
-         (let* ((target (match:get-value 'target-node dict))
-                ;; we don't need one captured piece to move to there.
-                ; (captured (board 'piece-in target))
-                )
-           ;; modified
-           `(capture ,my-piece
-                    ; ,captured
-                    ,(board 'address-of target))))))
-;; we get place-node address
-;; Then we store all checked pos's by (capture?* board from path) in one data structure
-;; where from is one of all nodes with pieces (also in one data structure to save time)
-;; path is based on from type.
-;; Then we get all checked pos's.
-(define (unoccupied-and-unchecked place-node dict)
-  
+;; bottom-right piece depends on color.
+(define (rook-initial board addr)
+  (let ((piece (board 'piece-at addr)))
+    (and
+      ;; no need for board-address since node-at will do invert-address appropriately.
+      (rook_piece? piece)
+      (piece-initial-mark piece)
+      ))
   )
+(define (br-rook-initial board)
+  (rook-initial board (make-address 0 7)))
+(define (bl-rook-initial board)
+  (rook-initial board (make-address 0 0)))
+
+;; occupied-by-and-initial-and-bl-rook-initial similar
+(define (occupied-by-and-initial-and-br-rook-initial type)
+  (lambda (place-node dict) 
+    (and 
+      ((occupied-by-and-initial type) place-node dict)
+      (br-rook-initial (chess-dict:board dict))
+      )))
+;; similarly
+(define (occupied-by-and-initial-and-bl-rook-initial type)
+  (lambda (place-node dict) 
+    (and 
+      ((occupied-by-and-initial type) place-node dict)
+      (bl-rook-initial (chess-dict:board dict))
+      )))
+
+(load "check_lib.scm")
 
 ;; We use the 2nd move in castling-king-moves with graph-match as capture?* does.
-(define (king-castling-with_a1 board)
-  
+(define (get-initial-king-pos board color)
+  (if (eq? 'white (board 'color))
+    (if (eq? color (board 'color))
+      (make-address 4 0)
+      (make-address 4 7))
+    (if (eq? color (board 'color))
+      (make-address 3 0)
+      (make-address 3 7)))
+  )
+; (load "../pred_lib.scm")
+(define get-bl-castling-king-move cadr)
+(define get-br-castling-king-move car)
+(define (king-castling-with_bl board)
+  ;; since we can only move the current color piece, so assume "(board 'color)".
+  (let ((king-pos (get-initial-king-pos board (board 'color))))
+    ((lambda (path)
+        (let ((dict 
+                (graph-match path
+                  (match:extend-dict chess-board:var
+                                    board
+                                    (match:new-dict))
+                  (board 'node-at king-pos))))
+          (and dict
+            ; (address= to (board 'address-of (match:get-value 'target-node dict)))
+            )
+          )
+        )
+      (get-bl-castling-king-move castling-king-moves)
+      ))
   )
 
-(define (occupied-by-and-initial-and-white-and-king-castling-with_a1-and-a1 parameters)
-  (and
-    (white? board)
-    (a1? node)
-    )
-  )
-
+(load "board_lib.scm")
+(define (bl? node board)
+  (address= (make-address 0 0) (board 'address-of node)))
+(define (occupied-by-and-initial-and-white-and-king-castling-with_bl-and-bl type)
+  (lambda (place-node dict) 
+    (let ((board chess-dict:board dict))
+      (and 
+        ((occupied-by-and-initial type) place-node dict)
+        (white? board)
+        (king-castling-with_bl board)
+        (bl? place-node)
+        )
+      )
+    ))

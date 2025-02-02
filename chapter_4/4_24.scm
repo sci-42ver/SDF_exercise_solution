@@ -130,11 +130,11 @@
 
 ;; tests
 (assert (check-move-for-type 'queen '(0 0) '(1 1)))
-(trace valid-path-origin-end?)
-(trace address-divisible)
-(check-move-for-type 'queen '(3 4) '(5 4))
-(untrace valid-path-origin-end?)
-(untrace address-divisible)
+; (trace valid-path-origin-end?)
+; (trace address-divisible)
+; (check-move-for-type 'queen '(3 4) '(5 4))
+; (untrace valid-path-origin-end?)
+; (untrace address-divisible)
 (assert (check-move-for-type 'queen '(3 4) '(5 4)))
 
 (define (assert-not pred)

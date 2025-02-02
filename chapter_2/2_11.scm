@@ -84,6 +84,8 @@
 (define (clean_list lst)
   (if (list? lst)
     ;; https://stackoverflow.com/questions/8382296/scheme-remove-duplicated-numbers-from-list#comment138940848_8382296
+    ;; same as SICP_SDF/lecs/6.001_spring_2007_recitation/codes/rec17/objsys.scm
+    ;; It is requested in https://srfi.schemers.org/srfi-1/srfi-1.html#delete-duplicates
     (delete-duplicates lst)
     (write-data-list log-name "Output to log" (string-append "clean_list with wrong arg: " lst))
     ))

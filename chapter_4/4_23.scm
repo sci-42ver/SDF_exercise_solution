@@ -79,11 +79,12 @@
     ;; point 0
     `((? source-node ,(occupied-by 'pawn))
       ;; Use target-node at last always to ensure capture? work.
-      north (? ,target-node))
+      north (? target-node ,unoccupied))
     ;; point 1
     `((? source-node ,(occupied-by-and-initial 'pawn))
+      ;; Here (? ,unoccupied) is fine. See (gmatch:compile-var var)->(match-list? var gmatch:var-type? procedure?).
       north (? ,unoccupied)
-      north (? ,target-node)
+      north (? target-node ,unoccupied)
       )))
 (define all-pawn-moves
   (append pawn-capture-moves basic-pawn-moves))
@@ -136,38 +137,38 @@
 (define (piece-is-same-color? piece my-piece)
   (not (piece-is-opponent? piece my-piece)))
 (define castling-king-moves
-  ;; TODO occupied-by-and-initial-and-a1-rook-initial...
+  ;; TODO occupied-by-and-initial-and-bl-rook-initial...
   (list
-    `((? source-node ,(occupied-by-and-initial-and-h1-rook-initial 'king))
+    `((? source-node ,(occupied-by-and-initial-and-br-rook-initial 'king))
       ;; TODO unoccupied-and-unchecked.
       east (? ,unoccupied-and-unchecked)
       east (? target-node ,unoccupied-and-unchecked)
       )
-    `((? source-node ,(occupied-by-and-initial-and-a1-rook-initial 'king))
+    `((? source-node ,(occupied-by-and-initial-and-bl-rook-initial 'king))
       west (? ,unoccupied-and-unchecked)
       west (? target-node ,unoccupied-and-unchecked)
       )))
 ;; TODO king-castling
-(define (king-castling-with_a1 parameters)
+(define (king-castling-with_bl parameters)
   body)
 
 ;; white-br-rook moves 2 steps west but black-br-rook is 3.
 (define white-castling-rook-moves
   ;; TODO occupied-by-and-initial-and-king-castling...
   (list
-    `((? source-node ,(occupied-by-and-initial-and-white-and-king-castling-with_a1-and-a1 'rook))
+    `((? source-node ,(occupied-by-and-initial-and-white-and-king-castling-with_bl-and-bl 'rook))
       ;; > There must be no pieces between the king and the rook;
       east (? ,unoccupied)
       east (? ,unoccupied)
       east (? target-node ,unoccupied)
       )
-    `((? source-node ,(occupied-by-and-initial-and-white-and-king-castling-with_h1-and-h1 'rook))
+    `((? source-node ,(occupied-by-and-initial-and-white-and-king-castling-with_br-and-br 'rook))
       west (? ,unoccupied)
       west (? target-node ,unoccupied)
       )))
 
 ;; black is similar.
-;; Notice white king goes east 2 steps but black king goes east 2 steps
+;; Notice white king goes east 2 steps and black king *also* goes east 2 steps
 ;;; IGNORE: See SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-board.scm
 ;; where black will automatically use the reverse directions.
 

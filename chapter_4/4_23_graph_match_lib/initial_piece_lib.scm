@@ -1,14 +1,8 @@
-;; IGNORE: address (from node), type, color (from board) can decide whether initial.
-;; king, rook can move backwards, so we need to use one edge to show whether initial.
-(define (occupied-by-and-initial type)
-  (lambda (place-node dict) 
-    (let ((piece (piece-in place-node dict)))
-      (and piece
-           (eq? type (piece-type piece)))
-           ;; added
-           (piece-initial-mark piece)
-           ))
-  )
+;;; finished
+
+;;;; needs SDF_exercises/chapter_4/4_23_graph_match_lib/base_lib.scm
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
+(load "common/base_lib.scm")
 
 ;;; Here initial should be done on piece.
 ;; But (type color) can't decide piece and (make-piece type color) instance may be changed by (change-piece-type piece type).
@@ -88,7 +82,7 @@
       #f
       (piece-advance-two-initially-just-now piece))))
 
-;; all moves are done by simple-move
+;; 0. all moves are done by simple-move
 ;; so update initial-mark here when necessary.
 (define (simple-move board from to)
   ;;; IGNORE: for simplicity we update initial-mark after (board 'next-turn)
@@ -102,6 +96,7 @@
     (board 
       'set-piece-at 
       to 
+      ;; changed
       ;; For modularity, we don't do both in one procedure.
       (untick-piece-initial-mark 
         (tick-piece-advance-two-initially-just-now board my-piece from to))) ; modified
@@ -116,6 +111,7 @@
                           (board 
                             'set-piece-at 
                             address 
+                            ;; changed
                             ;; 0. Here it will only untick when set
                             ;; So assume we just set that piece.
                             ;; Then here we won't do operation for that piece.
@@ -138,14 +134,14 @@
       #f)
     piece))
 
+(load "board_lib.scm")
 (define (initial-pawn-advance-two? board from to)
   ;; > Pawns cannot move backwards.
   (n:= 1 (address-y (address-transform board from)))
   ;; assume piece have been checked whether it follows the valid path.
   (n:= 3 (address-y (address-transform board to)))
   )
-(cd "~/SICP_SDF/SDF_exercises/chapter_4")
-(load "./graph_match_lib/addr_lib.scm")
+(load "../graph_match_lib/addr_lib.scm")
 (define (initial-pawn-advance-two?* piece from to)
   (and
     (piece-initial-mark piece)
@@ -158,7 +154,7 @@
 (define (tick-piece-advance-two-initially-just-now board piece from to)
   (if 
     (and 
-      (eq? (piece-type piece) 'pawn)
+      (pawn_piece? piece)
       (initial-pawn-advance-two? board from to)
       ;; put here to show these pred's are same.
       (initial-pawn-advance-two?* piece from to)

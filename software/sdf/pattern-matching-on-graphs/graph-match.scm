@@ -196,6 +196,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (gmatch:seq2 match-first match-rest)
   (define (match-seq object dict succeed)
+    ;; Here succeed may be not called if failure
+    ;; which then returns #f like gmatch:var-matcher does.
     (match-first object dict
                  (lambda (object* dict*)
                    (match-rest object* dict* succeed))))
