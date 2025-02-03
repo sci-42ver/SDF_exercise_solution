@@ -1,5 +1,8 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
-(load "4_23_corrected.scm")
+(load "../software/sdf/manager/load.scm")
+(manage 'new 'pattern-matching-on-graphs)
+
+(load "4_23_lib_corrected.scm")
 
 (define (populate-sides* board)
 
@@ -11,8 +14,9 @@
       )
 
     (define (add-piece col row type)
+      ;; see SDF_exercises/chapter_4/4_23_graph_match_lib/initial_piece_lib.scm
       ((board 'node-at (make-address col row))
-       'connect! 0 (make-piece type color)))
+       'connect! 0 (make-piece type color #t #f)))
 
     (do-column 0 'rook)
     ; (do-column 1 'knight)

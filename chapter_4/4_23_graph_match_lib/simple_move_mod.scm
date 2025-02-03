@@ -2,6 +2,7 @@
 ;; this has loaded en_passant_lib.scm->initial_piece_lib.scm
 (load "check_lib.scm")
 
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
 (load "simple_move_orig_save.scm")
 (load "../4_24_based_on_graph_match_lib.scm")
 
@@ -65,7 +66,8 @@
                             (untick-piece-advance-two-initially-just-now p)
                             )))))
               board-addresses)
-    #t
+    ;; to allow the following set! to update board.
+    board
     ))
 
 (define (safe-simple-move board from to)

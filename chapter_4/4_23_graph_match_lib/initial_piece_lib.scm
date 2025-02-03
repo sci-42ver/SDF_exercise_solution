@@ -50,6 +50,7 @@
       (add-piece col pawn-row 'pawn))
 
     (define (add-piece col row type)
+      ;; changed
       ((board 'node-at (make-address col row))
        'connect! 0 (make-piece type color #t #f)))
 

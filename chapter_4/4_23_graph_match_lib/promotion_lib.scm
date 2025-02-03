@@ -84,4 +84,6 @@
       ;; > created bundle procedure from other procedures
       (bundle #f
               node-at piece-at piece-in address-of
+              ;; changed
+              white-move?
               set-piece-at color next-turn))))

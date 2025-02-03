@@ -13,8 +13,13 @@
 ;; If so, we can just use something like literal-mat tag and let symbolic-extender manipulate with it.
 ;; This is trivial.
 
-;; TODO ";... aborted" this file can't be totally loaded if not using 3_6_contents.scm.
-;; probably due to creating one new env...
+;;; TODO ";... aborted" this file can't be totally loaded if not using 3_6_contents.scm.
+;; 0. By checking (define-command '(new-environment . flavors) ...) in SDF_exercises/software/sdf/manager/software-manager.scm
+;; see "SKIPPED SDF_exercises TODO".
+;; 0.a. manage-((environment-define system-global-environment...) in SDF_exercises/software/sdf/manager/load.scm)>manage-software
+;; -(see SDF_exercises/chapter_4/4_23_corrected.scm)>new-environment by "(find-command-by-apropos command-name)"
+;; 1. probably due to creating one new env...
+
 ; (load "3_6.scm")
 
 (load "~/SICP_SDF/SDF_exercises/software/sdf/manager/load.scm")

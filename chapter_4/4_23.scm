@@ -151,8 +151,8 @@
 (define get-br-castling-king-move car)
 
 ;; TODO king-castling
-(define (king-castling-with_bl parameters)
-  body)
+; (define (king-castling-with_bl parameters)
+;   body)
 
 ;; white-br-rook moves 2 steps west but black-br-rook is 3.
 (define white-castling-rook-moves

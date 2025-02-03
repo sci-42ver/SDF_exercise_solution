@@ -89,7 +89,7 @@
         (eq? (board 'color) color)
         (pred board)
         (king-castling-with_bl board)
-        (bl? place-node)
+        (bl? place-node board)
         )
       )
     ))
@@ -108,7 +108,7 @@
         (eq? (board 'color) color)
         (pred board)
         (king-castling-with_br board)
-        (br? place-node)
+        (br? place-node board)
         )
       )
     ))
@@ -164,8 +164,13 @@
         (if (and king-to rook-to)
           (begin
             ;; see simple-move in SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm
-            (safe-simple-move board king-pos king-to)
-            (safe-simple-move board rook-pos rook-to)
+            ;; see chess-move
+            (set! board (safe-simple-move board king-pos king-to))
+            (display (list "new board-1 with move" king-pos king-to))
+            (print-chess-board board)
+            (set! board (safe-simple-move board rook-pos rook-to))
+            (display "new board-2:")
+            (print-chess-board board)
             (board 'next-turn)
             )
           (error (list "invalid move for (king rook)" (list king-pos rook-pos))))

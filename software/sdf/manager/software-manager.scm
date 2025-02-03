@@ -26,6 +26,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (call-with-current-continuation
     (lambda (k)
       (parameterize ((manager-continuation k))
+        ;; 
         (bind-condition-handler (list condition-type:error)
             (lambda (condition)
               (if debug-internal-errors?
@@ -92,6 +93,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (command-template? object)
   (and (pair? object)
        (symbol? (car object))
+       ;; SKIPPED SDF_exercises TODO
+       ;; no results in google 'scheme "mit-lambda-list?"'
        (mit-lambda-list? (cdr object))))
 
 (define (command-name command)

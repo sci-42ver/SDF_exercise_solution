@@ -1,6 +1,8 @@
-(cd "~/SICP_SDF/SDF_exercises/chapter_4")
-(load "../software/sdf/manager/load.scm")
-(manage 'new 'pattern-matching-on-graphs)
+; (cd "~/SICP_SDF/SDF_exercises/chapter_4")
+; (load "../software/sdf/manager/load.scm")
+; (manage 'command-apropos 'new)
+; ;Value: (new-environment)
+; (manage 'new 'pattern-matching-on-graphs)
 
 ;; https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_16.html
 ; (for-each 
@@ -13,8 +15,9 @@
 ;; load initial_piece_lib.scm->common/base_lib.scm
 (load "simple_move_mod.scm")
 ;; load common/board_lib.scm
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib")
 (load "castling_lib.scm")
-(cd "..")
+(cd "~/SICP_SDF/SDF_exercises/chapter_4")
 
 (load "4_23.scm")
 ;; Just use SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-moves.scm

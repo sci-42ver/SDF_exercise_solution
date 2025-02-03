@@ -65,7 +65,7 @@
 ;; So just use 2 global vars.
 (define checked_positions '())
 (define (unchecked place-node dict)
-  (let ((board (chess-board:var dict)))
+  (let ((board (chess-dict:board dict)))
     (let ((captured-positions
             (delete-duplicates
               (append-map
