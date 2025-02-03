@@ -163,20 +163,40 @@
             (rook-to (get-target-pos board rook-pos rook-path)))
         (if (and king-to rook-to)
           (begin
-            ;; see simple-move in SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm
+            ;; 0. see simple-move in SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm
             ;; see chess-move
-            (set! board (safe-simple-move board king-pos king-to))
-            (display (list "new board-1 with move" king-pos king-to))
-            (print-chess-board board)
-            (set! board (safe-simple-move board rook-pos rook-to))
-            (display "new board-2:")
-            (print-chess-board board)
+            ;; 1. This can't work since set-piece-at will set *all* pieces for the *next turn* of the current turn in one %simple-move.
+            ;; Then the 2nd safe-simple-move can't set rook for the next turn of the current turn.
+            ; (set! board (safe-simple-move board king-pos king-to))
+            ; (display (list "new board-1 with move" king-pos king-to))
+            ; (print-chess-board board)
+            ; (set! board (safe-simple-move board rook-pos rook-to))
+            ; (display "new board-2:")
+            ; (print-chess-board board)
+
+            (mul-simple-move board (list (new-from-to-pair king-pos king-to) (new-from-to-pair rook-pos rook-to)))
             (board 'next-turn)
             )
           (error (list "invalid move for (king rook)" (list king-pos rook-pos))))
         )
       )
     )
+  )
+(define (mul-simple-move board from-to-pairs)
+  (for-each
+    (lambda (pair)
+      ;; moved each piece to the target pos to
+      ;; and update piece_positions to remove those from's.
+      ;; If later to is former from, it may be cons'ed later.
+      (let ((from (get-from pair)) (to (get-to pair)))
+        (check-move-for-type board from to)
+        (simple-move-moved-part board from to))
+      )
+    from-to-pairs
+    )
+  ;; 0. update for the rest where only those pieces not related with from-to-pairs are kept.
+  ;; 1. Notice piece_positions may be updated to add to-lst.
+  (simple-move-rest-part board from-to-pairs)
   )
 (define (chess-move* king-pos rook-pos)
   (set! the-board (castling-move the-board king-pos rook-pos))
