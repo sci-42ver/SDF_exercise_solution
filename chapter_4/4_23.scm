@@ -191,6 +191,12 @@
 (define all-king-moves
   (append castling-king-moves simple-king-moves)
   )
+;; see SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm
+(define castling-rook-moves (append white-castling-rook-moves black-castling-rook-moves))
+(define get-white-bl car)
+(define get-white-br cadr)
+(define get-black-bl caddr)
+(define get-black-br cadddr)
 (define all-rook-moves
   (append white-castling-rook-moves black-castling-rook-moves simple-rook-moves)
   )

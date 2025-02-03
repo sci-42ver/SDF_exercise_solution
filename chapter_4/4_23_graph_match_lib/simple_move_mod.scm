@@ -2,10 +2,15 @@
 ;; this has loaded en_passant_lib.scm->initial_piece_lib.scm
 (load "check_lib.scm")
 
+(load "simple_move_orig_save.scm")
+(load "../4_24_based_on_graph_match_lib.scm")
+
 ;; 0. There are 3 simple-move locations with the following 2 plus initial_piece_lib.scm.
 ;; 1. based on SDF_exercises/chapter_4/4_23_graph_match_lib/check_lib.scm 
 ;; which is based on SDF_exercises/chapter_4/4_23_graph_match_lib/en_passant_lib.scm
-(define (simple-move board from to)
+;; 2. See SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm
+;; for why we define %simple-move.
+(define (%simple-move board from to)
   (let* ((my-piece (get-piece-to-move board from))
          ;; changed
          (is-en-passant-move (en-passant-move? board from to)))
@@ -13,6 +18,11 @@
     (let ((captured (board 'piece-at to)))
       (if (not (no-piece-or-opponent? captured my-piece))
           (error "Can't capture piece of same color:" captured)))
+    ;; not done here due to "... simultaneously ..." in SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm.
+    ; ;; changed
+    ; ;; from SDF_exercises/chapter_4/4_24_based_on_graph_match.scm
+    ; (if (not (check-move-for-type board from to))
+    ;   (error (list "invalid move" my-piece from to)))
     ;; The move looks good; make it so:
     (board 'set-piece-at to
       ;; changed
@@ -55,5 +65,18 @@
                             (untick-piece-advance-two-initially-just-now p)
                             )))))
               board-addresses)
+    #t
+    ))
+
+(define (safe-simple-move board from to)
+  (and
+    (check-move-for-type board from to)
+    (%simple-move board from to)
+    ))
+
+(define (simple-move board from to)
+  (if (safe-simple-move board from to)
     ;; just update turn
-    (board 'next-turn)))
+    (board 'next-turn)
+    (error (list "invalid move" from to)))
+  )

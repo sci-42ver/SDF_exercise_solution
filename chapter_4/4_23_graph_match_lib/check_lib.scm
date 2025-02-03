@@ -1,5 +1,6 @@
 ;;; finished
 ;; 0. en-passant-move can't capture king, so skipped.
+;; Similar for castling.
 ;; 1. NOTICE: here path must have target-node able to be unoccupied, so `pawn-capture-moves` in 4_23 needs small modification.
 ;; See "*vacant* squares which can be checked".
 (define basic-pawn-possible-capture-move
@@ -42,6 +43,12 @@
                     ; ,captured
                     ,(board 'address-of target))))))
 (define get-capture-res-addr caddr)
+(define (get-target-pos board from path)
+  (let ((res (capture?* board from path)))
+    (and 
+      res
+      (get-capture-res-addr res)
+      )))
 
 ;; 0. we get place-node address
 ;; Then we store all checked pos's by (capture?* board from path) in one data structure
@@ -65,11 +72,7 @@
                 (lambda (addr)
                   (filter-map
                     (lambda (path)
-                      (let ((res (capture?* board addr path)))
-                        (and 
-                          res
-                          (get-capture-res-addr res)
-                          ))
+                      (get-target-pos board addr path)
                       )
                     (get-capture-moves (piece-type (board 'piece-at addr)))
                     )

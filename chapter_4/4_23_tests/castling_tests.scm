@@ -1,0 +1,33 @@
+(cd "~/SICP_SDF/SDF_exercises/chapter_4")
+(load "4_23_corrected.scm")
+
+(define (populate-sides* board)
+
+  (define (populate-side color home-row pawn-row)
+
+    (define (do-column col type)
+      (add-piece col home-row type)
+      ; (add-piece col pawn-row 'pawn)
+      )
+
+    (define (add-piece col row type)
+      ((board 'node-at (make-address col row))
+       'connect! 0 (make-piece type color)))
+
+    (do-column 0 'rook)
+    ; (do-column 1 'knight)
+    ; (do-column 2 'bishop)
+    ; (do-column 3 'queen)
+    (do-column 4 'king)
+    (do-column 5 'bishop)
+    ; (do-column 6 'knight)
+    (do-column 7 'rook))
+
+  (populate-side 'white 0 1)
+  (populate-side 'black 7 6))
+
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_tests/")
+(load "common_lib.scm")
+(start-chess-game populate-sides*)
+
+(chess-move* '(4 0) '(0 0))

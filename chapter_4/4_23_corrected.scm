@@ -28,3 +28,16 @@
 (define all-rook-moves
   (append white-castling-rook-moves black-castling-rook-moves simple-rook-moves)
   )
+
+;; used by SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm
+(define all-pawn-moves
+  (append pawn-capture-moves basic-pawn-moves en-passant-moves))
+(define all-moves 
+  (append 
+    all-pawn-moves
+    all-rook-moves
+    all-knight-moves
+    all-bishop-moves
+    all-queen-moves
+    all-king-moves
+    ))
