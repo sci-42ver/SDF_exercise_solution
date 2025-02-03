@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;            Calculus of Infinitesimals
 
 ;;; The idea is that we compute derivatives by passing special
@@ -60,7 +60,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; 2011.  This was fixed by remapping the infinitesimals for
 ;;; derivatives of functions that returned functions.  This was
 ;;; done kludgerously, but it works.
-
+
 (declare (usual-integrations))
 
 (define differential-tag 'differential)
@@ -109,7 +109,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (diff-factors x)
   (if (not (diff-term? x)) (error "diff-factors" x))
   (caddr x))
-
+
 ;;; Differential term lists represent a kind of power series, so
 ;;; they can be added and multiplied.  It is important to note
 ;;; that when terms are multiplied, no contribution is made if
@@ -247,7 +247,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        (iota n)
                        increments)))))
   the-derivative)
-
+
 ;;; This is almost the right thing, but it has a subtle bug
 ;;; discovered by Radul and Perlmutter.  The very complex
 ;;; patch, which requires renaming the infinitesimals, is in

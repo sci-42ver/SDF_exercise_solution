@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; This is the setup for a units layer.
 
 ;;; A layered thing with units has a units entry in the
@@ -60,7 +60,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; Unnecessary because continuation of if is continuation of
   ;; c/a.
   default-if-handler)
-
+
 (define (unitless? x)
   (unitless-alist? (get-layer-value-or-default 'units x)))
 
@@ -86,7 +86,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (install-layer-handler! '- 'units
                         all-inputs-and-output-same-units)
-
+
 (define (multiply-input-units operator)
   (layer-args
    (lambda (current . args)
@@ -123,7 +123,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                               (cdr unit-alist2))))))))
 
 (install-layer-handler! '* 'units multiply-input-units)
-
+
 (define (negate-exponents unit-alist)
   (map (lambda (entry)
          (list (car entry)
@@ -152,7 +152,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 
 (install-layer-handler! '/ 'units divide-input-units)
-
+
 (define (all-inputs-have-same-units-output-unitless operator)
   (layer-args
    (lambda (current . args)
@@ -192,7 +192,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (install-layer-handler! 'cos 'units
         all-inputs-and-output-are-unitless)
-
+
 (define (units:sqrt operator)
   (layer-args
    (lambda (current . args)

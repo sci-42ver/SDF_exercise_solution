@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Symbolic arithmetic
 
 (define (symbolic? object)
@@ -101,7 +101,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                           (apply thing args)
                                           thing))
                                     things)))))))))
-
+
 ;;;; Book examples
 
 ;; here bases are nil, so `operation-alist, constant-alist` are both default `operator-names` etc. due to both (length bases) and (length base-operations) are 0 ~~both nil by `base-operations`, etc~~.

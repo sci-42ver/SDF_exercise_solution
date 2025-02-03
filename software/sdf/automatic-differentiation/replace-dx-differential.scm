@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; The code defining replace-dx-differential on page 122 is not
 ;;; quite right.  The bug was reported by Sam Ritchie.  My bug is
 ;;; that I forgot to collect like terms.  Here is a patch.

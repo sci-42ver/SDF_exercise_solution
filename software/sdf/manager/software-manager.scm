@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (manage-software command-name . args)
   ; (pp (pe))
   (call-with-current-continuation
@@ -58,7 +58,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (for-each (lambda (object)
                     (display object port))
                   objects))))
-
+
 (define (define-command template doc handler)
   (guarantee command-template? template 'define-command)
   (guarantee string? doc 'define-command)
@@ -107,7 +107,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (cddr command))
 
 (define all-commands '())
-
+
 (define-command '(help)
   "Prints out all of the commands and their documentation."
   (lambda ()
@@ -176,7 +176,7 @@ STRING may be a symbol or a string."
            (failure "multiple matching flavors for " match ": " names))
           (else
            (car names)))))
-
+
 (define-command '(new-environment . flavors)
   "Creates a new working environment and loads FLAVORS into it.
 The read-eval-print loop is moved to be in that environment."
@@ -230,7 +230,7 @@ Useful for debugging tests."
   "Returns the current working environment."
   (lambda ()
     ((current-working-env-model) 'get-environment)))
-
+
 (define-command '(name-current-environment name)
   "Assigns the name NAME to the current working environment."
   (lambda (name)
@@ -295,7 +295,7 @@ been given a name."
            (car names)))))
 
 (define named-environments (make-strong-eqv-hash-table))
-
+
 (define-command '(run-tests)
   "Run all tests in the current working environment."
   (lambda ()
@@ -336,7 +336,7 @@ containing only that FLAVOR and running its tests."
     (let ((old debug-test-errors?))
       (set! debug-test-errors? on?)
       old)))
-
+
 (define show-tests? #f)
 (define debug-test-errors? #t)
 
@@ -395,7 +395,7 @@ containing only that FLAVOR and running its tests."
                              results)))))))
                 (model 'get-inline-test-file-specs)))
     (write-test-summary failed all)))
-
+
 (define ((test-file-notifier filename) port)
   (write-string "running tests in file: " port)
   (write-string (enough-namestring filename root-directory)
@@ -419,7 +419,7 @@ containing only that FLAVOR and running its tests."
            (environment-assigned? env name))
       (environment-lookup env name)
       (default-object)))
-
+
 (define-command '(defining-files name)
   "Gets a list of filenames that define NAME."
   (lambda (name)

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define-arith-test 'pure-numeric-function
   (lambda ()
     (extend-arithmetic pure-function-extender
@@ -66,7 +66,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                 (+ 'a ((+ 'c cos sin) 'b)))
   (assert-equal '(+ a (+ (+ (c b) (cos b)) (sin b)))
                 (+ 'a ((+ (literal-function 'c) cos sin) 'b))))
-
+
 #|
 ;; Most powerful but has issues.  Doesn't work at present.
 

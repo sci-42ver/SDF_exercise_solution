@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define (find-pathnames predicate directory)
   (let loop ((directory (pathname-as-directory directory)))
     (append-map (lambda (pathname)

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define all-tests (make-settable-parameter '()))
 (define *test-file* (make-unsettable-parameter #f))
 (define *test-name* (make-unsettable-parameter #f))
@@ -96,7 +96,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (*test-name*)
         (*test-index*)
         (->namestring (*test-file*))))
-
+
 (define (assert-predicate-satisfied predicate value)
   (increment-index)
   (if (not (predicate value))
@@ -152,7 +152,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (begin
         (pp (list 'expected-one-of values 'actual actual))
         (fail))))
-
+
 (define (assert-contains-exactly values actual)
   (assert-lset= equal? values actual))
 

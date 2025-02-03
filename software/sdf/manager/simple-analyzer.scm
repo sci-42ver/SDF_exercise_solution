@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; A simple bound/free variable analyzer.
 
 (define (analyze-file filename environment)
@@ -78,7 +78,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                          (analysis-free analysis))
                  (analysis-free analysis)
                  (list analysis)))
-
+
 ;;;; Analysis results
 
 (define (analysis? object)
@@ -112,7 +112,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (analysis-children analysis)
   (guarantee analysis? analysis 'analysis-children)
   (cddddr analysis))
-
+
 (define (null-analysis)
   (make-analysis #f '() '() '()))
 
@@ -164,7 +164,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    bound)
                  (apply lset-union eq? (map analysis-free analyses))
                  (append-map analysis-children analyses)))
-
+
 (define (analyze-scode scode)
   (cond ((scode-variable? scode)
          (free-analysis (scode-variable-name scode)))
@@ -223,7 +223,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ;;  (null-analysis))
         (else
          (null-analysis))))
-
+
 (define install-in-global!
   (let ((env (the-environment)))
     (lambda ()

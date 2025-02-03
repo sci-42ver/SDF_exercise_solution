@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Shows signs of life!
 
 ((literal-function 'f) 'x)
@@ -65,7 +65,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (((partial 1) ((partial 0) foo)) 'x 'y)
 'expect-value: '(* 2 (* 2 x))
-
+
 ((derivative
   (lambda (x) (* x x x)))
  'a)
@@ -108,7 +108,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   'u)
  'v)
 'expect-value: '(((partial 1) ((partial 0) f)) u v)
-
+
 ;;; Eliminating complexities of literal functions.
 
 ;; coderef: deferred-extract
@@ -152,7 +152,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   'u)
  'v)
 'expect-value: '(((partial 1) f) u v)
-
+
 ;;; Alexey Radul problem!  With Scmutils version of extract.
 
 (define (((p x) g) y)
@@ -173,7 +173,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ((f-hat (f-hat exp)) 5)
 'expect-value: '59874.14171519782
-
+
 ((f-hat cube) 'a)
 'expect-value: '
 (+ (* (+ (+ 3 a) (+ 3 a)) (+ 3 a))
@@ -191,7 +191,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ((f-hat (f-hat (literal-function 'g))) 'a)
 'expect-value: '((derivative (derivative g)) (+ 3 (+ 3 a)))
-
+
 (define (legendre-transform-procedure F)
   (let ((w-of-v (derivative F)))
     (define (G w)
@@ -235,7 +235,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (square (/ (- p 0) (* (* 1/2 m) 2))))
       (* (* 1/2 k) (square x))))
 ;;   = (+ (* 1/2 k (expt x 2)) (/ (* 1/2 (expt p 2)) m))
-
+
 ((let ((m 'm) (k 'k) (x 'x))
    (legendre-transform-procedure
     (lambda (v)
@@ -265,7 +265,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    (* (* (cos u) (exp v)) dv))
 ;;   = (+ (* -1 du (sin u) (exp v))
 ;;        (* dv (exp v) (cos u)))
-
+
 ((((derivative
     (lambda (x)
       (derivative
@@ -301,7 +301,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   'v)
  'w)
 'expect-value: '(((partial 2) ((partial 1) ((partial 0) f))) u v w)
-
+
 ((((derivative
     (lambda (x)
       (derivative
@@ -345,7 +345,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (expt v 2)
       (((* (partial 0) (expt (partial 1) 2)) f) (* u v) (* v w))))
 |#
-
+
 ((derivative (lambda (x) (/ (sin x) x))) 'a)
 'expect-value: '
 (+ (* (cos a) (/ 1 a)) (* -1 (/ (sin a) (square a))))
@@ -370,7 +370,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (expt a 2)))
    (expt a 2))
 |#
-
+
 ;;; Version of Alexey's bug from paper by Manzyuk, et.al.
 
 ;;; With patch, using with-new-increment
@@ -394,7 +394,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (((derivative s) 5)
    (literal-function 'f))) 'x)
 'expect-value: '((derivative (derivative f)) (+ (+ x 3) 5))
-
+
 (define s
   (lambda (u)
     (lambda (f)
@@ -423,7 +423,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; Without patch ;Value: 0 ;;; Wrong!
 ;;; With patch -- correct:
 'expect-value: '((derivative (derivative f)) (+ (+ x 3) 3))
-
+
 ;;; May 2019.  Siskind found a new bug!
 
 (define s
@@ -458,7 +458,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (literal-function 'f))
  'a)
 'expect '((derivative (derivative f)) a)
-
+
 #|
 ;;; Must (load "load-simplifier")
 
@@ -478,7 +478,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    'a)))
 'expect-value: '(* 12 (expt a 2))
 |#
-
+
 ;;; Church pairs
 
 (define kons
@@ -548,7 +548,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; The correct derivative!
 |#
-
+
 (define (g x y)
   (len (kons x y)))
 

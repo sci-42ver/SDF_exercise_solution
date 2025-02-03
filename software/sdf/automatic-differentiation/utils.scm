@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Termlists are sorted
 
 (define (ordered-union <-? l1 l2)
@@ -64,7 +64,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (append-map (lambda (i)
                 (combinations lst i))
               (iota (length lst) 1)))
-
+
 ;;; Nice versions of arithmetic to simplify stuff.
 
 (define (numerical-simplifier-wrapper base-arithmetic)
@@ -116,7 +116,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define numeric-simplifier-forwarding
   (make-key-weak-eqv-hash-table))
-
+
 (define full-arithmetic
   (let ((g (make-generic-arithmetic make-simple-dispatch-store)))
     (add-to-generic-arithmetic! g numeric-arithmetic)

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; This takes an ordinary continuation and extends it to support
 ;;; key-value metadata.  This is a simplification of the more
 ;;; elaborate system of continuation marks from SRFI-226.
@@ -42,7 +42,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define marks-of-continuation
   (make-metadata-association))
-
+
 (define (continuation-mark cont key #!optional fail)
   (let ((marks (cont-marks cont)))
     (let ((p (assv key (car marks))))

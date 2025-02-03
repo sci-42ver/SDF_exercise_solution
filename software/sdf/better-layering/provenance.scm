@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;;  Trivial support set layer test.
 
 ;;; The provenance layer of a layered thing is a
@@ -53,7 +53,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                 'provenance arg))
                              args))
                  signer)))
-
+
 ;;; Setting up a layer for tracking provenance of data:
 
 (define (union-contributions value . args)
@@ -89,7 +89,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         only-provenance-layer-args)
 (install-layer-handler! '- 'provenance
                         only-provenance-layer-args)
-
+
 #|
 (define (provenance:* operator)
   ;; This needs to be more sophisticated, see below
@@ -122,7 +122,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    'provenance))
 
 (install-layer-handler! '* 'provenance provenance:*)
-
+
 (define (provenance:/ operator)
   (base-and-layer-args
    (lambda (value . blargs)
@@ -160,7 +160,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    'provenance))
 
 (install-layer-handler! 'atan 'provenance provenance:atan)
-
+
 (install-layer-handler! 'car 'provenance
                         only-provenance-layer-args)
 (install-layer-handler! 'cdr 'provenance

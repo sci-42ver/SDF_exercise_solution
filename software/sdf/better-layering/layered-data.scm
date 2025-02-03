@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Layered objects
 
 (define (make-layered-thing layer-map)
@@ -66,7 +66,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (general-procedure? object)
   (interpreter-procedure? (get-layer-value 'base object)))
-
+
 (define (available-layers thing)
   (if (layered-thing? thing)
       ((layered-thing-internal thing) 'layers-available)
@@ -110,7 +110,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define *novalue*
   (list '*novalue*))
-
+
 ;;;; Layer-map abstraction
 
 ;;; For this elementary implementation we will
@@ -144,7 +144,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           layer-map)
         (cons (list layer-name new-value)
               layer-map))))
-
+
 ;;;; Layer abstraction
 
 (define-record-type <layer>
@@ -183,7 +183,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     layer))
 
 (define *defined-layers* '())
-
+
 (define (default-if-handler value-in-dict value)
   (declare (ignore value-in-dict value))
   *ignore-value*)
@@ -208,7 +208,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (c/a-merge layer-name)
   (layer-c/a-merge (get-layer layer-name)))
-
+
 (define-generic-procedure-handler l:if-hook
   (match-args layered-thing? extended-continuation? any-object?)
   (lambda (p-value continue receiver)
@@ -245,7 +245,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       (cont
        (make-layered-thing (((cont-dict cont) 'filled-entries))))
       'multiple-nested-applications))
-
+
 (define (make-dictionary)
   (let ((dict '()))
 
@@ -281,7 +281,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         ((all-entries) dict)
         (else (error "unknown message -- dictionary" m))))
     the-dict))
-
+
 ;;;; Layering marks
 
 (define (cont-nested-apps cont)
@@ -308,7 +308,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define mark-key:dict
   (make-continuation-mark-key 'dict))
-
+
 ;;;; Base layer
 
 (define (base-merge value new-value)

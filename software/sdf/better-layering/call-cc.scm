@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Implementation of call/cc: predicate in rtdata-extra; dispatch in
 ;;; l:apply-strict; also modifies primitive-or-simple-procedure?
 
@@ -43,7 +43,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (for-each p (cdr l)))))
 
 
-
+
 ;; [LISTOF X] -> ( -> X u 'you-fell-off-the-end)
 (define (generate-one-element-at-a-time lst)
   ;; Both internal functions are closures over lst
@@ -85,7 +85,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (generate-digit) ;; 2
 (generate-digit) ;; you-fell-off-the-end
 |#
-
+
 #|
 ;;; In 1999, David Madore (inventor of the Unlambda programming
 ;; language) accidentally discovered a 12-character Unlambda term, making
@@ -105,7 +105,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;Quit!
 |#
 |#
-
+
 #|
 ;; Cooperative multitasking using call-with-current-continuation
 ;; in 25 lines of scheme
@@ -138,7 +138,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 	  ;; The original (exit) is a non returning function,
 	  ;; so this is a non-returning function.
           (exit)))))
-
+
 ;; Takes a one argument function with a given
 ;; argument and forks it off. The forked function's new
 ;; thread will exit if/when the function ever exits.

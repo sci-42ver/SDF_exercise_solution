@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; This is the applicator for layered procedures.
 
 (define-record-type <applyer>
@@ -69,7 +69,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                            (cons cont-layer-value args)
                            continue))
           (else 'OK))))
-
+
 (define (process-layers cont)
   (cont-increment-nested-apps cont)
 
@@ -87,7 +87,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (end-of-layers cont)
   (cont-decrement-nested-apps cont)
   (return-if-complete cont))
-
+
 ;;;; Wrappers for layer handlers
 
 (define (layer-args procedure layer)

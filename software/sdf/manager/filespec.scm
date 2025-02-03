@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;; <filespec> = ("<filename>" <option>*)
 ;; <option> = from "<dir>"
 ;;     | test "<name>"
@@ -65,7 +65,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; OVERRIDE ("<name>" | "<dir>/<name>"): If specified, this file
 ;; overrides the file specified by the argument, which would otherwise
 ;; be included.
-
+
 (define (make-load-spec flavor filespecs relative-dir)
   `((name ,flavor)
     (filespecs ,filespecs)
@@ -115,7 +115,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     ("predicate-counter" from "common")
     ("simple-tests" from "common")
     ("trie" from "common")))
-
+
 (define (filespec? spec)
   (and (pair? spec)
        (string? (car spec))
@@ -149,7 +149,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (filespec-override filespec)
   (filespec-property 'override filespec))
-
+
 (define (normalize-filespec filespec load-spec-dir)
   (cond ((string? filespec)
          (list filespec
@@ -220,7 +220,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        (normalize-filespec-dir (slash-trimmer dir-part))))
                  "/"
                  (file-namestring filename)))
-
+
 (define (filespec-filename spec)
   (merge-pathnames (filespec-relative-filename spec)
                    root-directory))
@@ -269,7 +269,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (guarantee filespec? spec 'filespec-inline-test-env-filename)
   (merge-pathnames (filespec-inline-test-env-name spec)
                    root-directory))
-
+
 (define (filespecs-difference* filespecs)
   (reduce (lambda (subtrahend minuend)
             (lset-difference (lambda (fs1 fs2)
@@ -295,7 +295,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (filespecs-union . filespecs)
   (filespecs-union* filespecs))
-
+
 (define (compute-flavor-load-specs)
   (let ((specs
          (map compute-load-spec (find-flavor-load-specs))))
@@ -360,7 +360,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               (symbol? (cadr expr))
               (list? (cddr expr))
               (cdr expr)))))
-
+
 (define (flavor-load-spec name #!optional load-specs)
   (let ((load-spec
          (find (lambda (spec)

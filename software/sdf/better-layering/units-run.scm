@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Combining provenance and units
 
 ;(repl)
@@ -70,7 +70,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 '((provenance ("NIST:CODATA-2006" "GJS-V" "GJS-T" "IRC"))
   (units ((ampere 1)))
   (base 1.2010041136964896e-3))
-
+
 (define (Id V)
   (signed (* Is (- (exp (/ (* :q V) (* :k T))) 1))
           "Searle&Gray"))
@@ -108,7 +108,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 '((base 1.3806505e-23)
   (provenance ("NIST:CODATA-2006"))
   (units ((kilogram 1) (meter 2) (second -2) (kelvin -1))))
-
+
 #|
 ;;; But we still have problems because we cannot pass in a
 ;;; bare number, hoping that it is not interpreted as

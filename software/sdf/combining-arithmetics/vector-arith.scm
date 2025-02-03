@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 #| -*-Scheme-*-
 
 Copyright (C) 2019, 2020, 2021 Chris Hanson and Gerald Jay Sussman
@@ -43,7 +43,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (register-predicate! vector? 'vector)
 
 (define (ensure-vector-lengths-match vecs)
@@ -157,7 +157,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                (lambda args
                                  (error "Don't know how to "
                                         operator args)))))))))))
-
+
 #|
 (define combined-arithmetic
   (extend-arithmetic symbolic-extender

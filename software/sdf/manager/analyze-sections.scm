@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 (define most-recent-total-index #f)
 (define saved-total-index-filename
   (merge-pathnames "manager/saved-total-index"
@@ -70,7 +70,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (find (lambda (entry)
           (eq? name (name-index-entry-name entry)))
         (per-name-index (get-total-index))))
-
+
 ;;;; Per-file index
 
 (define (compute-per-file-index load-specs)
@@ -132,7 +132,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           per-flavor))
               summaries)
     (hash-table-values table)))
-
+
 ;;;; Per-name index
 
 (define (compute-per-name-index per-file-index)

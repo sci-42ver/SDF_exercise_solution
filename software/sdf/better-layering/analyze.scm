@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Experimental interpreter
 
 ;;;  Separating analysis from execution.
@@ -62,7 +62,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (extend-continuation
       (lambda (value)
         (l:advance value continue)))))
-
+
 (define (analyze-self-evaluating expression)
   (lambda (environment continue)
     (declare (ignore environment))
@@ -92,7 +92,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler l:analyze
   (match-args quoted?)
   analyze-quoted)
-
+
 (define (simple-parameter-list? vars)
   (or (null? vars)
       (symbol? vars)
@@ -118,7 +118,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler l:analyze
   (match-args lambda?)
   analyze-lambda)
-
+
 ;;; analyze-if is extended with a hook to allow the
 ;;; interpolation of work between the evaluation of the
 ;;; predicate part of the expression and the choice of
@@ -145,7 +145,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; for the details.
 
 ;;; The details are very subtle.
-
+
 (define (analyze-if expression)
   (let ((predicate-exec (analyze (if-predicate expression)))
         (consequent-exec (analyze (if-consequent expression)))
@@ -167,7 +167,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler l:analyze
   (match-args if?)
   analyze-if)
-
+
 (define (analyze-begin expression)
   (reduce-right
    (lambda (exec1 exec2)
@@ -187,7 +187,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler l:analyze
   (match-args begin?)
   analyze-begin)
-
+
 (define (analyze-assignment expression)
   (let ((var
          (assignment-variable expression))
@@ -218,7 +218,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler l:analyze
   (match-args definition?)
   analyze-definition)
-
+
 ;;; Macros (definitions are in syntax.scm)
 
 (define-generic-procedure-handler l:analyze
@@ -251,7 +251,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                (extend-continuation
                  (lambda (vals)
                    (continue (cons val vals))))))))))
-
+
 ;;; Application
 
 (define (default-apply procedure operand-execs
@@ -290,7 +290,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (l:apply-strict procedure
                           args
                           continue))))))
-
+
 ;;; Traditional APPLY, as in Scheme
 (define (l:apply-strict procedure args continue)
   (cond ((strict-primitive-procedure? procedure)
@@ -338,7 +338,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (lambda (args)
              (body-exec (extend-environment names args penv)
                         continue))))))))
-
+
 (define l:handle-operand
   (simple-generic-procedure 'l:handle-operand 4
     (lambda (parameter operand-exec environment continue)
@@ -362,7 +362,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler procedure-parameter-name
   (match-args pair?)
   car)
-
+
 (define l:advance
   (simple-generic-procedure 'l:advance 2
     (lambda (x continue) (continue x))))

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;; Read-eval-print loop for extended Scheme interpreter
 
 (define *in-repl* #f)
@@ -66,7 +66,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (g:read)
   (prompt-for-command-expression ";eval>\n"))
-
+
 ;;; this has not been tested... probably wrong.
 
 (define (load-library filename)
@@ -82,7 +82,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                         (extend-continuation show-result))
                 (do-it))
               'done))))))
-
+
 (define (show-result val)
   (cond ((layered-thing? val)
          (for-each (lambda (layer)
@@ -110,7 +110,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (if (member 'base lst)
       (append (delete 'base lst) (list 'base))
       lst))
-
+
 ;;; For printing output
 
 (define write
@@ -139,7 +139,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler write-line
   (match-args deferred?)
   (doit! write-line))
-
+
 (define-generic-procedure-handler pp
   (match-args deferred?)
   (doit! pp))

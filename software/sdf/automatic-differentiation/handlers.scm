@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;;            Calculus of Infinitesimals
 
 ;;; The finite-part is all terms except for terms containing the
@@ -202,7 +202,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                          x y))
                               0)        ;assuming not y<0
                           (* (log x) (expt x y))))))
-
+
 (define diff:sqrt
   (diff:unary-proc sqrt
                    (lambda (x) (/ 1 (* 2 (sqrt x))))))
@@ -246,7 +246,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                       (/ (* -1 y)
                          (+ (square x) (square y))))))
 
-
+
 ;;; This is redundantly defined in several places.
 
 ;; coderef: sqrt-assignment

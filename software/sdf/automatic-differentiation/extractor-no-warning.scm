@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Complicated extractor, from scmutils.  Fixes Radul bug.
 
 ;;; extract-dx-part must be generic to handle compound values.
@@ -79,7 +79,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler extract-dx-part
   (match-args function? diff-factor?)
   extract-dx-function)
-
+
 (define (replace-dx-default new-dx old-dx object)
   (if (not (and (diff-factor? new-dx)
                 (diff-factor? old-dx)))
@@ -125,7 +125,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler replace-dx
   (match-args diff-factor? diff-factor? function?)
   replace-dx-function)
-
+
 ;;; Simple substitution
 (define (substitute new old x)
   (cond ((pair? x)

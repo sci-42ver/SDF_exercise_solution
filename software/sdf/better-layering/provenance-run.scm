@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
-
+
 ;;; Example provenance run
 
 ;(repl)
@@ -42,7 +42,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (Id 0.6)
 ;base;=> 1.2010041136964896e-3
-
+
 
 ;;; Starting to add provenance.
 
@@ -60,7 +60,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((base 1.2010041136964896e-3)
   (provenance ("NIST:CODATA-2006" "GJS-V" "GJS-T" "IRC")))
-
+
 ;;; Someone needs to sign the formula!
 
 (define (Id V)
@@ -95,7 +95,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance ("Searle&Gray" "NIST:CODATA-2006" "GJS-T" "IRC"))
   (base 1.2010041136964896e-3))
-
+
 ;;; Simple procedures tests
 
 ((signed (lambda () (+ (signed 2 'gjs))) 'me))
@@ -133,7 +133,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance (gjs jems me bilbo))
   (base 8))
-
+
 (if (signed #f 'p)
     (signed 'c 'wrong)
     (signed 'a 'correct))
@@ -173,7 +173,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance (correct p))
   (base c))
-
+
 (if (if (signed #t 'p)
         (signed #t 'correct0)
         (signed #f 'wrong0))
@@ -212,7 +212,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance (correct1 p2 p1 correct0 p))
   (base a))
-
+
 ;;; Conditionals work in procedures
 
 (define (count n)
@@ -261,7 +261,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance (gjs bilbo frodo sam))
   (base done))
-
+
 (define (count1 n)
   (if (= n (signed 0 'frodo))
       (signed 'done 'gjs)
@@ -305,7 +305,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance (gjs bilbo1 frodo0 bilbo2 frodo1 frodo2))
   (base done))
-
+
 (define (count4 n)
   (if (= n (signed 0 'frodo))
       (signed 'done 'gjs)
@@ -335,7 +335,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 '((provenance (gjs frodo0 bilbo1 frodo1
               bilbo2 frodo2 gjs1 bilbo3 frodo3))
   (base done))
-
+
 ;;; complex stuff with conditionals work!
 
 (define ff-test
@@ -384,7 +384,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance (gjs10 fib2 fib1 fact1 fact2 gjs5))
   (base 175))
-
+
 ;;; Layered Procedure with no explicit provenance layer
 ;;; acts as base.
 
@@ -419,7 +419,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; its signed argument loses its provenance as the
 ;;; value of the formal parameter x, so this does not
 ;;; propagate internal provenance computations.
-
+
 ;;; Raw scheme just passes through arguments with
 ;;; provenance Subtlety with **IF** here, see
 ;;; analyze.scm.
@@ -443,7 +443,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance (g3 g1 foo))
   (base 3))
-
+
 (define b (signed b "gjs"))
 
 (b (signed -3 'foo))
@@ -488,7 +488,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 'expect-layered:
 '((provenance (g4 g5 g3 g6))
   (base done))
-
+
 ;;; Now we sign count.
 
 (define count
