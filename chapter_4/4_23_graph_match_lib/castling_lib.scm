@@ -182,18 +182,31 @@
       )
     )
   )
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/")
+(load "pred_lib.scm")
 (define (mul-simple-move board from-to-pairs)
-  (for-each
-    (lambda (pair)
-      ;; moved each piece to the target pos to
-      ;; and update piece_positions to remove those from's.
-      ;; If later to is former from, it may be cons'ed later.
-      (let ((from (get-from pair)) (to (get-to pair)))
-        (check-move-for-type board from to)
-        (simple-move-moved-part board from to))
-      )
-    from-to-pairs
-    )
+  (let ((from-lst (map get-from from-to-pairs))
+        (to-lst (map get-to from-to-pairs)))
+    ;; we move from-to-pairs simultaneously, so we check *all beforehand*.
+    (let ((preds 
+            (map
+              (lambda (from to)
+                (check-move-for-type board from to)
+                )
+              from-lst to-lst
+              )))
+      (if (apply-and preds)
+        'success
+        (write-line (list "fail with preds:" preds "for from-to-pairs" from-to-pairs))))
+    (for-each
+      (lambda (from to)
+        ;; moved each piece to the target pos to
+        ;; and update piece_positions to remove those from's.
+        ;; If later to is former from, it may be cons'ed later.
+        (simple-move-moved-part board from to)
+        )
+      from-lst to-lst
+      ))
   ;; 0. update for the rest where only those pieces not related with from-to-pairs are kept.
   ;; 1. Notice piece_positions may be updated to add to-lst.
   (simple-move-rest-part board from-to-pairs)
