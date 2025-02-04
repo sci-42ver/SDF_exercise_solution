@@ -118,16 +118,16 @@
         (pair-dict2 (dict->pair-dict dict2))
         )
     (let ((dict1-rename-dict (rename-var-to-idxed-element-var pair-dict1 (lambda (dict) dict)))
-          (dict2-rename-dict (rename-var-to-idxed-element-var pair-dict1 (lambda (dict) dict)))
+          (dict2-rename-dict (rename-var-to-idxed-element-var pair-dict2 (lambda (dict) dict)))
           )
       (let ((dict1* ((match:dict-substitution dict1-rename-dict) pair-dict1))
             (dict2* ((match:dict-substitution dict2-rename-dict) pair-dict2))
             )
-        ; (pp (list "same-dict?" 
-        ;   (list dict1 dict2) 
-        ;   (list pair-dict1 pair-dict2)
-        ;   (list dict1-rename-dict dict2-rename-dict)
-        ;   (list dict1* dict2*)))
+        (pp (list "same-dict?" 
+          (list dict1 dict2) 
+          (list pair-dict1 pair-dict2)
+          (list dict1-rename-dict dict2-rename-dict)
+          (list dict1* dict2*)))
         (and (unify dict1* dict2*)
              #t
              )
@@ -135,3 +135,27 @@
       )
     )
   )
+
+;;; TODO
+(write-line "same-dict? test1")
+(pp (same-dict? '(dict (y ((?? w)) ??)) '(dict (y ((? w)) ?))))
+;; 0. wrong due to not checking type beforehand.
+; ("same-dict?" ((dict (y ((?? w)) ??)) (dict (y ((? w)) ?)))
+;               ((dict ((?? y) ((?? w)))) (dict ((? y) ((? w)))))
+;               ((dict (w ((? w:4)) ??) (y ((? y:3)) ??)) (dict (w (? w:2) ?) (y (? y:1) ?)))
+;               ((dict ((? y:3) ((? w:4)))) (dict ((? y:1) ((? w:2))))))
+;; 1. What's more, the renaming check is much complexer with more bindings.
+;; That is due to something like
+;; (binding1 binding2 binding3 ... bindingN) matched with (binding1* binding2* binding3* ... bindingN*)
+;; may have N! possible matches.
+
+;;;
+(cd "~/SICP_SDF/SDF_exercises/chapter_4")
+(load "../software/sdf/unification/unify-testing.scm")
+(load "../software/sdf/design-of-the-matcher/matcher.scm")
+(pp (unify:alpha-equivalent? '(?? w) '(? w)))
+
+;; This should return #f since (? w) *can't match all* things (?? w) can match.
+(pp (unify:alpha-equivalent? '(? w) '(?? w)))
+;; same #f as the above shows.
+(pp (unify-test '(? w) '(? w) '(dict (w (?? w) ?)) #t))

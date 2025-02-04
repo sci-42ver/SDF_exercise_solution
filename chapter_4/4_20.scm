@@ -61,6 +61,7 @@
 ;             '((?? y) (?? x))
 ;             '(dict (y () ??))
 ;             #t)
+
 ;; 0. use ?? for all ??? temporarily.
 ;; 1. Here e:1525 is no use.
 ; (unify-test '((?? x) 3)
@@ -76,8 +77,14 @@
 ;; based on
 ; ((x-internal:49-right () ???) (x ((??? x-internal:50-left)) ??) (x ((?? y) (??? x-internal:50-left)) ??))
 
-; (unifier '((?? x))
-;           '((?? y) (?? x)))
+(unifier '((?? x))
+          '((?? y) (?? x)))
+;;; if using 4_19_lib_for_4_20.scm
+; ("Bad dictionary" ((??? x-internal:52-left)) ((?? y) (??? x-internal:52-left)) (dict (x-internal:51-right () ???) (x ((??? x-internal:52-left)) ??) (x ((?? y) (??? x-internal:52-left)) ??)))
+;; this is due to 2 bindings for (?? x).
+;;; if using 4_19_lib_for_4_20_possible_loop.scm
+;; see https://stackoverflow.com/q/79311188/21294350
+
 ; (unifier '((?? x) (?? y))
 ;           '((?? y) (?? x))
 ;           )

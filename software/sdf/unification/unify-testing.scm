@@ -78,6 +78,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (unify-all x y)
   (let ((results '()))
+    ;; IMHO no need to add one more list wrapper since unify:internal will do that.
     (unify:internal (list x) (list y)
      (match:new-dict)
      (lambda (dict)
@@ -87,6 +88,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (unify:alpha-equivalent? p1 p2)
   (run-matcher
+    ;;; IGNORE: why (recursive-substitute '? '?? p1) is same as SDF_exercises/chapter_4/4_19_rename_dict_lib.scm
+    ;; (type-variable ...) to "think of each var as one *element var*".
+    ;;; 0. SDF_exercises TODO Here we only do substitution for one side instead of two as 4_19_rename_dict_lib does.
+    ;; So why?
+    ;; IMHO if we want to check matches-including-expected, then we need to ensure p1* can contain the substitution by expected-bindings.
+    ;; So we should use the original one.
+    ;; 0.a. Also see SDF_exercises/chapter_4/4_19_rename_dict_lib.scm for possible problems.
    (match:compile-pattern (recursive-substitute '? '?? p1))
    p2
    (lambda (dict) dict)))

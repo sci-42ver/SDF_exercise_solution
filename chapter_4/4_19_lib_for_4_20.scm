@@ -33,6 +33,7 @@
     )
   )
 
+;;; total example bindings
 (let ((p1 '(a (?? x) (?? y) (?? x) c))
       (p2 '(a b b b (?? w) b b b c)))
   (pp (unify:collector-wrapper p1 p2 (match:new-dict)
@@ -119,15 +120,16 @@
     (or 
       ;; substitution match
       (equal? pair1-subst pair2-subst)
-      ;; > uniformly renaming variables
-      ;; unify will ensure constant terms are correspondingly same.
-      ;; And var's bindings implies "uniformly renaming" where uniform is implied by that we check unify consistency after substitution with binding value.
       (unify-proc pair1-subst pair2-subst)
       ;; dict match
       (let ((pair1-result* (sort-dict pair1-result))
             (pair2-result* (sort-dict pair2-result))
             )
+        ;; Will remove 3 "(w () ??) (y () ??)"'s from 9 bindings in "total example bindings"
         (equal? pair1-result* pair2-result*))
+      ;; > uniformly renaming variables
+      ;; unify will ensure constant terms are correspondingly same.
+      ;; And var's bindings implies "uniformly renaming" where uniform is implied by that we check unify consistency after substitution with binding value.
       (same-dict? pair1-result pair2-result)
       )
     )
@@ -169,6 +171,7 @@
   )
 
 ; (trace same-pair-for-solution?)
+(write-line "4.19 b test1")
 (let ((pattern '(* (?? a) (+ (?? b)) (?? c)))
       (expression '(* x y (+ z w) m (+ n o) p)))
   (pp (unify:collector-wrapper-with-substitution-unique-pairs pattern expression (match:new-dict)
@@ -177,6 +180,10 @@
                                                                           #f)
                                                                         unify
                                                                         )))
+;; 2 results with the same substitution
+; ((c (m (+ n o) p) ??) (b (z w) ??) (a (x y) ??))
+; ((c (p) ??) (b (n o) ??) (a (x y (+ z w) m) ??))
+; (pairs ((* x y (+ z w) m (+ n o) p) dict (c (p) ??) (b (n o) ??) (a (x y (+ z w) m) ??)))
 
 ;; The above can't be checked for sameness by dict
 ;; since they have non-compatible values for the same var-seq.
@@ -190,6 +197,7 @@
                                                                       unify-proc
                                                                       ))
   )
+(write-line "4.19 b test2")
 (pp (main-test unify))
 ;; can recognize (y ((?? w)) ??) with (w ((?? y)) ??).
 ; [Entering #[compound-procedure same-pair-for-solution?]
