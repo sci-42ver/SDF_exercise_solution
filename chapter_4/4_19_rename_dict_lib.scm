@@ -28,7 +28,6 @@
      (assert (list? rest1))
      (or (and (null? rest1)
               (succeed dict*))
-         ;; IGNORE: SDF_exercises TODO when this happens.
          (begin
            ; (write-line (list "error for unify:internal" rest1))
            (fail)))
@@ -80,19 +79,36 @@
 (define-generic-procedure-handler rename:gdispatch
                                   (match-args (car-satisfies list-term?))
                                   rename:list-terms)
+;; similar to type-variable
+(define (type-variable-with-pred pred #!optional root)
+  `(? ,(generate-unique-name
+        (if (default-object? root)
+            'type
+            root))
+      ,pred
+      ))
+;; similar to 
+(define (seg-var-repr? var)
+  (and
+    (match:var? var)
+    (match:var-has-restriction? var)
+    (eq? seg-var-repr? (match:var-restriction var))
+    )
+  )
 (define (rename-var var-first)
   (define (rename dict succeed fail)
     (let ((var (car var-first)) (rest1 (cdr var-first)))
       (cond ((match:has-binding? var dict)
-             ;; will check consistency later.
+             ;; IGNORE: will check consistency later.
+             ;; Since we do renaming, we only need to bookkeep how var's are renamed.
+             ;; *No conflict* will occur.
              (succeed dict fail rest1))
             (else
               ;; wrap list to be compatible with segment
               (let ((renamed-var 
-                      ((if (match:segment-var? var)
-                         list
-                         (lambda (x) x))
-                       (type-variable (match:var-name var)))))
+                      (if (match:segment-var? var)
+                        (list (type-variable-with-pred seg-var-repr? 'seg-var))
+                        var)))
                 (let ((dict* (do-substitute var renamed-var dict)))
                   (if dict*
                     (succeed dict* fail rest1)
@@ -123,11 +139,11 @@
       (let ((dict1* ((match:dict-substitution dict1-rename-dict) pair-dict1))
             (dict2* ((match:dict-substitution dict2-rename-dict) pair-dict2))
             )
-        (pp (list "same-dict?" 
-          (list dict1 dict2) 
-          (list pair-dict1 pair-dict2)
-          (list dict1-rename-dict dict2-rename-dict)
-          (list dict1* dict2*)))
+        ; (pp (list "same-dict?" 
+        ;   (list dict1 dict2) 
+        ;   (list pair-dict1 pair-dict2)
+        ;   (list dict1-rename-dict dict2-rename-dict)
+        ;   (list dict1* dict2*)))
         (and (unify dict1* dict2*)
              #t
              )
@@ -136,7 +152,7 @@
     )
   )
 
-;;; TODO
+;;; SKIPPED since it is not needed by SDF_exercises/chapter_4/4_19_lib_for_4_20.scm: TODO
 (write-line "same-dict? test1")
 (pp (same-dict? '(dict (y ((?? w)) ??)) '(dict (y ((? w)) ?))))
 ;; 0. wrong due to not checking type beforehand.
@@ -148,6 +164,9 @@
 ;; That is due to something like
 ;; (binding1 binding2 binding3 ... bindingN) matched with (binding1* binding2* binding3* ... bindingN*)
 ;; may have N! possible matches.
+;; 1.a. So we should add one wrapper outside unify
+;; so that the 1st binding can match any of other *seg-var*'s at the other side if seg-var.
+;; This "any" mechanism can be done similar to unify:segment-var-var where we changes success continuation correspondingly.
 
 ;;;
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")

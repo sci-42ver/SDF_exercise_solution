@@ -84,12 +84,38 @@
 
 ;;; test5
 ;; ensure the added term binding in dict** can be got appropriately, i.e. that done by check-car-term-binding.
-(unify:internal-display-wrapper '(((?? x) 3 (?? z) 3))
+(define (trace-wrapper thunk . trace-procs)
+  (for-each
+    (lambda (proc)
+      (trace proc)
+      )
+    trace-procs
+    )
+  (thunk)
+  (for-each
+    (lambda (proc)
+      (untrace proc)
+      )
+    trace-procs
+    )
+  )
+(trace-wrapper
+  (lambda ()
+    (unify:internal-display-wrapper '(((?? x) 3 (?? z) 3))
                 '((4 (?? y) (?? y)))
                 (match:new-dict)
                 (lambda (dict)
                   (pp (match:bindings dict))
-                  #f))
+                  #f)) 
+    )
+  unify:internal
+  unify:collector-wrapper
+  unify:collector-wrapper-with-substitution
+  unify:collector-wrapper-with-substitution-unique-pairs
+  ;; will call unify......
+  substitution-instance?
+  ; same-pair-for-solution?
+  )
 ;; Emm... this is much complexer...
 ;; 0. similar to before, (?? z)<->(?? y) is bidirectional.
 ; ((z () ??) (y (3) ??) (x (4) ??))

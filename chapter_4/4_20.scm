@@ -83,7 +83,9 @@
 ; ("Bad dictionary" ((??? x-internal:52-left)) ((?? y) (??? x-internal:52-left)) (dict (x-internal:51-right () ???) (x ((??? x-internal:52-left)) ??) (x ((?? y) (??? x-internal:52-left)) ??)))
 ;; this is due to 2 bindings for (?? x).
 ;;; if using 4_19_lib_for_4_20_possible_loop.scm
-;; see https://stackoverflow.com/q/79311188/21294350
+;; see https://stackoverflow.com/questions/79311188/how-to-do-the-general-match-for-segment-variable-in-unification?noredirect=1#comment140045295_79410402
+;; either shows it only has 2 cases as the answer shows
+;; or detect similarity and show that this implies the arbitrary result satisfying some pattern (maybe wrong), i.e. x = [...y, ...x] here.
 
 ; (unifier '((?? x) (?? y))
 ;           '((?? y) (?? x))

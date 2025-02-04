@@ -78,7 +78,11 @@
 ;; > doesn't matter, so two resulting dictionaries represent the same
 ;; > solution if you can get one by uniformly renaming variables in
 ;; > the other.
-;; i.e. ((y ((?? w)) ??) (x (b b b) ??)) with ((w ((?? y)) ??) (x (b b b) ??))
+;; 0. i.e. ((y ((?? w)) ??) (x (b b b) ??)) with ((w ((?? y)) ??) (x (b b b) ??))
+;; 1. SKIPPED due to about maths: TODO IMHO this "... if ..." needs maths proof.
+;; The book assumes that is true.
+;; Maybe we should prove first that all solution *structures* are same.
+;; So no (a b b b (?? w) b b b c) with (a b b b (?? y) a k b c) etc.
 (define (new-collector data)
   (cons 'collector data))
 (define tagged-list-data cdr)
@@ -112,6 +116,7 @@
   (match:new-bindings dict (sort (match:bindings dict) symbol<? car)))
 ;; unify-proc is to allow further extension
 (define (same-pair-for-solution? pair1 pair2 unify-proc)
+  ; (pp (list "call same-pair-for-solution? with" pair1 pair2 unify-proc))
   (let ((pair1-subst (substitution-in-pair pair1))
         (pair2-subst (substitution-in-pair pair2))
         (pair1-result (result-dict-in-pair pair1))
@@ -120,6 +125,9 @@
     (or 
       ;; substitution match
       (equal? pair1-subst pair2-subst)
+      ;; > uniformly renaming variables
+      ;; unify will ensure constant terms are correspondingly same.
+      ;; And var's bindings implies "uniformly renaming" where uniform is implied by that we check unify consistency after substitution with binding value.
       (unify-proc pair1-subst pair2-subst)
       ;; dict match
       (let ((pair1-result* (sort-dict pair1-result))
@@ -127,20 +135,19 @@
             )
         ;; Will remove 3 "(w () ??) (y () ??)"'s from 9 bindings in "total example bindings"
         (equal? pair1-result* pair2-result*))
-      ;; > uniformly renaming variables
-      ;; unify will ensure constant terms are correspondingly same.
-      ;; And var's bindings implies "uniformly renaming" where uniform is implied by that we check unify consistency after substitution with binding value.
-      (same-dict? pair1-result pair2-result)
+      ;; IMHO just checking the resulting substitution renaming by unify-proc is enough.
+      ; (same-dict? pair1-result pair2-result)
       )
     )
   )
 (define (new-pairs data)
   (cons 'pairs data))
 (define (unify:collector-wrapper-with-substitution-unique-pairs pattern1 pattern2 dict succeed unify-proc)
+  ; (pp (list "unify:collector-wrapper-with-substitution-unique-pairs calls with " pattern1 pattern2 dict succeed unify-proc))
   (let ((collector (unify:collector-wrapper pattern1 pattern2 dict succeed))
         (pairs (new-pairs '()))
         )
-    ; (write-line "finish collector in unify:collector-wrapper-with-substitution-unique-pairs")
+    (write-line "finish collector in unify:collector-wrapper-with-substitution-unique-pairs")
     (for-each ; modified 
       (lambda (dict) 
         ;; same as the above.
@@ -239,7 +246,7 @@
     predicate?)
   )
 (var-cnt '(a b b b (?? w) ((?? w) a (b (?? w) c)) b b c))
-;; TODO Here I just use var-cnt to compare, this is not fine-grained for some cases.
+;; SKIPPED due to the book doesn't tell about the exact definition for "general": TODO Here I just use var-cnt to compare, this is not fine-grained for some cases.
 ;; IGNORE: Anyway this is not what this sub-problem tries to deal with.
 (define (general>=? subst1 subst2)
   (n:>= (var-cnt subst1) (var-cnt subst2))

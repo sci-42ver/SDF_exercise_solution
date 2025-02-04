@@ -14,7 +14,7 @@
 ;   )
 
 ;; https://stackoverflow.com/a/35530909/21294350
-;; TODO better to use filter for var-cnt
+;; SKIPPED due to the final effects are fine: TODO better to use filter for var-cnt
 ;; basic ideas: 
 ;; use one local list to collect filtered elem's in one flattened style
 ;; Then length.

@@ -39,6 +39,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; This is the programmer's interface to the unifier.
 
 (define (unify:internal pattern1 pattern2 dict succeed)
+  ; (write-line (list "unify:internal calls unify:dispatch" (list pattern1) (list pattern2)))
   ((unify:dispatch (list pattern1) (list pattern2))
    dict
    (lambda (dict fail rest1 rest2)
@@ -69,6 +70,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; Here we have 5 data:
 ;; 2 term lists, dict, succeed, fail.
 (define (unify:dispatch terms1 terms2)
+  ; (write-line (list "call unify:dispatch with" terms1 terms2))
   (assert (list? terms1))
   (assert (list? terms2))
   (define (unify-dispatcher dict succeed fail)
@@ -110,6 +112,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           (begin
             ; (write-line (list "constant-terms error for" first1 first2))
             (fail))))
+    ; (trace unify-constants)
     unify-constants))
 
 (define (constant-term? term)

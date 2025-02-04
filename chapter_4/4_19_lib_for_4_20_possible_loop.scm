@@ -129,6 +129,7 @@
   (match:new-bindings dict (sort (match:bindings dict) symbol<? car)))
 ;; unify-proc is to allow further extension
 (define (same-pair-for-solution? pair1 pair2 unify-proc)
+  (pp (list "call same-pair-for-solution? with" pair1 pair2 unify-proc))
   (let ((pair1-subst (substitution-in-pair pair1))
         (pair2-subst (substitution-in-pair pair2))
         (pair1-result (result-dict-in-pair pair1))
@@ -146,7 +147,7 @@
             (pair2-result* (sort-dict pair2-result))
             )
         (equal? pair1-result* pair2-result*))
-      (same-dict? pair1-result pair2-result)
+      ; (same-dict? pair1-result pair2-result)
       )
     )
   )
@@ -245,7 +246,7 @@
     predicate?)
   )
 (var-cnt '(a b b b (?? w) ((?? w) a (b (?? w) c)) b b c))
-;; TODO Here I just use var-cnt to compare, this is not fine-grained for some cases.
+;; SKIPPED (see SDF_exercises/chapter_4/4_19_lib_for_4_20.scm): TODO Here I just use var-cnt to compare, this is not fine-grained for some cases.
 ;; IGNORE: Anyway this is not what this sub-problem tries to deal with.
 (define (general>=? subst1 subst2)
   (n:>= (var-cnt subst1) (var-cnt subst2))
@@ -485,6 +486,7 @@
           )
       (cond 
         ((match:has-binding? var dict)
+        ;  (write-line (list maybe-grab-segment "update" var "with" (match:get-value var dict) "by dict" dict))
          ((unify:dispatch
             (append (match:get-value var dict)
                     (cdr var-first))
@@ -501,6 +503,7 @@
     (let ((var (car var-first)))
       ;; here possible-term-var-binding-list is just one tmp var, it should be cleared when necessary and with binding moved to dict.
       (let slp ((initial '()) (terms* terms) (possible-term-var-binding-list '()))
+        ; (trace slp)
         (assert (n:>= 1 (length possible-term-var-binding-list)))
         (define (continue)
           (if (null? terms*)
@@ -541,14 +544,15 @@
                       (let ((splitted-var (get-var-from-binding binding)))
                         ; (write-line (list "splitted-var var:" splitted-var var))
                         (if (equal? splitted-var var)
-                          ;; TODO I found this problem when using tests in 4.20
-                          ;; The problem is that this unify may return many possible dicts...
-                          ;; But here we only need 1
+                          ;; SKIPPED due to it is caused by "splitted-var" which may cause loop: TODO I found this problem when using tests in 4.20
+                          ;; The problem is that this unify may return many possible dicts (just as 4.19 shows)...
+                          ;; But here we only need one.
                           ;; 0. one solution: change continue so that we iterate through these dicts.
                           ;; 1. we just choose the most general (but I can't ensure there is only one. Maybe some are equally most general for some specific criterion but not for others.)
                           (begin
                             (write-line 
-                              (list 
+                              (list
+                                "during var-first terms" (list var-first ":" terms)
                                 "equal splitted-var var:" splitted-var var 
                                 "to get dicts** from" (get-substitution-from-binding binding) initial
                                 "with dict*" dict*
@@ -624,27 +628,80 @@
 
 ; (load "4_19_d_tests.scm")
 
-; (define unify:internal-display-wrapper 
-;   (let ((n 0))
-;     (lambda (pattern1 pattern2 dict succeed) 
-;       (write-line (list "4_19_d_tests test" (begin (set! n (n:+ n 1)) n)))
-;       ; (unify:internal pattern1 pattern2 dict succeed)
-;       ; (write-line "---")
-;       (pp 
-;         (let ((unify-proc substitution-instance?))
-;           (sort-and-remove-substitution-instance-for-pairs
-;             (unify:collector-wrapper-with-substitution-unique-pairs pattern1 pattern2 dict succeed unify-proc)
-;             unify-proc
-;             )
-;           ))
-;       (write-line "---")
-;       )
-;     )
-;   )
-;; TODO loop with new-continue modification
-; (unify:internal-display-wrapper '(((?? x) 3 (?? z) 3))
-;                 '((4 (?? y) (?? y)))
-;                 (match:new-dict)
-;                 (lambda (dict)
-;                   (pp (match:bindings dict))
-;                   #f))
+(define unify:internal-display-wrapper 
+  (let ((n 0))
+    (lambda (pattern1 pattern2 dict succeed) 
+      (write-line (list "4_19_d_tests test" (begin (set! n (n:+ n 1)) n)))
+      ; (unify:internal pattern1 pattern2 dict succeed)
+      ; (write-line "---")
+      (pp 
+        (let ((unify-proc substitution-instance?))
+          (sort-and-remove-substitution-instance-for-pairs
+            (unify:collector-wrapper-with-substitution-unique-pairs pattern1 pattern2 dict succeed unify-proc)
+            unify-proc
+            )
+          ))
+      (write-line "---")
+      )
+    )
+  )
+;; SKIPPED due to the relation with the above loop explanation: TODO loop with new-continue modification
+(write-line "4_19_lib_for_4_20_possible_loop test3")
+; (trace unify:gdispatch)
+
+; (trace unify:dispatch)
+; (trace unify:constant-terms)
+; (trace maybe-grab-segment)
+; (trace grab-segment)
+
+(trace same-pair-for-solution?)
+(trace substitution-instance?)
+(trace unify:internal)
+(unify:internal-display-wrapper '(((?? x) 3 (?? z) 3))
+                '((4 (?? y) (?? y)))
+                (match:new-dict)
+                (lambda (dict)
+                  (pp (match:bindings dict))
+                  #f))
+;; (?? y)->(3 z-internal:6-left)
+;; Then (3 z-internal:6-left)->(z-internal:5-right 3)
+; ((z-internal:6-left-internal:7-right (3) ???) 
+;  (z-internal:6-left ((??? z-internal:6-left-internal:8-left) 3) ???) 
+;  (z-internal:5-right (3 (??? z-internal:6-left-internal:8-left)) ???) 
+;  (z
+;   ((??? z-internal:6-left-internal:8-left)
+;    3
+;    3
+;    (??? z-internal:6-left-internal:8-left))
+;   ??)  
+;  (y (3 (??? z-internal:6-left-internal:8-left) 3) ??)
+;  (x (4) ??)) 
+
+;; "finish collector in unify:collector-wrapper-with-substitution-unique-pairs"
+;; ...
+; ("call same-pair-for-solution? with"
+;  (((4 (??? y-internal:26-left)
+;       3
+;       (?? z)
+;       3
+;       (??? y-internal:26-left)
+;       3
+;       (?? z)
+;       3))
+;   dict
+;   (y-internal:25-right (3 (?? z) 3) ???)
+;   (y ((??? y-internal:26-left) 3 (?? z) 3) ??)
+;   (x (4 (??? y-internal:26-left) 3 (?? z) 3 (??? y-internal:26-left)) ??))
+;  (((4 (?? z) 3 (?? z) 3)) dict
+;                           (y-internal:12-left ((?? z)) ???)
+;                           (y-internal:11-right (3) ???)
+;                           (y ((?? z) 3) ??)
+;                           (x (4 (?? z)) ??))
+;  #[compound-procedure substitution-instance?])
+;; ("unify:internal calls unify:dispatch" (((4 (??? y-internal:26-left) 3 (?? z) 3 (??? y-internal:26-left) 3 (?? z) 3))) (((4 (?? z) 3 (?? z) 3))))
+;; Then the same pattern as the above loop occurs.
+; ("during var-first terms" 
+;   (((?? z) 3 (?? z) 3) ":" (3 (?? z) 3 (??? y-internal:26-left) 3 (?? z) 3)) 
+;   "equal splitted-var var:" (?? z) (?? z) "to get dicts** from" 
+;   ((??? z-internal:30-left) (??? z-internal:29-right)) 
+;   (3 (??? z-internal:30-left)) "with dict*" (dict (z (3 (??? z-internal:30-left)) ??) (y-internal:26-left () ???))) 
