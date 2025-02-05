@@ -66,6 +66,10 @@
 (define checked_positions '())
 (define (unchecked place-node dict)
   (let ((board (chess-dict:board dict)))
+    ;; 0. We should not update captured-positions for each place-node
+    ;; since that is decided by board instead of place-node.
+    ;; 0.a. IGNORE: what's more, (get-target-pos board king-pos king-path)
+    ;; may call unchecked which then again calls (get-target-pos board king-pos king-path)...
     (let ((captured-positions
             (delete-duplicates
               (append-map

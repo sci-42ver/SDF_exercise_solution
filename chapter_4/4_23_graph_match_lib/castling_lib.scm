@@ -177,7 +177,7 @@
             (mul-simple-move board (list (new-from-to-pair king-pos king-to) (new-from-to-pair rook-pos rook-to)))
             (board 'next-turn)
             )
-          (error (list "invalid move for (king rook)" (list king-pos rook-pos))))
+          (error (list "invalid move for (king rook)" (list king-pos rook-pos) "with" king-to rook-to)))
         )
       )
     )

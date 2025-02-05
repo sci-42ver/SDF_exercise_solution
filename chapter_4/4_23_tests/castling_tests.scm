@@ -35,3 +35,7 @@
 (start-chess-game populate-sides*)
 
 (chess-move* '(4 0) '(0 0))
+(chess-move* '(3 0) '(0 0))
+; ("invalid move for (king rook)" ((3 0) (0 0)) "with" #f #f)
+(chess-move '(2 0) '(1 1))
+

@@ -185,6 +185,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  (lambda (object* dict*)
                    (match-* object* dict* succeed)))
         (succeed object dict)))
+  ; (trace match-*)
   match-*)
 
 ;; SDF_exercises TODO what does this comment mean?
@@ -200,6 +201,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     ;; which then returns #f like gmatch:var-matcher does.
     (match-first object dict
                  (lambda (object* dict*)
+                   (write-line (list "call match-rest" object* dict*))
                    (match-rest object* dict* succeed))))
   match-seq)
 
@@ -234,6 +236,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            ;; Update to the next node object.
            (match-target (object 'edge-value label)
                          dict succeed)))
+    ; (trace match-edge)
     match-edge))
 
 (define (gmatch:compile-target elt)

@@ -19,12 +19,16 @@
 (load "castling_lib.scm")
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 
+(define all-rook-moves-from-code-base all-rook-moves)
+(define all-king-moves-from-code-base all-king-moves)
+(define all-bishop-moves-from-code-base all-bishop-moves)
+
 (load "4_23.scm")
 ;; Just use SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-moves.scm
 ;; 0. all-bishop-moves
 
-(define simple-rook-moves all-rook-moves)
-(define simple-king-moves all-king-moves)
+(define simple-rook-moves all-rook-moves-from-code-base)
+(define simple-king-moves all-king-moves-from-code-base)
 (define all-king-moves
   (append castling-king-moves simple-king-moves)
   )
@@ -40,7 +44,7 @@
     all-pawn-moves
     all-rook-moves
     all-knight-moves
-    all-bishop-moves
+    all-bishop-moves-from-code-base
     all-queen-moves
     all-king-moves
     ))
