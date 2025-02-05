@@ -20,7 +20,18 @@
           (let ((res
                     (and dict
                       ;; We don't need capture necessarily.
-                      (address= to (board 'address-of (match:get-value 'target-node dict)))
+                      (or
+                        (address= to (board 'address-of (match:get-value 'target-node dict)))
+                        (and
+                          (match:has-binding? 'intermediate-possible-nodes dict)
+                          (member 
+                            to
+                            (map 
+                              (lambda (node) (board 'address-of node))
+                              (match:get-value 'intermediate-possible-nodes dict)
+                              )
+                            ))
+                        )
                       )   
                   ))
             ;; for debug infos

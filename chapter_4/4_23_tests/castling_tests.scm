@@ -38,4 +38,40 @@
 (chess-move* '(3 0) '(0 0))
 ; ("invalid move for (king rook)" ((3 0) (0 0)) "with" #f #f)
 (chess-move '(2 0) '(1 1))
-
+;; 0. the 3rd doesn't have northwest edge, so succeed of matcher and match-* both returns #f.
+;; 1. the 2nd returns #f for matcher as the 3rd implies.
+;; Then (succeed object dict) will call match-rest which binds target-node 
+;; (gmatch:compile-edge->gmatch:compile-target->gmatch:compile-var->gmatch:var-matcher->(succeed object dict*)).
+;; 1.a. succeed is only offered by graph-match, match-*, match-seq, gmatch:and.
+;; Here we have finished match-* and at the end of match-seq, so we call succeed by graph-match, i.e. return dict.
+; [Entering #[compound-procedure match-*]
+;     Args: #[graph-node "5,7"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [Entering #[compound-procedure match-*]
+;     Args: #[graph-node "6,6"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [Entering #[compound-procedure match-*]
+;     Args: #[graph-node "7,5"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [#f
+;       <== #[compound-procedure match-*]
+;     Args: #[graph-node "7,5"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [(dict (target-node #[graph-node "7,5"] ?) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;       <== #[compound-procedure match-*]
+;     Args: #[graph-node "6,6"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [(dict (target-node #[graph-node "7,5"] ?) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;       <== #[compound-procedure match-*]
+;     Args: #[graph-node "5,7"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+;; Here "7,5" is at southeast (rotate-180-view of northwest) of "5,7".
+; (((? source-node #[compound-procedure 25]) (* northwest (?* #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) 
+;   "returns" #f "with dict" 
+;   (dict (target-node #[graph-node "7,5"] ?) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?)))

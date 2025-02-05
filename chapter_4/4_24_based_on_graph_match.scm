@@ -3,6 +3,8 @@
 (manage 'new 'pattern-matching-on-graphs)
 
 (load "4_23_graph_match_lib/simple_move_orig_save.scm")
+
+(load "4_24_moves_with_intermediate_nodes_lib.scm")
 (load "4_24_based_on_graph_match_lib.scm")
 
 (define (simple-move board from to)
@@ -41,21 +43,46 @@
 (chess-move-orig '(4 1) '(4 3))
 (chess-move-orig '(3 1) '(3 3))
 
+;;; correspond to similar to (assert (check-move-for-type 'queen '(0 0) '(1 1)))
 ;; succeed
-; (let ((from '(3 0)))
-;   (chess-move from (address-sum '(1 1) from)))
+(let ((from '(3 0)))
+  (chess-move from (address-sum '(1 1) from)))
+; (((? source-node #[compound-procedure 18]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) 
+;   "returns" ((4 1) (5 2) (6 3)) "with dict" 
+;   (dict (target-node #[graph-node "7,4"] ?) 
+;     (intermediate-possible-nodes (#[graph-node "6,3"] #[graph-node "5,2"] #[graph-node "4,1"]) ?*) 
+;     (source-node #[graph-node "3,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 16] ?)))
 ;; (assert (check-move-for-type 'queen '(3 4) '(5 4)))
 ;; is similar
 
+;;; correspond to (assert-not (check-move-for-type 'queen '(3 4) '(5 5)))
+;; prepare for the possible queen move
+(chess-move-orig '(5 1) '(5 3))
+(chess-move-orig '(5 1) '(5 3))
 ;; fail due to no valid path
-; (chess-move '(3 0) '(5 1))
+(chess-move '(4 0) '(6 1))
+;; for black, this is from (3 7) to (1 6)
+;; the closest is (1 5)
+; (((? source-node #[compound-procedure 18]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) 
+;   "returns" #f "with dict" 
+;   (dict (target-node #[graph-node "0,4"] ?) 
+;     (intermediate-possible-nodes (#[graph-node "1,5"] #[graph-node "2,6"]) ?*) 
+;     (source-node #[graph-node "3,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 27] ?)))
 ;; res
-; ("invalid move" (queen white) (3 0) (5 1))
+; ("invalid move" (queen black) (4 0) (6 1))
+;; correct
+; (chess-move '(4 0) '(6 2))
 
 ;; fail due to maybe-opponent
 ; (chess-move '(1 0) '(3 1))
-;; succeed
+;; to prepare for "white move"
+(chess-move-orig '(0 1) '(0 3))
+;; white move
+;; succeed (both white and black are fine due to knight pos's are same for them.)
 (chess-move '(1 0) '(2 2))
+
+;; to prepare for black-move test
+; (chess-move-orig '(0 1) '(0 3))
 
 ;;; black-move test
 ;; fail due to no valid path
