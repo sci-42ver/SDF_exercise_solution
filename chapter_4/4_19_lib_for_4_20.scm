@@ -114,7 +114,8 @@
 (load "4_19_rename_dict_lib.scm")
 (define (sort-dict dict)
   (match:new-bindings dict (sort (match:bindings dict) symbol<? car)))
-;; unify-proc is to allow further extension
+;; 0. unify-proc is to allow further extension
+;; 1. If pair2 is same as pair1, then 
 (define (same-pair-for-solution? pair1 pair2 unify-proc)
   ; (pp (list "call same-pair-for-solution? with" pair1 pair2 unify-proc))
   (let ((pair1-subst (substitution-in-pair pair1))
@@ -126,8 +127,17 @@
       ;; substitution match
       (equal? pair1-subst pair2-subst)
       ;; > uniformly renaming variables
-      ;; unify will ensure constant terms are correspondingly same.
+      ;; 0. unify will ensure constant terms are correspondingly same.
       ;; And var's bindings implies "uniformly renaming" where uniform is implied by that we check unify consistency after substitution with binding value.
+      ;; 0.a. Actually unification is more general than renaming.
+      ;; So it can avoid duplication *further*.
+      ;; 1. So no problem for "1." in "same-dict? test1"
+      ;; 1.a. problem 0 can be avoided by sort in sort-and-remove-substitution-instance-for-pairs
+      ;; But we needs 2 var-cnt's to sort (?? x) before (? x).
+      ;; This can be done similarly.
+      ;; 1.a.0. Actually this is already done in substitution-instance?.
+      ;; See "general>=? test".
+      ;; So (... (?? x) ...) can contain the case (... (? x) ...), but not vice versa.
       (unify-proc pair1-subst pair2-subst)
       ;; dict match
       (let ((pair1-result* (sort-dict pair1-result))
@@ -228,6 +238,7 @@
 ; (pairs ((a b b b b b b c) dict (w () ??) (y () ??) (x (b b b) ??)))
 
 ;;; c.
+(write-line "begin 4.19 c")
 ;; > If any result in the collection is a substitution instance of
 ;; > another result, it is not a most general common specialization of
 ;; > the two inputs.
@@ -237,6 +248,10 @@
 (load "4_19_tree_lib.scm")
 (define (var-cnt pattern)
   (elem-cnt pattern match:var?))
+(define (element-var-cnt pattern)
+  (elem-cnt pattern match:element-var?))
+(define (segment-var-cnt pattern)
+  (elem-cnt pattern match:segment-var?))
 (define (elem-cnt tree predicate?)
   (tree-fold* 
     (lambda (elm res) (declare (ignore elm)) (+ 0 res)) 
@@ -245,12 +260,29 @@
     tree
     predicate?)
   )
-(var-cnt '(a b b b (?? w) ((?? w) a (b (?? w) c)) b b c))
+(assert (n:= 3 (var-cnt '(a b b b (?? w) ((?? w) a (b (?? w) c)) b b c))))
 ;; SKIPPED due to the book doesn't tell about the exact definition for "general": TODO Here I just use var-cnt to compare, this is not fine-grained for some cases.
 ;; IGNORE: Anyway this is not what this sub-problem tries to deal with.
+;; Actually, as the above says, (a (?? x) (? y) z) with (a (? x) (?? y) z) can't be easily compared about generality.
 (define (general>=? subst1 subst2)
-  (n:>= (var-cnt subst1) (var-cnt subst2))
+  ;; will = if both have the same number of the same types of var's.
+  (let ((seg1 (segment-var-cnt subst1)) (seg2 (segment-var-cnt subst2)))
+    (cond 
+      ((n:> seg1 seg2) #t)
+      ((n:= seg1 seg2) 
+        (let ((elem1 (element-var-cnt subst1)) (elem2 (element-var-cnt subst2)))
+          (cond 
+            ((n:> elem1 elem2) #t)
+            ((n:= elem1 elem2) 
+              (n:>= (var-cnt subst1) (var-cnt subst2))
+              )
+            ((n:< elem1 elem2) #f)))
+        )
+      ((n:< seg1 seg2) #f)))
   )
+;; general>=? test
+(assert (general>=? '(a b b b (?? w) b b b c) '(a b b b (? w) b b b c)))
+(assert (not (general>=? '(a b b b (? w) b b b c) '(a b b b (?? w) b b b c))))
 ;; check whether pair2 is substitution-instance of pair1.
 ; (define (substitution-instance? pair1 pair2)
 ;   (let ((pair1-subst (substitution-in-pair pair1))
@@ -270,6 +302,7 @@
   )
 ; (trace substitution-instance?)
 ; (trace general>=?)
+(write-line "(main-test substitution-instance?)")
 (pp (main-test substitution-instance?))
 ;; Compared with (main-test unify), won't remove the more general (a b b b (?? y) b b b c) part.
 ; (pairs 

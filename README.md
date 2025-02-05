@@ -1,3 +1,8 @@
+https://dspace.mit.edu/bitstream/handle/1721.1/44215/MIT-CSAIL-TR-2009-002.pdf and https://www.infoq.com/presentations/We-Really-Dont-Know-How-To-Compute/#downloadPdf/ both contains Multidirectional Constraints (p16 and p23). That is also shown in SICP 3.3.5 https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-22.html#%_sec_3.3.5. If so, then `x = y ++ x` is *already* one constraint.
+
+For the quick reference, 1. The 3rd to last comment there: Sussman's insistence on keeping Scheme syntax ... . 2. The 2nd to last comments: but if we write it with syntax ... .
+
+:57884231 Fine. 1. types in Prolog https://www.javatpoint.com/types-of-prolog 2. Anyway unification ideas are same for both Prolog https://www.dai.ed.ac.uk/groups/ssp/bookpages/quickprolog/node12.html and Scheme.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure

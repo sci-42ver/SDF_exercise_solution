@@ -2,5 +2,5 @@
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'unification)
 
-; (load "4_19_lib_for_4_20.scm")
-(load "4_19_lib_for_4_20_possible_loop.scm")
+(load "4_19_lib_for_4_20.scm")
+; (load "4_19_lib_for_4_20_possible_loop.scm")
