@@ -185,7 +185,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  (lambda (object* dict*)
                    (match-* object* dict* succeed)))
         (succeed object dict)))
-  (trace match-*)
+  ; (trace match-*)
   match-*)
 
 ;; SDF_exercises TODO what does this comment mean?
