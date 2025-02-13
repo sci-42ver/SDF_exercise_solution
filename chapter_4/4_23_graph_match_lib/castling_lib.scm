@@ -3,7 +3,8 @@
 ;; occupied-by-and-initial, 
 (load "./initial_piece_lib.scm")
 
-;; bottom-right piece depends on color.
+;; 0. bottom-right piece depends on color.
+;; 1. br means bottom-right.
 (define (rook-initial board addr)
   (let ((piece (board 'piece-at addr)))
     (and
@@ -19,16 +20,16 @@
 
 ;; occupied-by-and-initial-and-bl-rook-initial similar
 (define (occupied-by-and-initial-and-br-rook-initial type)
-  (lambda (place-node dict) 
+  (lambda (place-node-expected-to-be-king dict) 
     (and 
-      ((occupied-by-and-initial type) place-node dict)
+      ((occupied-by-and-initial type) place-node-expected-to-be-king dict)
       (br-rook-initial (chess-dict:board dict))
       )))
 ;; similarly
 (define (occupied-by-and-initial-and-bl-rook-initial type)
-  (lambda (place-node dict) 
+  (lambda (place-node-expected-to-be-king dict) 
     (and 
-      ((occupied-by-and-initial type) place-node dict)
+      ((occupied-by-and-initial type) place-node-expected-to-be-king dict)
       (bl-rook-initial (chess-dict:board dict))
       )))
 
@@ -83,6 +84,7 @@
               white?
               black?)
             ))
+      ; (write-line (list "occupied-by-and-initial-and-king-castling-with_bl-and-bl:" type place-node dict ((occupied-by-and-initial type) place-node dict)))
       (and 
         ((occupied-by-and-initial type) place-node dict)
         ;; ensure we moved the same color as the current.
@@ -132,18 +134,20 @@
       (n:= (address-y diff) 0)  
       )
     ))
-(define (pos-left-in-board? board pos1 pos2)
-  (if (board 'white-move?)
-    (pos-left? pos1 pos2)
-    (pos-left? (invert-address pos1) (invert-address pos2)))
+(define (pos-left-in-the-board-of-this-turn? board pos1 pos2)
+  ; (if (board 'white-move?)
+  ;   (pos-left? pos1 pos2)
+  ;   (pos-left? (invert-address pos1) (invert-address pos2)))
+  ;; invert-address will be manipulated by node-at.
+  (pos-left? pos1 pos2)
   )
 
-(load "simple_move_mod.scm")
+(load "combination/simple_move_mod.scm")
 (define (castling-move board king-pos rook-pos)
   ;; 0. based on SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm
   ;; 1. similar to check-move-for-type
   (let ((whether-white-move (board 'white-move?))
-        (whether-rook-left-pos (pos-left-in-board? board rook-pos king-pos)))
+        (whether-rook-left-pos (pos-left-in-the-board-of-this-turn? board rook-pos king-pos)))
     (let ((king-path
             (if whether-rook-left-pos
               (get-bl-castling-king-move castling-king-moves)
@@ -159,8 +163,11 @@
                 (get-black-br castling-rook-moves)))
             )
           )
-      (let ((king-to (get-target-pos board king-pos king-path))
-            (rook-to (get-target-pos board rook-pos rook-path)))
+      ; (trace get-target-pos)
+      (write-line (list "castling-move" king-pos rook-pos king-path rook-path))
+      (let ((king-to (get-target-pos board king-pos king-path #f))
+            (rook-to (get-target-pos board rook-pos rook-path #f)))
+        ; (untrace get-target-pos)
         (if (and king-to rook-to)
           (begin
             ;; 0. see simple-move in SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm

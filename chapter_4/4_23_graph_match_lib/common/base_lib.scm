@@ -3,10 +3,11 @@
 (define (occupied-by-and-initial type)
   (lambda (place-node dict) 
     (let ((piece (piece-in place-node dict)))
+      ; (write-line (list "occupied-by-and-initial" type place-node piece))
       (and piece
-           (eq? type (piece-type piece)))
+           (eq? type (piece-type piece))
            ;; added
-           (piece-initial-mark piece)
+           (piece-initial-mark piece))
            ))
   )
 

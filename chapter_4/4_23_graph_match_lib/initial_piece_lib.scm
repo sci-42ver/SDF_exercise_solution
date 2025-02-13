@@ -75,13 +75,17 @@
 
 ;; update helpers
 (define (untick-piece-initial-mark piece)
-  (if (piece-initial-mark piece) 
-    piece
+  (if (piece-initial-mark piece)
+    ;; I didn't check through the code base whether piece is used with eq?.
+    ;; IMHO it just uses internal info's. If so, it is fine to always create one *new* piece. Otherwise we should not do that. 
+    ;; Anyway, code base change-piece-type implies it is fine to "create one *new* piece".
     (make-piece 
       (piece-type piece)  
       (piece-color piece) 
       #f
-      (piece-advance-two-initially-just-now piece))))
+      (piece-advance-two-initially-just-now piece))
+    piece
+    ))
 
 ;; 0. all moves are done by simple-move
 ;; so update initial-mark here when necessary.

@@ -16,7 +16,10 @@
     (define (add-piece col row type)
       ;; see SDF_exercises/chapter_4/4_23_graph_match_lib/initial_piece_lib.scm
       ((board 'node-at (make-address col row))
-       'connect! 0 (make-piece type color #t #f)))
+       'connect! 0 (make-piece type color #t #f))
+      ;; added
+      (set! piece_positions (cons (make-address col row) piece_positions))
+      )
 
     (do-column 0 'rook)
     ; (do-column 1 'knight)
@@ -37,8 +40,12 @@
 (chess-move* '(4 0) '(0 0))
 (chess-move* '(3 0) '(0 0))
 ; ("invalid move for (king rook)" ((3 0) (0 0)) "with" #f #f)
+;; both can't meet "unoccupied" pred.
+; (pp (list all-bishop-moves-from-code-base all-moves))
+; (trace check-move-for-type)
+; (trace %simple-move)
 (chess-move '(2 0) '(1 1))
-;; 0. the 3rd doesn't have northwest edge, so succeed of matcher and match-* both returns #f.
+;; 0. the 3rd match-* call doesn't have northwest edge, so succeed of matcher and match-* both returns #f.
 ;; 1. the 2nd returns #f for matcher as the 3rd implies.
 ;; Then (succeed object dict) will call match-rest which binds target-node 
 ;; (gmatch:compile-edge->gmatch:compile-target->gmatch:compile-var->gmatch:var-matcher->(succeed object dict*)).
@@ -75,3 +82,12 @@
 ; (((? source-node #[compound-procedure 25]) (* northwest (?* #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) 
 ;   "returns" #f "with dict" 
 ;   (dict (target-node #[graph-node "7,5"] ?) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?)))
+
+(the-board 'piece-at '(6 6))
+;; prepare for checking of king initial.
+; (trace occupied-by-and-initial)
+(chess-move '(2 0) '(2 1)) ; white move
+(the-board 'piece-at '(6 6))
+; (trace invert-address)
+(chess-move* '(3 0) '(0 0)) ; black
+

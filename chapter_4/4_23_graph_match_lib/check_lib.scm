@@ -23,8 +23,8 @@
     ((queen) all-queen-moves)
     ((king) simple-king-moves)
     ))
-(define (capture?* board from path)
-  (let* ((my-piece (get-piece-to-move board from))
+(define (capture?* board from path allow-any-color)
+  (let* ((my-piece ((if allow-any-color get-any-piece-to-move get-piece-to-move) board from))
          (dict
           (graph-match path
                        ;; > used by some pattern restrictions that need to interrogate the board.
@@ -43,11 +43,55 @@
                     ; ,captured
                     ,(board 'address-of target))))))
 (define get-capture-res-addr caddr)
-(define (get-target-pos board from path)
-  (let ((res (capture?* board from path)))
+(define (get-any-piece-to-move board from)
+  (let ((my-piece (board 'piece-at from)))
+    (if (not my-piece)
+        (error "No piece in this square:" from))
+    ; (if (not (eq? (board 'color) (piece-color my-piece)))
+    ;     (error "Can move only one's own pieces:" my-piece from))
+    my-piece))
+(define (get-target-pos board from path allow-any-color)
+  (let ((res (capture?* board from path allow-any-color)))
     (and 
       res
       (get-capture-res-addr res)
+      )))
+
+;; similar to the above
+(define (general-capture? board from path allow-any-color)
+  (let* ((my-piece ((if allow-any-color get-any-piece-to-move get-piece-to-move) board from))
+         (dict
+          (graph-match path
+                       ;; > used by some pattern restrictions that need to interrogate the board.
+                       ;; Used by `unoccupied` etc.
+                       (match:extend-dict chess-board:var
+                                          board
+                                          (match:new-dict))
+                       (board 'node-at from))))
+    (and dict
+         (let* ((target (match:get-value 'target-node dict))
+                ;; we don't need one captured piece to move to there.
+                ; (captured (board 'piece-in target))
+                (intermediate-possible-nodes
+                  (and (match:has-binding? 'intermediate-possible-nodes dict)
+                    (match:get-value 'intermediate-possible-nodes dict)))
+                )
+            (and intermediate-possible-nodes (assert (not (memq target intermediate-possible-nodes))))
+           ;; modified
+           `(capture ,my-piece
+                    ; ,captured
+                    ,(cons 
+                      (board 'address-of target)
+                      (if intermediate-possible-nodes
+                        (map (lambda (node) (board 'address-of node)) intermediate-possible-nodes)
+                        '())
+                      ))))))
+(define get-general-capture-res-addr get-capture-res-addr)
+(define (get-intermediate-and-target-positions board from path allow-any-color)
+  (let ((res (general-capture? board from path allow-any-color)))
+    (and 
+      res
+      (get-general-capture-res-addr res)
       )))
 
 ;; 0. we get place-node address
@@ -64,24 +108,41 @@
 ;; Then no dict at all...
 ;; So just use 2 global vars.
 (define checked_positions '())
+;; based on turn color
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
+(load "common/board_lib.scm")
+(define (keep-only-opponents board positions)
+  (remove (lambda (pos) (my-piece? board pos)) positions))
 (define (unchecked place-node dict)
-  (let ((board (chess-dict:board dict)))
+  (let* ((board (chess-dict:board dict))
+        ;  (my-piece (board 'piece-in place-node))
+         )
     ;; 0. We should not update captured-positions for each place-node
     ;; since that is decided by board instead of place-node.
     ;; 0.a. IGNORE: what's more, (get-target-pos board king-pos king-path)
-    ;; may call unchecked which then again calls (get-target-pos board king-pos king-path)...
-    (let ((captured-positions
+    ;; may call unchecked which then again calls (get-intermediate-and-target-positions board king-pos king-path) here...
+    (let* ((opponent-positions
+            (keep-only-opponents 
+              board
+              (map 
+                (lambda (addr) (board-address* board addr)) 
+                piece_positions))
+            )
+          (captured-positions
             (delete-duplicates
               (append-map
                 (lambda (addr)
-                  (filter-map
-                    (lambda (path)
-                      (get-target-pos board addr path)
-                      )
-                    (get-capture-moves (piece-type (board 'piece-at addr)))
-                    )
+                  (apply append
+                    (filter-map
+                      (lambda (path)
+                        (get-intermediate-and-target-positions board addr path #t)
+                        )
+                      (get-capture-moves (piece-type (board 'piece-at addr)))
+                      ))
                   )
-                piece_positions
+                ;; Since piece_positions is default be based on white.
+                ;; So we need to cater to the board color used in piece-at.
+                opponent-positions
                 )
               ;; all are got by address-of which may call invert-address->make-address->list.
               ;; so default to use equal?.
@@ -90,6 +151,14 @@
             ))
       ;; Here we can also directly check the equality between nodes.
       ;; For debug, we generate position.
+      ; (write-line 
+      ;   (list 
+      ;     "captured-positions:" captured-positions 
+      ;     "with board color:" (board 'color)
+      ;     "opponent-positions:" opponent-positions
+      ;     "piece_positions:" piece_positions
+      ;     "place-node:" place-node
+      ;     ))
       (not 
         (any 
           (lambda (addr)
@@ -130,7 +199,9 @@
 ;; based on SDF_exercises/chapter_4/4_23_graph_match_lib/en_passant_lib.scm
 (cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
 (load "en_passant_lib.scm")
-;; since it needs to check what piece is captured.
+;; 0. since it needs to check what piece is captured.
+;; TODO I forgot why I wrote the above line. Maybe it meant for is-en-passant-move.
+;; 1. See SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm for correction about piece_positions.
 (define (simple-move board from to)
   (let* ((my-piece (get-piece-to-move board from))
          ;; changed

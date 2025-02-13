@@ -12,11 +12,18 @@
 ;   (cddr (map ->namestring (directory-read "./4_23_graph_match_lib/"))))
 (cd "./4_23_graph_match_lib")
 (load "promotion_lib.scm")
-;; load initial_piece_lib.scm->common/base_lib.scm
-(load "simple_move_mod.scm")
+;; 0. load initial_piece_lib.scm->common/base_lib.scm
+(load "combination/simple_move_mod.scm")
+;; 1. IGNORE: SDF_exercises/chapter_4/4_24_based_on_graph_match_lib.scm will change all-bishop-moves etc with SDF_exercises/chapter_4/4_24_moves_with_intermediate_nodes_lib.scm.
+;; Only 3 locations have "define all-bishop-moves" by grep.
+(load "4_24_moves_with_intermediate_nodes_lib.scm")
+; (pp all-bishop-moves)
 ;; load common/board_lib.scm
 (cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib")
+;; will load check_lib.scm which will define populate-sides etc
 (load "castling_lib.scm")
+(cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib")
+(load "combination/populate-sides.scm")
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 
 (define all-rook-moves-from-code-base all-rook-moves)

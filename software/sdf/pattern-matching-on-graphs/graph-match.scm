@@ -274,6 +274,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (gmatch:var-matcher var-type var-name restriction)
   (define (match-var object dict succeed)
+    ; (and (not (restriction object dict))
+    ;   (write-line (list "(restriction object dict)" restriction object var-type var-name (restriction object dict))))
     (and (or (not restriction)
              (restriction object dict))
          (if var-name
