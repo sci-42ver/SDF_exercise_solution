@@ -72,10 +72,19 @@
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
 (load "common/board_lib.scm")
+;; called by 
+;; occupied-by-and-initial-and-king-castling-with_bl-and-bl => 
+;; occupied-by-and-initial-and-black-and-king-castling-with_bl-and-bl =>
+;; black-castling-rook-moves =>
+;; castling-rook-moves =>
+;; castling-move
+;; So all addr's are all based on board view (see (get-target-pos board rook-pos rook-path #f)->...->(board 'node-at from)). 
+;; So fine to use 'address-of here.
 (define (bl? node board)
   (address= (make-address 0 0) (board 'address-of node)))
 (define (br? node board)
   (address= (make-address 7 0) (board 'address-of node)))
+;; See castling-move where we must move 2 pieces simultaneously, so no need to recheck king-castling-with_bl etc.
 (define (occupied-by-and-initial-and-king-castling-with_bl-and-bl type color)
   (lambda (place-node dict) 
     (let ((board (chess-dict:board dict))
@@ -88,9 +97,9 @@
       (and 
         ((occupied-by-and-initial type) place-node dict)
         ;; ensure we moved the same color as the current.
-        (eq? (board 'color) color)
+        ; (eq? (board 'color) color) ; duplicate of the next logical expression.
         (pred board)
-        (king-castling-with_bl board)
+        ; (king-castling-with_bl board)
         (bl? place-node board)
         )
       )
@@ -107,7 +116,7 @@
       (and 
         ((occupied-by-and-initial type) place-node dict)
         ;; ensure we moved the same color as the current.
-        (eq? (board 'color) color)
+        ; (eq? (board 'color) color)
         (pred board)
         (king-castling-with_br board)
         (br? place-node board)

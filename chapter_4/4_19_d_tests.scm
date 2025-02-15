@@ -84,21 +84,8 @@
 
 ;;; test5
 ;; ensure the added term binding in dict** can be got appropriately, i.e. that done by check-car-term-binding.
-(define (trace-wrapper thunk . trace-procs)
-  (for-each
-    (lambda (proc)
-      (trace proc)
-      )
-    trace-procs
-    )
-  (thunk)
-  (for-each
-    (lambda (proc)
-      (untrace proc)
-      )
-    trace-procs
-    )
-  )
+(cd "~/SICP_SDF/SDF_exercises/chapter_4")
+(load "test_lib.scm")
 (trace-wrapper
   (lambda ()
     (unify:internal-display-wrapper '(((?? x) 3 (?? z) 3))

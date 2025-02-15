@@ -54,6 +54,7 @@
 (unifier '((?? x) 3) '(4 (?? y)))
 
 ;;; from SICP_SDF/SDF_exercises/software/sdf/unification/gjs-test.scm
+(cd "~/SICP_SDF/SDF_exercises/chapter_4")
 (load "../software/sdf/unification/unify-testing.scm")
 (load "../software/sdf/design-of-the-matcher/matcher.scm")
 ;; IGNORE: Emm... I won't dig into unify-test. Anyway it just unify ((?? x)) with ((?? y) (?? x)) and expects something.

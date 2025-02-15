@@ -145,6 +145,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
    (piece-in (match:get-value 'source-node dict) dict)))
 
 (define (unoccupied place-node dict)
+  ; (write-line (list "unoccupied returns" (not (piece-in place-node dict)) "for" place-node))
   (not (piece-in place-node dict)))
 
 (define (piece-in place-node dict)

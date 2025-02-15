@@ -121,7 +121,7 @@
 ;;; d. 
 ;; > The king and rook involved in castling must not have previously moved;
 ;; > The castling rook must be on the same rank as the king
-;; similar to b.
+;; similar to b and "the same rank" can be implied by color if both are initial.
 ;; > There must be no pieces between the king and the rook;
 ;; use unoccupied
 ;; > The king may not currently be under attack, nor may the king pass through or end up in a square that is under attack by an enemy piece

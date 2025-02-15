@@ -3,7 +3,7 @@
 (define (occupied-by-and-initial type)
   (lambda (place-node dict) 
     (let ((piece (piece-in place-node dict)))
-      ; (write-line (list "occupied-by-and-initial" type place-node piece))
+      (write-line (list "occupied-by-and-initial" type place-node piece (piece-initial-mark piece)))
       (and piece
            (eq? type (piece-type piece))
            ;; added

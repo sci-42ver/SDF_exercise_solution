@@ -249,6 +249,7 @@
     (board 'next-turn)))
 
 (define (unoccupied-and-unchecked place-node dict)
+  (write-line (list "unoccupied-and-unchecked" place-node (unoccupied place-node dict) (unchecked place-node dict)))
   (and 
     (unoccupied place-node dict)
     (unchecked place-node dict)

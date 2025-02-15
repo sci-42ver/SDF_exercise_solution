@@ -1,0 +1,1735 @@
+MIT/GNU Scheme running under GNU/Linux
+Type `^C' (control-C) followed by `H' to obtain information about interrupts.
+
+Copyright (C) 2022 Massachusetts Institute of Technology
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Image saved on Friday January 6, 2023 at 10:11:41 PM
+  Release 12.1 || SF || LIAR/x86-64
+
+1 ]=> (cd "~/SICP_SDF/SDF_exercises/chapter_4")
+;Value: #[pathname 12 "/home/czg_arch/SICP_SDF/SDF_exercises/chapter_4/"]
+
+1 ]=> (load "../software/sdf/manager/load.scm")
+;Loading "../software/sdf/manager/load.scm"...
+;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/utils.scm"... done
+;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/filespec.scm"... done
+;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/env-model.scm"... done
+;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/simple-analyzer.scm"... done
+;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/analyze-sections.scm"... done
+;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/software-manager.scm"... done
+;... done
+;Value: manage
+
+1 ]=> (manage 'new 'pattern-matching-on-graphs)
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/overrides.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/utils.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/indexes.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/collections.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/memoizers.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicates.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicate-metadata.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/applicability.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/generic-procedures.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/pretty-printer.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/operators.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/operations.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/package.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicate-counter.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/simple-tests.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/trie.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/pattern-matching-on-graphs/graph.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/pattern-matching-on-graphs/lists.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/match-utils.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/design-of-the-matcher/matcher.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/design-of-the-matcher/general.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/term-rewriting/rule-implementation.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/term-rewriting/rules.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/term-rewriting/pattern-operator.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/pattern-matching-on-graphs/graph-match.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-board.scm"... done
+;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/pattern-matching-on-graphs/chess-moves.scm"... done
+;Value: pattern-matching-on-graphs
+
+1 ]=> (load "4_23_lib_corrected.scm")
+;Loading "4_23_lib_corrected.scm"...
+;  Loading "promotion_lib.scm"...
+;    Loading "common/base_lib.scm"... done
+;  ... done
+;  Loading "combination/simple_move_mod.scm"...
+;    Loading "check_lib.scm"...
+;      Loading "common/board_lib.scm"... done
+;      Loading "en_passant_lib.scm"...
+;        Loading "4_23_graph_match_lib/common/base_lib.scm"... done
+;        Loading "./4_23_graph_match_lib/initial_piece_lib.scm"...
+;          Loading "common/base_lib.scm"... done
+;          Loading "common/board_lib.scm"... done
+;          Loading "../graph_match_lib/addr_lib.scm"... done
+;        ... done
+;        Loading "pred_lib.scm"... done
+;      ... done
+;    ... done
+;    Loading "simple_move_orig_save.scm"... done
+;    Loading "../4_24_based_on_graph_match_lib.scm"...
+;      Loading "pred_lib.scm"... done
+;    ... done
+;    Loading "common/board_lib.scm"... done
+;    Loading "pred_lib.scm"... done
+;  ... done
+;  Loading "4_24_moves_with_intermediate_nodes_lib.scm"... done
+;  Loading "castling_lib.scm"...
+;    Loading "./initial_piece_lib.scm"...
+;      Loading "common/base_lib.scm"... done
+;      Loading "common/board_lib.scm"... done
+;      Loading "../graph_match_lib/addr_lib.scm"... done
+;    ... done
+;    Loading "check_lib.scm"...
+;      Loading "common/board_lib.scm"... done
+;      Loading "en_passant_lib.scm"...
+;        Loading "4_23_graph_match_lib/common/base_lib.scm"... done
+;        Loading "./4_23_graph_match_lib/initial_piece_lib.scm"...
+;          Loading "common/base_lib.scm"... done
+;          Loading "common/board_lib.scm"... done
+;          Loading "../graph_match_lib/addr_lib.scm"... done
+;        ... done
+;        Loading "pred_lib.scm"... done
+;      ... done
+;    ... done
+;    Loading "common/board_lib.scm"... done
+;    Loading "../graph_match_lib/addr_lib.scm"... done
+;    Loading "combination/simple_move_mod.scm"...
+;      Loading "check_lib.scm"...
+;        Loading "common/board_lib.scm"... done
+;        Loading "en_passant_lib.scm"...
+;          Loading "4_23_graph_match_lib/common/base_lib.scm"... done
+;          Loading "./4_23_graph_match_lib/initial_piece_lib.scm"...
+;            Loading "common/base_lib.scm"... done
+;            Loading "common/board_lib.scm"... done
+;            Loading "../graph_match_lib/addr_lib.scm"... done
+;          ... done
+;          Loading "pred_lib.scm"... done
+;        ... done
+;      ... done
+;      Loading "simple_move_orig_save.scm"... done
+;      Loading "../4_24_based_on_graph_match_lib.scm"...
+;        Loading "pred_lib.scm"... done
+;      ... done
+;      Loading "common/board_lib.scm"... done
+;      Loading "pred_lib.scm"... done
+;    ... done
+;    Loading "pred_lib.scm"... done
+;  ... done
+;  Loading "combination/populate-sides.scm"... done
+;  Loading "4_23.scm"...
+;    Loading "base_lib.scm"... done
+;  ... done
+;... done
+;Value: all-moves
+
+1 ]=> (define (populate-sides* board)
+
+  (define (populate-side color home-row pawn-row)
+
+    (define (do-column col type)
+      (add-piece col home-row type)
+      ; (add-piece col pawn-row 'pawn)
+      )
+
+    (define (add-piece col row type)
+      ;; see SDF_exercises/chapter_4/4_23_graph_match_lib/initial_piece_lib.scm
+      ((board 'node-at (make-address col row))
+       'connect! 0 (make-piece type color #t #f))
+      ;; added
+      (set! piece_positions (cons (make-address col row) piece_positions))
+      )
+
+    (do-column 0 'rook)
+    ; (do-column 1 'knight)
+    ; (do-column 2 'bishop)
+    ; (do-column 3 'queen)
+    (do-column 4 'king)
+    (do-column 5 'bishop)
+    ; (do-column 6 'knight)
+    (do-column 7 'rook))
+
+  (populate-side 'white 0 1)
+  (populate-side 'black 7 6))
+;Value: populate-sides*
+
+1 ]=> (cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_tests/")
+;Value: #[pathname "/home/czg_arch/SICP_SDF/SDF_exercises/chapter_4/4_23_tests/"]
+
+1 ]=> (load "common_lib.scm")
+;Loading "common_lib.scm"... done
+;Value: start-chess-game
+
+1 ]=> (start-chess-game populate-sides*)
+;;;     0    1    2    3    4    5    6    7
+;;;   +----+----+----+----+----+----+----+----+
+;;; 7 | Rb |    |    |    | Kb | Bb |    | Rb |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 6 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 5 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 4 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 3 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 2 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 1 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 0 | Rw |    |    |    | Kw | Bw |    | Rw |
+;;;   +----+----+----+----+----+----+----+----+
+;;; white to move
+;Unspecified return value
+
+1 ]=> ;; test for the normal case
+(chess-move* '(4 0) '(0 0))("castling-move" (4 0) (0 0) ((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) ((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])))
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied-and-unchecked" #[graph-node "3,0"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied-and-unchecked" #[graph-node "2,0"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied-and-unchecked" #[graph-node "3,0"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied-and-unchecked" #[graph-node "2,0"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+(((? source-node #[compound-procedure 15]) northeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 15]) southeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 16]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 17]) north (? #[compound-procedure unoccupied]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 18]) northwest (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 19]) northeast (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 20]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 21]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 22]) west (? #[compound-procedure unoccupied]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied-and-unchecked" #[graph-node "5,0"] #f #t)
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+(((? source-node #[compound-procedure 27]) east (? #[compound-procedure unoccupied-and-unchecked]) east (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied-and-unchecked" #[graph-node "3,0"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied-and-unchecked" #[graph-node "2,0"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+(((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #t "with dict" (dict (target-node #[graph-node "2,0"] ?) (source-node #[graph-node "4,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 28] ?)))
+(((? source-node #[compound-procedure 29]) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "4,1"] ?) (source-node #[graph-node "4,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 28] ?)))
+(((? source-node #[compound-procedure 29]) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "5,1"] ?) (source-node #[graph-node "4,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 28] ?)))
+(((? source-node #[compound-procedure 29]) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "3,0"] ?) (source-node #[graph-node "4,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 28] ?)))
+(((? source-node #[compound-procedure 29]) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "3,1"] ?) (source-node #[graph-node "4,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 28] ?)))
+(((? source-node #[compound-procedure 15]) northeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 15]) southeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 16]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 17]) north (? #[compound-procedure unoccupied]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 18]) northwest (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 19]) northeast (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied-and-unchecked" #[graph-node "3,0"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied-and-unchecked" #[graph-node "2,0"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+(((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #t "with dict" (dict (target-node #[graph-node "3,0"] ?) (source-node #[graph-node "0,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 28] ?)))
+("unoccupied returns" #t "for" #[graph-node "1,7"])
+("unoccupied returns" #t "for" #[graph-node "2,7"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #f "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied-and-unchecked" #[graph-node "5,0"] #f #t)
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+(((? source-node #[compound-procedure 20]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 21]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 22]) west (? #[compound-procedure unoccupied]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+("unoccupied returns" #t "for" #[graph-node "0,1"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+("unoccupied returns" #t "for" #[graph-node "0,3"])
+("unoccupied returns" #t "for" #[graph-node "0,4"])
+("unoccupied returns" #t "for" #[graph-node "0,5"])
+("unoccupied returns" #t "for" #[graph-node "0,6"])
+("unoccupied returns" #f "for" #[graph-node "0,7"])
+(((? source-node #[compound-procedure 23]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "0,7"] ?) (intermediate-possible-nodes (#[graph-node "0,6"] #[graph-node "0,5"] #[graph-node "0,4"] #[graph-node "0,3"] #[graph-node "0,2"] #[graph-node "0,1"]) ?*) (source-node #[graph-node "0,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 28] ?)))
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "3,0"])
+("unoccupied returns" #f "for" #[graph-node "4,0"])
+(((? source-node #[compound-procedure 23]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #t "with dict" (dict (target-node #[graph-node "3,0"] ?) (intermediate-possible-nodes (#[graph-node "2,0"] #[graph-node "1,0"]) ?*) (source-node #[graph-node "0,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 28] ?)))
+(((? source-node #[compound-procedure 23]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 27]) east (? #[compound-procedure unoccupied-and-unchecked]) east (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(set-piece-at for (5 0))(set-piece-at for (7 0))(set-piece-at for (0 7))(set-piece-at for (4 7))(set-piece-at for (5 7))(set-piece-at for (7 7))
+;;;     0    1    2    3    4    5    6    7
+;;;   +----+----+----+----+----+----+----+----+
+;;; 7 | Rw |    | Bw |    | Rw | Kw |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 6 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 5 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 4 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 3 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 2 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 1 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 0 | Rb |    | Bb | Kb |    |    |    | Rb |
+;;;   +----+----+----+----+----+----+----+----+
+;;; black to move
+;Unspecified return value
+
+1 ]=> ;; test for unoccupied
+(trace unchecked)
+;Unspecified return value
+
+1 ]=> (trace capture?*)
+;Unspecified return value
+
+1 ]=> ; (trace unoccupied)
+(chess-move* '(3 0) '(0 0))("castling-move" (3 0) (0 0) ((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) ((? source-node #[compound-procedure 21]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])))
+[Entering #[compound-procedure capture?*]
+    Args: #[<bundle> 30]
+          (0 0)
+          ((? source-node #[compound-procedure 21]) east (? #[compound-procedu...
+          #f]
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #f "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied-and-unchecked" #[graph-node "5,7"] #f #t)
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+[#f
+      <== #[compound-procedure capture?*]
+    Args: #[<bundle> 30]
+          (0 0)
+          ((? source-node #[compound-procedure 21]) east (? #[compound-procedu...
+          #f]
+[Entering #[compound-procedure capture?*]
+    Args: #[<bundle> 30]
+          (3 0)
+          ((? source-node #[compound-procedure 13]) west (? #[compound-procedu...
+          #f]
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #f "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+("unoccupied-and-unchecked" #[graph-node "5,7"] #f #t)
+("unoccupied returns" #f "for" #[graph-node "5,7"])
+[#f
+      <== #[compound-procedure capture?*]
+    Args: #[<bundle> 30]
+          (3 0)
+          ((? source-node #[compound-procedure 13]) west (? #[compound-procedu...
+          #f]
+; ("invalid move for (king rook)" ((3 0) (0 0)) "with" #f #f)
+;To continue, call RESTART with an option number:
+; (RESTART 1) => Return to read-eval-print level 1.
+
+2 error> ; ("invalid move for (king rook)" ((3 0) (0 0)) "with" #f #f)
+;; both can't meet "unoccupied" pred.
+
+; (pp (list all-bishop-moves-from-code-base all-moves))
+
+; (trace check-move-for-type)
+; (trace %simple-move)
+(chess-move '(2 0) '(1 1))(((? source-node #[compound-procedure 15]) northeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 15]) southeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 16]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 17]) north (? #[compound-procedure unoccupied]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 18]) northwest (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 19]) northeast (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 20]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 21]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 22]) west (? #[compound-procedure unoccupied]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+("unoccupied returns" #t "for" #[graph-node "4,6"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "2,4"])
+("unoccupied returns" #t "for" #[graph-node "1,3"])
+("unoccupied returns" #t "for" #[graph-node "0,2"])
+(((? source-node #[compound-procedure 25]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "0,2"] ?) (intermediate-possible-nodes (#[graph-node "1,3"] #[graph-node "2,4"] #[graph-node "3,5"] #[graph-node "4,6"]) ?*) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 30] ?)))
+(((? source-node #[compound-procedure 25]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+("unoccupied returns" #t "for" #[graph-node "6,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+(((? source-node #[compound-procedure 25]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" ((1 1)) "with dict" (dict (target-node #[graph-node "7,5"] ?) (intermediate-possible-nodes (#[graph-node "6,6"]) ?*) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 30] ?)))
+(((? source-node #[compound-procedure 26]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 27]) east (? #[compound-procedure unoccupied-and-unchecked]) east (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(set-piece-at for (0 0))(set-piece-at for (3 0))(set-piece-at for (7 0))(set-piece-at for (0 7))(set-piece-at for (2 7))(set-piece-at for (4 7))(set-piece-at for (5 7))
+;;;     0    1    2    3    4    5    6    7
+;;;   +----+----+----+----+----+----+----+----+
+;;; 7 | Rb |    |    |    | Kb |    |    | Rb |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 6 |    |    |    |    |    |    | Bb |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 5 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 4 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 3 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 2 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 1 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 0 |    |    | Kw | Rw |    | Bw |    | Rw |
+;;;   +----+----+----+----+----+----+----+----+
+;;; white to move
+;Unspecified return value
+
+2 error> ;; 0. the 3rd match-* call doesn't have northwest edge, so succeed of matcher and match-* both returns #f.
+;; 1. the 2nd returns #f for matcher as the 3rd implies.
+;; Then (succeed object dict) will call match-rest which binds target-node 
+;; (gmatch:compile-edge->gmatch:compile-target->gmatch:compile-var->gmatch:var-matcher->(succeed object dict*)).
+;; 1.a. succeed is only offered by graph-match, match-*, match-seq, gmatch:and.
+;; Here we have finished match-* and at the end of match-seq, so we call succeed by graph-match, i.e. return dict.
+; [Entering #[compound-procedure match-*]
+;     Args: #[graph-node "5,7"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [Entering #[compound-procedure match-*]
+;     Args: #[graph-node "6,6"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [Entering #[compound-procedure match-*]
+;     Args: #[graph-node "7,5"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [#f
+;       <== #[compound-procedure match-*]
+;     Args: #[graph-node "7,5"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [(dict (target-node #[graph-node "7,5"] ?) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;       <== #[compound-procedure match-*]
+;     Args: #[graph-node "6,6"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+; [(dict (target-node #[graph-node "7,5"] ?) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;       <== #[compound-procedure match-*]
+;     Args: #[graph-node "5,7"]
+;           (dict (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?))
+;           #[compound-procedure 38]]
+;; Here "7,5" is at southeast (rotate-180-view of northwest) of "5,7".
+; (((? source-node #[compound-procedure 25]) (* northwest (?* #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) 
+;   "returns" #f "with dict" 
+;   (dict (target-node #[graph-node "7,5"] ?) (source-node #[graph-node "5,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 34] ?)))
+
+(the-board 'piece-at '(6 6))
+;Value: (bishop black #f #f)
+
+2 error> ;; prepare for checking of king initial.
+; (trace occupied-by-and-initial)
+(chess-move '(2 0) '(2 1))(((? source-node #[compound-procedure 15]) northeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 15]) southeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 16]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 17]) north (? #[compound-procedure unoccupied]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 18]) northwest (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 19]) northeast (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 20]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 21]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 22]) west (? #[compound-procedure unoccupied]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 27]) east (? #[compound-procedure unoccupied-and-unchecked]) east (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) north (? target-node #[compound-procedure maybe-opponent])) "returns" #t "with dict" (dict (target-node #[graph-node "2,1"] ?) (source-node #[graph-node "2,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 31] ?)))
+(((? source-node #[compound-procedure 29]) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "3,1"] ?) (source-node #[graph-node "2,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 31] ?)))
+(((? source-node #[compound-procedure 29]) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "1,0"] ?) (source-node #[graph-node "2,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 31] ?)))
+(((? source-node #[compound-procedure 29]) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "1,1"] ?) (source-node #[graph-node "2,0"] ?) (#[uninterned-symbol |G1|] #[<bundle> 31] ?)))
+(set-piece-at for (3 0))(set-piece-at for (5 0))(set-piece-at for (7 0))(set-piece-at for (6 6))(set-piece-at for (0 7))(set-piece-at for (4 7))(set-piece-at for (7 7))
+;;;     0    1    2    3    4    5    6    7
+;;;   +----+----+----+----+----+----+----+----+
+;;; 7 | Rw |    | Bw |    | Rw |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 6 |    |    |    |    |    | Kw |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 5 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 4 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 3 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 2 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 1 |    | Bb |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 0 | Rb |    |    | Kb |    |    |    | Rb |
+;;;   +----+----+----+----+----+----+----+----+
+;;; black to move
+;Unspecified return value
+
+2 error> ; white move
+(the-board 'piece-at '(6 6))
+;Value: #f
+
+2 error> ; (trace invert-address)
+(chess-move* '(3 0) '(0 0))("castling-move" (3 0) (0 0) ((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) ((? source-node #[compound-procedure 21]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])))
+[Entering #[compound-procedure capture?*]
+    Args: #[<bundle> 32]
+          (0 0)
+          ((? source-node #[compound-procedure 21]) east (? #[compound-procedu...
+          #f]
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+("unoccupied-and-unchecked" #[graph-node "5,7"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied-and-unchecked" #[graph-node "6,7"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+[(capture (rook black #t #f) (2 0))
+      <== #[compound-procedure capture?*]
+    Args: #[<bundle> 32]
+          (0 0)
+          ((? source-node #[compound-procedure 21]) east (? #[compound-procedu...
+          #f]
+[Entering #[compound-procedure capture?*]
+    Args: #[<bundle> 32]
+          (3 0)
+          ((? source-node #[compound-procedure 13]) west (? #[compound-procedu...
+          #f]
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+("unoccupied-and-unchecked" #[graph-node "5,7"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied-and-unchecked" #[graph-node "6,7"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+[(capture (king black #t #f) (1 0))
+      <== #[compound-procedure capture?*]
+    Args: #[<bundle> 32]
+          (3 0)
+          ((? source-node #[compound-procedure 13]) west (? #[compound-procedu...
+          #f]
+(((? source-node #[compound-procedure 15]) northeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 15]) southeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 16]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 17]) north (? #[compound-procedure unoccupied]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 18]) northwest (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 19]) northeast (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 20]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 21]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 22]) west (? #[compound-procedure unoccupied]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "3,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#f
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "3,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied-and-unchecked" #[graph-node "3,7"] #t #f)
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "3,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#f
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "3,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+(((? source-node #[compound-procedure 27]) east (? #[compound-procedure unoccupied-and-unchecked]) east (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+("unoccupied-and-unchecked" #[graph-node "5,7"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied-and-unchecked" #[graph-node "6,7"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+(((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #t "with dict" (dict (target-node #[graph-node "6,7"] ?) (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+(((? source-node #[compound-procedure 29]) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "4,6"] ?) (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+(((? source-node #[compound-procedure 29]) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "3,6"] ?) (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+(((? source-node #[compound-procedure 29]) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "3,7"] ?) (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+(((? source-node #[compound-procedure 29]) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "5,7"] ?) (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+(((? source-node #[compound-procedure 29]) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "5,6"] ?) (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+(((? source-node #[compound-procedure 15]) northeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 15]) southeast (? target-node #[compound-procedure opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 16]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 17]) north (? #[compound-procedure unoccupied]) north (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 18]) northwest (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 19]) northeast (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 20]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+("unoccupied-and-unchecked" #[graph-node "5,7"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "5,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied-and-unchecked" #[graph-node "6,7"] #t #t)
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#t
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "6,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+(((? source-node #[compound-procedure 21]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied])) "returns" #t "with dict" (dict (target-node #[graph-node "5,7"] ?) (source-node #[graph-node "7,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "3,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#f
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "3,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied-and-unchecked" #[graph-node "3,7"] #t #f)
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+[Entering #[compound-procedure unchecked]
+    Args: #[graph-node "3,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+("unoccupied returns" #t "for" #[graph-node "6,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #f "for" #[graph-node "7,7"])
+("unoccupied returns" #t "for" #[graph-node "2,0"])
+("unoccupied returns" #t "for" #[graph-node "1,0"])
+("unoccupied returns" #t "for" #[graph-node "0,0"])
+("unoccupied returns" #t "for" #[graph-node "3,1"])
+("unoccupied returns" #t "for" #[graph-node "3,2"])
+("unoccupied returns" #t "for" #[graph-node "3,3"])
+("unoccupied returns" #t "for" #[graph-node "3,4"])
+("unoccupied returns" #t "for" #[graph-node "3,5"])
+("unoccupied returns" #t "for" #[graph-node "3,6"])
+("unoccupied returns" #t "for" #[graph-node "3,7"])
+("unoccupied returns" #t "for" #[graph-node "4,0"])
+("unoccupied returns" #f "for" #[graph-node "5,0"])
+[#f
+      <== #[compound-procedure unchecked]
+    Args: #[graph-node "3,7"]
+          (dict (source-node #[graph-node "4,7"] ?) (#[uninterned-symbol |G1|]...]
+(((? source-node #[compound-procedure 22]) west (? #[compound-procedure unoccupied]) west (? #[compound-procedure unoccupied]) west (? target-node #[compound-procedure unoccupied])) "returns" #f "with dict" #f)
+("unoccupied returns" #t "for" #[graph-node "7,6"])
+("unoccupied returns" #t "for" #[graph-node "7,5"])
+("unoccupied returns" #t "for" #[graph-node "7,4"])
+("unoccupied returns" #t "for" #[graph-node "7,3"])
+("unoccupied returns" #t "for" #[graph-node "7,2"])
+("unoccupied returns" #t "for" #[graph-node "7,1"])
+("unoccupied returns" #f "for" #[graph-node "7,0"])
+(((? source-node #[compound-procedure 23]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" (dict (target-node #[graph-node "7,0"] ?) (intermediate-possible-nodes (#[graph-node "7,1"] #[graph-node "7,2"] #[graph-node "7,3"] #[graph-node "7,4"] #[graph-node "7,5"] #[graph-node "7,6"]) ?*) (source-node #[graph-node "7,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+("unoccupied returns" #t "for" #[graph-node "6,7"])
+("unoccupied returns" #t "for" #[graph-node "5,7"])
+("unoccupied returns" #f "for" #[graph-node "4,7"])
+(((? source-node #[compound-procedure 23]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #t "with dict" (dict (target-node #[graph-node "5,7"] ?) (intermediate-possible-nodes (#[graph-node "6,7"]) ?*) (source-node #[graph-node "7,7"] ?) (#[uninterned-symbol |G1|] #[<bundle> 32] ?)))
+(((? source-node #[compound-procedure 23]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 23]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) north (?) north (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) east (?) east (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) south (?) south (?) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 24]) west (?) west (?) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 25]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* north (?* intermediate-possible-nodes #[compound-procedure unoccupied])) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* east (?* intermediate-possible-nodes #[compound-procedure unoccupied])) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southeast (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* south (?* intermediate-possible-nodes #[compound-procedure unoccupied])) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* southwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* west (?* intermediate-possible-nodes #[compound-procedure unoccupied])) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 26]) (* northwest (?* intermediate-possible-nodes #[compound-procedure unoccupied])) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 27]) east (? #[compound-procedure unoccupied-and-unchecked]) east (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 13]) west (? #[compound-procedure unoccupied-and-unchecked]) west (? target-node #[compound-procedure unoccupied-and-unchecked])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) north (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) northeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) east (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southeast (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) south (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) southwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) west (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(((? source-node #[compound-procedure 29]) northwest (? target-node #[compound-procedure maybe-opponent])) "returns" #f "with dict" #f)
+(set-piece-at for (7 0))(set-piece-at for (1 1))(set-piece-at for (5 6))(set-piece-at for (0 7))(set-piece-at for (2 7))(set-piece-at for (4 7))
+;;;     0    1    2    3    4    5    6    7
+;;;   +----+----+----+----+----+----+----+----+
+;;; 7 | Rb |    |    |    |    | Rb | Kb |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 6 |    |    |    |    |    |    | Bb |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 5 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 4 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 3 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 2 |    |    |    |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 1 |    |    | Kw |    |    |    |    |    |
+;;;   +----+----+----+----+----+----+----+----+
+;;; 0 |    |    |    | Rw |    | Bw |    | Rw |
+;;;   +----+----+----+----+----+----+----+----+
+;;; white to move
+;Unspecified return value
+
+2 error> ; black
+
+End of input stream reached.
+Moriturus te salutat.
