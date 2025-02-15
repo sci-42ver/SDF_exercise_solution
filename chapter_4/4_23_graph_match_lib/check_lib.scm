@@ -151,14 +151,14 @@
             ))
       ;; Here we can also directly check the equality between nodes.
       ;; For debug, we generate position.
-      ; (write-line 
-      ;   (list 
-      ;     "captured-positions:" captured-positions 
-      ;     "with board color:" (board 'color)
-      ;     "opponent-positions:" opponent-positions
-      ;     "piece_positions:" piece_positions
-      ;     "place-node:" place-node
-      ;     ))
+      (write-line 
+        (list 
+          "captured-positions:" captured-positions 
+          "with board color:" (board 'color)
+          "opponent-positions:" opponent-positions
+          "piece_positions:" piece_positions
+          "place-node:" place-node
+          ))
       (not 
         (any 
           (lambda (addr)
@@ -170,32 +170,33 @@
   )
 
 (define piece_positions '())
-(define (populate-sides board)
+;; See SDF_exercises/chapter_4/4_23_graph_match_lib/combination/populate-sides.scm
+; (define (populate-sides board)
 
-  (define (populate-side color home-row pawn-row)
+;   (define (populate-side color home-row pawn-row)
 
-    (define (do-column col type)
-      (add-piece col home-row type)
-      (add-piece col pawn-row 'pawn))
+;     (define (do-column col type)
+;       (add-piece col home-row type)
+;       (add-piece col pawn-row 'pawn))
 
-    (define (add-piece col row type)
-      ((board 'node-at (make-address col row))
-       'connect! 0 (make-piece type color))
-      ;; added
-      (set! piece_positions (cons (make-address col row) piece_positions))
-      )
+;     (define (add-piece col row type)
+;       ((board 'node-at (make-address col row))
+;        'connect! 0 (make-piece type color))
+;       ;; added
+;       (set! piece_positions (cons (make-address col row) piece_positions))
+;       )
 
-    (do-column 0 'rook)
-    (do-column 1 'knight)
-    (do-column 2 'bishop)
-    (do-column 3 'queen)
-    (do-column 4 'king)
-    (do-column 5 'bishop)
-    (do-column 6 'knight)
-    (do-column 7 'rook))
+;     (do-column 0 'rook)
+;     (do-column 1 'knight)
+;     (do-column 2 'bishop)
+;     (do-column 3 'queen)
+;     (do-column 4 'king)
+;     (do-column 5 'bishop)
+;     (do-column 6 'knight)
+;     (do-column 7 'rook))
 
-  (populate-side 'white 0 1)
-  (populate-side 'black 7 6))
+;   (populate-side 'white 0 1)
+;   (populate-side 'black 7 6))
 ;; based on SDF_exercises/chapter_4/4_23_graph_match_lib/en_passant_lib.scm
 (cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
 (load "en_passant_lib.scm")
@@ -249,9 +250,11 @@
     (board 'next-turn)))
 
 (define (unoccupied-and-unchecked place-node dict)
-  (write-line (list "unoccupied-and-unchecked" place-node (unoccupied place-node dict) (unchecked place-node dict)))
-  (and 
-    (unoccupied place-node dict)
-    (unchecked place-node dict)
-    )
+  (let ((unoccupied-res (unoccupied place-node dict)) (unchecked-res (unchecked place-node dict)))
+    (write-line 
+      (list "unoccupied-and-unchecked" place-node 
+        "unchecked-res" unchecked-res
+        "unoccupied-res" unoccupied-res
+        ))
+    (and unoccupied-res unchecked-res))
   )

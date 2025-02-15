@@ -134,15 +134,15 @@
    (piece-in (match:get-value 'source-node dict) dict)))
 (define (piece-is-same-color? piece my-piece)
   (not (piece-is-opponent? piece my-piece)))
+;;; See SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm for some reasons of the pred choices here.
 (define castling-king-moves
-  ;; TODO occupied-by-and-initial-and-bl-rook-initial...
   (list
-    `((? source-node ,(occupied-by-and-initial-and-br-rook-initial 'king))
+    `((? source-node ,(occupied-by-and-initial 'king))
       ;; TODO unoccupied-and-unchecked.
       east (? ,unoccupied-and-unchecked)
       east (? target-node ,unoccupied-and-unchecked)
       )
-    `((? source-node ,(occupied-by-and-initial-and-bl-rook-initial 'king))
+    `((? source-node ,(occupied-by-and-initial 'king))
       west (? ,unoccupied-and-unchecked)
       west (? target-node ,unoccupied-and-unchecked)
       )))
@@ -158,13 +158,13 @@
 (define white-castling-rook-moves
   ;; TODO occupied-by-and-initial-and-king-castling...
   (list
-    `((? source-node ,(occupied-by-and-initial-and-white-and-king-castling-with_bl-and-bl 'rook))
+    `((? source-node ,(occupied-by-and-initial-and-white-and-bl 'rook))
       ;; > There must be no pieces between the king and the rook;
       east (? ,unoccupied)
       east (? ,unoccupied)
       east (? target-node ,unoccupied)
       )
-    `((? source-node ,(occupied-by-and-initial-and-white-and-king-castling-with_br-and-br 'rook))
+    `((? source-node ,(occupied-by-and-initial-and-white-and-br 'rook))
       west (? ,unoccupied)
       west (? target-node ,unoccupied)
       )))
@@ -177,12 +177,12 @@
 ;; 1. black-castling-rook-moves is not that case.
 (define black-castling-rook-moves
   (list
-    `((? source-node ,(occupied-by-and-initial-and-black-and-king-castling-with_bl-and-bl 'rook))
+    `((? source-node ,(occupied-by-and-initial-and-black-and-bl 'rook))
       ;; > There must be no pieces between the king and the rook;
       east (? ,unoccupied)
       east (? target-node ,unoccupied)
       )
-    `((? source-node ,(occupied-by-and-initial-and-black-and-king-castling-with_br-and-br 'rook))
+    `((? source-node ,(occupied-by-and-initial-and-black-and-br 'rook))
       west (? ,unoccupied)
       west (? ,unoccupied)
       west (? target-node ,unoccupied)

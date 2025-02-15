@@ -23,5 +23,8 @@
     (do-column 6 'knight)
     (do-column 7 'rook))
 
+  ;; to ensure initial if populate-sides is called twice.
+  (set! piece_positions '())
+
   (populate-side 'white 0 1)
   (populate-side 'black 7 6))

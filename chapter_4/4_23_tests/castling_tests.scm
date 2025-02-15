@@ -29,6 +29,9 @@
     (do-column 5 'bishop)
     ; (do-column 6 'knight)
     (do-column 7 'rook))
+  
+  ;; to ensure initial if populate-sides is called twice.
+  (set! piece_positions '())
 
   (populate-side 'white 0 1)
   (populate-side 'black 7 6))
@@ -37,10 +40,10 @@
 (load "common_lib.scm")
 (start-chess-game populate-sides*)
 
-;;; test for the normal case, initial, bl-rook-initial
+;;; test for the normal case, initial
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 (load "test_lib.scm")
-(trace-wrapper (lambda () (chess-move* '(4 0) '(0 0))) untick-piece-initial-mark rook-initial capture?*)
+(trace-wrapper (lambda () (chess-move* '(4 0) '(0 0))) untick-piece-initial-mark capture?*)
 ; [Entering #[compound-procedure untick-piece-initial-mark]
 ;     Args: (king white #t #f)]
 ; [(king white #f #f)
@@ -51,8 +54,23 @@
 ; [(rook white #f #f)
 ;       <== #[compound-procedure untick-piece-initial-mark]
 ;     Args: (rook white #t #f)]
+
+; [Entering #[compound-procedure capture?*]
+;     Args: #[<bundle> 15]
+;           (0 0)
+;           ((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied...
+;           #f]
+; ("occupied-by-and-initial" rook #[graph-node "0,0"] (rook white #t #f) #t)
+; [(capture (rook white #t #f) (3 0))
+;       <== #[compound-procedure capture?*]
+;     Args: #[<bundle> 15]
+;           (0 0)
+;           ((? source-node #[compound-procedure 14]) east (? #[compound-procedure unoccupied]) east (? #[compound-procedure unoccupied]) east (? target-node #[compound-procedure unoccupied...
+;           #f]
+
+
 ;;;; Here I test for all preds (therefore their sub-preds) used in castling-king-moves and castling-rook-moves.
-;;; test for unoccupied and king-castling-with_bl etc.
+;;; test for unoccupied and king-castling-with_bl etc (The latter is dropped in the review later).
 (trace unchecked)
 (trace capture?*)
 ; (trace unoccupied)
@@ -156,12 +174,26 @@
 (chess-move* '(4 0) '(0 0))
 ; ("occupied-by-and-initial" rook #[graph-node "0,0"] (rook white #f #f) #f)
 ; ("occupied-by-and-initial" king #[graph-node "4,0"] (king white #f #f) #f)
+; ("invalid move for (king rook)" ((4 0) (0 0)) "with" #f #f)
 
-;;; test for br-rook-initial etc
+;;; IGNORE (see SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm): test for br-rook-initial etc
 
-;;; test for unchecked
-
-;;; white test skipped since that is done implicitly in castling-move
+;;; test for white (checking for board color to choose the correct path) is skipped since that is done implicitly in castling-move
 
 ;;; test for bl?
+;; occupied-by-and-initial for rook will only allow 4 pos's.
+;; Color restriction then decreases this number to 2 (implied by allow-any-color param choice).
+;; And then "whether-rook-left-pos" will just decreases this number to 1.
+;; So bl? must be met if using castling-move abstraction.
+
+;; So no need to write one test here (also for white pred etc). After all, only the analysis can guarantee the correctness as DMIA says.
+
+;;; test for unchecked
+(start-chess-game populate-sides*)
+(chess-move* '(4 0) '(0 0))
+;; fail due to rook capture.
+(chess-move* '(3 0) '(7 0))
+;; (4 0) is captured
+; ("captured-positions:" ((4 0) (4 6) (4 5) (4 4) (4 3) (4 2) (4 1) (3 7) (6 7) (6 6) (5 6) (1 7) (0 0) (0 6) (0 5) (0 4) (0 3) (0 2) (0 1)) "with board color:" black "opponent-positions:" ((4 7) (5 7) (0 7) (2 7)) "piece_positions:" ((3 0) (2 0) (7 7) (5 7) (4 7) (0 7) (7 0) (5 0)) "place-node:" #[graph-node "3,7"])
+; ("unoccupied-and-unchecked" #[graph-node "3,7"] "unchecked-res" #f "unoccupied-res" #t)
 
