@@ -201,6 +201,8 @@
   )
 (cd "~/SICP_SDF/SDF_exercises/chapter_4/")
 (load "pred_lib.scm")
+(define (backup-piece-positions)
+  (set! old-piece-positions piece-positions))
 (define (mul-simple-move board from-to-pairs)
   (let ((from-lst (map get-from from-to-pairs))
         (to-lst (map get-to from-to-pairs)))
@@ -215,17 +217,18 @@
       (if (apply-and preds)
         'success
         (write-line (list "fail with preds:" preds "for from-to-pairs" from-to-pairs))))
+    (backup-piece-positions)
     (for-each
       (lambda (from to)
         ;; moved each piece to the target pos to
-        ;; and update piece_positions to remove those from's.
+        ;; and update piece-positions to remove those from's.
         ;; If later to is former from, it may be cons'ed later.
         (simple-move-moved-part board from to)
         )
       from-lst to-lst
       ))
   ;; 0. update for the rest where only those pieces not related with from-to-pairs are kept.
-  ;; 1. Notice piece_positions may be updated to add to-lst.
+  ;; 1. Notice piece-positions may be updated to add to-lst.
   (simple-move-rest-part board from-to-pairs)
   )
 (define (chess-move* king-pos rook-pos)

@@ -11,7 +11,7 @@
       ((board 'node-at (make-address col row))
        'connect! 0 (make-piece type color #t #f))
       ;; added
-      (set! piece_positions (cons (make-address col row) piece_positions))
+      (set! piece-positions (cons (make-address col row) piece-positions))
       )
 
     (do-column 0 'rook)
@@ -24,7 +24,7 @@
     (do-column 7 'rook))
 
   ;; to ensure initial if populate-sides is called twice.
-  (set! piece_positions '())
+  (set! piece-positions '())
 
   (populate-side 'white 0 1)
   (populate-side 'black 7 6))

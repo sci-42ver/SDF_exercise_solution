@@ -18,7 +18,7 @@
       ((board 'node-at (make-address col row))
        'connect! 0 (make-piece type color #t #f))
       ;; added
-      (set! piece_positions (cons (make-address col row) piece_positions))
+      (set! piece-positions (cons (make-address col row) piece-positions))
       )
 
     (do-column 0 'rook)
@@ -31,7 +31,7 @@
     (do-column 7 'rook))
   
   ;; to ensure initial if populate-sides is called twice.
-  (set! piece_positions '())
+  (set! piece-positions '())
 
   (populate-side 'white 0 1)
   (populate-side 'black 7 6))
@@ -43,7 +43,7 @@
 ;;; test for the normal case, initial
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 (load "test_lib.scm")
-(trace-wrapper (lambda () (chess-move* '(4 0) '(0 0))) untick-piece-initial-mark capture?*)
+(trace-wrapper (lambda () (chess-move* '(4 0) '(0 0))) mul-simple-move simple-move-moved-part get-self-positions untick-piece-initial-mark capture?*)
 ; [Entering #[compound-procedure untick-piece-initial-mark]
 ;     Args: (king white #t #f)]
 ; [(king white #f #f)
@@ -74,6 +74,7 @@
 (trace unchecked)
 (trace capture?*)
 ; (trace unoccupied)
+;;; failure1
 (chess-move* '(3 0) '(0 0))
 (untrace unchecked)
 (untrace capture?*)
@@ -171,6 +172,7 @@
 (chess-move '(3 0) '(0 0))
 (let ((from '(2 2)))
   (chess-move from (address-sum '(1 1) from)))
+;;; failure2
 (chess-move* '(4 0) '(0 0))
 ; ("occupied-by-and-initial" rook #[graph-node "0,0"] (rook white #f #f) #f)
 ; ("occupied-by-and-initial" king #[graph-node "4,0"] (king white #f #f) #f)
@@ -191,9 +193,11 @@
 ;;; test for unchecked
 (start-chess-game populate-sides*)
 (chess-move* '(4 0) '(0 0))
+;;; failure3
 ;; fail due to rook capture.
 (chess-move* '(3 0) '(7 0))
 ;; (4 0) is captured
-; ("captured-positions:" ((4 0) (4 6) (4 5) (4 4) (4 3) (4 2) (4 1) (3 7) (6 7) (6 6) (5 6) (1 7) (0 0) (0 6) (0 5) (0 4) (0 3) (0 2) (0 1)) "with board color:" black "opponent-positions:" ((4 7) (5 7) (0 7) (2 7)) "piece_positions:" ((3 0) (2 0) (7 7) (5 7) (4 7) (0 7) (7 0) (5 0)) "place-node:" #[graph-node "3,7"])
+; ("captured-positions:" ((4 0) (4 6) (4 5) (4 4) (4 3) (4 2) (4 1) (3 7) (6 7) (6 6) (5 6) (1 7) (0 0) (0 6) (0 5) (0 4) (0 3) (0 2) (0 1)) "with board color:" black "opponent-positions:" ((4 7) (5 7) (0 7) (2 7)) "piece-positions:" ((3 0) (2 0) (7 7) (5 7) (4 7) (0 7) (7 0) (5 0)) "place-node:" #[graph-node "3,7"])
 ; ("unoccupied-and-unchecked" #[graph-node "3,7"] "unchecked-res" #f "unoccupied-res" #t)
 
+;; 3 errors totally all thrown by "invalid move ...".

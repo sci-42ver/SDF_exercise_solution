@@ -25,11 +25,13 @@
 ;; is implied by
 ;; > The king and rook involved in castling must *not have previously moved*
 
+;;; These are done in simple-move by SDF_exercises/chapter_4/4_23_graph_match_lib/check_lib.scm.
 ;; > the rule that a king cannot be moved into check
 ;; i.e. the following wikipedia where leaves means "the opposing player"'s recent move can check king and then we leave "king in check" without doing some action to avoid that.
 ;; > It is illegal to make a move that places or leaves one's king in check.
 ;; leave corresponds to where we need to avoid capture at the next move
 ;; > The king can be *put in check* but cannot be captured
+;; See the above '"the opposing player" ...'.
 
 ;;; > We have shown how to make *patterns* ...
 ;; So we can ignore the implementation for initial?, check?.

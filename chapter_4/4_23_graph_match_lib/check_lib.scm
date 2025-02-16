@@ -113,21 +113,36 @@
 (load "common/board_lib.scm")
 (define (keep-only-opponents board positions)
   (remove (lambda (pos) (my-piece? board pos)) positions))
-(define (unchecked place-node dict)
-  (let* ((board (chess-dict:board dict))
-        ;  (my-piece (board 'piece-in place-node))
-         )
-    ;; 0. We should not update captured-positions for each place-node
-    ;; since that is decided by board instead of place-node.
-    ;; 0.a. IGNORE: what's more, (get-target-pos board king-pos king-path)
-    ;; may call unchecked which then again calls (get-intermediate-and-target-positions board king-pos king-path) here...
-    (let* ((opponent-positions
-            (keep-only-opponents 
-              board
-              (map 
-                (lambda (addr) (board-address* board addr)) 
-                piece_positions))
-            )
+(define (get-opponent-positions board using-old-piece-positions)
+  (keep-only-opponents 
+    board
+    (get-current-board-piece-positions board using-old-piece-positions)
+    )
+  )
+(define (keep-only-self board positions)
+  (filter (lambda (pos) (my-piece? board pos)) positions))
+(define (get-self-positions board using-old-piece-positions)
+  (keep-only-self 
+    board
+    (get-current-board-piece-positions board using-old-piece-positions)
+    )
+  )
+(define (get-current-board-piece-positions board using-old-piece-positions)
+  (map 
+    (lambda (addr) (board-address* board addr)) 
+    (if using-old-piece-positions
+      old-piece-positions
+      piece-positions))
+  )
+;; See %make-board etc. So %unchecked and unchecked can have the different APIs.
+(define (%unchecked place-node board)
+  ;; 0. We should not update captured-positions for each place-node
+  ;; since that is decided by board instead of place-node.
+  ;; 0.a. IGNORE: what's more, (get-target-pos board king-pos king-path)
+  ;; may call unchecked which then again calls (get-intermediate-and-target-positions board king-pos king-path) here...
+  ;; 1. See "%unchecked won't be influenced ..." in SDF_exercises/chapter_4/4_23_graph_match_lib/combination/simple_move_mod.scm
+  ;; Here #f or #t are all fine.
+  (let* ((opponent-positions (get-opponent-positions board #f))
           (captured-positions
             (delete-duplicates
               (append-map
@@ -140,7 +155,7 @@
                       (get-capture-moves (piece-type (board 'piece-at addr)))
                       ))
                   )
-                ;; Since piece_positions is default be based on white.
+                ;; Since piece-positions is default be based on white.
                 ;; So we need to cater to the board color used in piece-at.
                 opponent-positions
                 )
@@ -156,7 +171,7 @@
           "captured-positions:" captured-positions 
           "with board color:" (board 'color)
           "opponent-positions:" opponent-positions
-          "piece_positions:" piece_positions
+          "piece-positions:" piece-positions
           "place-node:" place-node
           ))
       (not 
@@ -166,10 +181,18 @@
             )
           captured-positions
           ))
-    ))
+    )
+  )
+(define (unchecked place-node dict)
+  (let* ((board (chess-dict:board dict))
+        ;  (my-piece (board 'piece-in place-node))
+         )
+    (%unchecked place-node board)
+    )
   )
 
-(define piece_positions '())
+(define piece-positions '())
+(define old-piece-positions '())
 ;; See SDF_exercises/chapter_4/4_23_graph_match_lib/combination/populate-sides.scm
 ; (define (populate-sides board)
 
@@ -183,7 +206,7 @@
 ;       ((board 'node-at (make-address col row))
 ;        'connect! 0 (make-piece type color))
 ;       ;; added
-;       (set! piece_positions (cons (make-address col row) piece_positions))
+;       (set! piece-positions (cons (make-address col row) piece-positions))
 ;       )
 
 ;     (do-column 0 'rook)
@@ -202,19 +225,32 @@
 (load "en_passant_lib.scm")
 ;; 0. since it needs to check what piece is captured.
 ;; TODO I forgot why I wrote the above line. Maybe it meant for is-en-passant-move.
-;; 1. See SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm for correction about piece_positions.
+;; 1. See SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm for correction about piece-positions.
+(define (get-current-type-pos board type using-old-piece-positions)
+  (filter (lambda (pos) (eq? type (piece-type (board 'piece-at pos)))) (get-self-positions board using-old-piece-positions)))
+(define (get-current-king-pos board using-old-piece-positions)
+  (let ((cands (get-current-type-pos board 'king using-old-piece-positions)))
+    (assert (n:= 1 (length cands)))
+    (car cands)
+    ))
 (define (simple-move board from to)
-  (let* ((my-piece (get-piece-to-move board from))
+  (let* ((from-node (board 'node-at from))
+         (to-node (board 'node-at to))
+         (my-piece (get-piece-to-move board from))
          ;; changed
          (is-en-passant-move (en-passant-move? board from to)))
     ;; A bunch of checks for validity of move:
     (let ((captured (board 'piece-at to)))
       (if (not (no-piece-or-opponent? captured my-piece))
           (error "Can't capture piece of same color:" captured)))
+    (if (eq? 'king (piece-type my-piece))
+      (assert (%unchecked to-node board))
+      ;; wrong. See SDF_exercises/chapter_4/4_23_graph_match_lib/combination/simple_move_mod.scm
+      (assert (%unchecked from-node board)))
     ;; The move looks good; make it so:
     (board 'set-piece-at to my-piece)
     ;; changed*
-    (set! piece_positions (delete from piece_positions))
+    (set! piece-positions (delete from piece-positions))
     ;; Now update all the unaffected pieces to the next state of
     ;; the board:
     ;;; i.e. just update those pieces to exist in the next turn.
@@ -225,21 +261,21 @@
                               (if is-en-passant-move
                                 ;; if black, node-at and address-of will does 2 invert-address's.
                                 ;; So consistency is kept.
-                                (let ((captured-pos (address-of ((board 'node-at to) 'edge-value 'south))))
+                                (let ((captured-pos (address-of (to-node 'edge-value 'south))))
                                   ;; changed*
-                                  (set! piece_positions (cons to (delete captured-pos piece_positions)))
+                                  (set! piece-positions (cons to (delete captured-pos piece-positions)))
                                   captured-pos
                                   )
-                                ;; IGNORE: *no need for changes due to (cons to (delete to piece_positions)).
+                                ;; IGNORE: *no need for changes due to (cons to (delete to piece-positions)).
                                 (begin
                                   ;; changed*
-                                  ;; 0. only when "to" is captured, we have (delete to piece_positions).
+                                  ;; 0. only when "to" is captured, we have (delete to piece-positions).
                                   ;; 1. See no-piece-or-opponent?
                                   ;; 2. Check: here only 3 pos's are possible to be influenced (from to captured-pos)
                                   ;; We just check for all possible delete and cons for them.
                                   ;; Trivially from and captured-pos can't be "cons"ed.
                                   (if (not (board 'piece-at to))
-                                    (set! piece_positions (cons to piece_positions)))
+                                    (set! piece-positions (cons to piece-positions)))
                                   to)) 
                               address)))
                     (let ((p (board 'piece-at address)))
