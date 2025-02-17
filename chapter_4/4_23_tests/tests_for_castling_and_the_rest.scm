@@ -1,3 +1,5 @@
+;;; also implicitly tests for SDF_exercises/chapter_4/4_23_graph_match_lib/initial_piece_lib.scm and SDF_exercises/chapter_4/4_23_graph_match_lib/check_lib.scm.
+
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'pattern-matching-on-graphs)

@@ -126,6 +126,7 @@
 ;; > The king and rook involved in castling must not have previously moved;
 ;; > The castling rook must be on the same rank as the king
 ;; similar to b and "the same rank" can be implied by color if both are initial.
+;; The latter is done implicitly in castling-move => get-target-pos => get-piece-to-move. So that both are same as the board color.
 ;; > There must be no pieces between the king and the rook;
 ;; use unoccupied
 ;; > The king may not currently be under attack, nor may the king pass through or end up in a square that is under attack by an enemy piece

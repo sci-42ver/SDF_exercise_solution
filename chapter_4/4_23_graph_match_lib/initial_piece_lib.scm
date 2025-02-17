@@ -1,3 +1,6 @@
+;;;; 0. provide occupied-by-and-initial which is the base for occupied-by-and-initial-and-black-and-br etc.
+;;;; 1. Check all appropriate locations have used the correct "make-piece": In VSCode, "\(make-piece " with include "SDF_exercises/**/*.scm" and exclude "SDF_exercises/chapter_2,abstracting-a-domain".
+
 ;;; finished
 
 ;;;; needs SDF_exercises/chapter_4/4_23_graph_match_lib/base_lib.scm

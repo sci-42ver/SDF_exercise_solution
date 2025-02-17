@@ -16,6 +16,7 @@
     ;; So no need to do invert etc.
     (n:= 7 (address-y address))
     ))
+(define default-promote-target-type #f)
 (define (make-chess-board-internal)
   (let ((nodes
          (map (lambda (x)
@@ -60,9 +61,9 @@
         (if (promotion? address piece)
           (begin
             (display "This piece can be promoted. Which type do you want to promote to?")
-            (let* ((type (read))
+            (let* ((type (or default-promote-target-type (read)))
                    (promoted-piece
-                    (make-piece type (piece-color piece))
+                    (change-piece-type piece type)
                     ))
               ; (eq? 'pawn type)
               ((node-at address) 'connect! (+ turn 1) promoted-piece)
