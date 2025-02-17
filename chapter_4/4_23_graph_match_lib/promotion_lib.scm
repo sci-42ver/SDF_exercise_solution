@@ -4,13 +4,17 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/")
 (load "common/base_lib.scm")
 (define (promotion? address piece)
+  ;; IGNORE: defined inside board to access internal procedures.
   (and
     (pawn_piece? piece)
     ;; if white, just no invert.
     ;; otherwise 2 inverts.
     ;; Both have the same results.
     ;; So fine to check address-y.
-    (n:= 7 (address-y (address-of (node-at address))))
+    ; (n:= 7 (address-y (address-of (node-at address))))
+    ;; Only used in set-piece-at which will just use address based on the view (so implicitly call invert maybe).
+    ;; So no need to do invert etc.
+    (n:= 7 (address-y address))
     ))
 (define (make-chess-board-internal)
   (let ((nodes

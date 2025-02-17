@@ -3,7 +3,7 @@
 (define (occupied-by-and-initial type)
   (lambda (place-node dict) 
     (let ((piece (piece-in place-node dict)))
-      (write-line (list "occupied-by-and-initial" type place-node piece (piece-initial-mark piece)))
+      (write-line (list "occupied-by-and-initial" type place-node piece (and piece (piece-initial-mark piece))))
       (and piece
            (eq? type (piece-type piece))
            ;; added
@@ -17,6 +17,10 @@
   (eq? (piece-type piece) 'rook))
 
 (define (opponent place-node dict)
-  (piece-is-opponent?
-   (piece-in place-node dict)
-   (piece-in (match:get-value 'source-node dict) dict)))
+  (let ((target-piece (piece-in place-node dict)))
+    (and
+      target-piece
+      (piece-is-opponent?
+        target-piece
+        (piece-in (match:get-value 'source-node dict) dict)))
+    ))

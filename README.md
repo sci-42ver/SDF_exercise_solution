@@ -1,3 +1,6 @@
+This is less readable than the OP's one. Here I gave one brief description for the 3 params of `s`: 1. `s`: see https://stackoverflow.com/a/7721871/21294350. 2. `l`: trivial by iterating through the input `l` like `lst2` in `sublist?`. 3. `k`: Here each `k` will try call `test` first and then call the `k` created in the previous `s` call sequentially. All call starts with `(k '())`. For example, `(k3 '())=>(test '()), (k2 '(b))=>(test '(b)), (k1 '(a b))=>(test '(a b))` for `'(a b c a b d e)` where `=>` means "calls". So `(test '())` will be called multiple times.
+
+3.a. Similar to OP, here we won't directly stop if we can directly assert inequality. 3.a.1. Similar to "O(n) removal", here we have O(n) start pos addition for `r` during the `k` call sequence. 3.a.2. "even if the two first elements are different": Due to the adding direction is from the end to the start, we should use one `suffix` to achieve the similar  detection. In Scheme, list is not array in C language, so accessing the last elem is much slower than the 1st. So IMHO it is better to start from the beginning. Anyway the basic ideas are same.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure

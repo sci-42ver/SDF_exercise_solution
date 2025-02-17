@@ -28,6 +28,12 @@
   (let* ((board (chess-dict:board dict))
          (west/east-addr-data (west/east-addr board direction place-node))
          (west/east-piece (and west/east-addr-data (board 'piece-at west/east-addr-data))))
+    (write-line 
+      (list "occupied-by-opponent-pawn-advanced-two-initially-just-now"
+        "place-node" place-node
+        "captured piece addr" west/east-addr-data
+        west/east-piece
+        ))
     (and
       west/east-piece
       ;; here we may not have source-node bound as the following shows.

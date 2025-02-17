@@ -69,9 +69,10 @@
               (lambda (is-en-passant-move to)
                 ;; changed
                 (if is-en-passant-move
-                  ;; if black, node-at and address-of will does 2 invert-address's.
+                  ;; 0. if black, node-at and address-of will does 2 invert-address's.
                   ;; So consistency is kept.
-                  (let ((captured-pos (address-of ((board 'node-at to) 'edge-value 'south))))
+                  ;; 1. Anyway the output addr's are all based on view just as "to" param.
+                  (let ((captured-pos (board 'address-of ((board 'node-at to) 'edge-value 'south))))
                     ;; changed*
                     (set! piece-positions 
                       (cons 
@@ -114,6 +115,8 @@
                                 (display (list "set-piece-at for" address))
                                 (board 'set-piece-at address
                                   ;; changed
+                                  ;; If this has been ticked before, this will be unticked after opponent (assuming black) has moved one piece afterwards.
+                                  ;; So now white is to move in the next turn. So no "just-now".
                                   (untick-piece-advance-two-initially-just-now p)
                                   ))
                               ))

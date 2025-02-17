@@ -143,9 +143,9 @@
 (load "common/board_lib.scm")
 (define (initial-pawn-advance-two? board from to)
   ;; > Pawns cannot move backwards.
-  (n:= 1 (address-y (address-transform board from)))
+  (n:= 1 (address-y from))
   ;; assume piece have been checked whether it follows the valid path.
-  (n:= 3 (address-y (address-transform board to)))
+  (n:= 3 (address-y to))
   )
 (load "../graph_match_lib/addr_lib.scm")
 (define (initial-pawn-advance-two?* piece from to)
@@ -167,12 +167,14 @@
       )
     (let ((initial-mark (piece-initial-mark piece)))
       (if (not initial-mark)
-        (error "pawn has been moved wrongly")
-        (make-piece 
-          (piece-type piece)  
-          (piece-color piece) 
-          initial-mark
-          #t)))
+        (error "pred doesn't ensure initial-mark expectedly")
+        (begin
+          (write-line (list piece "has advance-two-initially-just-now from" from))
+          (make-piece 
+            (piece-type piece)  
+            (piece-color piece) 
+            initial-mark
+            #t))))
     (if (piece-advance-two-initially-just-now piece)
       (error "piece-advance-two-initially-just-now mark should be cleared/unticked at the opponent turn.")
       piece)))
