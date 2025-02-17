@@ -52,7 +52,9 @@
 (define basic-rook-move basic-queen-move)
 (define simple-rook-moves (symmetrize-move basic-rook-move rotate-90 rotate-180))
 
-;;; b. For the above point 1, we need to check the next move's row (but that is unsupported by make-graph-node. So add initial?).
+;;; b. For the above point 1 in "pawn's move", we need to check the next move's row (but that is unsupported by make-graph-node. So add initial?).
+;; TODO I forgot what I meant by "check the next move's row (but that is unsupported by make-graph-node" ...
+;; Anyway "the next move's row" can't decide whether pawn is initial because pawn can either forward 2 rows in one step or two steps to forward 2 rows. 
 ;; For the above point 2, we use piece-is-opponent?.
 (cd "~/SICP_SDF/SDF_exercises/chapter_4/4_23_graph_match_lib/common")
 (load "base_lib.scm")

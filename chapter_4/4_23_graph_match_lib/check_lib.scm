@@ -1,3 +1,5 @@
+;;;; Provide implementation for unchecked in SDF_exercises/chapter_4/4_23.scm
+
 ;;; finished
 ;; 0. en-passant-move can't capture king, so skipped.
 ;; Similar for castling.
@@ -143,22 +145,25 @@
   ;; 1. See "%unchecked won't be influenced ..." in SDF_exercises/chapter_4/4_23_graph_match_lib/combination/simple_move_mod.scm
   ;; Here #f or #t are all fine.
   (let* ((opponent-positions (get-opponent-positions board #f))
-          (captured-positions
+         (captured-positions-with-dup
+          (append-map
+            (lambda (addr)
+              (apply append
+                (filter-map
+                  (lambda (path)
+                    (get-intermediate-and-target-positions board addr path #t)
+                    )
+                  (get-capture-moves (piece-type (board 'piece-at addr)))
+                  ))
+              )
+            ;; Since piece-positions is default be based on white.
+            ;; So we need to cater to the board color used in piece-at.
+            opponent-positions
+            )
+          )
+         (captured-positions
             (delete-duplicates
-              (append-map
-                (lambda (addr)
-                  (apply append
-                    (filter-map
-                      (lambda (path)
-                        (get-intermediate-and-target-positions board addr path #t)
-                        )
-                      (get-capture-moves (piece-type (board 'piece-at addr)))
-                      ))
-                  )
-                ;; Since piece-positions is default be based on white.
-                ;; So we need to cater to the board color used in piece-at.
-                opponent-positions
-                )
+              captured-positions-with-dup
               ;; all are got by address-of which may call invert-address->make-address->list.
               ;; so default to use equal?.
               ; equal?
@@ -167,12 +172,13 @@
       ;; Here we can also directly check the equality between nodes.
       ;; For debug, we generate position.
       (write-line 
-        (list 
+        (list
+          "captured-positions-with-dup:" captured-positions-with-dup 
           "captured-positions:" captured-positions 
           "with board color:" (board 'color)
           "opponent-positions:" opponent-positions
           "piece-positions:" piece-positions
-          "place-node:" place-node
+          "checked place-node:" place-node
           ))
       (not 
         (any 

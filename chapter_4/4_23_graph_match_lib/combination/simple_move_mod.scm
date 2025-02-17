@@ -36,9 +36,11 @@
     ;; Here %unchecked won't be influenced since opponent pos's won't be changed by simple-move-moved-part.
     (if (eq? 'king (piece-type my-piece))
       (if (not (%unchecked (board 'node-at to) board))
-        (error (list to "is checked")))
-      (if (not (%unchecked (board 'node-at (get-current-king-pos board #t)) board))
-        (error (list from "is checked"))))
+        (error (list "king moved dest" to "is checked")))
+      (let ((king-pos (get-current-king-pos board #t)))
+        (if (not (%unchecked (board 'node-at king-pos) board))
+          (error (list "king at" king-pos "is checked"))))
+      )
     ;; changed*
     (set! piece-positions (delete (board-address* board from) piece-positions))
     )
