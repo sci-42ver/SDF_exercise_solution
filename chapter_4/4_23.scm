@@ -69,9 +69,10 @@
 ;; or
 (define basic-pawn-capture-move
   `((? source-node ,(occupied-by 'pawn))
-      northeast (? target-node ,opponent))
+      northwest (? target-node ,opponent))
   )
 (define pawn-capture-moves
+  ;; clockwise rotate
   (symmetrize-move basic-pawn-capture-move rotate-90)
   )
 
