@@ -42,7 +42,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            (cons* (transform-edge-label (car path-elts))
                   (cadr path-elts)
                   (transform-tail (cddr path-elts))))
-          ;; SDF_exercises TODO when happens
+          ;; IGNORE SDF_exercises TODO when happens
+          ;; see book p279
           ((and (pair? path-elts)
                 (pair? (car path-elts))
                 (memq (caar path-elts) '(* + opt)))

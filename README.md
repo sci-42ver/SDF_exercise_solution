@@ -113,7 +113,7 @@ with check comments in codes.
     So I *skipped* checking `SDF_exercises/software/sdf/user-defined-types/vector-arith.scm` (*user-defined-types/vector-arith*).
   - `define-generic-procedure-extractor` (*not shown in the SDF book*. There is no related funcs even by searching "extractor")
 ## @%review of "SDF_exercises TODO"
-`grep -v "IGNORE\|(cph)\|SKIPPED\|when happens\|(codes not included by the book)" -r ./**/*.scm | grep "SDF_exercises TODO" --color=always` (notice here the piped results have esc color codes, so "SDF_exercises TODO when happens" won't work).
+`~/SICP_SDF/SDF_exercises$ grep -v "IGNORE\|(cph)\|SKIPPED\|(codes not included by the book)" -r ./**/*.scm | grep "SDF_exercises TODO" --color=always` (notice here the piped results have esc color codes, so "SDF_exercises TODO when happens" won't work).
 - From cc09d5b919575d7a27d30d94100d2f12dd8248ef up to .
 ## @%review of mere TODO
 `grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" -r ./**/*.scm | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`

@@ -204,9 +204,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (pair? (cdr object))
        (symbol? (cadr object))
        (or (null? (cddr object))
-           ;; SDF_exercises TODO when happens (idx-0. with idx here since it is copied from SDF_exercises/README.md)
+           ;; IGNORE SDF_exercises TODO when happens (idx-0. with idx here since it is copied from SDF_exercises/README.md)
            ;; 0. not in book
-           ;; 1. Maybe match:var-restriction: but why symbol?.
+           ;; 1. IGNORE Maybe match:var-restriction: but why symbol?.
+           ;; 1.a. just see (type-variable #!optional root) definition
+           ;; it is always (? (symbol prefix ":" n)), so (pair? (cddr object)) won't be met at least for this case.
+           ;; 2. TODO I forgot what I meant by (idx-0).
            (and (pair? (cddr object))
                 (symbol? (caddr object))
                 (null? (cdddr object))))))

@@ -54,7 +54,7 @@
                    data-list
                    dictionary
                    (lambda (new-dictionary n)
-                     ;; SDF_exercises TODO when happens
+                     ;; IGNORE SDF_exercises TODO when happens
                      ;; not in book...
                      (if (> n (match:general-length data-list))
                        (error "Matcher ate too much."

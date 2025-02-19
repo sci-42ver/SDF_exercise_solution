@@ -75,7 +75,7 @@
                   'skip-duplicate-shift)
                 (set! normal-shift normal-shift*)))
              (transform-tail (cddr path-elts)))
-            ;; SDF_exercises TODO when happens
+            ;; IGNORE SDF_exercises TODO when happens
             ((and (pair? path-elts)
                   (pair? (car path-elts))
                   (memq (caar path-elts) '(*)))

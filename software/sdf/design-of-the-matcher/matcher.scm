@@ -139,8 +139,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                    data-list
                    dictionary
                    (lambda (new-dictionary n)
-                     ;; SDF_exercises TODO when happens
+                     ;; 0. IGNORE SDF_exercises TODO when happens
                      ;; not in book...
+                     ;; 0.a. IMHO here most of places related with succeed call will have (pair? data) restriction for n=1
+                     ;; or (length data) in match:segment.
+                     ;; So (> n (length data-list)) won't happen. Anyway when I used this lib, this error never happened.
                      (if (> n (length data-list))
                          (error "Matcher ate too much."
                                 n))

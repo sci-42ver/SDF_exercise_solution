@@ -17,7 +17,7 @@
                        data
                        dictionary
                        (lambda (new-dictionary n)
-                         ;; SDF_exercises TODO when happens
+                         ;; IGNORE SDF_exercises TODO when happens
                          (if (> n (length data))
                            (error "Matcher ate too much."
                                   n))
