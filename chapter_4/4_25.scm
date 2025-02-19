@@ -54,3 +54,32 @@
 ;; 1. promotion can be done by change-piece-type which can be used with set-piece-at.
 ;; So we uses set-piece-at* which checks whether address is "eighth rank" and piece type is pawn.
 ;; If so, we do promotion depending one the (read) result.
+
+;;;; Implementation
+;;; the 1st paragraph
+;; 0. Hypergraph just use one node-list as the value for (connect! label value).
+;; Again this is directed.
+;; So it is same as https://www.sciencedirect.com/science/article/pii/S0304397516002097#:~:text=A%20directed%20hypergraph%20consists%20of,from%20digraphs%20to%20directed%20hypergraphs.
+;; > A directed hypergraph consists of a set of vertices V and a set of hyperarcs H, where a hyperarc is a pair <S,v>, S non empty subset of V and $v \in V$.
+;; 1. As the above shows, "segment" needs to "find all paths between 2 nodes not allowing cycle".
+;; So just DFS https://stackoverflow.com/a/7283870/21294350 or BFS https://stackoverflow.com/a/7283870/21294350
+;; For the latter, cyclic graph needs "visited" to avoid "infinite number of paths" as the former link says.
+;; 1.a. "uniform cost search" is used for "weighted version" as https://web.archive.org/web/20121113111112/http://en.wikipedia.org/wiki/Uniform-cost_search#Relationship_to_other_algorithms 
+;; > Breadth-first search (BFS) is a special case of uniform-cost search when all edge costs are positive and *identical*.
+;; 1.a.0. It uses "priority queue" to optimize queue base operation https://en.wikipedia.org/wiki/Priority_queue#Operations.
+;; > In a priority queue, elements with high priority are served before elements with low priority
+;; 1.b. So in summary, here DFS or BFS is chosen for this non-weighted graph.
+;; 4 (skipped due to being too general). This is more about graph similarity IMHO where https://en.wikipedia.org/wiki/Edge_contraction (w can be one element variable) etc may be allowed (I learnt about this before in DMIA but a bit forgotten about the name. This link is offered by google AI summary.).
+;; The naive thoughts may be unifying many edge pairs, but how to construct these pairs (see https://en.wikipedia.org/wiki/Graph_isomorphism)?
+;; 4.a. "Inexact graph matching" https://en.wikipedia.org/wiki/Graph_matching is just like the above "segment".
+;; 4.a.0. "attributed graphs" is one a bit special type of graph, so skipped.
+;; 4.b. one possible open-source implementation https://mathoverflow.net/a/224390 although not meaning unification.
+
+;;; the 2nd paragraph
+;; 0. just do bidirectional connect! for each connect!.
+;; 1. So we need to unify between weighted edges.
+;; IGNORE: One simple way to do that is incorporate the edge weight into the edge value.
+;; The above IGNORE part is wrong since "edge value" is one node which may be connected with *multiple* nodes.
+;; 1.a. So we need to make edge also as one object.
+;; Then the total SDF_exercises/software/sdf/pattern-matching-on-graphs/graph-match.scm lib needs big changes. But the basic ideas are same.
+;; 2. This is similar to SICP 3.19.

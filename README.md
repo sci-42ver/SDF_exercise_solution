@@ -1,6 +1,6 @@
-This is less readable than the OP's one. Here I gave one brief description for the 3 params of `s`: 1. `s`: see https://stackoverflow.com/a/7721871/21294350. 2. `l`: trivial by iterating through the input `l` like `lst2` in `sublist?`. 3. `k`: Here each `k` will try call `test` first and then call the `k` created in the previous `s` call sequentially. All call starts with `(k '())`. For example, `(k3 '())=>(test '()), (k2 '(b))=>(test '(b)), (k1 '(a b))=>(test '(a b))` for `'(a b c a b d e)` where `=>` means "calls". So `(test '())` will be called multiple times.
+IMHO the old link https://web.archive.org/web/20121113111112/http://en.wikipedia.org/wiki/Uniform-cost_search#Relationship_to_other_algorithms (or https://en.wikipedia.org/w/index.php?title=Uniform-cost_search&oldid=639461257 by the history link in https://en.wikipedia.org/wiki/Talk:Dijkstra%27s_algorithm) is better to say specifically about "uniform-cost search". Also see why they are merged https://en.wikipedia.org/wiki/Talk%3AUniform-cost_search#Untitled.
 
-3.a. Similar to OP, here we won't directly stop if we can directly assert inequality. 3.a.1. Similar to "O(n) removal", here we have O(n) start pos addition for `r` during the `k` call sequence. 3.a.2. "even if the two first elements are different": Due to the adding direction is from the end to the start, we should use one `suffix` to achieve the similar  detection. In Scheme, list is not array in C language, so accessing the last elem is much slower than the 1st. So IMHO it is better to start from the beginning. Anyway the basic ideas are same.
+That old link says "uniform" implies "constant" compared with heuristic algorithm. However, the pseudocode is better to be understood based on https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Using_a_priority_queue due to their close relation.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
@@ -44,6 +44,9 @@ This is less readable than the OP's one. Here I gave one brief description for t
       - 4.16
 ## related with complexity analysis: better done after CRLS
 - 4.18
+## Only give basic implementation ideas
+Anyway this is enough just like pseudocode is enough for algorithm in CRLS.
+- 4.25
 # Notice
 - Sometimes, I only give one sample test since I didn't intend to learn how to write the safe tests.
 - I use naming with `_` instead of `-` since words constructed with the former can be selected in VSCode with the double clicks. 
@@ -99,8 +102,8 @@ with check comments in codes.
 - 2, 3, 4 (see "chapter 4" section where all exercises with reference search methods have been checked)
 # @%exercise tests finished (obviously not considering skipped exercises)
 - 2, 3, 
-- 4 (4.12 skipped)
-  - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~22,24.
+- 4 (4.12, 25 skipped)
+  - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~24.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
@@ -489,13 +492,14 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
     - [non-expansive expression](https://homepages.inf.ed.ac.uk/stg/NOTES/node90.html)
 ### other possible type-inference extension
 - [subtype etc](https://nus-cs2030s.github.io/2425-s1/27-inference.html#argument-typing)
+#### TODO why I wrote this subsection?
 ### @%TODO
 - ~~7,9 (Unification match may use env to implement)~~
   7 will be done implicitly when 9 is done.
   9 is ~~similar to SICP 4.79 which needs implement rule based on *unification* with env~~.
 - ~~11 to be done with 21.~~
 - ~~See above TODO.~~
-- 23 TODOs after all related graph implementation understanding.
+- ~~23 TODOs after all related graph implementation understanding.~~
   - ~~24 similarly needs some graph implementations, predicate implementations more specifically.~~
     But this predicate should be done in `match`... So this maybe have been implemented in SDF_exercises/software/sdf/pattern-matching-on-graphs/graph-match.scm.
   1. ~~SDF_exercises/chapter_4/4_23_graph_match_lib/check_lib.scm checked_positions update~~
@@ -510,6 +514,9 @@ chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forg
 ## related helper files describing useful things
 - `sc-macro-transformer`
   - capture-syntactic-environment.scm
+# TODO after CRLS
+## related with data structure
+- See priority queue in 4.25
 
 [POSIX_regex]:https://pubs.opengroup.org/onlinepubs/9699919799/nframe.html
 [software-manager-doc]:https://groups.csail.mit.edu/mac/users/gjs/6.945/sdf/manager/software-manager.pdf
