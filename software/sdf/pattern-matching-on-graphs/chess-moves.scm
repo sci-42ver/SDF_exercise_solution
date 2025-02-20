@@ -150,7 +150,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (not (piece-in place-node dict)))
 
 (define (piece-in place-node dict)
-  ;; SDF_exercises TODO where is chess-dict:board inited?
+  ;; IGNORE SDF_exercises TODO where is chess-dict:board inited?
+  ;; See how capture? calls graph-match.
   ((chess-dict:board dict) 'piece-in place-node))
 
 ;;; Basic knight move is NNE.

@@ -42,14 +42,21 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     ;; > evaluates its consequent in an environment in which the pattern
                     ;; > variables are bound to their matched data.
                      (succeed result
-                              ;; SDF_exercises TODO when this is used
-                              ;; See rule-simplifier (result fail) doesn't use fail.
+                              ;; 0. IGNORE SDF_exercises TODO when this is used
+                              ;; Based on search in "sdf/**/*.scm"
+                              ;; make-rule is only used by (define-syntax rule ...).
+                              ;; The latter is only used by rule-simplifier in SICP_SDF/SDF_exercises/software/sdf/term-rewriting/rules.scm and SICP_SDF/SDF_exercises/software/sdf/automatic-differentiation/simplifier.scm.
+                              ;; 0.a. See rule-simplifier (result fail) succeed doesn't use fail.
+                              ;; 0.a.0. try-rules fail uses that passed by rule-simplifier but not succeed (similar for try-rule).
                               (lambda () #f))))))
           ;; > The system backtracks into the matcher to look for an alternative match
           ;; i.e. (per-rule (cdr rules)) which matches between rule and data
           ;; > if none are forthcoming, the rule is not applicable.
           ;; IGNORE: when nested (see (map simplify-expression expression) in )
-          ;; SDF_exercises TODO IMHO should be "rules are ..."
+          ;; 1. IGNORE SDF_exercises TODO IMHO should be "rules are ..."
+          ;; Fine (Maybe one typo to be "rule is ..."). Anyway
+          ;; > The rules are gathered in a list for the rule-simplifier procedure.
+          ;; and only rule-simplifier will offer the fail to be (per-rule (cdr rules)) which does "backtrack"ing.
           (fail)))
     the-rule))
 

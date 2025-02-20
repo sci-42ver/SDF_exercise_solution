@@ -88,6 +88,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (rule '(+ (? a) (+ (? b) (? c)))
           ;; IGNORE: SDF_exercises TODO why use , here and how is rule defined? 
           ;; See SDF_exercises/software/sdf/term-rewriting/test-rule-implementation.scm
+          ;; Here , is to ensure we use the value of "a" instead of "a" symbol.
           `(+ (+ ,a ,b) ,c))
 
     ;; Commutative law of multiplication

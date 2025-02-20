@@ -90,7 +90,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (run-matcher
     ;;; IGNORE: why (recursive-substitute '? '?? p1) is same as SDF_exercises/chapter_4/4_19_rename_dict_lib.scm
     ;; (type-variable ...) to "think of each var as one *element var*".
-    ;;; 0. SDF_exercises TODO Here we only do substitution for one side instead of two as 4_19_rename_dict_lib does.
+    ;;; 0. SKIPPED (these tests are not shown in the book) SDF_exercises TODO Here we only do substitution for one side instead of two as 4_19_rename_dict_lib does.
     ;; So why?
     ;; IMHO if we want to check matches-including-expected, then we need to ensure p1* can contain the substitution by expected-bindings.
     ;; So we should use the original one.

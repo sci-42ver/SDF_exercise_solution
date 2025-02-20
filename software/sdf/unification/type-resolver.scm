@@ -366,7 +366,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler annotate-expr
   (match-args if-expr? any-object?)
   (lambda (expr env)
-    ;; SDF_exercises TODO if-consequent and if-alternative may return different types.
+    ;; IGNORE SDF_exercises TODO if-consequent and if-alternative may return different types.
+    ;; One fix may be 4_16_union_lib.scm.
     ;; See p249 Critique which is same as the problems here where the type should be "disjoin".
     (make-texpr (type-variable)
                 (make-if-expr
@@ -381,7 +382,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (append
      (list (constrain (boolean-type)
                       (texpr-type (if-predicate expr)))
-           ;; SDF_exercises TODO just as the above shows
+           ;; IGNORE SDF_exercises TODO just as the above shows
            ;; > if-consequent and if-alternative may return different types.
            ;; IMHO better to add one disjoin type operation.
            (constrain type

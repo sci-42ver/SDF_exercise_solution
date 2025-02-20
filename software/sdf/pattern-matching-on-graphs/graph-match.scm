@@ -137,8 +137,13 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (cond ((and (symbol? elt) (pair? rest))
            ;; > An edge may be labeled by any symbol that is not one of the special
            ;; > symbols (*, + , opt, or, and) used by graph-matcher patterns.
-           ;; SDF_exercises TODO IMHO ((?) * (?)) can be differentiated from ((?) (* ...)).
+           ;; 0. IMHO the reasons are that edge related procedures may interfere with those related with the special symbols. 
+           ;; SKIPPED SDF_exercises TODO IMHO ((?) * (?)) can be differentiated from ((?) (* ...) (?)).
            ;; So why must "not one of the special symbols"?
+           ;; 0.a. For example, opt (will call `gmatch:compile-path-elts`) is called in `gmatch:compile-path-elt` called by `gmatch:compile-path-elts`.
+           ;; So only (opt ...) will call the special gmatch:compile-opt.
+           ;; But the mere "opt" will match "(symbol? elt)" so that it will call gmatch:compile-edge expectedly.
+           ;; 0.b. Also see SDF_exercises/chapter_4/tests/graph_match/*_edge.scm.
            (gmatch:finish-compile-path (cdr rest)
              (gmatch:compile-edge elt (car rest))))
           ((pair? elt)
@@ -189,7 +194,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ; (trace match-*)
   match-*)
 
-;; SDF_exercises TODO what does this comment mean?
+;; SKIPPED SDF_exercises TODO what does this comment mean?
+;; IMHO it means we always uses (node1 (* ...) node2) for one element-list edge but not (node1 * ... node2).
+;; > (* (?)), which will be interpreted as an edge with label *
+;; means (gmatch:compile-path-elts (* (?)))
+;; > but is really a repeat missing the extra parens.
+;; SKIPPED TODO meaning.
 ;;; Each element-list must be parenthesized, but this means
 ;;; there's an ambiguity with an edge-like construct of the form
 ;;; (* (?)), which will be interpreted as an edge with label *
@@ -228,7 +238,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                  (loop (cdr matchers) dict*))))))))
 
 ;; > starting with the edge object*
-;; SDF_exercises TODO IMHO here object is node instead of edge.
+;; IGNORE SDF_exercises TODO IMHO here object is node instead of edge.
+;; See (succeed object dict*) in match-var where object is the node satisfying restriction which is passed to (lambda (object* dict*) ...).
 (define (gmatch:compile-edge label target)
   (let ((match-target (gmatch:compile-target target)))
     (define (match-edge object dict succeed)
@@ -243,7 +254,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (gmatch:compile-target elt)
   (if (match:var? elt)
       (gmatch:compile-var elt)
-      ;; SDF_exercises TODO why not use begin?
+      ;; IGNORE SDF_exercises TODO why not use "begin"?
+      ;; See begin_diff_let.scm
       (let ()
         ;; compared with SDF_exercises/software/sdf/design-of-the-matcher/matcher.scm
         ;; Here object structure is not one list since we are using *graph* which is connected by bundle.
@@ -294,9 +306,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (let* ((var (match:make-var var-type var-name))
          (binding (match:lookup var dict)))
     ;; These 2 "not" predicates seem to just ensure (eq? ...) able to work.
+    ;; Just see how this pred can be true.
+    ;; That only happens when binding, (match:var-type var) are both not false.
+    ;; And (eq? (match:var-type var) (match:binding-type binding)) is false,
+    ;; i.e. adding one binding with the different type.
     (if (not (or (not binding)
-                 ;; 0. SDF_exercises TODO when this will be #t...
-                 ;; See gmatch:compile-var where only var-name can be #f but it is avoided by the predicate var-name.
+                 ;; 0. IGNORE SDF_exercises TODO when this will be #t...
+                 ;; 0.a. IMHO this (not (match:var-type var)) is just as the above says, it is one safe programming convention,
+                 ;; although it won't happen at all.
+                 ;; 0.b. See the above for what this whole pred intends to do.
+                 ;; 1. See gmatch:compile-var where only var-name can be #f but it is avoided by the predicate var-name.
                  (not (match:var-type var))
                  (eq? (match:var-type var)
                       (match:binding-type binding))))
@@ -314,7 +333,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
             (lambda (binding)
               (if (eq? (match:binding-name binding)
                        (match:var-name var))
-                  ;; SDF_exercises TODO just as * does, we add one more element.
+                  ;; IGNORE SDF_exercises TODO just as * does, we add one more element.
+                  ;; In book, ?* is only used for "(* north (?* ,unoccupied))" etc.
+                  ;; Also see SICP_SDF/SDF_exercises/chapter_4/4_24_based_on_graph_match_lib.scm.
                   (match:map-binding-value
                    (lambda (values) (cons value values))
                    binding)

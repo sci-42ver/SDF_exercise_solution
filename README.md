@@ -1,6 +1,3 @@
-IMHO the old link https://web.archive.org/web/20121113111112/http://en.wikipedia.org/wiki/Uniform-cost_search#Relationship_to_other_algorithms (or https://en.wikipedia.org/w/index.php?title=Uniform-cost_search&oldid=639461257 by the history link in https://en.wikipedia.org/wiki/Talk:Dijkstra%27s_algorithm) is better to say specifically about "uniform-cost search". Also see why they are merged https://en.wikipedia.org/wiki/Talk%3AUniform-cost_search#Untitled.
-
-That old link says "uniform" implies "constant" compared with heuristic algorithm. However, the pseudocode is better to be understood based on https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Using_a_priority_queue due to their close relation.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
@@ -112,7 +109,7 @@ with check comments in codes.
   - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
     So I *skipped* checking `SDF_exercises/software/sdf/user-defined-types/vector-arith.scm` (*user-defined-types/vector-arith*).
   - `define-generic-procedure-extractor` (*not shown in the SDF book*. There is no related funcs even by searching "extractor")
-## @%review of "SDF_exercises TODO"
+## @%%review of "SDF_exercises TODO" (this should be checked for each sub-dir recursively in /software/sdf/ **immediately** after finishing one sub-section)
 `~/SICP_SDF/SDF_exercises$ grep -v "IGNORE\|(cph)\|SKIPPED\|(codes not included by the book)" -r ./**/*.scm | grep "SDF_exercises TODO" --color=always` (notice here the piped results have esc color codes, so "SDF_exercises TODO when happens" won't work).
 - From cc09d5b919575d7a27d30d94100d2f12dd8248ef up to .
 ## @%review of mere TODO
@@ -421,7 +418,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
     - Here no command name like $0, i.e. /bin/zsh etc.
     - so `...=$(...2)` returns same as `...2`.
   - TODO I don't know why [group command can't be directly used for `xargs`](https://stackoverflow.com/a/6958957/21294350)
-12: `do-substitute`
+- 12: `do-substitute`
 13: Emm... following the similar naming as `match:compile-pattern`, we search `unify:compile-pattern`. But this naming convention is not ensured to be used by others.
 14: `infer-program-types` then `procedure` (only 1 original implementation file and one test file in code base)
 15: `parametric-type` using the book naming convention (then search for `map` there)
@@ -434,6 +431,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 22: `tree->lazy-graph` based on the code base naming conventions.
 23: `all-rook-moves`
 24: `simple-move` (SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain can be ignored)
+25: `gmatch`
 ### @%comments (see the above)
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1

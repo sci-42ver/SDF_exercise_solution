@@ -466,7 +466,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-tag<= non-bottom-tag? bottom-tag? false-tag<=)
 (define-tag<= top-tag? non-top-tag? false-tag<=)
 
-;; WAITED SDF_exercises TODO temporarily skipped the following 2 define.
+;; WAITED SDF_exercises TODO temporarily skipped the following 2 define because they are not used temporarily.
 (define-tag<= parametric-tag? parametric-tag?
   (lambda (tag1 tag2)
     (and (eqv? (parametric-tag-template tag1)

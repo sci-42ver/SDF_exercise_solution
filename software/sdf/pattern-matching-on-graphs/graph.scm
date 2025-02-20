@@ -96,7 +96,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define graph-edge?
   (make-bundle-predicate 'graph-edge))
 
-;; SDF_exercises TODO When it is used
+;; IGNORE SDF_exercises TODO When it is used
+;; By searching, not used at all.
 (define (graph-node . plist)
   (let ((node (make-graph-node #f)))
     (for-each (lambda (p)
