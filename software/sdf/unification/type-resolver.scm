@@ -209,7 +209,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
            ;; 1. IGNORE Maybe match:var-restriction: but why symbol?.
            ;; 1.a. just see (type-variable #!optional root) definition
            ;; it is always (? (symbol prefix ":" n)), so (pair? (cddr object)) won't be met at least for this case.
-           ;; 2. TODO I forgot what I meant by (idx-0).
+           ;; 2. SKIPPED (the above is written a long time ago and forgotten why I wrote that...) TODO I forgot what I meant by (idx-0).
            (and (pair? (cddr object))
                 (symbol? (caddr object))
                 (null? (cdddr object))))))

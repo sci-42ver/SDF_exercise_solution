@@ -85,8 +85,9 @@ exercise solution for Software Design for Flexibility (SDF)
     > so I might end up *fooling myself*.
 - [~~this~~](https://github.com/compclub/projects) uses *Rust*...
 - ~~https://github.com/bishwa-poudel/Software-Design-and-Architecture-Specialization-Coursera~~ weirdly use Java.
-# @exercise solutions by *3 references* (i.e. nbardiuk etc.) and *6.945_assignment_solution* checked up to now (sometimes *code base* has sample implementations)
-with check comments in codes.
+# exercise solutions by *3 references* (i.e. nbardiuk etc.) and *6.945_assignment_solution* checked up to now (sometimes *code base* has sample implementations)
+Just see "@% reference implementation checked".
+- with check comments in codes.
 - For chapter 4 later, search in this repo by `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm` ~~and code base by ignoring these~~.
   Ignore `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm` which are all codes for former chapters and `sdf/manager/*.scm` which is about software manager.
   - ~~Here `6.945*/**/*.scm` can be `6.945*/**/*.scm`~~
@@ -104,9 +105,9 @@ with check comments in codes.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
-# @TODO
+# TODO
 - I skipped checking the detailed implementation of the following since they are less related with what the book intends to teach
-  - `make-predicate-template` (not shown in the SDF book. There is no related funcs even by searching "template")
+  - `make-predicate-template` (*not shown in the SDF book*. There is no related funcs even by searching "template")
     So I *skipped* checking `SDF_exercises/software/sdf/user-defined-types/vector-arith.scm` (*user-defined-types/vector-arith*).
   - `define-generic-procedure-extractor` (*not shown in the SDF book*. There is no related funcs even by searching "extractor")
 ## @%%review of "SDF_exercises TODO" (this should be checked for each sub-dir recursively in /software/sdf/ **immediately** after finishing one sub-section)
@@ -146,16 +147,17 @@ up to 30b5ddceb074ac5fe8928cde0764eb91980c93d6.
           ```
           - most of codes in the code base uses "TODO:" instead of only "TODO".
           - **Use [this](https://unix.stackexchange.com/a/788823/568529) after many improvements** (use `gsub` as Stéphane Chazelas shows)
-            I skipped SDF exercise codes, SICP codes, *.rkt, 6.945_assignment_solution code base codes, 
-            "code_base TODO"/"cph" means TODO originally in the code base.
+            I skipped SDF exercise codes, SICP codes, *.rkt, 6.945_assignment_solution code base codes (by `-prune`),
+            and skipped unrelated suffix files like `*.md`.
+            Here "code_base TODO"/"cph" means TODO originally in the code base.
             ```bash
-            find . \
+            [~/SICP_SDF]$ find . \
             \( -type d \( -path ./SDF_exercises/chapter_\* \
               -o -path \*/.git \
               -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o \
             \( -type f \( ! -path "./6.945_assignment_solution/ps[0-9]*/code/*.scm" \
               -a ! -name "*.md" -a ! -name "*.rkt" -a ! -name "*.sample" \) \) \
-            -exec awk '!/SDF_exercises TODO/ && !/IGNORE/ && !/\(cph\)/ && !/SKIPPED/ && !/code_base TODO/ && gsub(/TODO/,"\033[1;31m" "&" "\033[0m: ") {printf "\033[1;31m" FILENAME "\033[0m: " $0 "\n"}' {} +
+            -exec awk '!/SDF_exercises TODO/ && !/IGNORE/ && !/\(cph\)/ && !/SKIPPED/ && !/code_base TODO/ && gsub(/TODO/,"\033[1;31m" "&" "\033[0m") {printf "\033[1;31m" FILENAME "\033[0m: " $0 "\n"}' {} +
             ```
             - [perl](https://unix.stackexchange.com/a/788821/568529)
               - [`-p`](https://learnbyexample.github.io/learn_perl_oneliners/one-liner-introduction.html#substitution)
@@ -236,7 +238,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - list-of-unique-symbols?
   - list-of-type?
     - maybe mean a list of data whose type satisfies `pred` by `(list-of-type? object change?)`.
-# @exercise comments
+# exercise comments
 ## chapter 2
 - 2.9
   - [POSIX_regex]
@@ -501,14 +503,18 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   - ~~24 similarly needs some graph implementations, predicate implementations more specifically.~~
     But this predicate should be done in `match`... So this maybe have been implemented in SDF_exercises/software/sdf/pattern-matching-on-graphs/graph-match.scm.
   1. ~~SDF_exercises/chapter_4/4_23_graph_match_lib/check_lib.scm checked_positions update~~
-  2. SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm after check_lib.scm
+  2. (I forgot what I meant by this line. After all, 4.23 pred implementation with tests has been finished.) SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm after check_lib.scm
   3. SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm combining all other `simple-move` implementations.
 ## @% reference implementation checked
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
-- For chapter 4, 4.1~24 have been checked with 
+- For chapter 4, 4.1~25 have been checked with 
   include: `chebert*/**/*.rkt,6.945*/**/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm`
-  exclude: `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/combining-arithmetics/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/propagation,sdf/pattern-matching-on-graphs/*.scm`
-  - later, exclude remove `sdf/pattern-matching-on-graphs/*.scm`
+  - exclude 
+    - due to inside former chapters: `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm`
+    - due to being not related with what this book intends to teach: `sdf/manager/*.scm`
+    - due to inside *later* chapters: `sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/propagation,sdf/pattern-matching-on-graphs/*.scm`
+    - later, exclude remove `sdf/pattern-matching-on-graphs/*.scm`
+      - So temporarily use `sdf-function-combinators.rkt,ps0[0-4]/,sdf/automatic-differentiation/*.scm,sdf/manager/*.scm,sdf/better-layering/*.scm,sdf/layers/*.scm,sdf/propagation`
 ## related helper files describing useful things
 - `sc-macro-transformer`
   - capture-syntactic-environment.scm
