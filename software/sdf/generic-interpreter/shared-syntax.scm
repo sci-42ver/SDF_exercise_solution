@@ -25,6 +25,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Self-evaluating entities
 
+;; different from SICP
 (define (self-evaluating? exp)
   (or (number? exp)
       (boolean? exp)
@@ -94,6 +95,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (lambda-parameters lambda-exp) (cadr lambda-exp))
 (define (lambda-body lambda-exp)
   (let ((full-body (cddr lambda-exp)))
+    ;; maybe SKIPPED (not said in the book)
+    ;; SDF_exercises TODO this must call with arg (list body) which then just returns body...
     (sequence->begin full-body)))
 
 (define (make-lambda parameters body)
@@ -101,6 +104,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
         (cons parameters
               (if (begin? body)
                   (begin-actions body)
+                  ;; 0. maybe SKIPPED (not said in the book)
+                  ;; IGNORE SDF_exercises TODO this is not used here due to only let->combination using it.
+                  ;; IMHO this body must be already one list as SICP shows.
+                  ;; Otherwise, it should contain multiple exps together but that is impossible to be passed with only one formal parameter.
+                  ;; 0.a. See the following "(cons 'lambda" which doesn't use make-lambda logic here for the non-begin block.
+                  ;; See SDF_exercises/chapter_5/tests/recursive_define.scm for when this list call makes sense. 
                   (list body)))))
 
 (define procedure-parameter-name
@@ -132,6 +141,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (if-consequent exp) (caddr exp))
 
+;; similar to SICP but uses the different structure.
 (define (if-alternative exp)
   (if (not (null? (cdddr exp)))
       (cadddr exp)
@@ -158,11 +168,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (eq? (cond-clause-predicate clause) 'else))
 
 (define (cond->if cond-exp)
+  ;; better than SICP due to using the internal definition for the procedure used only by something.
   (define (expand clauses)
     (cond ((null? clauses)
+           ;; better than SICP due to the compliance with the standard https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Conditionals.html
+           ;; > If all predicates evaluate to false values, and there is no else clause, the result of the conditional expression is unspecified
            (error "COND: no values matched"))
+          ;; no abstraction compared with SICP
           ((else-clause? (car clauses))
            (if (null? (cdr clauses))
+               ;; better than SICP with abstraction
                (cond-clause-consequent (car clauses))
                (error "COND: ELSE not last"
                       cond-exp)))
@@ -174,9 +189,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (sequence->begin seq)
   (cond ((null? seq) seq)
+        ;; no abstraction compared with SICP
         ((null? (cdr seq)) (car seq))
         (else
+         ;; return (begin ...)
          (make-begin
+          ;; more robust than SICP
           (append-map (lambda (exp)
                         (if (begin? exp)
                             (begin-actions exp)
@@ -194,6 +212,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; LET expressions
 
+;; same as SICP Exercise 4.6 https://web.archive.org/web/20241003180540/http://community.schemewiki.org/?sicp-ex-4.6 and sicp_exercise.md
 (define (let? exp) (tagged-list? exp 'let))
 (register-predicate! let? 'let)
 
@@ -201,8 +220,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (cadr let-exp))
 
 (define (let-bound-variables let-exp)
+  ;; better to use the above let-varspecs abstraction
   (map car (cadr let-exp)))
 (define (let-bound-values let-exp) (map cadr (cadr let-exp)))
+;; 0. different from schemewiki
+;; 1. maybe SKIPPED (not said in the book)
+;; SDF_exercises TODO IMHO sequence->begin is redundant with what make-lambda does.
 (define (let-body let-exp) (sequence->begin (cddr let-exp)))
 (define (let->combination let-exp)
   (let ((names (let-bound-variables let-exp))
@@ -226,6 +249,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (application? exp) (pair? exp))
 (register-predicate! application? 'application)
 
+;; extra things added besides SICP
 (define (operands? exps) (list? exps))
 (register-predicate! operands? 'operands)
 

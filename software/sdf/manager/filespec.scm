@@ -66,18 +66,23 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; overrides the file specified by the argument, which would otherwise
 ;; be included.
 
+;;; Here I just use write-line to see what is done since the SDF book doesn't intend to teach about this manager.
+
 (define (make-load-spec flavor filespecs relative-dir)
   `((name ,flavor)
     (filespecs ,filespecs)
     (relative-dir ,relative-dir)))
 
 (define (load-spec-expanded-filespecs load-spec)
+  ; (write-line (list "load-spec-expanded-filespecs" load-spec))
   (remove filespec-data-only?
           (let ((filespecs (load-spec-filespecs load-spec)))
+            ; (write-line (list "load-spec-expanded-filespecs filespecs" filespecs))
             (append (default-filespecs-of filespecs)
                     filespecs))))
 
 (define (load-spec-filespecs-to-load load-spec)
+  ; (write-line (list "load-spec-filespecs-to-load" load-spec))
   (remove filespec-inline-test?
           (load-spec-expanded-filespecs load-spec)))
 
@@ -122,6 +127,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
        (keyword-list? (cdr spec))))
 
 (define (filespec-property name spec)
+  ; (write-line (list "filespec-property" name spec))
   (let ((value (get-keyword-value (cdr spec) name)))
     (and (not (default-object? value))
          value)))
@@ -261,8 +267,10 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
          (filter-map filespec-override
                      explicit-filespecs)))
     (lambda (filespec)
+      ; (write-line (list "default-filespec-predicate" overrides filespec (filespec-relative-filename filespec) (filespec-test-only? filespec)))
       (or (member (filespec-relative-filename filespec)
                   overrides)
+          ;; this will all return #f for "common".
           (filespec-test-only? filespec)))))
 
 (define (filespec-inline-test-env-filename spec)

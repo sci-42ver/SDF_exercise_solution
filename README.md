@@ -299,7 +299,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 - 11
   - [[111] reference](https://engineering.purdue.edu/~qobi/papers/ifl2005.pdf)
     - ~~TODO why `(D (λy . x + y) 1)` doesn't calculate derivative and gets 2.~~
-## @%chapter 4
+## chapter 4
 1: search `algebra-2` (no codes with explanation)
 2: simplification
 3: `sort`
@@ -434,7 +434,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 23: `all-rook-moves`
 24: `simple-move` (SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain can be ignored)
 25: `gmatch`
-### @%comments (see the above)
+### comments (see the above)
 - Here better to do 4.4.3. exercises after learning compiler...
 - [x] 1
   - same as SICP `(married Mickey ?who)`
@@ -493,7 +493,7 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
 ### other possible type-inference extension
 - [subtype etc](https://nus-cs2030s.github.io/2425-s1/27-inference.html#argument-typing)
 #### TODO why I wrote this subsection?
-### @%TODO
+### TODO
 - ~~7,9 (Unification match may use env to implement)~~
   7 will be done implicitly when 9 is done.
   9 is ~~similar to SICP 4.79 which needs implement rule based on *unification* with env~~.
@@ -505,6 +505,14 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   1. ~~SDF_exercises/chapter_4/4_23_graph_match_lib/check_lib.scm checked_positions update~~
   2. (I forgot what I meant by this line. After all, 4.23 pred implementation with tests has been finished.) SDF_exercises/chapter_4/4_23_graph_match_lib/castling_lib.scm after check_lib.scm
   3. SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm combining all other `simple-move` implementations.
+## @%chapter 5
+### keywords to search for reference implementation
+### comments
+### @%TODO
+- 5
+  > However, primitives that take procedures as arguments, such as map or filter, will not accept nonprimitive procedures (i.e., those created by this interpreter from lambda expressions).
+  see SCIP Exercise 4.14.
+  IMHO just similar, due to the "created" "nonprimitive procedures" are by `make-compound-procedure` unrecognized by the "Scheme primitive".
 ## @% reference implementation checked
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
 - For chapter 4, 4.1~25 have been checked with 

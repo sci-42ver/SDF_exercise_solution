@@ -134,6 +134,9 @@
   print-all-matches)
 ;; 0. only one level since only one pnew call.
 ;; 1. Here x is passed along to palindrome1
+;; 1.a. TODO (review when SDF chapter 5 p299) this exercise asks for "fresh lexically scoped pattern variables".
+;; So (?:ref palindrome1) should be unable to get the value for `x` introduced by palindrome just like one procedure.
+;; 1.a.0. But this exercise has been done a bit long time ago, since I won't spend long time to doc for each exercise codes, I won't do this TODO.
 ; ("level" 1 "constructs pnew-dict" (pnew-dict (x f ?)) "with new-pe" (pattern-environment (pnew-dict (x f ?)) (dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure choices-match] ?:ref))))
 ; ((dict (y a ?) (palindrome #[compound-procedure pnew-match] ?:ref) (palindrome1 #[compound-procedure choices-match] ?:ref)))
 ; #f

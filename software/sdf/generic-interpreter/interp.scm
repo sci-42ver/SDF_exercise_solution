@@ -29,6 +29,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define (default-eval expression environment)
   (cond ((application? expression)
+         ;; IGNORE SDF_exercises TODO what does "g:advance" do?
          (g:apply (g:advance
                    (g:eval (operator expression)
                            environment))
@@ -44,6 +45,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define g:eval
   (simple-generic-procedure 'eval 2 default-eval))
 
+;; SDF_exercises TODO this is similar to force-it in SICP.
+;; no other define-generic-procedure-handler etc related with g:advance.
 (define g:advance
   (simple-generic-procedure 'g:advance 1 (lambda (x) x)))
 
@@ -78,6 +81,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler g:eval
   (match-args if? environment?)
   (lambda (expression environment)
+    ;; different from SICP due to assuming using true/false in the underlying Scheme.
     (if (g:advance
          (g:eval (if-predicate expression)
                environment))
@@ -106,11 +110,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                        environment)))
 
 (define (evaluate-sequence actions environment)
+  ;; more robust than SICP
   (cond ((null? actions)
          (error "Empty sequence"))
+        ;; no abstraction compared with SICP
         ((null? (cdr actions))
          (g:eval (car actions) environment))
         (else
+         ;; SDF_exercises TODO why no g:advance?
          (g:eval (car actions) environment)
          (evaluate-sequence (cdr actions)
                             environment))))
@@ -122,9 +129,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (define-variable! (definition-variable expression)
       (g:eval (definition-value expression) environment)
       environment)
+    ;; different from SICP due to conforming to MIT/GNU Scheme convention of the return value of (define ...)
     (definition-variable expression)))
 
 ;; coderef: assignment
+;; different from SICP due to the return value.
 (define-generic-procedure-handler g:eval
   (match-args assignment? environment?)
   (lambda (expression environment)
@@ -156,6 +165,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (apply-primitive-procedure procedure
       (eval-operands operands calling-environment))))
 
+;; 0. see SICP p498 for why SICP doesn't use map for list-of-arg-values etc.
 (define (eval-operands operands calling-environment)
   (map (lambda (operand)
          (g:advance (g:eval operand calling-environment)))
@@ -175,11 +185,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler g:apply
   (match-args strict-compound-procedure? operands? environment?)
   (lambda (procedure operands calling-environment)
+    ;; > We can grab the formal parameter specifications
     (if (not (n:= (length (procedure-parameters procedure))
                   (length operands)))
         (error "Wrong number of operands supplied"))
+    ;; > We also can extract the body of the procedure, which
     (g:eval (procedure-body procedure)
+            ;; > we will pass to eval with an environment that includes the formal parameter bindings.
             (extend-environment
              (procedure-parameters procedure)
              (eval-operands operands calling-environment)
+             ;; > built on the environment packaged with the procedure
              (procedure-environment procedure)))))
