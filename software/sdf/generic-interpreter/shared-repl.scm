@@ -31,6 +31,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (set! the-global-environment (make-global-environment))
   'done)
 
+;; IGNORE: IMHO worse than SICP since if we *must* init, then why not just init by default?
+;; see (init)
 (define (check-repl-initialized)
   (if (eq? the-global-environment 'not-initialized)
       (error "Interpreter not initialized. Run (init) first.")))
@@ -60,7 +62,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (match-args compound-procedure?)
   (compose pp procedure-printable-representation))
 
+;; also see SDF_exercises/chapter_5/tests/read_behaviors.scm
 (define (g:read)
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Prompting.html#index-prompt_002dfor_002dcommand_002dexpression
+  ;; 0. > print a fresh line, a newline, and the prompt string; flush the output buffer; then read an object and return it
+  ;; 0.a. https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Output-Procedures.html#index-fresh_002dline 
+  ;; fresh line => EOF
+  ;; 0.b. flush (seemingly taught in CSAPP & OSTEP) https://stackoverflow.com/a/12450125/21294350
+  ;; Anyway just ensure to output something.
+  ;; 1. TODO 
+  ;; > Emacs ... The *first* expression that is submitted
   (prompt-for-command-expression "eval> "))
 
 (define (init)

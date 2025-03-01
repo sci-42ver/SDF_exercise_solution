@@ -40,6 +40,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                                     (apply function args))
                                   functions))))))))
 
+;; based on function-extender (see SDF_exercises/software/sdf/combining-arithmetics/test-standard-arith.scm for coercion meaning here)
 (define (function-extender-with-coercion codomain-arithmetic)
   (let ((codomain-predicate
          (arithmetic-domain-predicate codomain-arithmetic)))
@@ -48,6 +49,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                      (list
                       (function-extender codomain-arithmetic))
       (lambda (name function-constant)
+        ;; review when chapter 5, most of codes are a bit forgotten.
+        ;; See function-extender in SDF_exercises/software/sdf/combining-arithmetics/test-standard-arith.scm
+        ;; Here codomain-constant should be just *passed along* here.
         function-constant)
       (lambda (operator function-operation)
         (make-operation operator

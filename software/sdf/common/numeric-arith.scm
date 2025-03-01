@@ -38,7 +38,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                           ;; here negate is just -.
                           (operator->procedure-name operator))))))
 
-;; arithmetic-constant-alist: all are (default-object), so `(default-object? constant)` throws errors.
+;; arithmetic-constant-alist: all are (default-object), so `arithmetic-constant` throws errors.
 (define numeric-arithmetic-without-constant
   (make-arithmetic 'numeric number? '()
     (lambda (name)

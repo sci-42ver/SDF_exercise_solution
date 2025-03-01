@@ -26,6 +26,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (repl)
   (check-repl-initialized)
   (let ((input (g:read)))
+    ;; added
+    (newline)
+    ;; different from SICP due to
+    ;; 0. no output-prompt
+    ;; 1. IGNORE SDF_exercises TODO how to handle the possible loop in env.
+    ;; see SDF_exercises/chapter_5/tests/write_line_loop.scm
     (write-line (g:eval input the-global-environment))
     (repl)))
 

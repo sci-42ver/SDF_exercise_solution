@@ -72,7 +72,7 @@
 ;; test1
 ;; 0. TODO skipped. See SDF_exercises/chapter_4/4_19_lib_for_4_20_possible_loop.scm
 ;; 0.a. similar to "SEGMENT SPLITTER loops infinitely, producing new variables."
-;; 0.b. anyway /home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/unification/gjs-test.scm
+;; 0.b. anyway /home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/unification/gjs-test.scm
 ;; also doesn't give one possible SPLITTER result
 ; ((x-internal:49-right () ???) (x-internal:50-left () ???) (y () ??) (x () ??))
 ;; based on

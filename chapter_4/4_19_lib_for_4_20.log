@@ -9,39 +9,39 @@ Image saved on Friday January 6, 2023 at 10:11:41 PM
   Release 12.1 || SF || LIAR/x86-64
 
 1 ]=> (cd "~/SICP_SDF/SDF_exercises/chapter_4")
-;Value: #[pathname 12 "/home/czg_arch/SICP_SDF/SDF_exercises/chapter_4/"]
+;Value: #[pathname 12 "/home/hervey_arch/SICP_SDF/SDF_exercises/chapter_4/"]
 
 1 ]=> (load "../software/sdf/manager/load.scm")
 ;Loading "../software/sdf/manager/load.scm"...
-;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/utils.scm"... done
-;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/filespec.scm"... done
-;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/env-model.scm"... done
-;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/simple-analyzer.scm"... done
-;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/analyze-sections.scm"... done
-;  Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/manager/software-manager.scm"... done
+;  Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/manager/utils.scm"... done
+;  Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/manager/filespec.scm"... done
+;  Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/manager/env-model.scm"... done
+;  Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/manager/simple-analyzer.scm"... done
+;  Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/manager/analyze-sections.scm"... done
+;  Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/manager/software-manager.scm"... done
 ;... done
 ;Value: manage
 
 1 ]=> (manage 'new 'unification)
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/overrides.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/utils.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/indexes.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/collections.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/memoizers.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicates.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicate-metadata.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/applicability.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/generic-procedures.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/pretty-printer.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/operators.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/operations.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/package.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicate-counter.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/simple-tests.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/trie.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/common/match-utils.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/unification/unify.scm"... done
-;Loading "/home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/unification/type-resolver.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/overrides.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/utils.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/indexes.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/collections.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/memoizers.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicates.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicate-metadata.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/applicability.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/generic-procedures.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/pretty-printer.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/operators.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/operations.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/package.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/predicate-counter.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/simple-tests.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/trie.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/common/match-utils.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/unification/unify.scm"... done
+;Loading "/home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/unification/type-resolver.scm"... done
 ;Value: unification
 
 1 ]=> (load "4_19_lib_for_4_20.scm")

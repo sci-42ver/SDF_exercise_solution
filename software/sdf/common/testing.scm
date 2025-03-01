@@ -95,7 +95,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
           body
           (lambda () (install-arithmetic! numeric-arithmetic))))))
 
-;; see /home/czg_arch/SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain/test-checkers.scm for one usage.
+;; see /home/hervey_arch/SICP_SDF/SDF_exercises/software/sdf/abstracting-a-domain/test-checkers.scm for one usage.
 (define (run-tests filename show-tests?)
   (let ((failed 0))
     (for-each (lambda (test)

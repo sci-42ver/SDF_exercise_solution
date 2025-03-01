@@ -48,6 +48,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; Compound procedures
 
 ;;;; https://srfi.schemers.org/srfi-9/srfi-9.html
+;;; Also see scheme_primitive_tests/record.scm
 ;;; implementation of predicate => (record-predicate type)
 ;; 0. type is also one record with tag record-marker. It then encapsulates (record-type-tag record-type record-data).
 ;; 1. related with record-predicate:

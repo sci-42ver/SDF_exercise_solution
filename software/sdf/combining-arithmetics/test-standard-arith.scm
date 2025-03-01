@@ -54,6 +54,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (test-mixed-symbolic-function)))
 
 (define (test-mixed-symbolic-function)
+  ;; 0. see SDF_exercises/software/sdf/combining-arithmetics/standard-arith.scm
+  ;; where 4 will be kept unchanged while cos will be applied to args (+ 3 'a).
+  ;; 1. If using function-extender-with-coercion
+  ;; All "things" will be coerced into procedures.
+  ;; And then we use (function-extender codomain-arithmetic) with only all function? arguments. 
   (assert-equal '(* b (+ (+ 4 (cos (+ 3 a))) (sin (+ 3 a))))
                 (* 'b ((+ 4 cos sin) (+ 3 'a))))
   (assert-equal '(+ a (+ (cos b) (sin b)))
