@@ -57,22 +57,24 @@ numeric-arithmetic))
 (define lookup-scheme-value
   (let ((env (the-environment)))
     (named-lambda (lookup-scheme-value var)
-      ;; Using allow-self-evaluating-symbols only here is enough to decide whether unbound-var can be var symbol.
-      (if allow-self-evaluating-symbols
-        ;; https://stackoverflow.com/a/23502038/21294350
-        (if (environment-bound? env var)
-          (lexical-reference env var)
-          var)
-        (lexical-reference env var))
-      )))
+                  ;; Using allow-self-evaluating-symbols only here is enough to decide whether unbound-var can be var symbol.
+                  (if allow-self-evaluating-symbols
+                    ;; https://stackoverflow.com/a/23502038/21294350
+                    (if (environment-bound? env var)
+                      (lexical-reference env var)
+                      var)
+                    (lexical-reference env var))
+                  )))
 
 ;; > work with the numerical primitives ( +, *, - , /) it is necessary to extend their behavior as well
 ;; Then allow strict-primitive-procedure? (compound-procedure will at last call strict-primitive-procedure)
 ;; to use these unbound variables (IMHO just make them as symbol).
 ;; This is already done in chapter 3.
 ;; > ... in the underlying Scheme environment.
-;; because they are primitive
+;; 0. because they are primitive
 ;; IMHO just install-arithmetic
+;; 1. IMHO this means that of lexical-reference.
+;; Also see "underlying Scheme system" said in Exercise 5.5 which is different from the underlying language *evaluator*.
 (install-arithmetic! combined-arithmetic)
 
 ;;; > As in chapter 3, the generic operator mechanism may be given handlers that work in the underlying Scheme system.
@@ -98,13 +100,13 @@ numeric-arithmetic))
 ;; more trivial than the above
 (define make-combination cons)
 (define-generic-procedure-handler g:apply
-  (match-args variable?
-              operands?
-              environment?)
-  (lambda (procedure operands calling-environment)
-    (declare (ignore calling-environment))
-    (make-combination procedure operands)
-    ))
+                                  (match-args variable?
+                                              operands?
+                                              environment?)
+                                  (lambda (procedure operands calling-environment)
+                                    (declare (ignore calling-environment))
+                                    (make-combination procedure operands)
+                                    ))
 
 ;; > Make them contingent on the value of a user-settable variable: allow-self- evaluating-symbols.
 ;; see the above for usage.
