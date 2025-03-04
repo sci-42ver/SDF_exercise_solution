@@ -245,7 +245,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       fail)))
 
 (define-generic-procedure-handler a:apply
-  (match-args compound-procedure? executors? environment?
+  (match-args compound-procedure?* executors? environment?
               success? failure?)
   (lambda (procedure operand-execs env succeed fail)
     (if (not (n:= (length (procedure-parameters procedure))

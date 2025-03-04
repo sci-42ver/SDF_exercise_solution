@@ -51,15 +51,15 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
     (access pp user-initial-environment)))
 
 (define-generic-procedure-handler write
-  (match-args compound-procedure?)
+  (match-args compound-procedure?*)
   (compose write procedure-printable-representation))
 
 (define-generic-procedure-handler write-line
-  (match-args compound-procedure?)
+  (match-args compound-procedure?*)
   (compose write-line procedure-printable-representation))
 
 (define-generic-procedure-handler pp
-  (match-args compound-procedure?)
+  (match-args compound-procedure?*)
   (compose pp procedure-printable-representation))
 
 ;; also see SDF_exercises/chapter_5/tests/read_behaviors.scm

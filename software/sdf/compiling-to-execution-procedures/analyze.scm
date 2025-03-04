@@ -176,7 +176,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;; coderef: apply-compound
 (define-generic-procedure-handler x:apply
-  (match-args compound-procedure? executors? environment?)
+  (match-args compound-procedure?* executors? environment?)
   (lambda (procedure operand-execs calling-environment)
     (if (not (n:= (length (procedure-parameters procedure))
                   (length operand-execs)))

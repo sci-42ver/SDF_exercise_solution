@@ -18,9 +18,26 @@
       ; (eval-operands operands calling-environment)
       ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
       ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
-      (tree-map-with-strict-compound-procedure-as-elem
-        strict-compound-procedure->underlying-procedure
-        (eval-operands operands calling-environment)))))
+      (let ((strict-compound-procedure-vars (empty-vars-with-binding-to-strict-compound-procedure)))
+        (tree-map-with-strict-compound-procedure-as-elem
+          strict-compound-procedure->underlying-procedure
+          (eval-operands* 
+            operands 
+            calling-environment
+            strict-compound-procedure-vars)))
+        )))
+(define (empty-vars-with-binding-to-strict-compound-procedure) (list 'vars-with-binding-to-strict-compound-procedure))
+(define (empty-vars-with-binding-to-strict-compound-procedure? obj) (tagged-list? obj 'vars-with-binding-to-strict-compound-procedure))
+(define (eval-operands* operands calling-environment vars-with-binding-to-strict-compound-procedure)
+  (assert (empty-vars-with-binding-to-strict-compound-procedure? vars-with-binding-to-strict-compound-procedure))
+  (map (lambda (operand)
+         (let ((val (g:advance (g:eval operand calling-environment))))
+          (if (strict-compound-procedure? val)
+            (set-cdr! vars-with-binding-to-strict-compound-procedure (cons operand (cdr vars-with-binding-to-strict-compound-procedure))))
+          val
+          )
+         )
+       operands))
 ;; IGNORE TODO no use
 ;; see SDF_exercises/chapter_5/tests/trace_apply.scm
 ; (trace apply-primitive-procedure)
@@ -74,7 +91,7 @@
           (procedure-parameters exp)
           (procedure-body exp)
           )
-        (procedure-environment exp))
+        (vector-copy (procedure-environment exp)))
       )
     (else exp))
   )
@@ -135,6 +152,17 @@
 
 ;;; > Note: This is subtle to get right, so don't spend infinite time trying to make it work perfectly.
 ;; TODO IMHO the above is correct.
+
+
+;;;; Where strict-compound-procedure may exist
+;; 0. operator must be primitive
+;; 1. procedural-arg may be strict-compound-procedure
+;; 1.a. Then there may be other strict-compound-procedure's inside body and env
+;; 2. point 1 can be used for all other operands which may contain procedural-arg.
+
+;; Here point 1 and 2 are manipulated by tree-map-with-strict-compound-procedure-as-elem.
+;; For point 1.a., we just need to pass the correct binding to env, then body can be manipulated implicitly.
+
 
 ;;; tests
 ; (define test-compound-procedure (make-compound-procedure '() '() 'env))
@@ -231,20 +259,20 @@
     (list proc1 proc2)
     (list '(1 2 3) '(1 2 3))))
 
-;;; test6
-(define fib
-  (lambda (n)
-    (cond 
-      ((= n 0) 0)
-      ((= n 1) 1)
-      ((> n 1) (+ (fib (- n 1)) (fib (- n 2))))
-      (else (error (list "wrong arg for fib" n)))
-      )
-    )
+;;; lambda-body using strict-compound-procedure
+(map
+  (lambda (a) (+ a (proc1 3)))
+  '(1 2 3)
   )
-(fib 7)
-;; here env of fib will contain itself which also needs rebinding.
-;; so when calling (strict-compound-procedure->underlying-procedure fib-val), fib needs something like (all-strict-compound-procedure-binding-val->underlying-procedure (procedure-environment fib-val)) which will call (strict-compound-procedure->underlying-procedure fib-val).
-(map fib '(1 2))
+;The object #[*compound-procedure 15] is not applicable.
+;; inside debugger
+; (pp #[*compound-procedure 15])
+; (compound-procedure (x) (* x y) <procedure-environment>)
+; (procedure-environment #[*compound-procedure 15])
+; Value: #((y) (3) #((proc2 proc1 y) (#[*compound-procedure 14] #[*compound-procedure 15] 4) (*the-empty-environment*)))
+;; So (strict-compound-procedure->underlying-procedure proc1) should also transform strict-compound-procedure's inside the env if that binding may be used inside proc1.
+;; Just like the above (lambda (a) (+ a (proc1 3))) needs change proc1 binding in env.
+;; So the recursive loop occurs.
 
 ;; No #f in the above tests, so passed.
+

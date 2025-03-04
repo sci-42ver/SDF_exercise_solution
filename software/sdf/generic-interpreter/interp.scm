@@ -179,7 +179,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; the corresponding operands in the calling environment.
 
 (define (strict-compound-procedure? object)
-  (and (compound-procedure? object)
+  (and (compound-procedure?* object)
        (every symbol? (procedure-parameters object))))
 
 ;; coderef: strict-compound-procedure
@@ -197,4 +197,4 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
              (procedure-parameters procedure)
              (eval-operands operands calling-environment)
              ;; > built on the environment packaged with the procedure
-             (procedure-environment procedure)))))
+             (procedure-environment* procedure)))))

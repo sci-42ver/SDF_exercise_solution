@@ -6,21 +6,100 @@
 
 ;;; implementation
 ;; will overload the original one. See (set-cdr! p handler) in SDF_exercises/software/sdf/common/generic-procedures.scm
+(define (empty-var-val-pairs) (list 'var-val-pairs))
+(define (new-var-val-pairs pairs) (cons 'var-val-pairs pairs))
+(define (find-var var tagged-pairs) (assq var (get-pairs tagged-pairs)))
+
+(define var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
+;; IGNORE to accelerate merge
+; (define reverse-var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
+(define get-pairs cdr)
+(define scp-up-pairs (empty-var-val-pairs))
 (define-generic-procedure-handler 
   g:apply
   (match-args strict-primitive-procedure?
               operands?
               environment?)
   (lambda (procedure operands calling-environment)
-    (apply-primitive-procedure 
-      procedure
-      ;; modified
-      ; (eval-operands operands calling-environment)
-      ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
-      ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
-      (tree-map-with-strict-compound-procedure-as-elem
-        strict-compound-procedure->underlying-procedure
-        (eval-operands operands calling-environment)))))
+    (set! var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
+    (set! scp-up-pairs (empty-var-val-pairs))
+    (let ((operands*
+            ;; modified
+            ; (eval-operands operands calling-environment)
+            ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
+            ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
+            (tree-map-with-strict-compound-procedure-as-elem
+              strict-compound-procedure->underlying-procedure
+              (eval-operands operands calling-environment))
+            ))
+      (let ((var-underlying-procedure-pairs
+              (new-var-val-pairs
+                (map 
+                  (lambda (pair)
+                    (let ((var (get-left pair)))
+                      (let ((rel-pair (find-var (get-right pair) tagged-pairs)))
+                        (if rel-pair
+                          (new-pair var (get-right rel-pair))
+                          (error (list var "doesn't get underlying-procedure")))
+                        )
+                      )
+                    )
+                  (get-pairs var-strict-compound-procedure-val-pairs)
+                  ))
+              ))
+        (apply-primitive-procedure 
+          procedure 
+          ;; we need to get all underlying procedure bindings for the rebindings.
+          (tree-map-with-underlying-compound-procedure-as-elem
+            (lambda (obj) (rewrite-env obj var-underlying-procedure-pairs))
+            operands*
+            ))   
+        )
+      )
+    ))
+(define (rewrite-env obj var-underlying-procedure-pairs)
+  (cond 
+    ((underlying-compound-procedure? obj)
+      (let ((env (procedure-environment obj)))
+        (for-each
+          (lambda (pair)
+            (let ((var (get-left pair)))
+              (if (environment-assignable? env var)
+                (environment-assign! env var (get-right pair))
+                (error (list var "is not defined in underlying-compound-procedure")))
+              )
+            )
+          var-underlying-procedure-pairs
+          ))
+      )
+    (else consequent2))
+  )
+
+;; return (operand value) pair for further bindings
+(define new-pair list)
+(define get-left car)
+(define get-right cadr)
+(define (change-pair! pair target) 
+  (assert (eq? (car target) (car pair)))
+  (set-cdr! pair (cdr target)))
+(define (add-binding-to-pairs binding tagged-pairs)
+  (let ((pairs (get-pairs tagged-pairs)))
+    (let ((val (assq (get-left binding) pairs)))
+      (if (not val)
+        (set-cdr! tagged-pairs (cons binding tagged-pairs))
+        (change-pair! val binding)))
+    ))
+(define-generic-procedure-handler g:eval
+  (match-args variable? environment?)
+  (lambda (var env)
+    (let ((val (lookup-variable-value var env)))
+      (if (strict-compound-procedure? val)
+        (add-binding-to-pairs (new-pair var val) var-strict-compound-procedure-val-pairs))
+      val
+      )  
+    )
+  )
+
 ;; IGNORE TODO no use
 ;; see SDF_exercises/chapter_5/tests/trace_apply.scm
 ; (trace apply-primitive-procedure)
@@ -50,6 +129,16 @@
     )
   (tree-map proc tree elem?)
   )
+(define (underlying-compound-procedure? obj)
+  (and (procedure? obj) (not (primitive-procedure? obj))))
+(define (tree-map-with-underlying-compound-procedure-as-elem proc tree)
+  (define (elem? obj)
+    (or (underlying-compound-procedure? obj)
+      (not (list? obj))
+      )
+    )
+  (tree-map proc tree elem?)
+  )
 ; (trace tree-map-with-strict-compound-procedure-as-elem)
 ; (trace tree-map)
 
@@ -57,24 +146,28 @@
 (define (strict-compound-procedure->underlying-procedure exp)
   (cond 
     ((strict-compound-procedure? exp)
-      (eval*
-        ;; What to pass here?
-        ;; just the original lambda-exp and lexical env.
-        ;; 0. see g:eval (match-args lambda? environment?)
-        ;; 0.a. How lambda object is ~~passed around~~ eval'ed?
-        ;; make-compound-procedure
-        ;; 0.b. Here lambda-parameters is just same as the original parameters part in (make-lambda parameters body).
-        ;; 0.b.0. lambda-body is different due to with one begin wrapper *possibly*.
-        ;; 3 cases: 
-        ;; null: (list body) -> (list '()) redundantly
-        ;; len=1: (cons params (list exp)) -> `(,params exp) fine.
-        ;; len>1: begin will be dropped, so go back to the original one but with internal begin removed.
-        ;; 0.b.1. env is just passed around intact.
-        (make-lambda-corrected
-          (procedure-parameters exp)
-          (procedure-body exp)
-          )
-        (procedure-environment exp))
+      (let ((val
+              (eval*
+                ;; What to pass here?
+                ;; just the original lambda-exp and lexical env.
+                ;; 0. see g:eval (match-args lambda? environment?)
+                ;; 0.a. How lambda object is ~~passed around~~ eval'ed?
+                ;; make-compound-procedure
+                ;; 0.b. Here lambda-parameters is just same as the original parameters part in (make-lambda parameters body).
+                ;; 0.b.0. lambda-body is different due to with one begin wrapper *possibly*.
+                ;; 3 cases: 
+                ;; null: (list body) -> (list '()) redundantly
+                ;; len=1: (cons params (list exp)) -> `(,params exp) fine.
+                ;; len>1: begin will be dropped, so go back to the original one but with internal begin removed.
+                ;; 0.b.1. env is just passed around intact.
+                (make-lambda-corrected
+                  (procedure-parameters exp)
+                  (procedure-body exp)
+                  )
+                (procedure-environment* exp))))
+        (assert (not (strict-compound-procedure? val)))
+        (add-binding-to-pairs (new-pair exp val) scp-up-pairs)
+        val)
       )
     (else exp))
   )

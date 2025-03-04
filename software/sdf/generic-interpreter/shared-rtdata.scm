@@ -66,11 +66,12 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; 1. Based on 0, if (record-predicate type) is met, just record-ref, so similar to SICP.
 (define-record-type <*compound-procedure>
     (make-compound-procedure vars bproc env)
-    compound-procedure?
+    ;; changed to avoid overloading primitive 
+    compound-procedure?*
   (vars  procedure-parameters)
   (bproc procedure-body)
-  (env   procedure-environment))
-(register-predicate! compound-procedure? 'compound-procedure?)
+  (env   procedure-environment*))
+(register-predicate! compound-procedure?* 'compound-procedure?*)
 
 (define (procedure-printable-representation procedure)
   `(compound-procedure
