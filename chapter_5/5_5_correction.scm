@@ -34,6 +34,7 @@
                 strict-compound-procedure->underlying-procedure
                 operands**
               )))
+      ; (write-line (list "operands**" operands** "operands*" operands*))
       (let ((var-underlying-procedure-pairs
               (new-var-val-pairs
                 (map 
@@ -49,13 +50,17 @@
                   (get-pairs var-strict-compound-procedure-val-pairs)
                   ))
               ))
-        (apply-primitive-procedure 
-          procedure 
-          ;; we need to get all underlying procedure bindings for the rebindings.
-          (tree-map-with-underlying-compound-procedure-as-elem
-            (lambda (obj) (rewrite-env obj var-underlying-procedure-pairs))
-            operands*
-            ))   
+        (let ((res
+                (apply-primitive-procedure 
+                  procedure 
+                  ;; we need to get all underlying procedure bindings for the rebindings.
+                  (tree-map-with-underlying-compound-procedure-as-elem
+                    (lambda (obj) (rewrite-env obj var-underlying-procedure-pairs))
+                    operands*
+                    ))))
+          (set! var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
+          (set! scp-up-pairs (empty-var-val-pairs))
+          res)
         )
       )
     ))
@@ -178,10 +183,12 @@
                   (procedure-body exp)
                   )
                 (procedure-environment* exp))))
-        (add-binding-to-pairs (new-pair exp val) scp-up-pairs))
+        (add-binding-to-pairs (new-pair exp val) scp-up-pairs)
+        val)
       (begin
         (error "should not duplicately traverse")
-        (get-val binding))
+        ; (get-val binding)
+        )
       ))
   )
 (define (strict-compound-procedure->underlying-procedure exp)
@@ -228,22 +235,33 @@
 ; #f
 (define (eval* expression environment)
   (let ((bindings (all-bindings environment)))
-    (write-line (list "eval*" expression "bindings" bindings))    
+    ; (write-line (list "eval*" expression "bindings" bindings))    
     ;; 0. to ensure all bindings including those in env can be used by the created underlying procedure.
     (for-each
       (lambda (binding)
-        (if (not (assq (get-left binding) (get-pairs var-strict-compound-procedure-val-pairs)))
-          (begin
-            ;; not traversed 
-            (add-binding-to-pairs
-              binding
-              var-strict-compound-procedure-val-pairs
+        (let ((var (get-left binding))
+              (val (get-right binding)))
+          (if (and 
+                (not (assq var (get-pairs var-strict-compound-procedure-val-pairs)))
+                (strict-compound-procedure? val)
+                )
+            (begin
+              ;; not traversed 
+              (add-binding-to-pairs
+                binding
+                var-strict-compound-procedure-val-pairs
+                )
+              (eval** val)
               )
-            (eval** (get-right binding))
-            )
-          )
+            ))
         )
-      bindings
+      (let ((vars (get-names bindings))
+            (vals (get-vals bindings)))
+        (map 
+          (lambda (var val) (new-pair var val))
+          vars
+          vals 
+          ))
       )
     (eval 
       expression 
@@ -289,6 +307,8 @@
 ;   strict-compound-procedure->underlying-procedure
 ;   eval*
 ;   )
+
+; (trace rewrite-env)
 
 ;; for-each works.
 ; (for-each 
@@ -380,12 +400,16 @@
 (fib 7)
 ;; here env of fib will contain itself which also needs rebinding.
 ;; so when calling (strict-compound-procedure->underlying-procedure fib-val), fib needs something like (all-strict-compound-procedure-binding-val->underlying-procedure (procedure-environment fib-val)) which will call (strict-compound-procedure->underlying-procedure fib-val).
-(map fib '(1 2 3 10))
+(equal? (map fib '(1 2 3 10)) '(1 1 2 55))
 
 ;;; test6.1
-(map
-  (lambda (a) (+ a (proc1 3)))
-  '(1 2 3)
+;; binding inside strict-compound-procedure is created before but not inside this invocation.
+(equal? 
+  (map
+    (lambda (a) (+ a (proc1 3))) ; (* 3 3)
+    '(1 2 3)
+    )
+  '(10 11 12)
   )
 
 ;; No #f in the above tests, so passed.

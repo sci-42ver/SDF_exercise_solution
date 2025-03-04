@@ -72,7 +72,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler g:eval
   (match-args lambda? environment?)
   (lambda (expression environment)
-    (write-line "call g:eval for lambda")
+    ; (write-line "call g:eval for lambda")
     (make-compound-procedure
      (lambda-parameters expression)
      (lambda-body expression)
