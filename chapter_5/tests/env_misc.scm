@@ -11,5 +11,7 @@
 
 (eq? (the-environment) system-global-environment)
 ;Value: #f
+(eq? (the-environment) user-initial-environment)
+;Value: #f
 ; (eq? (the-environment) exposed_env)
 ; (eq? (the-environment) exposed_env_by_new_environment)

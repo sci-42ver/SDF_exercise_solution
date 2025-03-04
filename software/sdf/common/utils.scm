@@ -33,6 +33,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (case (length args)
     ((0) (lambda (x) x))
     ((1) (car args))
+    ;; 0. not read https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Folding-of-Lists.html#index-reduce_002dright
+    ;; which uses reduce (based on fold) inside reduce-right
+    ;; 0.a. see https://srfi.schemers.org/srfi-1/srfi-1.html#delete-duplicates
+    ;; > in other words, we compute (fold-right f ridentity list)
+    ;; which is then (f e1 (f e2 ... (f en ridentity)))
+    ;; while (fold-right f e1 '(e2 ...))
+    ;; is (f e2 (f e3 ... (f en e1)))
+    ;; 0.a.0. See SDF_exercises/chapter_5/tests/reduce_right_tests.scm
+    ;; only (fold-right f ridentity list) is right.
+    ;; 1. So returns (arg_1 (arg_2 ... (arg_n x)))
     (else (reduce-right (lambda (f g)
                           (lambda (x) (f (g x))))
                         (lambda (x) x)

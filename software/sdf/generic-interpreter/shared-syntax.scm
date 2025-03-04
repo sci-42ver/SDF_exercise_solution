@@ -96,8 +96,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (lambda-parameters lambda-exp) (cadr lambda-exp))
 (define (lambda-body lambda-exp)
   (let ((full-body (cddr lambda-exp)))
-    ;; maybe SKIPPED (not said in the book)
+    ;; 0. maybe SKIPPED (not said in the book)
     ;; SDF_exercises TODO this must call with arg (list body) which then just returns body...
+    ;; 1. full-body can't be null.
+    ;; See https://standards.scheme.org/corrected-r7rs/r7rs-Z-H-3.html#TAG:__tex2page_sec_1.3.3
+    ;; and https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Definitions.html#index-lambda-6
     (sequence->begin full-body)))
 
 (define (make-lambda parameters body)
@@ -110,7 +113,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   ;; IMHO this body must be already one list as SICP shows.
                   ;; Otherwise, it should contain multiple exps together but that is impossible to be passed with only one formal parameter.
                   ;; 0.a. See the following "(cons 'lambda" which doesn't use make-lambda logic here for the non-begin block.
-                  ;; See SDF_exercises/chapter_5/tests/recursive_define.scm for when this list call makes sense. 
+                  ;; See SDF_exercises/chapter_5/tests/recursive_define.scm for when this list call makes sense (i.e. we need parenthesis wrapper for each inner lambda inside the recursive lambda).
                   (list body)))))
 
 (define procedure-parameter-name
@@ -163,6 +166,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (car clause))
 
 (define (cond-clause-consequent clause)
+  ;; incomparable for some cases. see SDF_exercises/chapter_5/tests/lambda_tests.scm
   (sequence->begin (cdr clause)))
 
 (define (else-clause? clause)
@@ -172,9 +176,14 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; better than SICP due to using the internal definition for the procedure used only by something.
   (define (expand clauses)
     (cond ((null? clauses)
-           ;; better than SICP due to the compliance with the standard https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Conditionals.html
+           ;; IGNORE better than SICP due to the compliance with the standard https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Conditionals.html
            ;; > If all predicates evaluate to false values, and there is no else clause, the result of the conditional expression is unspecified
-           (error "COND: no values matched"))
+           ;; But here we are analyzing cond but not evaluating it.
+           ;; So we should not throw errors early.
+           ;  (error "COND: no values matched")
+           ;; modified
+           'unspecified
+           )
           ;; no abstraction compared with SICP
           ((else-clause? (car clauses))
            (if (null? (cdr clauses))
@@ -188,6 +197,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                     (expand (cdr clauses))))))
   (expand (cond-clauses cond-exp)))
 
+;; return one object which has the same effects as "seq".
 (define (sequence->begin seq)
   (cond ((null? seq) seq)
         ;; no abstraction compared with SICP

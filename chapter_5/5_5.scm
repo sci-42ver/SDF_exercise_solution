@@ -1,60 +1,81 @@
-;; > procedural arguments
-;; https://en.wikipedia.org/wiki/Procedural_parameter
-
-;; > if we redefine map for our interpreter it does work:
-;; same as SICP p144 except without nil abstraction.
-
-;; > Why does it not work to use the underlying procedures that take procedural arguments, such as map? Explain.
-;; see SDF_exercises/README.md
-
-;;; > Outline a strategy to fix the problem and implement your solution.
-;; What to be done is just let the lambda object here can be executed expectedly like strict-compound-procedure.
-;; 0. IMHO just let the underlying scheme eval to return one compatible lambda object.
-;; 0.a. Notice the env arg needs to contain all necessary bindings.
-;; See (match-args strict-compound-procedure? operands? environment?)
-;; 0.a.0. length compatibility can be done by the underlying Scheme, e.g. the following will throw errors.
-; (map (lambda (x y) (* x x)) '(1 2 3))
-;; 0.a.1. IGNORE: Then we use the underlying eval instead of g:eval.
-;; We need to pass the correct env to eval just like make-compound-procedure does.
-;; 0.a.1.a. IMHO the env trivially should contain those can't be accessed by lookup-scheme-value.
-;; So it is based on (the-environment).
-
-(map (lambda (x) (* x x)) '(1 2 3))
-(define y 3)
-(map (lambda (x) (* x y)) '(1 2 3))
-;; 0.a.1.b. So it should also contain those defined in this evaluator, i.e. the-global-environment.
-;; Done by behavior1 in SDF_exercises/chapter_5/5_5_env_behaviors.scm
-;; 0.a.1.c. lookup-variable-value behavior same as the evaluator:
-;; newer in the-global-environment => older ... => (the-environment)
-;; 0.a.1.d. ";; behavior3" implies the evaluator inherence here, i.e. changes are independent of the underlying Scheme.
-
-;; IGNORE won't work
-;; tests for the 2nd => based on "shadow" in SDF_exercises/chapter_5/5_5_env_behaviors.scm
-(define test-overload-env (extend-top-level-environment (the-environment) '(*) `(,+)))
-;; notice to use quote to avoid applicative-order evaluation.
-(eval '(assert (= (+ 3 3) ((lambda (x) (* x x)) 3))) test-overload-env)
-
-;; tests for the 1st =>
-(define test-env-with-overloads-inside (extend-top-level-environment (the-environment) '(a a) `(2 3)))
-;; notice here the 1st new binding is used.
-(eval '(assert (= (* 3 2) ((lambda (x) (* x a)) 3))) test-env-with-overloads-inside)
-
-;;; implementation
-(cd "~/SICP_SDF/SDF_exercises/chapter_4")
-(eq? (the-environment) user-initial-environment)
+(cd "~/SICP_SDF/SDF_exercises/chapter_5")
+(load "5_5_preparation.scm")
 (load "../software/sdf/manager/load.scm")
-(eq? (the-environment) user-initial-environment)
 ;; many procedures inside (define-command '(new-environment . flavors) ...) are not doc'ed. So skipped.
 (manage 'new 'generic-interpreter)
-(eq? (the-environment) user-initial-environment)
+
+;;; implementation
 ;; will overload the original one. See (set-cdr! p handler) in SDF_exercises/software/sdf/common/generic-procedures.scm
-(define-generic-procedure-handler g:apply
-                                  (match-args strict-primitive-procedure?
-                                              operands?
-                                              environment?)
-                                  (lambda (procedure operands calling-environment)
-                                    (apply-primitive-procedure procedure
-                                                               (eval-operands-and-keep-underlying-procedure-arg operands calling-environment))))
+(define-generic-procedure-handler 
+  g:apply
+  (match-args strict-primitive-procedure?
+              operands?
+              environment?)
+  (lambda (procedure operands calling-environment)
+    (apply-primitive-procedure 
+      procedure
+      ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
+      ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
+      (tree-map-with-strict-compound-procedure-as-elem
+        strict-compound-procedure->underlying-procedure
+        (eval-operands operands calling-environment)))))
+;; IGNORE TODO no use
+;; see SDF_exercises/chapter_5/tests/trace_apply.scm
+; (trace apply-primitive-procedure)
+
+(define (make-lambda-corrected parameters body)
+  (cons 'lambda
+        (cons parameters
+              (cond 
+                ((begin? body) (begin-actions body))
+                ;; see SDF_exercises/chapter_5/tests/lambda_tests.scm
+                ;; for simplicity, here we skip cond manipulation correction.
+                ((null? body) (error "invalid lambda"))
+                (else (list body))))))
+
+(cd "~/SICP_SDF/SDF_exercises")
+(load "common-lib/tree-lib.scm")
+(define (tree-map-with-strict-compound-procedure-as-elem proc tree)
+  (define (elem? obj)
+    ;; here exp may work due to using parent env bindings.
+    ; (or (strict-compound-procedure? exp)
+    ;   ;; we won't descend deeper than eval-operands.
+    ;   (not (list? exp))
+    ;   )
+    (or (strict-compound-procedure? obj)
+      (not (list? obj))
+      )
+    )
+  (tree-map proc tree elem?)
+  )
+; (trace tree-map-with-strict-compound-procedure-as-elem)
+; (trace tree-map)
+
+;; transform if possible
+(define (strict-compound-procedure->underlying-procedure exp)
+  (cond 
+    ((strict-compound-procedure? exp)
+      (eval*
+        ;; What to pass here?
+        ;; just the original lambda-exp and lexical env.
+        ;; 0. see g:eval (match-args lambda? environment?)
+        ;; 0.a. How lambda object is ~~passed around~~ eval'ed?
+        ;; make-compound-procedure
+        ;; 0.b. Here lambda-parameters is just same as the original parameters part in (make-lambda parameters body).
+        ;; 0.b.0. lambda-body is different due to with one begin wrapper *possibly*.
+        ;; 3 cases: 
+        ;; null: (list body) -> (list '()) redundantly
+        ;; len=1: (cons params (list exp)) -> `(,params exp) fine.
+        ;; len>1: begin will be dropped, so go back to the original one but with internal begin removed.
+        ;; 0.b.1. env is just passed around intact.
+        (make-lambda-corrected
+          (procedure-parameters exp)
+          (procedure-body exp)
+          )
+        (procedure-environment exp))
+      )
+    (else exp))
+  )
 
 (define (new-bindings names vals) (cons names vals))
 (define set-names set-car!)
@@ -86,10 +107,11 @@
       )
     )
   )
-(write-line (list "outside of the interpreter" (eq? base-env user-initial-environment)))
+; (write-line (list "outside of the interpreter" (eq? base-env user-initial-environment)))
+; #f
 (define (eval* expression environment)
   (let ((bindings (all-bindings environment)))
-    (write-line (list "eval* bindings" bindings))
+    (write-line (list "eval*" expression "bindings" bindings))
     (eval 
       expression 
       (extend-top-level-environment
@@ -113,20 +135,98 @@
 ;; TODO IMHO the above is correct.
 
 ;;; tests
+; (define test-compound-procedure (make-compound-procedure '() '() 'env))
+; test-compound-procedure
+; (pp test-compound-procedure)
+; (compound-procedure () () <procedure-environment>)
+; (define outside-pp pp)
+
 ; (trace extend-top-level-environment) ; no use
 ; (trace eval*)
 (init)
-;; normal
-(equal? '(1 4 9) (map (lambda (x) (* x x)) '(1 2 3)))
+;;; normal
+;; dot . inside parameter list is unsupported.
+; (cd "~/SICP_SDF/SDF_exercises/chapter_5")
+; (load "../common-lib/test-lib.scm")
+; (trace-wrapper
+;   (lambda () (equal? '(1 4 9) (map (lambda (x) (* x x)) '(1 2 3))))
+;   strict-compound-procedure->underlying-procedure
+;   eval*
+;   )
 
-;; using outside var
+;; for-each works.
+; (for-each 
+;   (lambda (proc) (trace proc)) 
+;   (list
+;     strict-compound-procedure->underlying-procedure
+;     eval*
+;     ))
+;; assert is not one primitive, so not use it.
+(equal? '(1 4 9) (map (lambda (x) (* x x)) '(1 2 3)))
+; (for-each 
+;   (lambda (proc) (untrace proc))
+;   (list
+;     ;; TODO these are all defined in (model 'get-environment). See SDF_exercises/software/sdf/manager/software-manager.scm. Unsure due to force-top-level-repl! etc.
+;     strict-compound-procedure->underlying-procedure
+;     eval*
+;     ))
+
+;;; using outside var
 (define y 3)
 (equal? '(3 6 9) (map (lambda (x) (* x y)) '(1 2 3)))
 
-;; overload var definitions
+;;; overload var definitions and also "using outside var"
 (equal? 
-  '(4 8 12)
+  (map (lambda (num) (* num y)) '(4 8 12))
   ;; here map will have 2 bindings for a.
   ;; So the a for map is 4.
-  ((lambda (a) ((lambda (a) (map (lambda (x) (* x a)) '(1 2 3))) (+ a a))) 2)
+  ((lambda (a) ((lambda (a) (map (lambda (x) (* x a y)) '(1 2 3))) (+ a a))) 2)
   )
+
+;;; proc arg existed deep inside operands
+;; and using compound porc var
+(define y 3)
+;; should use the above definition instead of the next inside the following (map map ,,,)
+(define proc1 (lambda (x) (* x y)))
+; (trace procedure-printable-representation)
+; (trace lookup-variable-value)
+; (eq? outside-pp pp) ; #t
+;; Based on the above implementation, here proc1 => strict-compound-procedure => underlying proc, so here we don't call procedure-printable-representation.
+; (pp proc1)
+; ("eval*" (lambda (x) (* x y)) "bindings" ((proc1 y) #[*compound-procedure 14] 3))
+; (lambda (x)
+;   (* x y))
+; #!unspecific
+(define y 4)
+; (pp proc1)
+; ("eval*" (lambda (x) (* x y)) "bindings" ((proc1 y) #[*compound-procedure 14] 4))
+
+(define proc2 (lambda (x) (+ x y)))
+; (trace eval*)
+(equal?
+  '((4 8 12) (5 6 7))
+  (map 
+    map
+    (list proc1 proc2)
+    (list '(1 2 3) '(1 2 3))))
+;; see SDF_exercises/chapter_5/5_5_lexical_scope_behaviors.scm
+;; here proc1's y is modified later because it is "A *top-level* definition".
+;; See define-variable! which may call set!.
+
+;;; ensure env-arg is stored to implement lexical scope.
+(define proc1 
+  ((lambda ()
+    (define y 3)
+    ;; this should use the extended env by (lambda () ...) with the y binding shadowing the outside one.
+    (lambda (x) (* x y))
+    )))
+;; still use the "top-level" y.
+(define proc2 (lambda (x) (* x y)))
+(equal?
+  '((3 6 9) (4 8 12))
+  (map 
+    map
+    (list proc1 proc2)
+    (list '(1 2 3) '(1 2 3))))
+
+;; No #f in the above tests, so passed.
