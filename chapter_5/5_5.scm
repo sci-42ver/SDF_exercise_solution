@@ -14,6 +14,8 @@
   (lambda (procedure operands calling-environment)
     (apply-primitive-procedure 
       procedure
+      ;; modified
+      ; (eval-operands operands calling-environment)
       ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
       ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
       (tree-map-with-strict-compound-procedure-as-elem
@@ -144,7 +146,7 @@
 ; (trace extend-top-level-environment) ; no use
 ; (trace eval*)
 (init)
-;;; normal
+;;; test1 normal
 ;; dot . inside parameter list is unsupported.
 ; (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 ; (load "../common-lib/test-lib.scm")
@@ -171,11 +173,11 @@
 ;     eval*
 ;     ))
 
-;;; using outside var
+;;; test2 using outside var
 (define y 3)
 (equal? '(3 6 9) (map (lambda (x) (* x y)) '(1 2 3)))
 
-;;; overload var definitions and also "using outside var"
+;;; test3 overload var definitions and also "using outside var"
 (equal? 
   (map (lambda (num) (* num y)) '(4 8 12))
   ;; here map will have 2 bindings for a.
@@ -183,8 +185,8 @@
   ((lambda (a) ((lambda (a) (map (lambda (x) (* x a y)) '(1 2 3))) (+ a a))) 2)
   )
 
-;;; proc arg existed deep inside operands
-;; and using compound porc var
+;;; test4 proc arg existed deep inside operands
+;; and using compound porc "var"
 (define y 3)
 ;; should use the above definition instead of the next inside the following (map map ,,,)
 (define proc1 (lambda (x) (* x y)))
@@ -213,7 +215,7 @@
 ;; here proc1's y is modified later because it is "A *top-level* definition".
 ;; See define-variable! which may call set!.
 
-;;; ensure env-arg is stored to implement lexical scope.
+;;; test5 ensure env-arg is stored to implement lexical scope.
 (define proc1 
   ((lambda ()
     (define y 3)
