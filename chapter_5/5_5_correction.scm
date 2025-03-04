@@ -37,7 +37,7 @@
                 (map 
                   (lambda (pair)
                     (let ((var (get-left pair)))
-                      (let ((rel-pair (find-var (get-right pair) tagged-pairs)))
+                      (let ((rel-pair (find-var (get-right pair) scp-up-pairs)))
                         (if rel-pair
                           (new-pair var (get-right rel-pair))
                           (error (list var "doesn't get underlying-procedure")))
@@ -69,10 +69,12 @@
                 (error (list var "is not defined in underlying-compound-procedure")))
               )
             )
-          var-underlying-procedure-pairs
-          ))
+          (get-pairs var-underlying-procedure-pairs)
+          )
+        obj
+        )
       )
-    (else consequent2))
+    (else obj))
   )
 
 ;; return (operand value) pair for further bindings
@@ -86,12 +88,14 @@
   (let ((pairs (get-pairs tagged-pairs)))
     (let ((val (assq (get-left binding) pairs)))
       (if (not val)
-        (set-cdr! tagged-pairs (cons binding tagged-pairs))
+        (set-cdr! tagged-pairs (cons binding pairs))
         (change-pair! val binding)))
+    tagged-pairs
     ))
 (define-generic-procedure-handler g:eval
   (match-args variable? environment?)
   (lambda (var env)
+    ; (write-line "call new (variable? environment?) g:eval handler")
     (let ((val (lookup-variable-value var env)))
       (if (strict-compound-procedure? val)
         (add-binding-to-pairs (new-pair var val) var-strict-compound-procedure-val-pairs))
@@ -298,6 +302,7 @@
 
 (define proc2 (lambda (x) (+ x y)))
 ; (trace eval*)
+; (trace add-binding-to-pairs)
 (equal?
   '((4 8 12) (5 6 7))
   (map 
@@ -338,6 +343,12 @@
 (fib 7)
 ;; here env of fib will contain itself which also needs rebinding.
 ;; so when calling (strict-compound-procedure->underlying-procedure fib-val), fib needs something like (all-strict-compound-procedure-binding-val->underlying-procedure (procedure-environment fib-val)) which will call (strict-compound-procedure->underlying-procedure fib-val).
-(map fib '(1 2))
+(map fib '(1 2 3 10))
+
+;;; test6.1
+(map
+  (lambda (a) (+ a (proc1 3)))
+  '(1 2 3)
+  )
 
 ;; No #f in the above tests, so passed.
