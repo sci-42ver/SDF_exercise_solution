@@ -1,3 +1,5 @@
+;;; Also see Problem 3 in 6.945_assignment_solution/ps06/ps06.scm
+
 ;; > But it did not allow the use of unbound variables as literal numbers.
 ;; See SDF_exercises/software/sdf/combining-arithmetics/test-standard-arith.scm
 ;; where we only consider something like 'a but not a.
@@ -59,6 +61,7 @@ numeric-arithmetic))
     (named-lambda (lookup-scheme-value var)
                   ;; Using allow-self-evaluating-symbols only here is enough to decide whether unbound-var can be var symbol.
                   (if allow-self-evaluating-symbols
+                    ;; Added
                     ;; https://stackoverflow.com/a/23502038/21294350
                     (if (environment-bound? env var)
                       (lexical-reference env var)
@@ -116,3 +119,7 @@ numeric-arithmetic))
 (+ (* 2 3) (* 4 5))
 (+ (* a 3) (* 4 5))
 (+ (f 3) (* 4 5))
+
+;; tests from 6.945_assignment_solution/ps06/ps06.scm
+(define (f x y) (* x y))
+(f 2 3)

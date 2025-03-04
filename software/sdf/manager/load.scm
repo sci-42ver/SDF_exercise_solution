@@ -21,9 +21,11 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 |#
 
+(define exposed_env)
+
 (let ((here (directory-pathname (current-load-pathname)))
       (manager-env (make-top-level-environment)))
-
+  ; (write-line (list "load here:" here))
   ; (pp manager-env)
   (define (load-1 name)
     (load (merge-pathnames name here)
@@ -42,6 +44,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (load-1 "analyze-sections")
   (load-1 "software-manager")
 
+  (set! exposed_env manager-env)
   ;; 
   (environment-define system-global-environment
                       'manage

@@ -189,13 +189,17 @@ The read-eval-print loop is moved to be in that environment."
       (guarantee-flavor-compatibility flavors)
       (if (pair? flavors)
           (let ((load-specs (compute-flavor-load-specs)))
+            ;; https://standards.scheme.org/corrected-r7rs/r7rs-Z-H-8.html#TAG:__tex2page_index_1098
+            ;; This doesn't use (interaction-environment) but (model 'get-environment) which is not doc'ed...
             (load-flavor-from-spec (flavor-load-spec (car flavors) load-specs)
                                    model)
             (for-each (lambda (flavor)
                         (add-flavor model flavor load-specs))
                       (cdr flavors))))
+      (write-line "finish loading")
       ;; just change `system-global-environment`.
       (enter-working-environment model)
+      (write-line "finished new-environment")
       ;; SKIPPED SDF_exercises TODO all 3 used procedures in force-top-level-repl! are not defined anywhere in this code base. 
       ;; And they are also not shown in MIT_Scheme_Reference.
       ;; Google "scheme doc "abort->top-level"" no useful references.
@@ -203,7 +207,8 @@ The read-eval-print loop is moved to be in that environment."
                              `(manage 'new-environment
                                       ,@(map (lambda (flavor) `',flavor)
                                              flavors))
-                             (model 'get-environment)))))
+                             (model 'get-environment))
+      )))
 
 (define-command '(add-flavor flavor)
   "Adds FLAVOR to an existing working environment."

@@ -53,6 +53,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (quoted? exp) (tagged-list? exp 'quote))
 (register-predicate! quoted? 'quoted)
 
+;; (cadr '(quote (+ 1 2))) => (+ 1 2) which is list, see (list? (cadr '(quote (+ 1 2)))).
 (define (text-of-quotation quot) (cadr quot))
 
 

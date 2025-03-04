@@ -78,8 +78,17 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (string-splitter 'delimiter char-set:punctuation
                    'allow-runs? #f))
 
+;; added for debug
+(define exposed_env_by_new_environment)
+
 (define (force-top-level-repl! value expression environment)
+  (write-line "run force-top-level-repl!")
   (abort->top-level
    (lambda (cmdl)
      (set-repl/environment! cmdl environment)
-     (repl-write value expression cmdl))))
+     (repl-write value expression cmdl)
+     ;; no use
+     ;  ;; added
+     ;  (set! exposed_env_by_new_environment (model 'get-environment))
+     ;  (write-line "finished new-environment")
+     )))

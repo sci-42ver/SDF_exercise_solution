@@ -133,11 +133,20 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; Extension to make underlying Scheme values available to
 ;;; interpreter
 
+;; Here (the-environment) will probably be modified later by define etc.
+;; So later (lookup-scheme-value 'define-variable!) can work.
 (define lookup-scheme-value
   (let ((env (the-environment)))
     (named-lambda (lookup-scheme-value var)
+      ;; will have #f. See SDF_exercises/software/sdf/manager/software-manager.scm new-environment comments.
+      ; (write-line (list "lookup-scheme-value" (eq? env user-initial-environment)))
+      ;; here env is that created by (manage 'new 'generic-interpreter), i.e. new-environment.
+      ; (write-line (list "lookup-scheme-value" (eq? env base-env)))
       ;; not in MIT_Scheme_Reference
       (lexical-reference env var))))
+
+;; added
+(define base-env (the-environment))
 
 (define (define-variable! var val env)
   (let scan
