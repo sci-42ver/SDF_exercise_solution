@@ -10,45 +10,45 @@
 (define (strict-compound-procedure? object)
   (and (compound-procedure? object)
        (let ((params (procedure-parameters object)))
-        (or (and (list? params) (every symbol? params))
-          (variable? params)
-          ))
+         (or (and (list? params) (every symbol? params))
+             (variable? params)
+             ))
        ))
 ;; overload handler as add-handler! and get-handler implies
 (define-generic-procedure-handler g:apply
-  (match-args strict-compound-procedure? operands? environment?)
-  (lambda (procedure operands calling-environment)
-    (let ((params (procedure-parameters procedure)))
-      (cond 
-        ((list? params)
-          (if (not (n:= (length params)
-                        (length operands)))
-              (error "Wrong number of operands supplied"))
-        )
-        (else 'pass-check)
-        )
-      ;; > We also can extract the body of the procedure, which
-      (g:eval (procedure-body procedure)
-              ;; > we will pass to eval with an environment that includes the formal parameter bindings.
-              (extend-environment
-                params
-                (eval-operands operands calling-environment)
-                ;; > built on the environment packaged with the procedure
-                (procedure-environment procedure))))
-    ))
+                                  (match-args strict-compound-procedure? operands? environment?)
+                                  (lambda (procedure operands calling-environment)
+                                    (let ((params (procedure-parameters procedure)))
+                                      (cond 
+                                        ((list? params)
+                                         (if (not (n:= (length params)
+                                                       (length operands)))
+                                           (error "Wrong number of operands supplied"))
+                                         )
+                                        (else 'pass-check)
+                                        )
+                                      ;; > We also can extract the body of the procedure, which
+                                      (g:eval (procedure-body procedure)
+                                              ;; > we will pass to eval with an environment that includes the formal parameter bindings.
+                                              (extend-environment
+                                                params
+                                                (eval-operands operands calling-environment)
+                                                ;; > built on the environment packaged with the procedure
+                                                (procedure-environment procedure))))
+                                    ))
 ;; for modularity, here I checked for variables type both in extend-environment and the above  handler. Maybe there is one better alternative ~~TODO~~ (See "to add a new handler").
 (define (extend-environment variables values base-environment)
   (cond 
     ((list? variables)
      (if (not (fix:= (length variables) (length values)))
-          (if (fix:< (length variables) (length values))
-              (error "Too many arguments supplied" variables values)
-              (error "Too few arguments supplied" variables values)))
+       (if (fix:< (length variables) (length values))
+         (error "Too many arguments supplied" variables values)
+         (error "Too few arguments supplied" variables values)))
      (vector variables values base-environment)
      )
     ((variable? variables) 
-      (vector (list variables) (list values) base-environment)
-      )
+     (vector (list variables) (list values) base-environment)
+     )
     (else (error "Incompatible arguments supplied" variables values))
     )
   )
@@ -69,18 +69,18 @@
        (variable? (procedure-parameters object))
        ))
 (define-generic-procedure-handler g:apply
-  (match-args compound-procedure-with-symbol-arg? operands? environment?)
-  (lambda (procedure operands calling-environment)
-    (let ((params (procedure-parameters procedure)))
-      ;; > We also can extract the body of the procedure, which
-      (g:eval (procedure-body procedure)
-              ;; > we will pass to eval with an environment that includes the formal parameter bindings.
-              (extend-environment
-                (list params)
-                (list (eval-operands operands calling-environment))
-                ;; > built on the environment packaged with the procedure
-                (procedure-environment procedure))))
-    ))
+                                  (match-args compound-procedure-with-symbol-arg? operands? environment?)
+                                  (lambda (procedure operands calling-environment)
+                                    (let ((params (procedure-parameters procedure)))
+                                      ;; > We also can extract the body of the procedure, which
+                                      (g:eval (procedure-body procedure)
+                                              ;; > we will pass to eval with an environment that includes the formal parameter bindings.
+                                              (extend-environment
+                                                (list params)
+                                                (list (eval-operands operands calling-environment))
+                                                ;; > built on the environment packaged with the procedure
+                                                (procedure-environment procedure))))
+                                    ))
 
 ;; same tests as the above
 (init)

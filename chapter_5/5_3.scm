@@ -13,15 +13,15 @@
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'generic-interpreter)
 (define-generic-procedure-handler g:apply
-  (match-args vector?
-              operands?
-              environment?)
-  (lambda (procedure operands calling-environment)
-		;; same as 6.945_assignment_solution/ps06/ps06.scm but using vector-map directly.
-    (vector-map 
-			(lambda (proc-elem) (g:apply proc-elem operands calling-environment)) 
-			procedure)
-		))
+                                  (match-args vector?
+                                              operands?
+                                              environment?)
+                                  (lambda (procedure operands calling-environment)
+                                    ;; same as 6.945_assignment_solution/ps06/ps06.scm but using vector-map directly.
+                                    (vector-map 
+                                      (lambda (proc-elem) (g:apply proc-elem operands calling-environment)) 
+                                      procedure)
+                                    ))
 
 ;; > demonstrate it
 (init)
