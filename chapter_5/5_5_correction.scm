@@ -23,15 +23,17 @@
   (lambda (procedure operands calling-environment)
     (set! var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
     (set! scp-up-pairs (empty-var-val-pairs))
-    (let ((operands*
-            ;; modified
-            ; (eval-operands operands calling-environment)
-            ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
-            ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
-            (tree-map-with-strict-compound-procedure-as-elem
-              strict-compound-procedure->underlying-procedure
-              (eval-operands operands calling-environment))
-            ))
+    (let* ((operands** (eval-operands operands calling-environment))
+            (operands*
+              ;; modified
+              ; (eval-operands operands calling-environment)
+              ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
+              ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
+              (tree-map-with-strict-compound-procedure-as-elem
+                ;; only used here
+                strict-compound-procedure->underlying-procedure
+                operands**
+              )))
       (let ((var-underlying-procedure-pairs
               (new-var-val-pairs
                 (map 
@@ -60,7 +62,12 @@
 (define (rewrite-env obj var-underlying-procedure-pairs)
   (cond 
     ((underlying-compound-procedure? obj)
+      ;; modify the created underlying procedure env to avoid influence interpreter env
+      ;; although much inefficient.
       (let ((env (procedure-environment obj)))
+        ;; actually all strict-compound-procedure's are needed to be changed to be underlying procedure.
+        ; (let (variables)
+        ;   ())
         (for-each
           (lambda (pair)
             (let ((var (get-left pair)))
@@ -147,9 +154,11 @@
 ; (trace tree-map)
 
 ;; transform if possible
-(define (strict-compound-procedure->underlying-procedure exp)
-  (cond 
-    ((strict-compound-procedure? exp)
+(define (eval** exp)
+  (assert (strict-compound-procedure? exp))
+  ;; to avoid loop
+  (let ((binding (find-var exp scp-up-pairs)))
+    (if (not binding)
       (let ((val
               (eval*
                 ;; What to pass here?
@@ -169,8 +178,17 @@
                   (procedure-body exp)
                   )
                 (procedure-environment* exp))))
+        (add-binding-to-pairs (new-pair exp val) scp-up-pairs))
+      (begin
+        (error "should not duplicately traverse")
+        (get-val binding))
+      ))
+  )
+(define (strict-compound-procedure->underlying-procedure exp)
+  (cond 
+    ((strict-compound-procedure? exp)
+      (let ((val (eval** exp)))
         (assert (not (strict-compound-procedure? val)))
-        (add-binding-to-pairs (new-pair exp val) scp-up-pairs)
         val)
       )
     (else exp))
@@ -210,7 +228,23 @@
 ; #f
 (define (eval* expression environment)
   (let ((bindings (all-bindings environment)))
-    (write-line (list "eval*" expression "bindings" bindings))
+    (write-line (list "eval*" expression "bindings" bindings))    
+    ;; 0. to ensure all bindings including those in env can be used by the created underlying procedure.
+    (for-each
+      (lambda (binding)
+        (if (not (assq (get-left binding) (get-pairs var-strict-compound-procedure-val-pairs)))
+          (begin
+            ;; not traversed 
+            (add-binding-to-pairs
+              binding
+              var-strict-compound-procedure-val-pairs
+              )
+            (eval** (get-right binding))
+            )
+          )
+        )
+      bindings
+      )
     (eval 
       expression 
       (extend-top-level-environment
@@ -221,7 +255,10 @@
         ;; base env used by lookup-scheme-value.
         base-env
         (get-names bindings)
-        (get-vals bindings))))
+        ;; not use this to avoid loop, see SDF_exercises/chapter_5/5_5_loop_problem.scm
+        ; (map strict-compound-procedure->underlying-procedure (get-vals bindings))
+        (get-vals bindings)
+        )))
   )
 (define (eval-operands-and-keep-underlying-procedure-arg operands calling-environment)
   (map (lambda (operand)
