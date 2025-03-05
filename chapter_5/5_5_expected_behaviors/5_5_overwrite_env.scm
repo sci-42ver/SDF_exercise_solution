@@ -13,7 +13,8 @@
 (* 1 2 (+ 1 20))
 
 ;;
-(define f (lambda (x) (+ x 10)))
+; (define f (lambda (x) (+ x 10)))
 
+;; all can access procedure-environment
 (procedure-environment base-lambda)
 (procedure-environment lambda1)

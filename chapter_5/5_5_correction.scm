@@ -1,3 +1,6 @@
+;; based on SDF_exercises/chapter_5/5_5.scm when with problems shown by SDF_exercises/chapter_5/5_5_loop_problem.scm
+;; also see https://stackoverflow.com/q/79484080/21294350
+
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_5_preparation.scm")
 (load "../software/sdf/manager/load.scm")
@@ -23,6 +26,9 @@
   (lambda (procedure operands calling-environment)
     (set! var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
     (set! scp-up-pairs (empty-var-val-pairs))
+    ;; For modularity, I did map in 2 steps instead of combining them into one.
+    ;; TODO interested readers can do that for efficiency.
+    ;; To do that, we need to wrap g:eval with strict-compound-procedure->underlying-procedure like one post-hook in gdb.
     (let* ((operands** (eval-operands operands calling-environment))
             (operands*
               ;; modified
