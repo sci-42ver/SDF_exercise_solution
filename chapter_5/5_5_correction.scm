@@ -35,6 +35,7 @@
                 operands**
               )))
       ; (write-line (list "operands**" operands** "operands*" operands*))
+      ;; needed to quickly rewrite-env
       (let ((var-underlying-procedure-pairs
               (new-var-val-pairs
                 (map 
@@ -50,6 +51,7 @@
                   (get-pairs var-strict-compound-procedure-val-pairs)
                   ))
               ))
+        ;; TODO IMHO can't simultaneously done with the above strict-compound-procedure->underlying-procedure due to loop
         (let ((res
                 (apply-primitive-procedure 
                   procedure 
@@ -58,8 +60,10 @@
                     (lambda (obj) (rewrite-env obj var-underlying-procedure-pairs))
                     operands*
                     ))))
+          ;; reset for the next g:apply
           (set! var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
           (set! scp-up-pairs (empty-var-val-pairs))
+          ;; return
           res)
         )
       )
