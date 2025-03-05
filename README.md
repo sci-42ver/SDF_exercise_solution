@@ -1,6 +1,3 @@
-@bksunday At least for now, there is one better alternative https://launchpad.net/ubuntu/+source/kwallet-pam which is recommended in https://wiki.archlinux.org/title/KDE_Wallet#Unlock_KDE_Wallet_automatically_on_login (also see Tip for additional Infos of this answer). With `sddm`, it is even more simpler by just installing this pam https://wiki.archlinux.org/title/PAM#See_also. Notice "The chosen KWallet password must be the *same* as the current user password." otherwise pam can't do something like autologin. `auto_start` arg: https://wiki.gnome.org/Projects(2f)GnomeKeyring(2f)Pam.html.
-
-"Can someone explain the downvote?": I didn't downvote for you. Maybe others do that due to https://wiki.archlinux.org/title/KDE_Wallet#Unlock_KDE_Wallet_automatically_on_login "Tip".
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
@@ -26,6 +23,8 @@
 ## ~~unrelated with programming strategies since my goal is "A strong understanding of programming" said in mit_6-046j_2005~~
 ## maybe need some inspiration
 - 5.4
+## obscure exercise description...
+- 5.6
 # partially done exercises
 - 4.13
   - > `match:compile-pattern` used in `maybe-substitute`
@@ -108,7 +107,8 @@ Just see "@% reference implementation checked".
 - 4 (4.12, 25 skipped)
   - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~24.
   - so all that can be done by myself have been done.
-- 5
+- 5 Use `grep -w -E "(test|tests|demonstrate)" -r .`
+  all exercises done up to 5.6.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
@@ -514,18 +514,20 @@ It seems to have no test files by searching "r:seq" with only 1 result file.
   3. SDF_exercises/chapter_4/4_23_graph_match_lib/simple_move_mod.scm combining all other `simple-move` implementations.
 ## @%chapter 5
 ### @%keywords to search for reference implementation
+notice only doc'ed after *having checked* the reference implementation
 - 5.1 `(+ (f 3) (* 4 5))`
 - 5.2 `procedure-parameters`
 - 3 `(lambda (procedure operands calling-environment)`
 - 4 "fun "
-- 
+- 5 `(map (lambda (x) (* x x)) '(1 2 3))`
+- 6 mdl ?
 ### comments
 - 5
   > However, primitives that take procedures as arguments, such as map or filter, will not accept nonprimitive procedures (i.e., those created by this interpreter from lambda expressions).
   see SCIP Exercise 4.14.
   IMHO just similar, due to the "created" "nonprimitive procedures" are by `make-compound-procedure` unrecognized by the "Scheme primitive".
 ### @%TODO
-## @% reference implementation checked
+## reference implementation checked
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 
 - For chapter 4, 4.1~25 have been checked with 
   include: `chebert*/**/*.rkt,6.945*/*/*.scm,sdf_mbillingr*/**/*.scm,sdf/**/*.scm` (`6.945*/*/*.scm` is to skip all lib files in something like `6.945_assignment_solution/ps06/code/*.scm`)
