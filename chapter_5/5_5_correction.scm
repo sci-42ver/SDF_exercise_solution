@@ -30,16 +30,16 @@
     ;; TODO interested readers can do that for efficiency.
     ;; To do that, we need to wrap g:eval with strict-compound-procedure->underlying-procedure like one post-hook in gdb.
     (let* ((operands** (eval-operands operands calling-environment))
-            (operands*
-              ;; modified
-              ; (eval-operands operands calling-environment)
-              ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
-              ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
-              (tree-map-with-strict-compound-procedure-as-elem
-                ;; only used here
-                strict-compound-procedure->underlying-procedure
-                operands**
-              )))
+           (operands*
+             ;; modified
+             ; (eval-operands operands calling-environment)
+             ;; 0. not use eval-operands-and-keep-underlying-procedure-arg because we may have one var whose val is lambda procedure.
+             ;; 1. Here proc-arg may be still something like map, so we need to dig into operands to  transform all strict-compound-procedure's.
+             (tree-map-with-strict-compound-procedure-as-elem
+               ;; only used here
+               strict-compound-procedure->underlying-procedure
+               operands**
+               )))
       ; (write-line (list "operands**" operands** "operands*" operands*))
       ;; needed to quickly rewrite-env
       (let ((var-underlying-procedure-pairs
@@ -77,25 +77,25 @@
 (define (rewrite-env obj var-underlying-procedure-pairs)
   (cond 
     ((underlying-compound-procedure? obj)
-      ;; modify the created underlying procedure env to avoid influence interpreter env
-      ;; although much inefficient.
-      (let ((env (procedure-environment obj)))
-        ;; actually all strict-compound-procedure's are needed to be changed to be underlying procedure.
-        ; (let (variables)
-        ;   ())
-        (for-each
-          (lambda (pair)
-            (let ((var (get-left pair)))
-              (if (environment-assignable? env var)
-                (environment-assign! env var (get-right pair))
-                (error (list var "is not defined in underlying-compound-procedure")))
-              )
-            )
-          (get-pairs var-underlying-procedure-pairs)
-          )
-        obj
-        )
-      )
+     ;; modify the created underlying procedure env to avoid influence interpreter env
+     ;; although much inefficient.
+     (let ((env (procedure-environment obj)))
+       ;; actually all strict-compound-procedure's are needed to be changed to be underlying procedure.
+       ; (let (variables)
+       ;   ())
+       (for-each
+         (lambda (pair)
+           (let ((var (get-left pair)))
+             (if (environment-assignable? env var)
+               (environment-assign! env var (get-right pair))
+               (error (list var "is not defined in underlying-compound-procedure")))
+             )
+           )
+         (get-pairs var-underlying-procedure-pairs)
+         )
+       obj
+       )
+     )
     (else obj))
   )
 
@@ -115,16 +115,16 @@
     tagged-pairs
     ))
 (define-generic-procedure-handler g:eval
-  (match-args variable? environment?)
-  (lambda (var env)
-    ; (write-line "call new (variable? environment?) g:eval handler")
-    (let ((val (lookup-variable-value var env)))
-      (if (strict-compound-procedure? val)
-        (add-binding-to-pairs (new-pair var val) var-strict-compound-procedure-val-pairs))
-      val
-      )  
-    )
-  )
+                                  (match-args variable? environment?)
+                                  (lambda (var env)
+                                    ; (write-line "call new (variable? environment?) g:eval handler")
+                                    (let ((val (lookup-variable-value var env)))
+                                      (if (strict-compound-procedure? val)
+                                        (add-binding-to-pairs (new-pair var val) var-strict-compound-procedure-val-pairs))
+                                      val
+                                      )  
+                                    )
+                                  )
 
 ;; IGNORE TODO no use
 ;; see SDF_exercises/chapter_5/tests/trace_apply.scm
@@ -150,8 +150,8 @@
     ;   (not (list? exp))
     ;   )
     (or (strict-compound-procedure? obj)
-      (not (list? obj))
-      )
+        (not (list? obj))
+        )
     )
   (tree-map proc tree elem?)
   )
@@ -160,8 +160,8 @@
 (define (tree-map-with-underlying-compound-procedure-as-elem proc tree)
   (define (elem? obj)
     (or (underlying-compound-procedure? obj)
-      (not (list? obj))
-      )
+        (not (list? obj))
+        )
     )
   (tree-map proc tree elem?)
   )
@@ -204,10 +204,10 @@
 (define (strict-compound-procedure->underlying-procedure exp)
   (cond 
     ((strict-compound-procedure? exp)
-      (let ((val (eval** exp)))
-        (assert (not (strict-compound-procedure? val)))
-        val)
-      )
+     (let ((val (eval** exp)))
+       (assert (not (strict-compound-procedure? val)))
+       val)
+     )
     (else exp))
   )
 
@@ -383,10 +383,10 @@
 ;;; test5 ensure env-arg is stored to implement lexical scope.
 (define proc1 
   ((lambda ()
-    (define y 3)
-    ;; this should use the extended env by (lambda () ...) with the y binding shadowing the outside one.
-    (lambda (x) (* x y))
-    )))
+     (define y 3)
+     ;; this should use the extended env by (lambda () ...) with the y binding shadowing the outside one.
+     (lambda (x) (* x y))
+     )))
 ;; still use the "top-level" y.
 (define proc2 (lambda (x) (* x y)))
 (equal?

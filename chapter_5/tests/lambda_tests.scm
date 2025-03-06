@@ -57,8 +57,8 @@
           (make-begin
             (append-map (lambda (exp)
                           (if (begin? exp)
-                              (begin-actions exp)
-                              (list exp)))
+                            (begin-actions exp)
+                            (list exp)))
                         seq)))))
 (define (let-body let-exp) 
   (sequence->begin 

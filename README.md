@@ -1,3 +1,6 @@
+@WillNess Thanks for pointing out my writing problems. I have removed long-winded description less related with my final question and keep the related still lengthy to ensure readers can understand my final question. I added one reproducible example and both the problematic and expected behaviors.
+
+Since this is one problem about the `g:apply` part inside one evaluator which is closely related with `g:eval`, I didn't figure out one way to "Restart from scratch" to produce one more *minimal* example. So I keep using the code base.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure

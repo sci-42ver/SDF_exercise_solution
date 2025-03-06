@@ -45,8 +45,8 @@
     ;   (not (list? exp))
     ;   )
     (or (strict-compound-procedure? obj)
-      (not (list? obj))
-      )
+        (not (list? obj))
+        )
     )
   (tree-map proc tree elem?)
   )
@@ -57,25 +57,25 @@
 (define (strict-compound-procedure->underlying-procedure exp)
   (cond 
     ((strict-compound-procedure? exp)
-      (eval*
-        ;; What to pass here?
-        ;; just the original lambda-exp and lexical env.
-        ;; 0. see g:eval (match-args lambda? environment?)
-        ;; 0.a. How lambda object is ~~passed around~~ eval'ed?
-        ;; make-compound-procedure
-        ;; 0.b. Here lambda-parameters is just same as the original parameters part in (make-lambda parameters body).
-        ;; 0.b.0. lambda-body is different due to with one begin wrapper *possibly*.
-        ;; 3 cases: 
-        ;; null: (list body) -> (list '()) redundantly
-        ;; len=1: (cons params (list exp)) -> `(,params exp) fine.
-        ;; len>1: begin will be dropped, so go back to the original one but with internal begin removed.
-        ;; 0.b.1. env is just passed around intact.
-        (make-lambda-corrected
-          (procedure-parameters exp)
-          (procedure-body exp)
-          )
-        (procedure-environment exp))
-      )
+     (eval*
+       ;; What to pass here?
+       ;; just the original lambda-exp and lexical env.
+       ;; 0. see g:eval (match-args lambda? environment?)
+       ;; 0.a. How lambda object is ~~passed around~~ eval'ed?
+       ;; make-compound-procedure
+       ;; 0.b. Here lambda-parameters is just same as the original parameters part in (make-lambda parameters body).
+       ;; 0.b.0. lambda-body is different due to with one begin wrapper *possibly*.
+       ;; 3 cases: 
+       ;; null: (list body) -> (list '()) redundantly
+       ;; len=1: (cons params (list exp)) -> `(,params exp) fine.
+       ;; len>1: begin will be dropped, so go back to the original one but with internal begin removed.
+       ;; 0.b.1. env is just passed around intact.
+       (make-lambda-corrected
+         (procedure-parameters exp)
+         (procedure-body exp)
+         )
+       (procedure-environment exp))
+     )
     (else exp))
   )
 
@@ -218,10 +218,10 @@
 ;;; test5 ensure env-arg is stored to implement lexical scope.
 (define proc1 
   ((lambda ()
-    (define y 3)
-    ;; this should use the extended env by (lambda () ...) with the y binding shadowing the outside one.
-    (lambda (x) (* x y))
-    )))
+     (define y 3)
+     ;; this should use the extended env by (lambda () ...) with the y binding shadowing the outside one.
+     (lambda (x) (* x y))
+     )))
 ;; still use the "top-level" y.
 (define proc2 (lambda (x) (* x y)))
 (equal?
