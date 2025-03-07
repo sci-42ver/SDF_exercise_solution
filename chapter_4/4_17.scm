@@ -66,13 +66,14 @@
   (set-cdr! (last-pair queue) (list data))
   )
 
-(define define-name-stack (list 'define-name-stack))
-(define stack-contents cdr)
-(define (stack-empty? stack)
-  (null? (stack-contents stack)))
-(define (pop-stack stack)
+(cd "~/SICP_SDF/SDF_exercises")
+(load "common-lib/stack_lib.scm")
+(define stack-tag 'define-name-stack)
+(define define-name-stack (make-new-stack))
+;; This is much inefficient compared with stack_lib.scm
+(define (pop-stack! stack)
   ;; simplification of https://stackoverflow.com/a/77711423/21294350
-  (if (stack-empty? stack)
+  (if (empty-stack? stack)
     (error "can't pop")
     (let loop ((cur-stack stack))
       (if (null? (cddr cur-stack))
@@ -83,8 +84,14 @@
   ; (set-cdr! (last-pair stack) '())
   )
 (define (get-stack-top stack)
-  (and (stack-empty? stack)
-       (last stack))
+  ;;; IGNORE TODO I reviewed this when doing ex 5.7 and implement stack.
+  ;; How can this work by extracting one empty stack?
+  ;; This program doesn't have much description comments... I wrote one bad program.
+
+  ;; Anyway this is partially done. See SDF_exercises/README.md.
+  (if (empty-stack? stack)
+    (error "empty-stack")
+    (last stack))
   )
 (define push-stack enqueue)
 
@@ -246,7 +253,7 @@
                                           (if val-whether-lambda
                                             (begin
                                               (run-restore-env-queue)
-                                              (pop-stack define-name-stack)
+                                              (pop-stack! define-name-stack)
                                               )
                                             'ignored)
                                           res
@@ -271,7 +278,7 @@
                                                                       (annotate-expr operand env))
                                                                     (combination-operands expr))))))
                                         (if whether-use-lambda-proc
-                                          (pop-stack define-name-stack)
+                                          (pop-stack! define-name-stack)
                                           'ignored)
                                         (if (not whether-use-lambda-proc)
                                           (let ((proc (get-reset-proc proc-name)))

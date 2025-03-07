@@ -9,14 +9,14 @@
 
 ;;; implementation
 ;; will overload the original one. See (set-cdr! p handler) in SDF_exercises/software/sdf/common/generic-procedures.scm
-(define (empty-var-val-pairs) (list 'var-val-pairs))
-(define (new-var-val-pairs pairs) (cons 'var-val-pairs pairs))
-(define (find-var var tagged-pairs) (assq var (get-pairs tagged-pairs)))
+(cd "~/SICP_SDF/SDF_exercises/chapter_5")
+(load "../common-lib/pair_lib.scm")
+(define (empty-var-val-pairs) (empty-tagged-lst 'var-val-pairs))
+(define (new-var-val-pairs pairs) (new-tagged-lst 'var-val-pairs pairs))
 
 (define var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
 ;; IGNORE to accelerate merge
 ; (define reverse-var-strict-compound-procedure-val-pairs (empty-var-val-pairs))
-(define get-pairs cdr)
 (define scp-up-pairs (empty-var-val-pairs))
 (define-generic-procedure-handler 
   g:apply
@@ -100,27 +100,15 @@
   )
 
 ;; return (operand value) pair for further bindings
-(define new-pair list)
-(define get-left car)
-(define get-right cadr)
-(define (change-pair! pair target) 
-  (assert (eq? (car target) (car pair)))
-  (set-cdr! pair (cdr target)))
-(define (add-binding-to-pairs binding tagged-pairs)
-  (let ((pairs (get-pairs tagged-pairs)))
-    (let ((val (assq (get-left binding) pairs)))
-      (if (not val)
-        (set-cdr! tagged-pairs (cons binding pairs))
-        (change-pair! val binding)))
-    tagged-pairs
-    ))
+(cd "~/SICP_SDF/SDF_exercises/chapter_5")
+(load "../common-lib/pair_lib.scm")
 (define-generic-procedure-handler g:eval
                                   (match-args variable? environment?)
                                   (lambda (var env)
                                     ; (write-line "call new (variable? environment?) g:eval handler")
                                     (let ((val (lookup-variable-value var env)))
                                       (if (strict-compound-procedure? val)
-                                        (add-binding-to-pairs (new-pair var val) var-strict-compound-procedure-val-pairs))
+                                        (add-pair-to-tagged-pairs (new-pair var val) var-strict-compound-procedure-val-pairs))
                                       val
                                       )  
                                     )
@@ -193,7 +181,7 @@
                   (procedure-body exp)
                   )
                 (procedure-environment* exp))))
-        (add-binding-to-pairs (new-pair exp val) scp-up-pairs)
+        (add-pair-to-tagged-pairs (new-pair exp val) scp-up-pairs)
         val)
       (begin
         (error "should not duplicately traverse")
@@ -257,7 +245,7 @@
                 )
             (begin
               ;; not traversed 
-              (add-binding-to-pairs
+              (add-pair-to-tagged-pairs
                 binding
                 var-strict-compound-procedure-val-pairs
                 )
@@ -369,7 +357,7 @@
 
 (define proc2 (lambda (x) (+ x y)))
 ; (trace eval*)
-; (trace add-binding-to-pairs)
+; (trace add-pair-to-tagged-pairs)
 (equal?
   '((4 8 12) (5 6 7))
   (map 

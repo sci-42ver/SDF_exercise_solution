@@ -1,11 +1,33 @@
-(define partition-separtor-lst '((or "(" ")") (or "**" ":=" "--" "++" "==") (or "*" ":" "-" "+" "/" "=")))
-;; no further partitions done for them.
-(define primitive-symbol-re-lst '((or "**" ":=" "--" "++" "==")))
-(define split-lst '((+ space)))
+(cd "~/SICP_SDF/SDF_exercises/chapter_5")
+(load "5_7_basic_pred_lib.scm")
 
 (define (make-or sre-lst)
   (assert (and (list? sre-lst) (every valid-sre? sre-lst)))
   (cons 'or sre-lst)
+  )
+
+;; refactored for modularity https://stackoverflow.com/questions/1025844/what-is-refactoring-and-what-is-only-modifying-code/1025867#1025867
+;; > altering its internal structure without changing its external behavior
+(define primitive-op-lst '("*" ":" "-" "+" "/" "="))
+;; can't be splitted into ("*" "*") etc.
+(define unsplittable-primitive-op-lst '("**" ":=" "--" "++" "=="))
+;; no further partitions done for them.
+(define primitive-symbol-re-lst `(,(make-or unsplittable-primitive-op-lst)))
+(define partition-separtor-lst 
+  `((or ,left-parenthesis ,right-parenthesis) 
+    ,(car primitive-symbol-re-lst)
+    ,(make-or primitive-op-lst)))
+(define split-lst '((+ space)))
+
+;; just as one demo
+(define keyword-lst 
+  (append 
+    primitive-op-lst
+    unsplittable-primitive-op-lst
+    ; (list left-parenthesis right-parenthesis)
+    ))
+(define (keyword? str)
+  (any (lambda (cmp) (equal? str cmp)) keyword-lst)
   )
 
 (define (exp-split exp split-lst)
