@@ -88,6 +88,15 @@
         ;; 2. @$ https://stackoverflow.com/a/37208206/21294350
         ;; 3. <=> https://www.shlomifish.org/lecture/Perl/Newbies/lecture2/useful_funcs/sort/cmp.html
         ;; sort https://perldoc.perl.org/functions/sort
+        ;;;; 4. For details, see perlfunc for use, my, split (also see perlretut), push, pop, sort, say.
+        ;; > # sort numerically ascending
+        ;; perlop for qw, '', eq, =, ++, <=>, "" (qq//).
+        ;; perlintro for $, @, ;, and 
+        ;; > You can use parentheses for functions' arguments or omit them according to your personal taste.  They are only required occasionally to clarify issues of precedence.
+        ;; perlref for [], ->[], @$_.
+        ;;; perlsyn for "for", "if" (see Compound Statements). Notice LIST meaning "any combination of *scalar arguments* or list values".
+        ;; elsif is not detailedly descried maybe assumingly functioning like other programming languages.
+        ;; See "Statement Modifiers" for "for sort ...".
         (paren-idx-pair-lst (empty-tagged-lst 'paren-idx-pair-lst))
         (new-left-paren-idx 'unknown)
         )
