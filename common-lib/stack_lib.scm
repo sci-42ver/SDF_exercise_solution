@@ -94,10 +94,11 @@
   (empty-tagged-lst stack-tag))
 ;; same as SDF_exercises/chapter_4/4_9_stack_lib.scm
 ;; but with abstraction
-(define (push! stack elm)
+(define (push! stack elem)
   ;; 0. different from lecs/6.001_spring_2007_recitation/codes/rec16/stack.scm
   ;; 0.a. infinite room if memory allows.
   (insert-elem-to-data-beginning! elem stack)
+  stack
   )
 (define (pop! stack)
   (and (empty-stack? stack) (error "empty stack can't be poped"))

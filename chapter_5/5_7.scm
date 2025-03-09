@@ -66,6 +66,7 @@
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "../common-lib/stack_lib.scm")
+(load "../common-lib/pair_lib.scm")
 (define new-triple list)
 (define (triple? lst) (n:= 3 (length lst)))
 (define (new-triple-with-new-3rd triple 3rd)
@@ -99,13 +100,15 @@
         ;; See "Statement Modifiers" for "for sort ...".
         ;; 0.a. One stack is at least not straightforward.
         ;; With two, one stack can be pushed and poped which just like +/- paren-cnt here.
-        (paren-idx-pair-lst (empty-tagged-lst 'paren-idx-pair-lst))
-        (new-left-paren-idx 'unknown)
+        ;; 1. For simplicity, here only consider "(" and ")".
+        ;; So just one stack without using dict.
+        (left-pos-stack (make-new-stack))
+        (pos-pair-stack (make-new-stack))
         )
       (if (n:<= str-cnt idx)
         (if (n:> paren-cnt 0)
           (error "redundant parentheses")
-          paren-idx-pair-lst)
+          pos-pair-stack)
         (let ((cur (list-ref str-lst idx)))
           (let ((next-idx (n:+ idx 1)))
             (cond 
@@ -114,10 +117,8 @@
                   (n:+ paren-cnt 1) 
                   next-idx 
                   (append paren-to-match (list left-parenthesis))
-                  (if (or (n:= idx 0) (and (n:> idx 0) (keyword? (list-ref str-lst (n:- idx 1)))))
-                    (insert-elem-to-data-end (new-triple 'non-application idx 'unknown) paren-idx-pair-lst)
-                    (insert-elem-to-data-end (new-triple 'application idx 'unknown) paren-idx-pair-lst))
-                  idx
+                  (push! left-pos-stack idx)
+                  pos-pair-stack
                   ))
               ((right-parenthesis? cur)
                 (let ((paren-cnt* (n:- paren-cnt 1)))
@@ -127,29 +128,18 @@
                       (not (equal? left-parenthesis (list-ref paren-to-match paren-cnt*))))
                     (error "matched with the wrong right str")
                     )
-                  (let ((data (get-data paren-idx-pair-lst)))
-                    (assert (n:<= paren-cnt (length data)))
-                    ;; it is fine to change let local variable.
-                    ;; https://stackoverflow.com/a/18471336/21294350
-                    (assert (number? new-left-paren-idx))
-                    (list-set! 
-                      data 
-                      (find (lambda (triple) (n:= new-left-paren-idx (second triple))) data)
-                      (new-triple-with-new-3rd 
-                        (list-ref data paren-cnt*) 
-                        idx))
-                    (write-line (list "new data" data))
+                  (let ((paired-left-pos (pop! left-pos-stack)))
                     (lp 
                       paren-cnt* 
                       next-idx 
                       (drop-right paren-to-match 1)
-                      (new-tagged-lst (get-tag paren-idx-pair-lst) data)
-                      new-left-paren-idx
+                      left-pos-stack
+                      (push! pos-pair-stack (new-pair paired-left-pos idx))
                       ))
                   )
                 )
               (else
-                (lp paren-cnt next-idx paren-to-match paren-idx-pair-lst new-left-paren-idx)
+                (lp paren-cnt next-idx paren-to-match left-pos-stack pos-pair-stack)
                 )
               ))
           ))
@@ -159,14 +149,16 @@
 (load "5_7_list_lib.scm")
 (match-parentheses? expected-parsed-test-exp2)
 (for-each
-  (lambda (triple)
+  (lambda (pair)
     (write-line 
       (list 
-        "left" (list-ref expected-parsed-test-exp2 (second triple))
-        "right" (list-ref expected-parsed-test-exp2 (third triple))
+        "left" (list-ref expected-parsed-test-exp2 (get-left pair))
+        "right" (list-ref expected-parsed-test-exp2 (get-right pair))
         ))
     )
-  (get-data (combine-parentheses expected-parsed-test-exp2))
+  (let ((paren-idx-pairs (combine-parentheses expected-parsed-test-exp2)))
+    (write-line (list "paren-idx-pairs" paren-idx-pairs))
+    (get-data paren-idx-pairs))
   )
 
 (define (infix->polish str-lst)
