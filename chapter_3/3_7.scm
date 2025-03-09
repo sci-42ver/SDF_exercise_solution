@@ -73,7 +73,7 @@
 
 (define test-literal-matrix (literal-mat 'A))
 (define test-literal-vec (literal-vec 'A))
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 ;; trivial since that is just like a symbol but with one different type.
 (assert-predicate equal? '(* (literal-matrix a) (matrix #(#(a 2) #(3 b)) 2 2)) (* test-literal-matrix test-symbolic-mat1))
 (* test-literal-vec test-symbolic-mat1)

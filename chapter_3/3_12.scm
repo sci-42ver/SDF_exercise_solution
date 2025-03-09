@@ -89,7 +89,7 @@
 
 (assert (equal? (* (vector 3 4) 'u) '(* #(3 4) u)))
 
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 ;; Here we gets ((x*y)_y)_x=1. Similarly, we should have value (1 0) 
 (assert-predicate
   equal?

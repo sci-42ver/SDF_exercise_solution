@@ -7,7 +7,7 @@
 
 ;; covector -> row vector
 (load "generic-procedure-lib/vector-arith-row-col.scm")
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 
 ;; a
 ;; similar to general-derivative.

@@ -85,7 +85,7 @@
 ;;; test5
 ;; ensure the added term binding in dict** can be got appropriately, i.e. that done by check-car-term-binding.
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 (trace-wrapper
   (lambda ()
     (unify:internal-display-wrapper '(((?? x) 3 (?? z) 3))

@@ -43,7 +43,7 @@
 (start-chess-game populate-sides*)
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 
 ;;; The above is same as en_passant_tests.scm except that we just only keep pawn and king (king is to ensure that the game can be played).
 (cd "~/SICP_SDF/SDF_exercises/chapter_4/")

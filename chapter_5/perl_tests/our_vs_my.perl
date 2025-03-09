@@ -53,3 +53,6 @@ for $x ( 1 .. 3 ) {       # Backs up and restores the SV associated with `$x`.
 }
 
 say $x;                   # Accesses the only `$x`
+
+# > use experimental qw( declared_refs defer refaliasing );
+# used by `my \$backup = \$x;` where refaliasing mean ref aliasing.

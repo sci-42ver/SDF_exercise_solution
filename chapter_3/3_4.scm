@@ -143,7 +143,7 @@
 (install-specific-generic-arithmetic)
 ;; use numeric-arithmetic to get (vector (cos 3) (sin 3)).
 ;; then again numeric-arithmetic to get the final result.
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 (assert-predicate equal? ((vector cos sin) 3) (vector (cos 3) (sin 3)))
 (assert-predicate equal? ((vector cos 2) 3) (vector (cos 3) 2))
 

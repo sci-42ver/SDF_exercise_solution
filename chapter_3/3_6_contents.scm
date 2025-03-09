@@ -249,7 +249,7 @@ v2= np.array([[1, 2]])
 print(np.matmul(a, v1))
 print(np.matmul(v2, a))
 |#
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 (assert-predicate equal? (* test-numeric-mat1 test-numeric-mat2) #(#(19 22) #(43 50)))
 
 (define test-numeric-mat3 (make-matrix (vector (vector 5 6 7) (vector 7 8 9))))

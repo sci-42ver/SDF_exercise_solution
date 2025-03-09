@@ -36,7 +36,7 @@
 ; (book-order-test)
 
 ;; this will work
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 (define (assert-test-mod)
   (assert-predicate equal? (book-order-test-mod) '(* b (+ (+ (cos (+ 3 a)) c) (sin (+ 3 a))))))
 (assert-test-mod)

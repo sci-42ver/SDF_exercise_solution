@@ -65,7 +65,7 @@
 (assert (equal? (parse test-book-exp) '("fact" ":=" "lambda" "n" ":" "if" "n" "==" "0" "then" "1" "else" "n" "*" "fact" "(" "n" "-" "1" ")")))
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
-(load "../common-lib/tagged_lst_lib.scm")
+(load "../common-lib/stack_lib.scm")
 (define new-triple list)
 (define (triple? lst) (n:= 3 (length lst)))
 (define (new-triple-with-new-3rd triple 3rd)
@@ -80,7 +80,7 @@
       ((paren-cnt 0) 
         (idx 0) 
         (paren-to-match (list))
-        ;; use 2 stacks to get the pairs `[ pop @stack, $pos ]`s https://stackoverflow.com/a/56239802/21294350
+        ;; 0. use 2 stacks to get the pairs `[ pop @stack, $pos ]`s https://stackoverflow.com/a/56239802/21294350
         ;; > push @output, [ pop @stack, $pos ]
         ;; 0. @ https://stackoverflow.com/questions/5553898/what-are-the-differences-between-in-perl-variable-declaration
         ;; 1. pop https://perlmaven.com/manipulating-perl-arrays
@@ -97,6 +97,8 @@
         ;;; perlsyn for "for", "if" (see Compound Statements). Notice LIST meaning "any combination of *scalar arguments* or list values".
         ;; elsif is not detailedly descried maybe assumingly functioning like other programming languages.
         ;; See "Statement Modifiers" for "for sort ...".
+        ;; 0.a. One stack is at least not straightforward.
+        ;; With two, one stack can be pushed and poped which just like +/- paren-cnt here.
         (paren-idx-pair-lst (empty-tagged-lst 'paren-idx-pair-lst))
         (new-left-paren-idx 'unknown)
         )

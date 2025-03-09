@@ -44,7 +44,7 @@
 
 ;;; test for the normal case, initial
 (cd "~/SICP_SDF/SDF_exercises/chapter_4")
-(load "../common-lib/test-lib.scm")
+(load "../common-lib/test_lib.scm")
 (trace-wrapper (lambda () (chess-move* '(4 0) '(0 0))) mul-simple-move simple-move-moved-part get-self-positions untick-piece-initial-mark capture?*)
 ; [Entering #[compound-procedure untick-piece-initial-mark]
 ;     Args: (king white #t #f)]

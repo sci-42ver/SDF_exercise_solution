@@ -36,7 +36,7 @@
                 (else (list body))))))
 
 (cd "~/SICP_SDF/SDF_exercises")
-(load "common-lib/tree-lib.scm")
+(load "common-lib/tree_lib.scm")
 (define (tree-map-with-strict-compound-procedure-as-elem proc tree)
   (define (elem? obj)
     ;; here exp may work due to using parent env bindings.
@@ -149,7 +149,7 @@
 ;;; test1 normal
 ;; dot . inside parameter list is unsupported.
 ; (cd "~/SICP_SDF/SDF_exercises/chapter_5")
-; (load "../common-lib/test-lib.scm")
+; (load "../common-lib/test_lib.scm")
 ; (trace-wrapper
 ;   (lambda () (equal? '(1 4 9) (map (lambda (x) (* x x)) '(1 2 3))))
 ;   strict-compound-procedure->underlying-procedure
