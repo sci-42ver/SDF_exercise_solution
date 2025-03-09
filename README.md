@@ -1,22 +1,4 @@
-As one reference for future readers: Here "in the second case you effectively create a multi-dimensional data structure": that is due to `@var` expects a list but gets one scalar value (see `man perlref` which normally assigns ref to one scalar). So it is *implicitly* transformed into one list which is implied in `LIST` description in `man perlfunc` (e.g. see `push ARRAY,LIST` for how that works).
-
-Thanks for your answer and the helpful links. I updated my question with my  understanding based on your answer, could you help checking whether that is fine?
-
-@zdim Thanks for pointing out my defect. "you dropped the my on that $x": I did that because `$::x` can't access that `my` var as https://stackoverflow.com/a/20992896/21294350 shows. Anyway I did that to show how the example in the reference link of the "the difference between local and my" link works.
-
-Thanks for the detailed answer. "except when using $_" may be due to `$_` is one global var as `man perlvar` says. 1. Is "Accesses only" one typo for "Accesses outer"? 2. Could you say something about the difference between `our` and the global variable? Please see the follow-up question I added (maybe I should post one new question for that). 3. Could you help checking whether "The 3rd sentence example can be updated: ..." part is fine?
-
-Re to 1: Thanks. That is what dynamic scope means which overwrites the existing binding but not creates one new as lexical scope does. Re to 2: "which would greatly complicate the explanation", so do you think it is fine to ask one new question for that, i.e. my follow-up question in the above question edit. Re to 3: That is the sentence of my 1st quote in the question.
-
-The newer reference link https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_10 in the question says `here_end` is `here_end         : WORD`, but the doc seems to not say much about what "token WORD" is. Could you help clarifying that?
-
-As one reference for future readers, here we have `here_end         : WORD` where `WORD` can mean *anything* as this comment post https://help-bash.gnu.narkive.com/ZxdTPhxI/posix-2-3-token-recognition-2-10-shell-grammar#post2 implies.
-
-@StéphaneChazelas If IFS is irrelvant, then what is related with "concatenated" here? Is that due to "token recognition" as Stephen Kitt says? (as one reference for future readers, "IFS is involved in *unquoted* expansions" is implied in https://stackoverflow.com/q/18498218/21294350 *question* post.)
-
-IMHO "All we have is tokens separated out as per the syntax of the shell language." means token recognition, could you help improving the answer based on that? Here is my understanding based on https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_03: with manipulation "in turn", `"findtest/file with "` generates the token verbatim, then double has the previous character <space>. "The token shall *not be delimited* by the end of the quoted field." Continued...
-
-and "Once a token has started, zero or more characters from the input shall be *appended to the token until the end of the token is delimited* according to one of the rules below.", we should keep appending to that token until meeting <blank> https://www.gnu.org/software/grep/manual/html_node/Character-Classes-and-Bracket-Expressions.html as "If the current character is an unquoted <blank>, any token containing the previous character is delimited and the current character shall be discarded." says. Is it that case?
+What do you mean by "would capture"? For the 2nd example demo, with `my $x`, that  subroutine can't access that `my $x`. So not "capture" IMHO.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
