@@ -1,4 +1,5 @@
 (define new-pair list)
+(define pair?* list)
 (define get-left car)
 (define get-right cadr)
 (define (change-pair-right! pair target) 

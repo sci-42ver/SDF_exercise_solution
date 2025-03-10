@@ -1,0 +1,6 @@
+(define new-triple list)
+(define (triple? lst) (n:= 3 (length lst)))
+(define (new-triple-with-new-3rd triple 3rd)
+  (assert (triple? triple))
+  (new-triple (first triple) (second triple) 3rd)
+  )

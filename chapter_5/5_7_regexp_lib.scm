@@ -24,7 +24,7 @@
   (append 
     primitive-op-lst
     unsplittable-primitive-op-lst
-    ; (list left-parenthesis right-parenthesis)
+    (list left-parenthesis right-parenthesis)
     ))
 (define (keyword? str)
   (any (lambda (cmp) (equal? str cmp)) keyword-lst)
