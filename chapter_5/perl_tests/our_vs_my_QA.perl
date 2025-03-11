@@ -8,8 +8,8 @@ my $x = 7;
 $x = 7;
 for $x (1 .. 3) {  # Implicit localisation happens here.
   print "$x\n";
-  print "global $::x\n";  # Prints 1 .. 3 correspondingly.
-  foo(); # Prints 1 .. 3 correspondingly.
+  print "global $::x\n";  # Prints nothing for $::x.
+  foo(); # Prints nothing for $x.
 }
 print $x;  # Prints 7.
 
@@ -17,7 +17,7 @@ print $x;  # Prints 7.
 $x = 7;
 for my $x (1 .. 3) {
   print "$x\n";
-  print "global $::x\n";  # Always prints 7.
-  foo(); # Always prints 7.
+  print "global $::x\n";  # Prints nothing for $::x.
+  foo(); # Prints nothing for $x.
 }
 print $x;  # Prints 7.

@@ -70,10 +70,7 @@
       (if (n:<= str-cnt idx)
         (if (n:> paren-cnt 0)
           (error "redundant parentheses")
-          (new-stack 
-            (filter 
-              (lambda (pair) (non-application? pair)) 
-              (get-data pos-pair-stack))))
+          pos-pair-stack)
         (let ((cur (list-ref str-lst idx)))
           (let ((next-idx (n:+ idx 1)))
             (cond 
@@ -122,14 +119,23 @@
 ;; 0.a. If parentheses are matched, then only one can contain the other totally but not partially.
 ;; i.e. there are only 3 relations with 2 for containment relation.
 (define (combine-non-application-parentheses str-lst)
-  (let ((sorted-idx-pair-lst 
+  (let* ((parenthesis-idx-pair-lst (get-data (parenthesis-idx-pair-stack str-lst)))
+         (non-application-parenthesis-idx-pair-lst
+          (filter 
+            (lambda (pair) (non-application? pair)) 
+            parenthesis-idx-pair-lst))
+         (sorted-idx-pair-lst 
           (get-data
             (new-stack
               (sort 
-                (get-data (parenthesis-idx-pair-stack str-lst)) 
+                non-application-parenthesis-idx-pair-lst
                 n:< 
                 get-left-idx)))))
     (%combine-non-application-parentheses str-lst sorted-idx-pair-lst)
+    ;; 0. After combination, application pairs will be located inside different non-application-parenthesis-pair's.
+    ;; To use that in the later manipulation for each non-application-parenthesis-pair, we need to extract the corresponding one and update the rest for each infix->polish possibly.
+    ;; IMHO that seems to incur more calculation than that we do iteration for the parenthesis again...
+    ;; 0.a. This is similar for [],{} locations.
     )
   )
 (define (inside? inner outer)

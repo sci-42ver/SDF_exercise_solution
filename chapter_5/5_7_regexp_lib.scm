@@ -6,11 +6,17 @@
   (cons 'or sre-lst)
   )
 
-;; refactored for modularity https://stackoverflow.com/questions/1025844/what-is-refactoring-and-what-is-only-modifying-code/1025867#1025867
+;;; (see git history) refactored for modularity https://stackoverflow.com/questions/1025844/what-is-refactoring-and-what-is-only-modifying-code/1025867#1025867
 ;; > altering its internal structure without changing its external behavior
+
+;; 0. See SDF_exercises/chapter_5/5_7_precedence_lib.scm
+;; Here "," is not one separtor among statements in Python which uses line (see https://docs.python.org/3/reference/lexical_analysis.html#line-structure and https://stackoverflow.com/a/35053210/21294350)
 (define primitive-op-lst '("*" ":" "-" "+" "/" "="))
+
 ;; can't be splitted into ("*" "*") etc.
-(define unsplittable-primitive-op-lst '("**" ":=" "--" "++" "=="))
+; (define unsplittable-primitive-op-lst '("**" ":=" "--" "++" "=="))
+;; no ++ in Python https://stackoverflow.com/a/1485854/21294350. See SDF_exercises/chapter_5/5_7_precedence_lib.scm
+(define unsplittable-primitive-op-lst '("**" ":=" "=="))
 ;; no further partitions done for them.
 (define primitive-symbol-re-lst `(,(make-or unsplittable-primitive-op-lst)))
 (define partition-separtor-lst 
