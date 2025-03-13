@@ -1,8 +1,3 @@
-In newer python, we need to use `\\d` instead of `\d` https://stackoverflow.com/a/52335971/21294350.
-
-"then you have to renumber your captures": What do you mean by that? With `?:` removed, `m.group(1)` and `m.group(0)` still work as https://docs.python.org/3/library/re.html#re.Match.group implies since the outer parenthesis is not influenced. IMHO here `?:` is just to avoid referring to unrelated things like `m.group(2)` etc as doc https://docs.python.org/3/library/re.html#regular-expression-syntax says "the substring matched by the group cannot be retrieved after performing a match".
-
-@AshishYadav: The 2nd link shows one example for LL. If you want one for LR, https://stackoverflow.com/a/6824545/21294350 will be helpful which also shows for LL. In a  nutshell, IMHO LL uses leftmost derivation so it can just uses one production rule directly which allows top down. While for LR using rightmost derivation, we must keep going forward until reaching "the right end of the syntax pattern that will *combine* them", so bottom-up. This is related with tree traversal order https://blog.reverberate.org/2013/07/ll-and-lr-parsing-demystified.html due to that they are related with AST.
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
 ## TODO
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.
