@@ -46,60 +46,104 @@
 ;; n.2.b.0. Here (n-1) is not one tuple
 ;; > Note that tuples are not formed by the parentheses, but rather by use of the comma.
 
-(define (name parameters)
-  body)
+(cd "~/SICP_SDF/SDF_exercises/chapter_5")
+(load "5_7_parenthesis_syntax_lib.scm")
+(load "../common-lib/op_lib.scm")
+
+(define (%manipulate-precedence order-tag operator-lst item-list full-precedence-list)
+  ;; Use Interned symbols https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Symbols.html
+  (let ((is-left-to-right-order (eq? from-left-to-right-tag order-tag))
+        (is-right-to-left-order (eq? from-right-to-left-tag order-tag))
+        (item-cnt (length item-list)))
+    (and (not is-left-to-right-order) (not is-right-to-left-order)
+      (error "unrecognized precedence order"))
+    (let ((start-idx 
+            (cond 
+              (is-left-to-right-order 0)
+              (is-right-to-left-order item-cnt)
+              ))
+          (next-op
+            (cond 
+              (is-left-to-right-order inc)
+              (is-right-to-left-order dec)
+              )
+            )
+          )
+      (let lp ((cur-idx start-idx))
+        (find-op-and-transform operator-lst item-list full-precedence-list)
+        )
+      ))
+  )
+(define (manipulate-precedence item-list precedence-list)
+  (assert (item-list? item-list))
+  ;; Ensure manipulation order by the explicit loop
+  (let lp ((transformed-item-list item-list) (rest-precedence-list precedence-list))
+    (if (null? precedence-list)
+      transformed-item-list
+      (let ((cur-precedence-items (car rest-precedence-list)))
+        (lp
+          (%manipulate-precedence 
+            (get-tag cur-precedence-items)  
+            (get-data cur-precedence-items) 
+            transformed-item-list 
+            precedence-list)
+          (cdr precedence-list)
+          )
+        ))
+    )
+  )
 (define precedence-list
   (list
     ;; Notice all these pred's/str/func should return one object for consistency.
-    (new-tagged-lst 'from-left-to-right 
+    (new-from-left-to-right-precedence-items 
       ;; 0. For simplicity, comprehension is skipped https://docs.python.org/3/reference/expressions.html#list-displays.
       ;; So only "a comma-separated list of expressions".
       ;; 1. Here I also consider "call" which must be related with Binding 
       ;; when we have manipulated with parenthesized expression in combine-non-application-parentheses.
-      (new-pair 'delimit-then-divide (new-pair (list variable? left-parenthesis right-parenthesis) ","))
+      (new-delimit-then-divide-exp (new-pair (list variable? left-parenthesis right-parenthesis) ","))
       ;; Dict https://docs.python.org/3/reference/expressions.html#dictionary-displays
       ;; 0. '"**" or_expr' is skipped.
       ;; 1. key: value is manipulated in infix->polish
       )
-    (new-tagged-lst 'from-left-to-right 
+    (new-from-left-to-right-precedence-items 
       ;; Use obj? because `[1,2][1]` is valid in Python.
-      (new-pair 'delimit (list obj? "[" "]"))
+      (new-delimit-exp (list obj? "[" "]"))
       ;; skipped due to being related with class https://docs.python.org/3/reference/datamodel.html#custom-classes
-      ; (new-pair 'exact (list variable? "." variable?))
+      ; (new-exact-exp (list variable? "." variable?))
       )
-    (new-tagged-lst 'from-right-to-left 
+    (new-from-right-to-left-precedence-items 
       ;; Notice iterate from-right-to-left
-      (new-pair 'exact (list obj? "**" obj?))
+      (new-exact-exp (list obj? "**" obj?))
       )
-    (new-tagged-lst 'from-left-to-right 
-      (new-pair 'non-obj-before (list "-" obj?))
+    (new-from-left-to-right-precedence-items 
+      (new-non-obj-before-exp (list "-" obj?))
       )
-    (new-tagged-lst 'from-left-to-right 
-      (new-pair 'exact (list obj? "*" obj?))
-      (new-pair 'exact (list obj? "/" obj?))
+    (new-from-left-to-right-precedence-items 
+      (new-exact-exp (list obj? "*" obj?))
+      (new-exact-exp (list obj? "/" obj?))
       )
-    (new-tagged-lst 'from-left-to-right 
-      (new-pair 'exact (list obj? "-" obj?))
-      (new-pair 'exact (list obj? "+" obj?))
+    (new-from-left-to-right-precedence-items 
+      (new-exact-exp (list obj? "-" obj?))
+      (new-exact-exp (list obj? "+" obj?))
       )
-    (new-tagged-lst 'from-left-to-right 
-      (new-pair 'exact (list obj? "==" obj?))
+    (new-from-left-to-right-precedence-items 
+      (new-exact-exp (list obj? "==" obj?))
       )
     ;; Not in Python doc
     ;; Python uses logical line to catch if statement. But here we can't do that in one str easily... 
     ;; Here I assume it is similar to if – else https://docs.python.org/3/reference/expressions.html#if-expr
-    (new-tagged-lst 'from-left-to-right
-      (new-pair 'delimit (list "if" "then" "else"))
+    (new-from-left-to-right-precedence-items
+      (new-delimit-exp (list "if" "then" "else"))
       )
-    (new-tagged-lst 'from-left-to-right
+    (new-from-left-to-right-precedence-items
       ;; 0. skip "/" in parameter_list https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-parameter_list
       ;; 0.a. so only something like (lambda a,b,c: a+b+c)(1,2,3) is considered https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions.
       ;; Then "a,b,c" can be manipulated like Binding,
       ;; i.e. comma-param-lst? should return (a,b,c)=> (a b c) parameter_list in Scheme.
-      (new-pair 'delimit (list "lambda" comma-param-lst? ":" obj?))
+      (new-delimit-exp (list "lambda" comma-param-lst? ":" obj?))
       )
-    (new-tagged-lst 'from-left-to-right 
-      (new-pair 'exact (list obj? ":=" obj?))
+    (new-from-left-to-right-precedence-items 
+      (new-exact-exp (list obj? ":=" obj?))
       )
     )
   )

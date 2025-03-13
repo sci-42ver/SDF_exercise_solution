@@ -1,3 +1,7 @@
+What is "Binding or parenthesized expression" in Python?
+
+---
+
 This is from [operator precedence doc][1]:
 > (expressions...), [expressions...], {key: value...}, {expressions...} Binding or parenthesized expression, list display, dictionary display, set display
 

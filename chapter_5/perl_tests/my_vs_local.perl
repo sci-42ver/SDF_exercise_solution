@@ -33,7 +33,7 @@ print $x;  # Prints 7.
 print "\n\n3rd:\n";
 
 $x = 7;
-for my $x (1 .. 3) {  # Implicit localisation happens here.
+for my $x (1 .. 3) {
   print "$x\n";
 	print "global $::x\n";  # Always prints 7.
 	foo(); # Always prints 7.

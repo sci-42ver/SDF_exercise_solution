@@ -1,3 +1,5 @@
+;;; Similar to tokenize in https://eli.thegreenplace.net/2010/01/02/top-down-operator-precedence-parsing
+;; but not uses generator https://stackoverflow.com/a/1073582/21294350
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_7_basic_pred_lib.scm")
 

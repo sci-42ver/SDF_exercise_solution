@@ -1,8 +1,3 @@
-Thanks for the explanation. With the 2nd para, I can understand code snippet 2. 1. "my $x = 7;, like any use of my, makes any use of unqualified $x refer to that lexical, from the following statement until the end of scope": can we just substitute "my" here with "our"/"state" and still hold this assertion? 2. If we swap for `my $x = 7;` and `sub foo { print "foo: $x\n"; }` in code snippet 2, package var `$::x` is unchanged. But "localisation" seems to not work (i.e. code block 2 `foo` also outputs 7). Does that mean localisation only do dynamic scoping for "global package var"?
-
-3. For code snippet 3, the beginning `foo` defaults to refer to the global package var. So although it is not in the lexical scope of the latter `our`, it can be still influenced. Is it that case? 4. Could you say more about what "our's scope can *span multiple packages* but the lexical alias it creates is *to the first package*" means?
-
-What do you mean by "would capture"? For the 2nd example demo, with `my $x`, that  subroutine can't access that `my $x`. So not "capture" IMHO.
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure
