@@ -230,7 +230,11 @@ I encountered with this problem while reading about [Precedence climbing][1] and
 >         r := c.NBP
 >     return t
 > ```
-
+# licence choice for scheme_demo
+- I followed https://choosealicense.com/ and https://opensource.guide/legal/#which-open-source-license-is-appropriate-for-my-project
+  I want to keep open-source, so not those like MIT. ~~But I want license not too restrictive like "choose an identical or compatible license"~~ I choose "“strong” copyleft license" since “weak” copyleft license will
+  > The newly added files may be released under a different license or *kept proprietary (closed-source)*.
+  So I choose AGPLv3 which seems [the most restrictive](https://choosealicense.com/licenses/).
 
   [1]: https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method
   [2]: https://tdop.github.io/

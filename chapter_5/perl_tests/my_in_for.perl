@@ -1,3 +1,5 @@
+# https://stackoverflow.com/q/79492046/21294350
+
 $i = 'samba';
 # > If the variable is preceded with the keyword "my", then it is lexically scoped, and is therefore visible only within the loop.
 for (my $i = 1; $i <= 4; $i++) {

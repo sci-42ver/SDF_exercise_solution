@@ -80,11 +80,15 @@
     (set! fname (symbolconc sname '-macro))
     (list 'begin
           (list 'define (cons fname argl)
-                (list 'replace (car argl) body))
+                ; (list 'replace (car argl) body)
+                body
+                )
           (list 'define sname (list 'quote fname)))))
 
 (define defmac 'defmac-macro)
 
+;; either tagged-list https://stackoverflow.com/a/1048403/21294350 https://docs.racket-lang.org/reference/boxes.html
+;; or macro https://stackoverflow.com/a/11872479/21294350
 (defmac (pop form)
         (list 'let (list (list 'tmp (cadr form)))
               (list 'set! (cadr form) '(cdr tmp))
@@ -104,7 +108,13 @@
                     (cond ((eq? op 'peek)
                            (if l (car l) (eof-val)))
                           ((eq? op 'get)
-                           (if l (pop l) (eof-val)))))))
+                           (if l
+                             (let ((pop-val (pop l)))
+                               (writes nil l "poped elem:" pop-val "\n")
+                               pop-val
+                               )
+                             (eof-val))
+                           )))))
 
 (define (token-peek stream)
   (stream 'peek nil))
@@ -248,9 +258,20 @@
         value))
 
 (define (defsyntax-macro form)
+  (writes nil "defsyntax-macro (cdr form)=>" (cdr form))
   (list '*defsyntax (list 'quote (cdr form))))
+; ;; IMHO the above means
+; (*defsyntax (list 'quote (cdr form)))
+; ;; So (I use MIT/GNU Scheme syntax here) for defsyntax:
+; (*defsyntax `(,args))
 
 (define defsyntax 'defsyntax-macro)
+;; IMHO the above means (Wrong. TODO (Maybe Done))
+;; Emm... I don't know how to pass $ etc without quote as quote elem's when not using the above macro.
+; (define (defsyntax . args)
+;   (defsyntax-macro (cons 'defsyntax args)))
+; (define (defsyntax . args)
+;   (*defsyntax `(,args)))
 
 (define (*defsyntax input)
   (let ((l (cdr input)))
@@ -263,6 +284,7 @@
 (defsyntax $
            lbp -1
            nud premterm-err)
+(writes nil "$ lbp" (get-syntax '$ 'lbp) "\n")
 
 (defsyntax #.COMMA
            lbp 10
@@ -411,4 +433,8 @@
 
 ; (trace pop token-read)
 
+; Here #.OPEN-PAREN will be printed as (.
+(writes nil '(if g #.OPEN-PAREN a #.COMMA b #.CLOSE-PAREN then a > b else k * c + a * b))
+
 (pl '(if g #.OPEN-PAREN a #.COMMA b #.CLOSE-PAREN then a > b else k * c + a * b))
+(pl '(f #.OPEN-PAREN a #.CLOSE-PAREN = a + b / c))

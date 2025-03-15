@@ -1,3 +1,4 @@
+## No need to check this when with SDF_exercises/chapter_5/perl_tests/our_vs_my_QA.perl etc
 # https://stackoverflow.com/a/17710075/21294350
 # TODO "fields pragma"
 

@@ -8,8 +8,10 @@ $a = 3.14159;
 print "Outside block, \$a = $a\n";
 print "Outside block, \$::a = $::a\n";
 
+# https://stackoverflow.com/q/79492046/21294350
 sub foo { print "foo: $x\n"; }
 
+# > If we prepend:
 my $x = 7;
 for $x (1 .. 3) {  # Implicit localisation happens here.
   print "$x\n";
@@ -21,6 +23,7 @@ print $x;  # Prints 7.
 print "\n\n2nd:\n";
 
 # https://stackoverflow.com/a/79492975/21294350
+# > But if we define the latter defined var as our $x = 7;
 our $x = 7;
 # $x = 7;
 for $x (1 .. 3) {  # Implicit localisation happens here.

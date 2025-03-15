@@ -1,10 +1,8 @@
-:57950425 OK. It is my misunderstanding that the global variable `$_` is one lexical and can have multiple instances... So for the same example, here `\$x` is passed outside after that lexical variable has finished its scope and should be destroyed by something like garbage collector. But we *still* needs that variable. So "a new one is created and put in place of the old one" and the reference *seems to* work as before but actually points to one different object. Continued...
+:57954361 "I found your current rephrasing confusing": Maybe using codes can convey what I meant better. What I meant is `say $$_ for map { my $x = $_; \$x } 1..3;` has almost the same effects as `my $x = 1; $x_ref1 = \$x; my $x = 2; $x_ref2 = \$x; my $x = 3; $x_ref3 = \$x; map {say $$_ } ($x_ref1, $x_ref2, $x_ref3);`. Here "put in place of the old one" is implicitly shown by = here although being one unidirectional assignment to $x_ref1 instead of $x. Continued...
 
-"the old one lives a separate life" means lexical scope, i.e. it can't be accessed outside scope. Is my current rephrasing fine?
+`use feature qw/say/;{my $x = 1; our $x_ref1 = \$x;} {my $x = 2; our $x_ref2 = \$x;} {my $x = 3; our $x_ref3 = \$x;} map {say $$_ } ($x_ref1, $x_ref2, $x_ref3, $x);` is finer. Then "at scope exit, if there are any references to it remaining, a new one is created and put in place of the old one" is implicitly shown by `our $x_ref1 = \$x;` etc although being one unidirectional assignment to $x_ref1 instead of $x. Continued...
 
-:57948075 "Yes, the for $x should use the lexical our $x": So can we tweak the perlsyn reference to "If the variable was previously declared with *our most recently*, it *still* uses the *global* variable"?
-
-We also need to change group as https://askubuntu.com/a/34075/2168145 shows.
+"the old one lives a separate life." is implied by that inner `my $x ...` won't have influences for the outer `map {say $$_ } (... $x)`. This is ensured by lexical scoping. Is my current rephrasing fine?
 # [QA1](https://stackoverflow.com/q/79492046/21294350)
 3 files "my_in_for_non_C.perl  my_in_for.perl  my_vs_local.perl".
 - [`::` qualified](https://www.perlmonks.org/?node_id=1143881#:~:text=Replies%20are%20listed%20'Best%20First,'@::foo'?&text=Hello%20jmeek%2C%20and%20welcome%20to%20the%20Monastery!&text=In%20all%20cases%2C%20x%20is,preventing%20errors%20from%20use%20strict.)&text=Re%5E2:%20What%20does%20','@::foo'?) seems to like Cpp namespace.
