@@ -241,6 +241,20 @@
                   (error 'comma-or-match-not-found (token-read stream)))))
          (loop (list (parse comma-lbp stream))))))
 
+(define (prsmatch* token stream)
+  (cond ((eq? token (token-peek stream))
+         ;; null argument
+         (error 'empty-parenthesized-expression (token-read stream))
+         )
+        ('else
+         (define (loop elm)
+           (cond ((eq? token (token-peek stream))
+                  (token-read stream)
+                  elm)
+                 ('else
+                  (error 'match-not-found (token-read stream)))))
+         (loop (parse comma-lbp stream)))))
+
 (define (prsmatch-modified token comma stream)
   (cond ((eq? token (token-peek stream))
          (token-read stream)
@@ -443,12 +457,15 @@
            led parse-nary
            lbp 60)
 
+;; IMHO here it must be "parenthesized expression" in Python.
+;; So no #.COMMA at all.
 (define (open-paren-nud token stream)
   (cond ((eq? (token-peek stream) '#.CLOSE-PAREN)
          (token-read stream)
          nil)
         ('else
-         (prsmatch '#.CLOSE-PAREN '#.COMMA stream))))
+         (writes nil "call open-paren-nud with" token "\n" stream "\n")
+         (prsmatch* '#.CLOSE-PAREN stream))))
 
 (define (open-paren-led token left stream)
   (cons (header left) (prsmatch '#.CLOSE-PAREN '#.COMMA stream)))
@@ -504,3 +521,9 @@
 (pl '(f #.OPEN-PAREN a #.CLOSE-PAREN = a + b / c))
 
 (pl '(g #.OPEN-PAREN #.CLOSE-PAREN))
+
+;; tests from SDF_exercises/chapter_5/5_7.scm
+(pl '(b ** 2 - 4 * a * c))
+(pl '(#.OPEN-PAREN - b + sqrt #.OPEN-PAREN discriminant #.CLOSE-PAREN #.CLOSE-PAREN / #.OPEN-PAREN 2 * a #.CLOSE-PAREN))
+; (lambda (n) )
+; (pl ''(fact := lambda n : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))
