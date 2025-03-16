@@ -1,3 +1,11 @@
+:57955972 Fine. We have talked about "multiple instances" too much which is a bit off topic about the original QA question. This is one general idea in programming IMHO. For here, it just means one local lexical in one function is created multiple times (i.e. multiple instances) when one function is called. If this function returns this lexical, then we need special manipulation because this value should not be put on call stack. Continued...
+
+
+That is a bit like Upwards funarg problem https://en.wikipedia.org/wiki/Funarg_problem#Example although not returning funarg necessarily. So we need to bookkeep it elsewhere. That is what "a new one is created and put in place of the old one, and the old one lives a separate life." means. Is my brief conclusion right (I tried my best to say as briefly and clearly as possible. Sorry for my former a bit lengthy and ambiguous description.)?
+
+"Not sure why you'd think it might have influences outside its scope." Sorry for my ambiguity. I know lexical scope won't have that weird behavior. Here I said that is impossible to show "the old one lives a separate life.".
+
+:57955972 Anyway I can understand your simplex example now where "multiple instances of the same lexical alive at once" means `$x` created by 2 calls of `{ my$x ...}` and used inside anonymous `sub{$x*shift}` are "alive at once" inside that hash table. Is that right? Thanks for your patience.
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
 ## TODO
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.
@@ -81,10 +89,42 @@ cares about **AEB** in string which is got by Linearizing Trees (search for "iss
 > Accordingly we require that all arguments be *delimited by at least one token*
 > An obvious choice of delimiters is commas. However, this is not as valuable as a syntactic token that *documents the role of the argument* following it.
 > Thus, we may *abbreviate* the previous example to for i to n do b
+- > partly because complications arise, e.g., if - is to be used as both an infix and a prefix operator
+  e.g. `a - b - c` can be `a - b, - c` or `a, -b, - c` etc.
+- > We shall call the semantic tokens *associated* with a delimiter its parents.
+  see
+  > two parents, itself and '→' (where a→b|c is shorthand for if a then b else c)
+  which is similar to `prefix  if ...` which manipulates both `then` and `else`.
 - conclusion
   > This is one reason for preferring a procedural embedding of semantics; we can write arbitrary code to find all the arguments when the language designer feels the need to complicate things.
   i.e. **semantic code** for OOP as https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm shows.
 ## Section 3
+- > which will use the value of left as either the translation or value of the left-hand argument
+  i.e. either to another language
+  > The object is to translate, for example, a+b into (PLUS a b)
+  or get the value like the normal program interpreter does.
+- > Clearly we want to be able to deal with a mixture of these two types of tokens, together with tokens having both kinds of arguments (infix operators).
+  - > It runs the code of the current token, stores the result in a variable called left, advances the input, and repeats the process.
+    based on thegreenplace
+    just the `while` loop does almost same as the initial block in `expression`.
+  - > The variable left may be consulted by the code of the next token, which will use the value of left as either the translation or value of the left-hand argument,
+    i.e. `t.led(left)`
+  - > In this case the code of a prefix operator can get its argument by calling the code of the following token.
+    i.e. `left * expression(20)`
+  - > This process will continue recursively until a token is encountered (e.g., a variable or a constant) that does not require an argument.
+    i.e. `rbp < token.lbp` where the next operator `token` can't grab the former argument.
+  - > The code of this token returns the appropriate translation and then so does the code of each of the other tokens, in the reverse of the order in which they were called.
+    i.e. `return left` and then implied by the stack caused by `left * expression(20)`.
+  - "a mixture of these two types of tokens"
+    IMHO token can be
+    1. number-type etc argument "It runs the code of the current token, stores the result in a variable called left"
+    2. maybe ~~infix/~~postfix based on infix context "The variable left may be consulted by the code of the next token,"
+    3. prefix "In this case the code of a prefix operator can get its argument by calling the code of the following token."
+    4. non-postfix *comparably* "a token is encountered (e.g., a variable or a constant) that does not require an argument."
+    5. compound token composed by primitive ones constructed by call stack "The code of this token returns the appropriate translation and then so does the code of each of the other tokens"
+    So it may mean postfix and prefix when not considering relation (so not point 4, 5) and primitive non-operator (not point 1).
+  - Here "both kinds of arguments" means "left-hand argument" and "right-hand argument".
+### TODO
 ### Significant diagrams
 - See the last diagram "The machine becomes..."
   - q0->q1 (i.e. in eli.thegreenplace.net):

@@ -54,12 +54,15 @@
 
 (define defmac 'defmac-macro)
 
-;; This will do (begin (define (push-macro form) (replace form body)) (define push 'push-macro))
+;;; Here it's the heuristics *guessed* from defsyntax in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new.scm
+;;; since siod doc doesn't say about the behavior of `(define (proc-b ...) ...) (define a 'proc-b) (a arg1 arg2 ...)`.
+;; 0. This will do (begin (define (push-macro form) (replace form body)) (define push 'push-macro))
 ;; So (push element place) https://stackoverflow.com/q/11854357/21294350
-;; will call (push-macro '(push element place)) => (replace form (set! ...))
-;;; (Maybe Done) TODO I don't know why it uses replace since body is executed before into replace
-;; Then form is *not used* later. Then return the already executed body.
+;; will call (push-macro '(push element place)) => (replace '(push element place) (set! ...))
+;;; (Maybe Done) TODO I don't know why it uses replace ~~since body is executed before into replace~~
+;; Then form is *not used* later. Then return ~~the already executed~~ body which will then be evaluated.
 ;; See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new.scm where it is fine without replace.
+;; 1. So it will do (set! place (cons element place)).
 (defmac (push form)
         (list 'set! (caddr form)
               (list 'cons (cadr form) (caddr form))))

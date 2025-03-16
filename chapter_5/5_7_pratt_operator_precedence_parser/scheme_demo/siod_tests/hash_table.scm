@@ -1,0 +1,6 @@
+(define (href table key)
+  (cdr (assoc key
+              (aref table (sxhash key (length table))))))
+
+;; no hset implementation available...
+;; So can't know the purpose of sxhash...

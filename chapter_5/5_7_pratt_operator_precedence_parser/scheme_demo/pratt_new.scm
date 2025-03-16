@@ -87,14 +87,19 @@
 
 (define defmac 'defmac-macro)
 
-;; either tagged-list https://stackoverflow.com/a/1048403/21294350 https://docs.racket-lang.org/reference/boxes.html
+;; 0. either tagged-list https://stackoverflow.com/a/1048403/21294350 https://docs.racket-lang.org/reference/boxes.html
 ;; or macro https://stackoverflow.com/a/11872479/21294350
+;; 1. See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/siod/siod.scm
+;; Similar to push, here (pop stack) will does (let ((tmp stack)) (set! stack (cdr tmp)) (car tmp))) *inline*.
+;; So here stack just modifies the input arg in place due to using macro, instead of the local lexical created by the procedure call.
 (defmac (pop form)
         (list 'let (list (list 'tmp (cadr form)))
               (list 'set! (cadr form) '(cdr tmp))
               '(car tmp)))
 
-;; orig
+;;; orig
+
+;; These are not used
 (define COMMA (intern ","))
 (define OPEN-PAREN (intern "("))
 (define CLOSE-PAREN (intern ")"))
@@ -136,23 +141,34 @@
 (define (nudcall token stream)
   (if (symbol? token)
     (if (get-syntax token 'nud)
+      ;; Compared with defsyntax-macro returning (list 'proc ...) which probably implicitly calls "symbol-value",
+      ;; here we explicitly do that.
       ((value-if-symbol (get-syntax token 'nud)) token stream)
       (if (get-syntax token 'led)
+        ;; 0. See original paper https://tdop.github.io/, infix is one special prefix.
+        ;; 1. See the above, here postfix is not considered.
         (error 'not-a-prefix-operator token)
+        ;; TODO why here it prefers choosing led instead of orig token
         token)
-      token)
+      ;; IGNORE How can this work when (if predicate-form true-form false-form)...
+      ;; see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/siod_tests/if_with_more_args.scm
+      ; token
+      )
+    ;; TODO when is used
     token))
 
 (define (ledcall token left stream)
   ((value-if-symbol (or (and (symbol? token)
                              (get-syntax token 'led))
+                        ;; Since postfix is not considered, so infix when having left.
                         (error 'not-an-infix-operator token)))
    token
    left
    stream))
 
 (define (lbp token)
-  (or (and (symbol? token) (get-syntax token 'lbp))
+  (or (and (symbol? token) (value-if-symbol (get-syntax token 'lbp)))
+      ;; TODO Why 200
       200))
 
 (define (rbp token)
@@ -164,6 +180,10 @@
     (if (< rbp-level (lbp (token-peek stream)))
       (parse-loop (ledcall (token-read stream) translation stream))
       translation))
+  ;; Compared with thegreenplace
+  ;; 0. token-read => t = token; token = next()
+  ;; 1. left is implicitly in translation arg.
+  ;; Anyway same basic ideas.
   (parse-loop (nudcall (token-read stream) stream)))
 
 (define (header token)
@@ -193,6 +213,8 @@
                            (or (get-syntax token 'comma) '#.COMMA)
                            stream)))
 
+;; No need for comma if ending with "etc." https://www.grammarly.com/blog/commonly-confused-words/et-cetera-etc/ .
+;; will make a - b - c => (- a b c) etc.
 (define (prsnary token stream)
   (define (loop l)
     (if (eq? token (token-peek stream))
@@ -201,8 +223,10 @@
       (reverse l)))
   (loop (list (parse (rbp token) stream))))
 
+;; Similar to Python (),[],{} using , as the delimiter.
 (define (prsmatch token comma stream)
   (cond ((eq? token (token-peek stream))
+         ;; null argument
          (token-read stream)
          nil)
         ('else
@@ -212,10 +236,10 @@
                   (reverse l))
                  ((eq? comma (token-peek stream))
                   (token-read stream)
-                  (loop (cons (parse 10 stream) l)))
+                  (loop (cons (parse comma-lbp stream) l)))
                  ('else
                   (error 'comma-or-match-not-found (token-read stream)))))
-         (loop (list (parse 10 stream))))))
+         (loop (list (parse comma-lbp stream))))))
 
 (define (prsmatch-modified token comma stream)
   (cond ((eq? token (token-peek stream))
@@ -232,10 +256,10 @@
                          (token-read stream)
                          (reverse l))
                         ('else
-                         (loop (cons (parse 10 stream) l)))))
+                         (loop (cons (parse comma-lbp stream) l)))))
                  ('else
                   (error 'comma-or-match-not-found (token-read stream)))))
-         (loop (list (parse 10 stream))))))
+         (loop (list (parse comma-lbp stream))))))
 
 (define (delim-err token stream)
   (error 'illegal-use-of-delimiter token))
@@ -249,10 +273,13 @@
 (define *syntax-table* (cons-array 10))
 
 (define (get-syntax token key)
+  ;; See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/siod_tests/href.scm
+  ;; default to return ().
   (href (or (href *syntax-table* key) #(())) token))
 
 (define (set-syntax token key value)
   (hset (or (href *syntax-table* key)
+            ;; > The hash table is a *one dimensional* array of association lists.
             (hset *syntax-table* key (cons-array 10)))
         token
         value))
@@ -267,7 +294,8 @@
 
 (define defsyntax 'defsyntax-macro)
 ;; IMHO the above means (Wrong. TODO (Maybe Done))
-;; Emm... I don't know how to pass $ etc without quote as quote elem's when not using the above macro.
+;; 0. Emm... I don't know how to pass $ etc without quote as quote elem's when not using the above macro.
+;; 1. Here dot is fine. See mapcar
 ; (define (defsyntax . args)
 ;   (defsyntax-macro (cons 'defsyntax args)))
 ; (define (defsyntax . args)
@@ -286,10 +314,13 @@
            nud premterm-err)
 (writes nil "$ lbp" (get-syntax '$ 'lbp) "\n")
 
+(define comma-lbp 10)
 (defsyntax #.COMMA
-           lbp 10
+           lbp comma-lbp
            nud delim-err)
 
+;; lbp order
+;; -1<5<10<60<65<70<80<100<120<140<200
 
 (defsyntax #.CLOSE-PAREN
            nud delim-err
@@ -318,15 +349,18 @@
            lbp 5)
 
 (defsyntax if
+           ;; we can add led as Python allows.
            nud if-nud
            rbp 45)
 
 (defsyntax then
+           ;; better with led-error.
            nud delim-err
            lbp 5
            rbp 25)
 
 (defsyntax else
+           ;; better with led-error as "then".
            nud delim-err
            lbp 5
            rbp 25)
@@ -348,6 +382,9 @@
            lbp 120)
 
 (defsyntax =
+           ;;; IGNORE IMHO better with define/set! header.
+           ;; Which one to choose depends one the program structure...
+           ;;; The C = is := here. 
            led parse-infix
            lbp 80
            rbp 80)
@@ -436,5 +473,34 @@
 ; Here #.OPEN-PAREN will be printed as (.
 (writes nil '(if g #.OPEN-PAREN a #.COMMA b #.CLOSE-PAREN then a > b else k * c + a * b))
 
+;; Trace
+;; it will call if-nudcall with token 'if
+;; Then g has no nud/led, so return itself
+;; Then #.OPEN-PAREN has the larger lbp 200 > if-rbp 45.
+;; So it binds g.
+;; Then (prsmatch ...) returns (g a b)
+;; Then then-lbp 5 < if-rbp 45, so finish for pred.
+;; Then (parse then-rbp=25 ...)
+;; Similarly >-lbp > then-rbp (binds a), but else-lbp < >-rbp, so binds b.
+;; So return (> a b) for then's parse.
+;; Similarly (* k c) is returned to parse-loop of else.
+;; Again +-lbp 100 > else-rbp 25, so + grabs (* k c).
+;; Then (* a b) is got in (loop (list (parse (rbp token) stream))) where we finish at $ (i.e. "yield end_token()" in thegreenplace. This is not said explicitly in the paper.).
+;; Then parse-nary returns (+ (* k c) (* a b)) due to no more +.
+;; $ has lbp -1, so grabs nothing.
+;; So we then call (if (eq? '$ (token-peek stream)) (token-read stream)).
+
+;; So here the main problem is to define rbp/lbp based on precedence. 
+;; Then define led (only allowed if it can bind left-argument), nud (only allowed if this can be at the beginning) based on structure.
 (pl '(if g #.OPEN-PAREN a #.COMMA b #.CLOSE-PAREN then a > b else k * c + a * b))
+
+;; Trace is similar to the above.
+;; #.OPEN-PAREN will grabs f and the latter until #.CLOSE-PAREN.
+;; That returns as the result of ledcall.
+;; Then = is the new ledcall.
+;; =-rbp 80 < +-lbp 100 = +-rbp 100 < /-lbp 120 = /-rbp 120 > $-lbp
+;; So + grabs a, / grabs b and c.
+;; So (= ... (+ a (/ b c)))
 (pl '(f #.OPEN-PAREN a #.CLOSE-PAREN = a + b / c))
+
+(pl '(g #.OPEN-PAREN #.CLOSE-PAREN))
