@@ -19,3 +19,11 @@ def test2(*args : *tuple[int, str, int | None], a, b : int = 3, **kwargs):
   for item in args:
     print(item)
 test2(1,a=2)
+
+def test3(a,b,):
+  print(a,b)
+test3(1,2)
+
+def test4(a0, a=1, /, b=3, *args, *, kwd_only):
+  print(a,b,kwd_only)
+test4(1,b=2,kwd_only=3)

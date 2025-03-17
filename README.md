@@ -1,3 +1,4 @@
+To be more clear about what Bakuriu says, Python doc https://docs.python.org/3/reference/expressions.html#lambda also says "Note that functions created with lambda expressions cannot contain *statements* or annotations" (annotation means type hinting https://www.geeksforgeeks.org/function-annotations-python/).
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure

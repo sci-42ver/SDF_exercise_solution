@@ -130,7 +130,8 @@
 (define (toplevel-parse stream)
   (if (eq? (eof-val) (token-peek stream))
     (token-read stream)
-    (prog1 (parse -1 stream)
+    ;; The start should bind nothing.
+    (prog1 (parse end-lbp stream)
       (if (eq? '$ (token-peek stream)) (token-read stream)))))
 
 (define (value-if-symbol x)
@@ -236,10 +237,12 @@
                   (reverse l))
                  ((eq? comma (token-peek stream))
                   (token-read stream)
-                  (loop (cons (parse comma-lbp stream) l)))
+                  ;; the reason is similar to the following.
+                  (loop (cons (parse (lbp comma) stream) l)))
                  ('else
                   (error 'comma-or-match-not-found (token-read stream)))))
-         (loop (list (parse comma-lbp stream))))))
+         ;; to stop when encountering one comma.
+         (loop (list (parse (lbp comma) stream))))))
 
 (define (prsmatch* token comma stream)
   ;; Based on https://docs.python.org/3/reference/expressions.html#parenthesized-forms
@@ -267,10 +270,10 @@
                     ))
                  ((eq? comma (token-peek stream))
                   (token-read stream)
-                  (loop (cons (parse comma-lbp stream) l)))
+                  (loop (cons (parse (lbp comma) stream) l)))
                  ('else
                   (error 'comma-or-match-not-found (token-read stream)))))
-         (loop (list (parse comma-lbp stream))))))
+         (loop (list (parse (lbp comma) stream))))))
 
 ;; This doesn't consider tuple.
 ; (define (prsmatch* token stream)
@@ -298,6 +301,7 @@
                   (reverse l))
                  ((eq? comma (token-peek stream))
                   (token-read stream)
+                  ;; Difference from the above, allowing {stmt;}
                   (cond ((eq? token (token-peek stream))
                          (token-read stream)
                          (reverse l))
@@ -355,23 +359,28 @@
 
 ; will call (defsyntax-macro '(defsyntax $ lbp -1 nud premterm-err)) =>
 ; (*defsyntax (list 'quote ($ lbp -1 nud premterm-err)))
+(define end-lbp -1)
+; (define start-rbp end-lbp)
 (defsyntax $
-           lbp -1
+           lbp end-lbp
            nud premterm-err)
 (writes nil "$ lbp" (get-syntax '$ 'lbp) "\n")
 
 (define comma-lbp 10)
 (defsyntax #.COMMA
            lbp comma-lbp
+          ;  rbp comma-lbp
            nud delim-err)
 
 ;; lbp order
-;; -1<5[),},then,else]<10[',',]<60<65<70<80<100<120<140<200
+;; -1<5[),},then,else]<10[',',]<60[or]<65[and]<70<80<100<120<140<200
 
 ;; rbp order
-;; 25<45[if]<70<80<100<120<139
+;; IMHO since here 45 and 25 are greater than the same group of lbp's, it is fine to define if-rbp as 25.
+;; 25[then, else]<45[if]<70<80<100<120<139
 
-;; Here "if a ," (similar for ')' etc) is not allowed by if-nud, so if won't grab a.
+;;; Notice then-rbp > ,-lbp doesn't imply then can grab something from ",". See "(eq? (token-peek stream) 'else)".
+;; Similarly "if a ," (similar for ')' etc) is not allowed by if-nud, so if won't grab a.
 ;; So it is better to use nud/led procedure for ensurance of operand-operator relation
 ;; instead of just using rbp/lbp to ensure that.
 
@@ -432,7 +441,11 @@
 
 (defsyntax *
            led parse-nary
-           lbp 120)
+           nud identity
+           lbp 120
+           ;; Must define rbp < (-lbp=200 here to avoid using default 200 which may grab proc-name unexpectedly.
+           rbp 120
+           )
 
 (defsyntax =
            ;;; IGNORE IMHO better with define/set! header.
@@ -456,6 +469,7 @@
 
 (defsyntax /
            led parse-infix
+           nud identity
            lbp 120
            rbp 120)
 
@@ -506,12 +520,38 @@
            rbp 45
            )
 
+;; 0. similar to then
+;; 1. lbp is less then all possible rbp's, IGNORE LATER but greater than comma-lbp.
+;; so it binds nothing IGNORE LATER except when competing with $.
+;; 2. rbp may be used by the related nud.
+;; But related unexpected behaviors are excluded by that nud procedure
+;; instead of rbp/lbp ordering (see "Notice then-rbp ...").
+(defsyntax :
+           led delim-err
+           nud delim-err
+           lbp 5
+           rbp 25)
 
+(define (identity token stream)
+  token)
 
 (define (lambda-nud token stream)
-  ;; token must be lambda implied by nudcall.
-  (define params (prsmatch ': '#.COMMA stream))
-  
+  ;; 0. token must be lambda implied by nudcall.
+  ;; 1. Here a,b,: is allowed as Python (see SDF_exercises/chapter_5/5_7_related_python_behavior/parameter_list.py).
+  (define params (prsmatch-modified ': '#.COMMA stream))
+  ;; 0. To allow multiple statements inside the body
+  ;; I use {stmt1; stmt2; stmt3; ...} similar to perl 
+  ;; (not use Python because it uses NEWLINE etc as the delimeter) 
+  ;; but here I enforce "foreach ... {}" etc to also end with ";".
+  ;; Actually, this is already done in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_orig.scm.
+  ;; 0.a. For {stmt1; stmt2; stmt3; ...}
+  ;; Similar to code base lambda-body, body is just one begin.
+  ;; 0.b. So body {a; b} is different from "a; b" where the latter only grabs "a" as the body.
+  ;; 0.c. Notice in Python, lambda doesn't support that "multiple statements"
+  ;; https://stackoverflow.com/questions/28429680/lambda-and-multiple-statements-in-python/28429947#comment140227809_28429680
+  ;; 1. (rbp ':) is needed when rhs is "a or b" etc.
+  (define body (parse (rbp ':) stream))
+  (list 'lambda params body)
   )
 
 ;; IMHO here it must be "parenthesized expression" in Python.
@@ -593,4 +633,11 @@
 (pl '(#.OPEN-PAREN 1 #.COMMA 3 #.COMMA 7 #.CLOSE-PAREN + #.OPEN-PAREN 2 #.CLOSE-PAREN))
 
 ; (lambda (n) )
-; (pl '(fact := lambda n : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))
+(pl '(fact := lambda n : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))
+;; 0. see SDF_exercises/chapter_5/5_7_related_python_behavior/lambda_no_annotation.py
+;; no type hinting is allowed here.
+;; So "parameter, star_parameter" means same here.
+;; 1. Here c should be c=... . This error is checked by interpreter like Python or Scheme.
+;; I won't implement that error checking here. Also for how these arguments like "/ #.COMMA *args" are manipulated.
+;; 1.a. So all related possible argument elements in Python lambda are considered.
+(pl '(fact := lambda a #.COMMA b = 0 #.COMMA / #.COMMA c #.COMMA *args #.COMMA * #.COMMA kwarg1 #.COMMA **kwargs : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))

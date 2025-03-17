@@ -155,6 +155,11 @@
       ;; 0.n. so only something like (lambda a,b,c: a+b+c)(1,2,3) is considered https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions.
       ;; Then "a,b,c" can be manipulated like Binding,
       ;; i.e. comma-param-lst? should return (a,b,c)=> (a b c) parameter_list in Scheme.
+      ;; 0.n+1. ALL IN ALL, https://tdop.github.io/ just uses the simplest lambda argument list where '",", getlist 25' should be '"," getlist 25' by (a getlist b) and 'is "EXPT"' notation.
+      ;; See https://docs.python.org/3/reference/compound_stmts.html#function-definitions
+      ;; Trivially parameter_list, parameter_list_no_posonly are all delimited by ",".
+      ;; See SDF_exercises/chapter_5/5_7_related_python_behavior/parameter_list.py
+      ;; where [","] in parameter_star_kwargs is only omitted when at the end and actually it must be at the end...
       ;; 1. For define, skip Type parameter lists "func[T](a: T, b: T) -> T" https://peps.python.org/pep-0695/#summary-examples
       (new-delimit-exp (list "lambda" comma-param-lst? ":" obj?))
       )
