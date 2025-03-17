@@ -1,11 +1,3 @@
-:57955972 Fine. We have talked about "multiple instances" too much which is a bit off topic about the original QA question. This is one general idea in programming IMHO. For here, it just means one local lexical in one function is created multiple times (i.e. multiple instances) when one function is called. If this function returns this lexical, then we need special manipulation because this value should not be put on call stack. Continued...
-
-
-That is a bit like Upwards funarg problem https://en.wikipedia.org/wiki/Funarg_problem#Example although not returning funarg necessarily. So we need to bookkeep it elsewhere. That is what "a new one is created and put in place of the old one, and the old one lives a separate life." means. Is my brief conclusion right (I tried my best to say as briefly and clearly as possible. Sorry for my former a bit lengthy and ambiguous description.)?
-
-"Not sure why you'd think it might have influences outside its scope." Sorry for my ambiguity. I know lexical scope won't have that weird behavior. Here I said that is impossible to show "the old one lives a separate life.".
-
-:57955972 Anyway I can understand your simplex example now where "multiple instances of the same lexical alive at once" means `$x` created by 2 calls of `{ my$x ...}` and used inside anonymous `sub{$x*shift}` are "alive at once" inside that hash table. Is that right? Thanks for your patience.
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
 ## TODO
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.

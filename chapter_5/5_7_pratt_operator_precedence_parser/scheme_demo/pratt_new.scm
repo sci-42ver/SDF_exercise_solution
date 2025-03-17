@@ -241,19 +241,51 @@
                   (error 'comma-or-match-not-found (token-read stream)))))
          (loop (list (parse comma-lbp stream))))))
 
-(define (prsmatch* token stream)
+(define (prsmatch* token comma stream)
+  ;; Based on https://docs.python.org/3/reference/expressions.html#parenthesized-forms
   (cond ((eq? token (token-peek stream))
          ;; null argument
-         (error 'empty-parenthesized-expression (token-read stream))
-         )
+         (token-read stream)
+         ; > An empty pair of parentheses yields an empty tuple object.
+         (cons 'tuple nil))
         ('else
-         (define (loop elm)
+         (define (loop l)
            (cond ((eq? token (token-peek stream))
                   (token-read stream)
-                  elm)
+                  (let* ((l* (reverse l))
+                         (len (length l*)))
+                    (cond
+                      ;; > if the list contains at least one comma, it yields a tuple; 
+                      ;; > otherwise, it yields the single expression that makes up the expression list.
+                      ((= len 1) (car l*))
+                      ((> len 1) (cons 'tuple l*))
+                      ('else
+                        ;; just for safety here.
+                        ;; IMHO `(list (parse comma-lbp stream))` implies >= 1.
+                        (error 'this-should-not-happen l))
+                      )
+                    ))
+                 ((eq? comma (token-peek stream))
+                  (token-read stream)
+                  (loop (cons (parse comma-lbp stream) l)))
                  ('else
-                  (error 'match-not-found (token-read stream)))))
-         (loop (parse comma-lbp stream)))))
+                  (error 'comma-or-match-not-found (token-read stream)))))
+         (loop (list (parse comma-lbp stream))))))
+
+;; This doesn't consider tuple.
+; (define (prsmatch* token stream)
+;   (cond ((eq? token (token-peek stream))
+;          ;; null argument
+;          (error 'empty-parenthesized-expression (token-read stream))
+;          )
+;         ('else
+;          (define (loop lst)
+;            (cond ((eq? token (token-peek stream))
+;                   (token-read stream)
+;                   lst)
+;                  ('else
+;                   (error 'match-not-found (token-read stream)))))
+;          (loop (list (parse comma-lbp stream))))))
 
 (define (prsmatch-modified token comma stream)
   (cond ((eq? token (token-peek stream))
@@ -334,7 +366,14 @@
            nud delim-err)
 
 ;; lbp order
-;; -1<5<10<60<65<70<80<100<120<140<200
+;; -1<5[),},then,else]<10[',',]<60<65<70<80<100<120<140<200
+
+;; rbp order
+;; 25<45[if]<70<80<100<120<139
+
+;; Here "if a ," (similar for ')' etc) is not allowed by if-nud, so if won't grab a.
+;; So it is better to use nud/led procedure for ensurance of operand-operator relation
+;; instead of just using rbp/lbp to ensure that.
 
 (defsyntax #.CLOSE-PAREN
            nud delim-err
@@ -457,15 +496,36 @@
            led parse-nary
            lbp 60)
 
+(defsyntax lambda
+           nud lambda-nud
+           led delim-err
+           ;; no led, so no lbp.
+          ;  lbp 60
+           ;; See the above "So it is better to use nud/led procedure ..."
+           ;; All related objects with lower lbp can be avoided by nud procedure.
+           rbp 45
+           )
+
+
+
+(define (lambda-nud token stream)
+  ;; token must be lambda implied by nudcall.
+  (define params (prsmatch ': '#.COMMA stream))
+  
+  )
+
 ;; IMHO here it must be "parenthesized expression" in Python.
 ;; So no #.COMMA at all.
 (define (open-paren-nud token stream)
-  (cond ((eq? (token-peek stream) '#.CLOSE-PAREN)
-         (token-read stream)
-         nil)
-        ('else
-         (writes nil "call open-paren-nud with" token "\n" stream "\n")
-         (prsmatch* '#.CLOSE-PAREN stream))))
+  ;; The 1st is already done in prsmatch*.
+  ; (cond ((eq? (token-peek stream) '#.CLOSE-PAREN)
+  ;        (token-read stream)
+  ;        nil)
+  ;       ('else
+  ;        ))
+  (writes nil "call open-paren-nud with" token "\n" stream "\n")
+  (prsmatch* '#.CLOSE-PAREN '#.COMMA stream)
+  )
 
 (define (open-paren-led token left stream)
   (cons (header left) (prsmatch '#.CLOSE-PAREN '#.COMMA stream)))
@@ -525,5 +585,12 @@
 ;; tests from SDF_exercises/chapter_5/5_7.scm
 (pl '(b ** 2 - 4 * a * c))
 (pl '(#.OPEN-PAREN - b + sqrt #.OPEN-PAREN discriminant #.CLOSE-PAREN #.CLOSE-PAREN / #.OPEN-PAREN 2 * a #.CLOSE-PAREN))
+
+;; tuple
+(pl '(#.OPEN-PAREN 3 #.CLOSE-PAREN + #.OPEN-PAREN 2 #.CLOSE-PAREN))
+;; Just as the code base, here argument type checking for + etc won't be done.
+(pl '(#.OPEN-PAREN #.CLOSE-PAREN + #.OPEN-PAREN 2 #.CLOSE-PAREN))
+(pl '(#.OPEN-PAREN 1 #.COMMA 3 #.COMMA 7 #.CLOSE-PAREN + #.OPEN-PAREN 2 #.CLOSE-PAREN))
+
 ; (lambda (n) )
-; (pl ''(fact := lambda n : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))
+; (pl '(fact := lambda n : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))

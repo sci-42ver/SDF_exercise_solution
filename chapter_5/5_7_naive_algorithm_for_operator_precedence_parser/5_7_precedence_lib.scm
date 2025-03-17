@@ -28,12 +28,12 @@
 ;; https://docs.python.org/3/reference/expressions.html#operator-precedence
 ;; > Operators in the same box group left to right (except for exponentiation and conditional expressions, which group from right to left).
 ;;; IGNORE Better see https://techvidvan.com/tutorials/python-operator-precedence/ which adds "Parentheses (Highest precedence)".
-;; "parenthesized expression" just means that.
-;;; 0. Here for is directly related with in https://docs.python.org/3/tutorial/controlflow.html#for-statements
+;; "parenthesized expression" just means that using parenthesis to change the evaluation order.
+;;; 0. IGNORE (I don't know why I say about for statement.): Here for is directly related with in https://docs.python.org/3/tutorial/controlflow.html#for-statements
 ;; 1. > The power operator binds more tightly than unary operators on its left
 ;; "more tightly" means higher precedence.
 ;; n. examples
-;; IMHO here we need to consider both group and precedence
+;; IMHO here group and precedence means same.
 ;; n.0. b**2-4*a*c: **, - (binary), *
 ;; n.1. (-b+sqrt(discriminant))/(2*a): (), -x, +, Binding, x(arguments...), /, *
 ;; See https://stackoverflow.com/a/68896193/21294350 or doc for Binding meaning
@@ -96,10 +96,13 @@
   (list
     ;; Notice all these pred's/str/func should return one object for consistency.
     (new-from-left-to-right-precedence-items 
-      ;; 0. For simplicity, comprehension is skipped https://docs.python.org/3/reference/expressions.html#list-displays.
+      ;; 0. For simplicity, comprehension is skipped for list https://docs.python.org/3/reference/expressions.html#list-displays.
       ;; So only "a comma-separated list of expressions".
       ;; 1. Here I also consider "call" which must be related with Binding 
       ;; when we have manipulated with parenthesized expression in combine-non-application-parentheses.
+      ;; 2. IGNORE Here I skipped tuple since it is immutable.
+      ;; > if the list contains at least one comma, it yields a tuple; otherwise, it yields the single expression that makes up the expression list.
+      ;; Here we can assume Scheme has one (tuple ...) procedure and set! syntax redefinition which can check tuple tag to ensure immutability.
       (new-delimit-then-divide-exp (new-pair (list variable? left-parenthesis right-parenthesis) ","))
       ;; Dict https://docs.python.org/3/reference/expressions.html#dictionary-displays
       ;; 0. '"**" or_expr' is skipped.
@@ -137,9 +140,22 @@
       )
     (new-from-left-to-right-precedence-items
       ;; 0. skip "/" in parameter_list https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-parameter_list
-      ;; 0.a. so only something like (lambda a,b,c: a+b+c)(1,2,3) is considered https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions.
+      ;; See https://peps.python.org/pep-0570/#function-examples
+      ;; See 0.a.: Due to no keyword parameter, so all are positional-only... 
+      ;; 0.a. And also for parameter_star_kwargs etc https://stackoverflow.com/a/36908/21294350.
+      ;; ~~Anyway~~ Although Scheme ~~doesn't have~~ has one native way to do unpack *hint* like "*" does (i.e. (proc . args)), but not for keyword parameter restriction "**".
+      ;; The latter can be done in https://srfi.schemers.org/srfi-177/srfi-177.html (not in MIT/GNU Scheme) where "(c d e)" must be kw.
+      ;; So the former can't be generalized as Python does (see SDF_exercises/chapter_5/5_7_related_python_behavior/parameter_list.py).
+      ;; IGNORE: The former can be done with no hint in procedure definition https://stackoverflow.com/a/30522731/21294350.
+      ;; 0.b. For "parameter ["=" expression]", Racket supports default value better https://stackoverflow.com/a/36220746/21294350
+      ;; but not for MIT/GNU Scheme.
+      ;; 0.c. Similarly no type hints "identifier [":" expression]".
+      ;; 0.d. identifier checking seems off topic... https://docs.python.org/3/reference/lexical_analysis.html#grammar-token-python-grammar-identifier
+      ;; https://unicode.org/reports/tr15/
+      ;; 0.n. so only something like (lambda a,b,c: a+b+c)(1,2,3) is considered https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions.
       ;; Then "a,b,c" can be manipulated like Binding,
       ;; i.e. comma-param-lst? should return (a,b,c)=> (a b c) parameter_list in Scheme.
+      ;; 1. For define, skip Type parameter lists "func[T](a: T, b: T) -> T" https://peps.python.org/pep-0695/#summary-examples
       (new-delimit-exp (list "lambda" comma-param-lst? ":" obj?))
       )
     (new-from-left-to-right-precedence-items 

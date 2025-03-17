@@ -43,6 +43,10 @@
     - I even didn't know what to do for that "general case", more specifically I didn't know what problems will have for "procedures passed as arguments and returned as values" when we assume all procedures with generic arguments ~~(so "free variables" are )~~.
     - related
       - 4.16
+- 5.7 (skip most of special features in Python)
+  See "0. skip "/" in parameter_list ..." in `SDF_exercises/chapter_5/5_7_naive_algorithm_for_operator_precedence_parser/5_7_precedence_lib.scm`.
+  - Here the exercise intends to implement transformation but not implement many new Scheme procedures for new Scheme features.
+    so 0., 0.a., 0.b., 0.c., 0.d. are all skipped where 0.b. is supported in Racket.
 ## related with complexity analysis: better done after CRLS
 - 4.18
 ## Only give basic implementation ideas
