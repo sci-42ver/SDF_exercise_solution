@@ -3,28 +3,23 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_7_common_lib/5_7_basic_pred_lib.scm")
 
-;; https://srfi.schemers.org/srfi-115/srfi-115.html#Types-and-Naming-Conventions
-;; > re: an SRE or pre-compiled regexp object
-;; Here I just use SRE for simplicity without using (regexp re) to compile.
-(define (sre-lst? sre-lst)
-  (and (list? sre-lst) (every valid-sre? sre-lst)))
-(define (make-or sre-lst)
-  (assert (sre-lst? sre-lst))
-  (cons 'or sre-lst)
-  )
+(load "5_7_common_lib/re/re_syntax_lib.scm")
 
 ;;; (see git history) refactored for modularity https://stackoverflow.com/questions/1025844/what-is-refactoring-and-what-is-only-modifying-code/1025867#1025867
 ;; > altering its internal structure without changing its external behavior
 
 ;; 0. See SDF_exercises/chapter_5/5_7_precedence_lib.scm
-;; Here "," is not one separtor among statements in Python which uses line (see https://docs.python.org/3/reference/lexical_analysis.html#line-structure and https://stackoverflow.com/a/35053210/21294350)
-(define primitive-op-lst '("*" ":" "-" "+" "/" "="))
+;; Here "," is not one separtor among statements in Python which uses line 
+;; (see https://docs.python.org/3/reference/lexical_analysis.html#line-structure 
+;; and https://stackoverflow.com/a/35053210/21294350)
+;; But it is used to delimit list elements etc.
+(define primitive-op-lst '("*" ":" "-" "+" "/" "=" ","))
 
 ;; no use to make neg-look-behind/look-ahead etc work.
 ; (cd "~/SICP_SDF/SDF_exercises/chapter_5/re_lib")
 ; (load "regexp.sld")
 
-(define word-corrected '(or word (+ numeric)))
+(load "5_7_common_lib/re/general_re_lib.scm")
 (define unsplitted-var 
   `(: 
     ;; IGNORE 0. only consider unary
@@ -48,91 +43,11 @@
 ;; 0. can't be splitted into ("*" "*") etc.
 ;; 1. no ++ in Python https://stackoverflow.com/a/1485854/21294350. See SDF_exercises/chapter_5/5_7_precedence_lib.scm
 ; (define unsplittable-primitive-op-lst '("**" ":=" "--" "++" "=="))
-;; 2. 
 (define unsplittable-primitive-op-lst `("**" ":=" "==" ,unsplitted-var))
 
-;; One workaround for neg-look-behind.
-;; i.e. only the alone *args etc are not splittable, but a*b etc can.
-(define (string-null? str)
-  (assert (string? str))
-  (n:= 0 (string-length str))
-  )
-(define (optional-arg-lst arg)
-  (if (default-object? arg)
-    '()
-    (list arg))
-  )
-(define (substring-lst str #!optional start end)
-  (let ((res 
-          (apply 
-            substring 
-            (append (list str) (optional-arg-lst start) (optional-arg-lst end)))))
-    (if (string-null? res)
-      '()
-      (list res))
-    )
-  )
+;; only the alone *args etc are not splittable, but a*b etc can.
 (define (get-args-kwargs exp)
-  (assert (string? exp))
-  (let ((last-end 0)
-        (len (string-length exp)))
-    (let ((res 
-            (regexp-fold unsplitted-var
-                          ;; IGNORE Here i is the index before m-start or 0 if m-start is 0.
-                          ;; Emm... sometimes i is the index of m-start inclusive, while sometimes exclusive.
-                          (lambda (i m str acc)
-                            (let* ((s (regexp-match-submatch m 0))
-                                    (start (regexp-match-submatch-start m 0))
-                                    (end (regexp-match-submatch-end m 0))
-                                    ; (corrected-i 
-                                    ;   (if (n:= start 0)
-                                    ;       start
-                                    ;       (n:- start 1))
-                                    ;   )
-                                    (str-before (substring str 0 start)))
-                              (let ((end-with-word (regexp-search `(: ,word-corrected eos) str-before))
-                                    (match (regexp-match-submatch m 0))
-                                    )
-                                ; (write-line (list "last-end" last-end "i" i "match" match "str-before" str-before))
-                                (if end-with-word
-                                  (begin
-                                    (write-line 
-                                      (list 
-                                        match
-                                        "with"
-                                        (regexp-match-submatch end-with-word 0) 
-                                        "before"
-                                        "is not one *args or **kwargs"
-                                        ))
-                                    acc
-                                    )
-                                  (let ((intermediate-str 
-                                          (substring-lst 
-                                            str 
-                                            last-end 
-                                            ; (if (n:= corrected-i 0) corrected-i (n:+ corrected-i 1))
-                                            start
-                                            )))
-                                    ; (write-line (list "last-end" last-end "i" i "append" intermediate-str match))
-                                    (set! last-end end)
-                                    (append
-                                      (if 
-                                        ; (default-object? acc)
-                                        (eq? #!unspecific acc)
-                                        '()
-                                        acc)
-                                      intermediate-str
-                                      (list match))
-                                    )
-                                  ))
-                              ))
-                          '()
-                          exp)
-            ))
-      (append res (substring-lst exp last-end))
-      )
-    )
-  )
+  (neg-look-behind word-corrected unsplitted-var exp))
 (define n:+ +)
 (define n:- -)
 (define n:= =)
