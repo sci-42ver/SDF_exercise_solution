@@ -588,7 +588,7 @@
 ; (trace pop token-read)
 
 ; Here #.OPEN-PAREN will be printed as (.
-(writes nil '(if g #.OPEN-PAREN a #.COMMA b #.CLOSE-PAREN then a > b else k * c + a * b))
+; (writes nil '(if g #.OPEN-PAREN a #.COMMA b #.CLOSE-PAREN then a > b else k * c + a * b))
 
 ;; Trace
 ;; it will call if-nudcall with token 'if

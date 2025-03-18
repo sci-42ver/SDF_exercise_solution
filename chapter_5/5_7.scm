@@ -32,6 +32,9 @@
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_7_regexp_lib.scm")
+;; tokenizer
+(define (parse exp)
+  (%parse exp split-lst partition-separtor-lst skipped-primitive-re-lst))
 (define (check-split-lst-and-partition-lst . sre-lsts)
   (for-each 
     (lambda (sre-lst)
@@ -39,8 +42,6 @@
       )
     sre-lsts)
   )
-(define (parse exp)
-  (%parse exp split-lst partition-separtor-lst primitive-symbol-re-lst))
 (define (%parse exp split-lst partition-separtor-lst skipped-re-lst)
   (assert (string? exp))
   (check-split-lst-and-partition-lst split-lst partition-separtor-lst skipped-re-lst)
@@ -59,6 +60,7 @@
     (remove empty-str? partition-res))
   )
 
+;; tokenizer tests
 (define test-exp1 "b**2-4*a*c")
 (define test-exp2 "(-b+sqrt(discriminant))/(2*a)")
 
@@ -76,25 +78,24 @@
 (define test-exp4 "b**m-n*a*c")
 (assert (equal? (parse test-exp4) '("b" "**" "m" "-" "n" "*" "a" "*" "c")))
 
-;; not used
-; (cd "~/SICP_SDF/SDF_exercises/chapter_5")
-; (load "5_7_naive_algorithm_for_operator_precedence_parser/5_7_parenthesis_lib.scm")
-; (match-parentheses? expected-parsed-test-exp2)
-
-; (for-each
-;   (lambda (pair)
-;     (write-line 
-;       (list 
-;         "left" (list-ref expected-parsed-test-exp2 (get-left-idx pair))
-;         "right" (list-ref expected-parsed-test-exp2 (get-right-idx pair))
-;         ))
-;     )
-;   (let ((paren-idx-pairs (parenthesis-idx-pair-stack expected-parsed-test-exp2)))
-;     (write-line (list "paren-idx-pairs" paren-idx-pairs))
-;     (get-data paren-idx-pairs))
-;   )
-
-; (combine-non-application-parentheses expected-parsed-test-exp2)
+(define test-exp5 "fact := lambda a, b = 0, /, c, *args, *, kwarg1, **kwargs:
+  if n == 0
+  then 1
+  else n*fact(n-1)")
+(parse test-exp5)
+(assert 
+  (equal? 
+    (parse test-exp5) 
+    '("fact" ":=" "lambda" 
+      "a" "," 
+      "b" "=" "0" "," 
+      "/" "," 
+      "c" "," 
+      "*args" "," 
+      "*" "," 
+      "kwarg1" "," 
+      "**kwargs"
+      ":" "if" "n" "==" "0" "then" "1" "else" "n" "*" "fact" "(" "n" "-" "1" ")")))
 
 (define (infix->polish str-lst)
   (assert (every string? str-lst))
@@ -103,9 +104,9 @@
 
 ;;;; tests
 ;;; old-example from 6-945 2009
-(define (quadratic a b c)
-  (let ((discriminant (infix "b**2-4*a*c")))
-    (infix "(-b+sqrt(discriminant))/(2*a)")))
+; (define (quadratic a b c)
+;   (let ((discriminant (infix "b**2-4*a*c")))
+;     (infix "(-b+sqrt(discriminant))/(2*a)")))
 
 ;;; book
 ;; here some spaces are necessary to make codes work.

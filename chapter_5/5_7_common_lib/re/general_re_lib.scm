@@ -1,9 +1,10 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_7_common_lib/string_lib.scm")
 (define word-corrected '(or word (+ numeric)))
-;; One workaround for neg-look-behind.
+;; 0. One workaround for neg-look-behind.
 ;; (i.e. `(: (neg-look-behind ,neg-pat) normal-pat)
-(define (neg-look-behind neg-pat normal-pat exp)
+;; 0.a. Actually here is more general since it has no restriction of "fixed length" for neg-pat.
+(define (arbitrary-len-neg-look-behind neg-pat normal-pat exp)
   (assert (string? exp))
   (let ((last-end 0)
         (len (string-length exp)))
@@ -13,13 +14,11 @@
                           ;; Emm... sometimes i is the index of m-start inclusive, while sometimes exclusive.
                           (lambda (i m str acc)
                             (let* ((s (regexp-match-submatch m 0))
+                                    ;; If m matches "ab" in "mnabc", then start is 2 with index 0 for the leftmost.
                                     (start (regexp-match-submatch-start m 0))
+                                    ;; For the former example, end is 4 which is the index *past* the match end.
                                     (end (regexp-match-submatch-end m 0))
-                                    ; (corrected-i 
-                                    ;   (if (n:= start 0)
-                                    ;       start
-                                    ;       (n:- start 1))
-                                    ;   )
+                                    ;; Returns "" if start=0. Anyway this returns str-before due to exclusive end argument "start".
                                     (str-before (substring str 0 start)))
                               (let ((end-with-word (regexp-search `(: ,neg-pat eos) str-before))
                                     (match (regexp-match-submatch m 0))
@@ -35,23 +34,21 @@
                                         "before"
                                         "is not one *args or **kwargs"
                                         ))
+                                    ;; 0. arbitrary-len-neg-look-behind done here, i.e. not consider this match (negative).
+                                    ;; 1. Notice to return one valid object here for the usage in the next fold iteration.
                                     acc
                                     )
                                   (let ((intermediate-str 
                                           (substring-lst 
                                             str 
                                             last-end 
-                                            ; (if (n:= corrected-i 0) corrected-i (n:+ corrected-i 1))
                                             start
                                             )))
                                     ; (write-line (list "last-end" last-end "i" i "append" intermediate-str match))
+                                    ;; As the above shows, index end elem is not consumed. So it will be used as the next inclusive start.
                                     (set! last-end end)
                                     (append
-                                      (if 
-                                        ; (default-object? acc)
-                                        (eq? #!unspecific acc)
-                                        '()
-                                        acc)
+                                      acc
                                       intermediate-str
                                       (list match))
                                     )
@@ -60,6 +57,7 @@
                           '()
                           exp)
             ))
+      ;; consume the rest substring.
       (append res (substring-lst exp last-end))
       )
     )

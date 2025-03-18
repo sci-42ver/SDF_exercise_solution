@@ -17,3 +17,9 @@
       (list res))
     )
   )
+
+;; misc string lib
+(define (empty-str? str)
+  (assert (string? str))
+  (n:= 0 (string-length str))
+  )
