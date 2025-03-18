@@ -639,5 +639,7 @@
 ;; So "parameter, star_parameter" means same here.
 ;; 1. Here c should be c=... . This error is checked by interpreter like Python or Scheme.
 ;; I won't implement that error checking here. Also for how these arguments like "/ #.COMMA *args" are manipulated.
+;; Anyway ex 5.7 intends to implement transformation from infix to polish but not new statement etc which is not syntax like SICP 4.1.2.
+;; > This is entirely a small matter of syntax (ha!).
 ;; 1.a. So all related possible argument elements in Python lambda are considered.
 (pl '(fact := lambda a #.COMMA b = 0 #.COMMA / #.COMMA c #.COMMA *args #.COMMA * #.COMMA kwarg1 #.COMMA **kwargs : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))

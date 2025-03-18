@@ -32,8 +32,18 @@
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_7_regexp_lib.scm")
+(define (check-split-lst-and-partition-lst . sre-lsts)
+  (for-each 
+    (lambda (sre-lst)
+      (assert (sre-lst? sre-lst))
+      )
+    sre-lsts)
+  )
 (define (parse exp)
+  (%parse exp split-lst partition-separtor-lst primitive-symbol-re-lst))
+(define (%parse exp split-lst partition-separtor-lst skipped-re-lst)
   (assert (string? exp))
+  (check-split-lst-and-partition-lst split-lst partition-separtor-lst skipped-re-lst)
   (let* ((split-res (exp-split exp split-lst))
          (partition-res 
           (append-map 
@@ -41,7 +51,7 @@
               (exp-partition 
                 res 
                 partition-separtor-lst 
-                primitive-symbol-re-lst)
+                skipped-re-lst)
               )
             split-res
             )
@@ -58,30 +68,33 @@
   then 1
   else n*fact(n-1)"
   )
-(parse test-exp1)
 (assert (equal? (parse test-exp1) '("b" "**" "2" "-" "4" "*" "a" "*" "c")))
 (define expected-parsed-test-exp2 '("(" "-" "b" "+" "sqrt" "(" "discriminant" ")" ")" "/" "(" "2" "*" "a" ")"))
 (assert (equal? (parse test-exp2) expected-parsed-test-exp2))
 (assert (equal? (parse test-book-exp) '("fact" ":=" "lambda" "n" ":" "if" "n" "==" "0" "then" "1" "else" "n" "*" "fact" "(" "n" "-" "1" ")")))
 
-(cd "~/SICP_SDF/SDF_exercises/chapter_5")
-(load "5_7_parenthesis_lib.scm")
-(match-parentheses? expected-parsed-test-exp2)
+(define test-exp4 "b**m-n*a*c")
+(assert (equal? (parse test-exp4) '("b" "**" "m" "-" "n" "*" "a" "*" "c")))
 
-(for-each
-  (lambda (pair)
-    (write-line 
-      (list 
-        "left" (list-ref expected-parsed-test-exp2 (get-left-idx pair))
-        "right" (list-ref expected-parsed-test-exp2 (get-right-idx pair))
-        ))
-    )
-  (let ((paren-idx-pairs (parenthesis-idx-pair-stack expected-parsed-test-exp2)))
-    (write-line (list "paren-idx-pairs" paren-idx-pairs))
-    (get-data paren-idx-pairs))
-  )
+;; not used
+; (cd "~/SICP_SDF/SDF_exercises/chapter_5")
+; (load "5_7_naive_algorithm_for_operator_precedence_parser/5_7_parenthesis_lib.scm")
+; (match-parentheses? expected-parsed-test-exp2)
 
-(combine-non-application-parentheses expected-parsed-test-exp2)
+; (for-each
+;   (lambda (pair)
+;     (write-line 
+;       (list 
+;         "left" (list-ref expected-parsed-test-exp2 (get-left-idx pair))
+;         "right" (list-ref expected-parsed-test-exp2 (get-right-idx pair))
+;         ))
+;     )
+;   (let ((paren-idx-pairs (parenthesis-idx-pair-stack expected-parsed-test-exp2)))
+;     (write-line (list "paren-idx-pairs" paren-idx-pairs))
+;     (get-data paren-idx-pairs))
+;   )
+
+; (combine-non-application-parentheses expected-parsed-test-exp2)
 
 (define (infix->polish str-lst)
   (assert (every string? str-lst))
