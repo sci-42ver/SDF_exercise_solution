@@ -110,7 +110,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 (define unit-conversion-table
   ;; MIT_Scheme_Reference
-  ;; hash-table-entry-type:strong See make-key-weak-eqv-hash-table
+  ;; hash-table-entry-type:strong (obsolete now...) See make-key-weak-eqv-hash-table
   ;; It constructs one specific type based on `make-hash-table-type`.
   (make-equal-hash-table))
 

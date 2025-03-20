@@ -3,3 +3,8 @@
 
 (href table 'test)
 (href #(()) 'test)
+
+(if (href #(()) 'test)
+  (writes nil "#t")
+  (writes nil "#f")
+  )

@@ -88,7 +88,10 @@
 (define defmac 'defmac-macro)
 
 ;; 0. pop is implemented by either tagged-list https://stackoverflow.com/a/1048403/21294350 https://docs.racket-lang.org/reference/boxes.html
-;; or macro https://stackoverflow.com/a/11872479/21294350
+;; or macro https://stackoverflow.com/a/11872479/21294350 
+;; (notice this "hygiene problem" doesn't exist for Scheme. 
+;; Common Lisp has this problem where 11.1.2.1.2 standard doesn't explicitly forbid but shows "undefined" https://en.wikipedia.org/wiki/Hygienic_macro#Standard_library_function_redefinition
+;; Also see https://stackoverflow.com/questions/52549740/more-macro-woes/52602664#comment140238178_52602664)
 ;; 1. See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/siod/siod.scm
 ;; Similar to push, here (pop stack) will does (let ((tmp stack)) (set! stack (cdr tmp)) (car tmp))) *inline*.
 ;; So here stack just modifies the input arg in place due to using macro, instead of the local lexical created by the procedure call.
@@ -99,7 +102,7 @@
 
 ;;; orig
 
-;; These are not used
+;; These are used implicitly in '#.COMMA etc.
 (define COMMA (intern ","))
 (define OPEN-PAREN (intern "("))
 (define CLOSE-PAREN (intern ")"))
@@ -339,12 +342,14 @@
   (list '*defsyntax (list 'quote (cdr form))))
 ; ;; IMHO the above means
 ; (*defsyntax (list 'quote (cdr form)))
-; ;; So (I use MIT/GNU Scheme syntax here) for defsyntax:
+; ;; So (I use MIT/GNU Scheme syntax here) for defsyntax (See the following for implementation):
 ; (*defsyntax `(,args))
 
 (define defsyntax 'defsyntax-macro)
 ;; IMHO the above means (Wrong. TODO (Maybe Done))
 ;; 0. Emm... I don't know how to pass $ etc without quote as quote elem's when not using the above macro.
+;; Maybe as the above shows, we need to qoute for all which can be done with define-syntax to avoid evaluating those arg's in advance.
+;; See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; 1. Here dot is fine. See mapcar
 ; (define (defsyntax . args)
 ;   (defsyntax-macro (cons 'defsyntax args)))
