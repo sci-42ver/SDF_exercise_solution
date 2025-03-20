@@ -1,0 +1,9 @@
+As a reference for future readers: 1. Since here is about free identifier and bound identifier, we need to know the actual scoping of `x` in `(lambda () (+ x x))`. At least for Guile https://www.gnu.org/software/guile/manual/html_node/Syntax-Case.html#index-syntax it is implemented as one *lambda* procedure with `syntax-case`. So we should consider whether free or bound when *application*. Then based on the *definition* of free identifier and bound identifier in https://webperso.info.ucl.ac.be/~pvr/VanRoyHaridi2003-book.pdf p65 Continued...
+
+"An identifier occurrence X is bound with respect to a statement <s> if it is declared inside <s>, i.e., in a *local* statement, in the pattern of a case
+statement, or as argument of a procedure declaration. An identifier occurrence
+that is not bound is free.", here the 1st demo only considers `(double)` which implies `x` is one free identifier but the 2nd considers the local env introduced by `(proc)` application where `x` is one bound identifier by `(define x 3)`. Due to "identifier occurrence" is relative to one statement, so the outer `(define x 42)` is one free identifier for the 2nd example.
+
+2. The reason for renaming is due to after macro expansion, special keyword like `if` may be shadowed unexpectedly (see `define-macro` example in https://www.gnu.org/software/guile/manual/html_node/Defmacros.html. Not use `(define double (lambda () ((lambda () (+ x x)))) )` as the counterexample since it will also print 84 due to lexical scoping). Continued...
+
+Notice this is done "before variable resolution" https://cs.stackexchange.com/a/49722/161388 (R7RS introduction https://standards.scheme.org/corrected-r7rs/r7rs-Z-H-2.html#TAG:__tex2page_chap_Temp_3 only shows this difference in the "macro" context), so `(double)` scoping in the 2nd example is in `proc` instead of top-level when definition.

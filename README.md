@@ -1,4 +1,6 @@
 To be more clear about what Bakuriu says, Python doc https://docs.python.org/3/reference/expressions.html#lambda also says "Note that functions created with lambda expressions cannot contain *statements* or annotations" (annotation means type hinting https://www.geeksforgeeks.org/function-annotations-python/).
+
+Since here is about free identifier and bound identifier, we need to know the actual scoping of `x` in `(lambda () (+ x x))`. At least for Guile https://www.gnu.org/software/guile/manual/html_node/Syntax-Case.html#index-syntax it is implemented as one *lambda* procedure with `syntax-case`. So we should consider whether free or bound when *application*. Then based on the *definition* of free identifier and bound identifier in https://webperso.info.ucl.ac.be/~pvr/VanRoyHaridi2003-book.pdf p65 Continued...
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure

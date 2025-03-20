@@ -87,7 +87,7 @@
 
 (define defmac 'defmac-macro)
 
-;; 0. either tagged-list https://stackoverflow.com/a/1048403/21294350 https://docs.racket-lang.org/reference/boxes.html
+;; 0. pop is implemented by either tagged-list https://stackoverflow.com/a/1048403/21294350 https://docs.racket-lang.org/reference/boxes.html
 ;; or macro https://stackoverflow.com/a/11872479/21294350
 ;; 1. See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/siod/siod.scm
 ;; Similar to push, here (pop stack) will does (let ((tmp stack)) (set! stack (cdr tmp)) (car tmp))) *inline*.
