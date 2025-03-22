@@ -43,8 +43,14 @@
             (QUOTE-SYMBOL COMMA SEMICOLON 
               OPEN-PAREN CLOSE-PAREN
               LEFT-BRACE RIGHT-BRACE)))
-        ;; This is used since (quote ' a b) etc can't work.
+        ;; 0. This is used since (quote ' a b) etc can't work.
         ;; Then we use (pl `(,QUOTE ...)).
+        ;; 1. See https://stackoverflow.com/q/79522809/21294350
+        ;; Here (unquote if) is one syntactic error. 
+        ;; I don't how to implement one thing like (_ (QUOTE-SYMBOL COMMA SEMICOLON) arg1 ...)
+        ;; which will match QUOTE-SYMBOL or COMMA or SEMICOLON.
+        ;; One way is just like here to not use if.
+        ;; Or a bit routine work by writing the similar template for each inside QUOTE-SYMBOL, COMMA and SEMICOLON etc.
         (*defsyntax (quasiquote ((unquote sym) arg1 ...)))
         (*defsyntax (quote (sym arg1 ...))))
       )

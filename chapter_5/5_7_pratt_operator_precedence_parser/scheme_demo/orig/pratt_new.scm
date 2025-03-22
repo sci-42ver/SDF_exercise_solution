@@ -110,7 +110,10 @@
 (define QUOTE (intern "'"))
 
 (define (pl l)
-  ;; parse a list of tokens
+  ;; 0. parse a list of tokens
+  ;; 1. $ is needed for Pratt which is LR https://en.wikipedia.org/wiki/LR_parser#Parsing_steps
+  ;; shift is implied by consuming one symbol at each step
+  ;; reduce is implied by semantic code will output one combined result after some consumption.
   (set! l (append l '($)))
   (toplevel-parse (lambda (op arg)
                     (cond ((eq? op 'peek)

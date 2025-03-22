@@ -1,3 +1,12 @@
+What Quinten says is also said in video 30:26 and 50:25. Here security may be due to avoiding modifying one global variable which may influence *anywhere* in the program. This is said detailedly in https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421.
+
+You seems to have one typo that `newObj` doesn't have `text` property.
+
+https://stackoverflow.com/a/10657843/21294350: To be more specific based on https://cs.stackexchange.com/a/93148/161388, here one lookahead token is needed for S, at least k+1 lookahead tokens are needed for A, and we don't have one *simpler* LL(k) *grammar* (better with one strict proof as p10 "Suppose now that we have an LL(k-1) grammar equivalent to G, ... which is in contradiction with (4)" in https://sci-hub.ru/10.1007/BF01946814) as ladypary shows for that one, so we have "LL(k+1) language that is not LL(k)".
+
+To be more specific about what Maximilian says, The book (also for the 2nd version) says "Fig. 8.11. An LL(k+1) *grammar* that is not LL(k)" for the above example. "An LL(k+1) grammar that is not LL(k)" is easily got due to we need at least k+1 "tokens of lookahead" https://en.wikipedia.org/wiki/LL_parser to decide whether S ends with a or b. Notice one formal language can have *possibly more than one* formal grammar (Its definition doesn't exclude that possibility https://en.wikipedia.org/wiki/Formal_language). Continued...
+
+So the language corresponding to the above grammar can be also defined based on grammar S->a^kB, B->a|b which is one LL(k) grammar due to either a^k or a|b (i.e. at most k lookahead tokens) is checked (you can check https://cs.stackexchange.com/a/93148/161388 for how LL(1) is derived here).
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
 ## TODO
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.
@@ -47,9 +56,150 @@
   just relatively less with former next value based on `prec`/`lbp`.
 - The 3rd difference is same as that said in https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm.
 - > Pratt's paper doesn't seem to mention the right associativity trick
-  see 
+  IMHO it is not that case. see `infixr` in paper.
+- > Richards[1] gives a procedure for parsing expressions which uses recursion rather than an explicit stack despite being derived using the operator precedence technique.
+  I won't check detailedly for [that reference book](https://archive.org/details/richards1979bcpl)...
+  Anyway "explicit stack" probably means [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm). Probably "recursion rather than an explicit stack" just means https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method.
+  - > requires the construction of the operator precedence matrix. We show how the procedure can be derived by grammar- and program-transformation from the recursive descent method, using only numerical precedences
+    ["operator precedence matrix"](https://www.chegg.com/homework-help/questions-and-answers/calculate-precedence-function-following-operator-precedence-matrix-using-b-matrix-techniqu-q111462667) implies [a bit like](https://stackoverflow.com/a/63677576/21294350) partial order
+- [Floyd's paper](https://dl.acm.org/doi/pdf/10.1145/321172.321179) is hard to search. I won't dig into that. Anyway it also uses *matrix* to represent precedence.
+  - > a number should be associated with *each argument position* by means of precedence functions over tokens
+    i.e. `f, g` in p9 where $*\gtrdot +$ just means the former's bp is larger.
+    Then $\gtrdot$ implies the rule application order (see p4).
+    - Here `f, g` construction steps may a bit complex based on "*precedence matrix*" (see p3) which is based on [*production* rules](https://en.wikipedia.org/wiki/Production_(computer_science)#Grammar_generation) (see p9. I won't dig into why it is  defined as that is.).
+      Then we get $\lessdot, \gtrdot, \doteq$ relation.
+      >  one of T1 < T~, T1 == T2, and T1 ::> T2 occurs, according as f( T1) < , T1) = g( T2), or f( Tr) > g( T2), respectively
+    - Based on Pratt's paper, here `f, g` is jusr `rbp, lbp`.
+      That can be checked by `f, g` definition.
+      > X < Y then $f(X)<g(Y)$, if $X\doteq Y$ then f(X) = , and if X :: Y then  Y).
+      - $X\lessdot Y$ just means $XU\Rightarrow XKY$ where K is bound to Y, so $rbp(X)<lbp(Y)$.
+        Similar for others.
+    - Also see https://stackoverflow.com/a/63677576/21294350
+      - > ⋖, indicating that the input symbol should be shifted.
+        > ⋗, indicating that the stack symbol should be reduced.
+        Take $+\lessdot *, *\lessdot +$ as one example, here for 1+2*3, we should shift * like [step 10](https://en.wikipedia.org/wiki/Shift-reduce_parser#Parser_actions).
+        But for 1*2+3, we should reduce the symbol `1*2` which is similar to [step 6](https://en.wikipedia.org/wiki/LR_parser#LR_parse_steps_for_example_A*2_+_1).
+        - [advantages over LL parser](https://en.wikipedia.org/wiki/Top-down_parsing#Programming_language_application) (see for [L(k), k>=2](https://stackoverflow.com/questions/10634197/ll2-language-that-is-not-ll1#comment140246851_72787522))
+          > For an *ambiguous* language to be parsed by an LL parser, the parser must lookahead more than 1 symbol, e.g. LL(3).
+          Here reduce [only needs *one* symbol (TODO proof)](https://en.wikipedia.org/wiki/LR_parser#Theory) (also [see](https://stackoverflow.com/a/41752951/21294350)). This also implies Pratt's power which is also one LR.
+          > So an LR(1) parsing method was, in theory, powerful enough to handle any reasonable language.
+        - LR relation with rightmost
+          see https://stackoverflow.com/questions/2392431/difference-between-top-down-and-bottom-up-parsing-techniques/2392440#comment140209425_2392440 and https://en.wikipedia.org/wiki/Context-free_grammar#Derivations_and_syntax_trees where the SO link in the former is one *reversed* derivation for LR.
+        - Also see sly doc there
+          > ( is always shifted onto the stack, meaning that its right precedence is higher than the left precedence of any operator.
+          notice here "right precedence" means
+          > the "left precedence" and the "right precedence", one used for the operator on the left and the other for the operator on the right.
+          so here it just means precedence of `(` is higher than all the rest on the stack. So it "is always shifted".
+  - Relation with Pratt paper
+    In a nutshell, "precedence function" => direct assigning unchanged the binding power to each operator token.
+    - > announce the outcome in advance for each pair A and B, basing the choices on some reasonable heuristics. ... The outcome was stored in a table.
+      trivially this is implicit with the derivation based on bp. "reasonable heuristics" means based on *grammar*.
+      - In paper, "table" means "precedence matrix", that for f and g, or that for LTCD and RTCD. All of these are based on *grammar*.
+      - Due to derivation based on grammar, the calculation is much more than the mere  assignment of bp.
+    - > One objection to this approach is that there seems to be little guarantee that one will always be able to find a set of numbers consistent with one's needs. 
+      Floyd just constructs that based on grammar. So no need to "find".
+      > Another obeection is that the programmer has to learn as many numbers as there are argument positions, which for a respectable language may be the order of a hundred.
+      Again, no need to "learn" if using Floyd's.
+      - > We present an approach to language design which simultaneously solves both these problems, without unduly restricting normal usage, yet allows us to retain the numeric approach to operator precedence.
+        i.e. *not using Floyd's totally* (so a bit "restricting normal usage")
+        > Nevertheless we would be interested to see *a less restrictive* set of conventions that offer a degree of *modularity* comparable with the above while retaining the use of precedence functions. The approach of *recomputing the precedence functions for every operator after one change to the grammar* is not modular, and does not allow flexible access to individual items in a library of semantic tokens.
+        - Here "flexible access to individual items" is allowed here by semantic code.
+    - It actually still uses operator precedence but not
+      > The idea is to assign data types to classes and then to totally order the classes.
+      - due to (2 Theorem proofs are skipped)
+        > Unfortunately, nonsense testing requires looking up the types rA and aB and *verifying the existence of a coercion from rA to aB*.
+        > The non-semantically motivated conventions about and, or, + and ↑ may be implemented by *further subdividing* the appropriate classes (here the Booleans and Algebraics) into pseudo-classes
+        - > An attractive alternative to precedence functions would be to dispose of the ordering and rely purely on the data types and legal coercions to resolve associations. Cases which did *not have a unique answer* would be referred back to the programmer, which would be acceptable in an on-line environment, but *undesirable in batch mode*. 
+          
+          > Our concern about efficiency for interpreters could be dealt with by having the outcome of each association problem *marked at its occurrence, to speed things up on subsequent encounters*.
+          IMHO i.e. like memorizer.
+          > *Pending such developments*, operator precedence seems to offer the best overall compromise in terms of modularity, ease of use and memorizing, and efficiency.
+  - > Pratt is assigning a total order to tokens with the binding power
+    at least feasible compared with precedence matrix in Floyd's paper if all operator tokens have rbp & lbp.
+- > Fortress language avoided a total order on operator precedence for usability reasons
+  see https://labs.oracle.com/pls/apex/f?p=LABS:0:102530341090474:APPLICATION_PROCESS=GETDOC_INLINE:::DOC_ID:952 (just the slides in https://www.youtube.com/watch?v=EZD3Scuv02g. Actually based on "Fortress" context in Transcript and searching for "prece", this is the only thing about precedence said in that lecture.)
+  > We use only *the most obvious and familiar* rules of precedence.
+  >> This reduces opportunities for for making silly mistake
+  https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=4e836364e239fc71ace7c63e01c6cbf89866cea6
+  > operator precedence in Fortress is *not always transitive*
+  - Anyway Python and C are both allow the total order by listing all based on "Operator precedence" probably implied by the above lecture 32:05
+    > all these other language is that then implies that because their precedence is transitive ...
+#### Background
+Says why the author wants to use Pratt Parsing (because he wants to implement the more general "shell arithmetic")
+- > but the core algorithm is the same:
+  see
+  - "*precedence*, or binding power" which also implies point 2 "precedence less than or equal to"
+  - "tokens can be used in the null and/or left position" i.e. the *common* behavior for token.
+#### Further Thoughts: Generation vs. Recognition
+- https://bford.info/pub/lang/peg.pdf
+  - IMHO here Recognition is ~~just shift-reduce... See 3.3 Interpretation of a Grammar where "parsing expression" always *forwards* without using grammar~~
+    See "The classic example language $a^nb^nc^n$ is not context-free" where `&(A !b)` ensures $a^nb^n$. Then we consumes $a^n$ and then B ensures $b^nc^n$ and then $!.$ ensures ending.
+    Here the only backtracking is done when &/! fails.
+    - > The ?, *, and + operators behave as in common regular expression syntax, except that they are “greedy” rather than nondeterministic.
+      Here it says about ? since *, + are already greedy.
+  - > recognition-based vs. generative or grammar-based methods for describing languages
+    see paper
+    > Most language syntax theory and practice is based on generative systems, such as regular expressions and context-free grammars, in which a language is defined formally by a set of rules applied recursively to *generate* strings of the language. A recognition-based system, in contrast, defines a language in terms of rules or predicates that *decide whether* or not a given string is in the language.
+    where decision is done step by step with shift-reduce.
+    - > The TDOP algorithm is clearly in the recognition-based category
+      IMHO no programming language will use that "generative or grammar-based methods" since grammar is more complexer than [the trivial LR which can automatically generate one parser](https://tratt.net/laurie/blog/2023/why_we_need_to_know_lr_and_recursive_descent_parsing_techniques.html) etc...
+      > I've researched how "real" languages implement their parsers, and I have to agree with Pratt. Languages are often described by grammars, but in general we use hand-written parsers *rather than parsers derived automatically from grammars*.
 #### skipped
 - > These same differences in presentation are in Pratt's and Clarke's original papers
+# [Pratt tutorial review](https://www.oilshell.org/blog/2016/11/02.html)
+## [Douglas Crockford](https://crockford.com/javascript/tdop/tdop.html)
+- a
+  - > JavaScript and Lua both use prototypal inheritance, and I still don't see any advantage of this style over classes.
+    Anyway *they are same* in JS as [Inheritance_and_the_prototype_chain] says.
+  - > *Object.create()*, which I think has already fallen out of favor.
+    said in QA1.
+- b (see `original_symbol`)
+  - > To me, tokens are data that are operated on with functions (or methods on a separate class.)
+    > I've never seen a tutorial on recursive descent where tokens need nontrivial methods.
+    same as paper `led(token)` etc.
+- c
+  - > The reuse of token objects as AST node objects. This results in a lot of mutation in the code
+    e.g. it may restrict `arity` by `token.arity = "literal";` etc.
+    > Its arity may be changed later to "binary", "unary", or "statement"
+    - You can try `{let a;a=1;}` [here](https://crockford.com/javascript/tdop/index.html) for "reuse of token objects as AST node objects" meaning where `"="` has only one arity at all. So no need for the later change at all.
+  - [pure function](https://en.wikipedia.org/wiki/Pure_function)
+- d
+  - `assignment("=");` => `infixr` => `let s = symbol(id, bp);` => `Object.create(original_symbol)`.
+    Then `s.led = led || function (left) { ... }`
+    - `this` [see](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
+      > it is used in object methods, where this refers to the object that the method is attached to,
+      - > At the top level of a script, this refers to globalThis whether in strict mode or not.
+        is better than https://stackoverflow.com/a/1981556/21294350
+      - So here `this` refers to `s` which is one token `token = Object.create(o);` based on symbol.
+    - Here it may modify global `symbol_table` by `symbol_table[id] = s;`.
+      > Otherwise, you have to trace through multiple function calls to see what variable is being changed.
+### [class-free](https://depth-first.com/articles/2019/03/04/class-free-object-oriented-programming/)
+- Also see [QA1](https://stackoverflow.com/a/27595904/21294350)
+  - Why new etc are dropped.
+    - `new` is dropped as https://stackoverflow.com/a/6613332/21294350 says for simplicity.
+    - `this` is avoided due to it may refer to [global variable which is bad](https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421)? TODO
+    - `null` is dropped to avoid *more than one bottom values*.
+    - falisness ([falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)) is to avoid using many interchangable values as false ~~to be different from C~~, maybe for  understandability?
+  - Here `{member} = spec` is [Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring) like `let {member1, ...rest2}={member1: 1, member2: 2}; console.log(rest2);` => `Object { member2: 2 }`.
+  - [class free definition](https://rosettacode.org/wiki/Classless-objects)
+    > In class-based languages, a new instance is constructed through a *class's constructor* function ... The resulting instance will *inherit all the methods and properties* that were defined in the class
+    > With classless, objects can be made *directly and created by other objects*.
+    just as here `spec` obj creates one new "frozen object".
+    - compared with [Prototypal inheritance](https://javascript.info/prototype-inheritance) (also see [Inheritance_and_the_prototype_chain][Inheritance_and_the_prototype_chain] which also says about "Dynamic objects with prototypal inheritance". Both uses object to implement)
+      So ~~object~~ class free doesn't imply impossibility of Prototypal inheritance. Anyway both are implemented by *object*. But the former has no inheritance.
+      - Notice Prototypal inheritance is implicitly used in many places https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain#different_ways_of_creating_and_mutating_prototype_chains.
+      - Here "Prototypal inheritance" just means "class-based".
+      - no [memory conservation](https://stackoverflow.com/a/56589789/21294350) like `rabbit.__proto__ = animal;` ([`Object.assign` doesn't have that conservation](https://stackoverflow.com/a/36956330/21294350) while [`Object.create`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#proto) has due to *prototype*).
+        That is due to we destructure and construct one *new* object which can be [checked by `===` in JS](https://stackoverflow.com/questions/21457644/how-to-know-that-two-javascript-variable-point-to-the-same-memory-address#comment32380463_21457644).
+      - own or inherited
+        As the former says, here we *doesn't inherit* but just "destructure" the input `spec`.
+      - retroactive heredity
+        Again we have *no "inheritance"* at all (because only use that `spec` as one constructor *instead of reference*).
+      - performance inhibiting
+        Because no *inheritance chain* which may need time-consuming path search.
+  - So
+    > Objects are class-free. We can add a new member to any object by ordinary assignment. An object can inherit members from another object.
+    just means we don't need to [modify class definition or add one "intermediary class"](https://stackoverflow.com/a/22856260/21294350)
 # [Pratt algorithm](https://tdop.github.io/)
 ## 1
 skipped due to introduction of *historic* survey of the problem. (no need if just to understand the algorithm)
@@ -72,6 +222,8 @@ i.e. [word](https://en.wikipedia.org/wiki/Lexical_semantics) vs [syntax](https:/
 ## 2.2 Conventions for Linearizing Trees
 cares about **AEB** in string which is got by Linearizing Trees (search for "issue").
 > While these remarks are not essential to the basic approach, they do provide a sense in which operator precedence is *more than just an ad hoc solution* to the association problem.
+
+See the above "Floyd's paper"
 ### skipped
 - > The theorems of this section may be interpreted as theorems about BNF grammars,
 ### TODO
@@ -209,8 +361,10 @@ The 1st paragraph is same as thegreenplace codes although with small differences
 - > The is facility is more declarative than imperative in flavor, even though it is a program.
   ~~"declarative" is due to it outputs one data structure "LIST ...".~~
   See https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
-  - > This is already an improvement over a recursive descent parser because our grammar is now more declarative instead of being spread out over a few imperative functions, and we can see the actual grammar *all in one place*.
+  - > This is already an improvement over a recursive descent parser because our grammar is now more declarative instead of being spread out over *a few imperative functions*, and we can see the actual grammar *all in one place*.
     Because of OOP, all programs are on token instead of [long procedures](https://en.wikipedia.org/wiki/Recursive_descent_parser) where `block` etc are like what is done in Precedence climbing.
+    - same as what [this old wikipedia entry](https://en.wikipedia.org/w/index.php?title=Pratt_parser&oldid=907196572) (referred to in https://www.oilshell.org/blog/2016/11/01.html#python-code) says
+      > a Pratt parser is an improved recursive descent parser that associates semantics with tokens *instead of grammar rules*.
 ### miscs
 - > We present a subset of the definitions of tokens of the language L; all of them are defined in L, although in practice one would begin with a host language H (say the target language, here LISP) and write as many definitions in H as are sufficient to define the reast in L.
   Here we should group as "(...); (..., ...)". see [1](https://www.grammarly.com/blog/punctuation-capitalization/semicolon/#3) and https://www.grammarly.com/blog/punctuation-capitalization/comma-splice/.
@@ -227,47 +381,4 @@ The 1st paragraph is same as thegreenplace codes although with small differences
 # [Bottom-up versus top-down](https://en.wikipedia.org/wiki/Bottom-up_parsing)
 - The former is [Post-order](https://en.wikipedia.org/wiki/Tree_traversal#Pre-order,_NLR), while the latter is Pre-order as [this](https://blog.reverberate.org/2013/07/ll-and-lr-parsing-demystified.html) and [LL as top down and LR as bottom-up](https://stackoverflow.com/q/2392431/21294350) (i.e. Pre-order vs Post-order) says.
 
-I encountered with this problem while reading about [Precedence climbing][1] and [Pratt parsing][2]. Their relation is shown in [this wikipedia reference link][3].
-> To accommodate operators like these and additional prefix operators in a *modular* way, we can use Pratt parsing.
->
-> We'll rewrite the E procedure to use commands. The old E is
-> ```
-> E(p) is  
->     precondition 0 ≤ p
->     var t := P
->     var r := +inf
->     loop
->         const l := next
->         exit unless p≤prec(next)≤r
->         consume
->         if isBinary(l) then 
->             const y := E( rightPrec(l) )
->             t := mknode(binary(l), t, y)
->         else t := mknode(postfix(l), t) 
->         r := nextPrec(l) 
->     return t
-> ```
-> The new E is
-> ```
-> E(p) is  
->     precondition 0 ≤ p
->     var t := P
->     var r := +inf
->     loop
->         const l := next
->         const c := leftComm[l]
->         exit unless p ≤ c.LBP ≤ r
->         consume
->         t := c.LeD( t, l )
->         r := c.NBP
->     return t
-> ```
-# licence choice for scheme_demo
-- I followed https://choosealicense.com/ and https://opensource.guide/legal/#which-open-source-license-is-appropriate-for-my-project
-  I want to keep open-source, so not those like MIT. ~~But I want license not too restrictive like "choose an identical or compatible license"~~ I choose "“strong” copyleft license" since “weak” copyleft license will
-  > The newly added files may be released under a different license or *kept proprietary (closed-source)*.
-  So I choose AGPLv3 which seems [the most restrictive](https://choosealicense.com/licenses/).
-
-  [1]: https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method
-  [2]: https://tdop.github.io/
-  [3]: https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm
+[Inheritance_and_the_prototype_chain]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain
