@@ -1,3 +1,7 @@
+To be compatible with the above example, we should use `def __init__(self, parent_instance): self.obj = parent_instance`, then `B = Child(A)` works fine.
+
+Currently, Firefox *doesn't support* that at all. See https://wordpress.com/forums/topic/rss-feed-doesnt-display-on-latest-firefox-browser/#post-3274026. So we even can't open that by  modifying the Settings https://www.reddit.com/r/firefox/comments/vybtvs/comment/ig2zlry/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button.
+
 What Quinten says is also said in video 30:26 and 50:25. Here security may be due to avoiding modifying one global variable which may influence *anywhere* in the program. This is said detailedly in https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421.
 
 You seems to have one typo that `newObj` doesn't have `text` property.
@@ -147,6 +151,8 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
 #### skipped
 - > These same differences in presentation are in Pratt's and Clarke's original papers
 # [Pratt tutorial review](https://www.oilshell.org/blog/2016/11/02.html)
+- > but you wouldn't do that in a "production" parser these days.
+  it means https://stackoverflow.com/a/6388968/21294350 instead of https://en.wikipedia.org/wiki/Production_(computer_science).
 ## [Douglas Crockford](https://crockford.com/javascript/tdop/tdop.html)
 - a
   - > JavaScript and Lua both use prototypal inheritance, and I still don't see any advantage of this style over classes.
@@ -175,6 +181,7 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
       > Otherwise, you have to trace through multiple function calls to see what variable is being changed.
 ### [class-free](https://depth-first.com/articles/2019/03/04/class-free-object-oriented-programming/)
 - Also see [QA1](https://stackoverflow.com/a/27595904/21294350)
+  - closure used here is [also in Python](https://stackoverflow.com/a/61831327/21294350) with [the searching strategy](https://stackoverflow.com/a/292502/21294350).
   - Why new etc are dropped.
     - `new` is dropped as https://stackoverflow.com/a/6613332/21294350 says for simplicity.
     - `this` is avoided due to it may refer to [global variable which is bad](https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421)? TODO
@@ -187,6 +194,11 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
     just as here `spec` obj creates one new "frozen object".
     - compared with [Prototypal inheritance](https://javascript.info/prototype-inheritance) (also see [Inheritance_and_the_prototype_chain][Inheritance_and_the_prototype_chain] which also says about "Dynamic objects with prototypal inheritance". Both uses object to implement)
       So ~~object~~ class free doesn't imply impossibility of Prototypal inheritance. Anyway both are implemented by *object*. But the former has no inheritance.
+      > An object can inherit members from another object.
+      - > Dynamic objects with prototypal inheritance
+        Here Dynamic corresponds to
+        > We can add a new member to any object *by ordinary assignment*.
+        so the object type is actually not static when compilation etc. See [obj_access_property] "Create additional properties on myObj" for this feature.
       - Notice Prototypal inheritance is implicitly used in many places https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain#different_ways_of_creating_and_mutating_prototype_chains.
       - Here "Prototypal inheritance" just means "class-based".
       - no [memory conservation](https://stackoverflow.com/a/56589789/21294350) like `rabbit.__proto__ = animal;` ([`Object.assign` doesn't have that conservation](https://stackoverflow.com/a/36956330/21294350) while [`Object.create`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#proto) has due to *prototype*).
@@ -198,8 +210,26 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
       - performance inhibiting
         Because no *inheritance chain* which may need time-consuming path search.
   - So
-    > Objects are class-free. We can add a new member to any object by ordinary assignment. An object can inherit members from another object.
-    just means we don't need to [modify class definition or add one "intermediary class"](https://stackoverflow.com/a/22856260/21294350)
+    > Objects are class-free. We can add a new member to any object by ordinary assignment.
+    just means we don't need to [modify class definition or add one "intermediary class"](https://stackoverflow.com/a/22856260/21294350) (also see [obj_access_property])
+## Fredrikh Lundh
+- >  It still mutates tokens instances to become AST nodes
+  - `symbol_table[id] = s` is fine due to [Python GC mechanism](https://stackoverflow.com/questions/25286171/when-does-python-delete-variables#comment140252478_25286230)
+  - `self.first = expression(100)` is fine to [add *instance* member by one *method*](https://stackoverflow.com/a/12409963/21294350) which is different from JS object because the latter can be prototype while the former can't (although [with some hacks we can do that much less elegant](https://stackoverflow.com/a/1081925/21294350)).
+    - [`__getattr__, __dict__`](https://docs.python.org/3/reference/datamodel.html)
+    - https://pypi.org/project/Acquisition/#acquisition-and-methods
+      is general due to
+      > objects acquire behaviour from their *current containers* at runtime
+      e.g. `d.color = 'green' ...`
+    - https://stackoverflow.com/a/14182553/21294350 hack is better
+  - > first = second = third = None # used by tree nodes
+    here token trivially doesn't have valid values for these attributes. Node is created by `class s(symbol_base) ...`.
+  - > It uses an unusual style of registering methods using decorators, which looks more like Crockford's JavaScript than idiomatic Python.
+    It originally uses same as Crockford with `infix_r` etc.
+    But then it doesn't use `prefix` for `(`. Here it passes no `nud` for `prefix`, but passes `bp`. Anyway it can be programmed like Crockford with `lambda`.
+    More specifically, both does the creation of `symbol` and the register of `led`/`nud`.
+- > but there’s a more practical description in the section “Evaluation order” in Python’s language reference.
+  See [the oldest archive](https://web.archive.org/web/20121101045119/https://docs.python.org/3/reference/expressions.html#evaluation-order) which still has the precedence list in the section after "Evaluation order" instead of "Evaluation order" itself.
 # [Pratt algorithm](https://tdop.github.io/)
 ## 1
 skipped due to introduction of *historic* survey of the problem. (no need if just to understand the algorithm)
@@ -382,3 +412,4 @@ The 1st paragraph is same as thegreenplace codes although with small differences
 - The former is [Post-order](https://en.wikipedia.org/wiki/Tree_traversal#Pre-order,_NLR), while the latter is Pre-order as [this](https://blog.reverberate.org/2013/07/ll-and-lr-parsing-demystified.html) and [LL as top down and LR as bottom-up](https://stackoverflow.com/q/2392431/21294350) (i.e. Pre-order vs Post-order) says.
 
 [Inheritance_and_the_prototype_chain]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain
+[obj_access_property]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects#accessing_properties
