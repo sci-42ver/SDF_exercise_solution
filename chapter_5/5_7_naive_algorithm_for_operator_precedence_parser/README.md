@@ -16,4 +16,6 @@ To be more specific, in https://docs.python.org/3/reference/expressions.html#ope
 
 ---
 
+Then I googled "operator precedence algorithm" and found one [bottom-up parser](https://en.wikipedia.org/wiki/Operator-precedence_parser). Then "operator-precedence parser top-down" since I prefers top-down which IMHO is more straightforward (maybe wrong for this opinion) where I found Pratt.
+
 Anyway the above naive algorithm will iterate through the expression *multiple times* which is much more inefficient compared with Pratt.
