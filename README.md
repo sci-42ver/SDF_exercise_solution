@@ -1,6 +1,7 @@
-To be more clear about what Bakuriu says, Python doc https://docs.python.org/3/reference/expressions.html#lambda also says "Note that functions created with lambda expressions cannot contain *statements* or annotations" (annotation means type hinting https://www.geeksforgeeks.org/function-annotations-python/).
+@WillNess Thanks for your detailed description. Maybe it is better to say why I encountered with this problem. My homework needs me to write one simple parser for one infix expression. I used Pratt parsing as wikipedia hints. In scheme we can't have `'(... , ...)` to parse something like Python infix lambda `lambda arg1, arg2: body`. So I use interned symbol `(intern ",")` and store that inside one variable like `COMMA`. Then I use `if` to dispatch based on whether that symbol is special to use interned symbol *value* or simple to use the original representation. Continued...
 
-Since here is about free identifier and bound identifier, we need to know the actual scoping of `x` in `(lambda () (+ x x))`. At least for Guile https://www.gnu.org/software/guile/manual/html_node/Syntax-Case.html#index-syntax it is implemented as one *lambda* procedure with `syntax-case`. So we should consider whether free or bound when *application*. Then based on the *definition* of free identifier and bound identifier in https://webperso.info.ucl.ac.be/~pvr/VanRoyHaridi2003-book.pdf p65 Continued...
+I don't use `COMMA` to allow some expression like `lambda COMMA COMMA arg2: body` to be be also parsed. More specifically, it will be tokenized to `(lambda COMMA COMMA arg2 : tokenized-body)`.
+
 # skipped exercise
 ## You can do if you are interested without extra background knowledge assumption
 ### needs big changes to the overall program structure

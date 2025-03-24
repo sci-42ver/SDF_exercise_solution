@@ -18,7 +18,7 @@
 (load "compatible_lib.scm")
 
 ;;; orig
-(define COMMA (intern ","))
+; (define COMMA (intern ","))
 (define OPEN-PAREN (intern "("))
 (define CLOSE-PAREN (intern ")"))
 (define SEMICOLON (intern ";"))
@@ -148,7 +148,7 @@
   (loop (list (parse (rbp token) stream))))
 
 ;; Similar to Python (),[],{} using , as the delimiter.
-(define uninterned-delimeters '(:))
+(define uninterned-delimeters '(: COMMA))
 (define (value-if-symbol* token)
   (if (any (lambda (sym) (eq? sym token)) uninterned-delimeters)
     token
@@ -528,7 +528,7 @@
 
 (pl-assert 
   '(if (g a b) (> a b) (+ (* k c) (* a b)))
-  `(if* g ,OPEN-PAREN a ,COMMA b ,CLOSE-PAREN then a > b else* k * c + a * b))
+  `(if* g ,OPEN-PAREN a comma b ,CLOSE-PAREN then a > b else* k * c + a * b))
 
 (pl-assert 
   '(= (f a) (+ a (/ b c))) 
@@ -555,11 +555,11 @@
   `(,OPEN-PAREN ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
 (pl-assert 
   '(+ (tuple 1 3 7) 2)
-  `(,OPEN-PAREN 1 ,COMMA 3 ,COMMA 7 ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
+  `(,OPEN-PAREN 1 COMMA 3 COMMA 7 ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
 
 (pl-assert 
   '(define fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))))
   `(fact := lambda* n : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
 (pl-assert 
   '(define fact (lambda (a (= b 0) / c *args * kwarg1 **kwargs) (if (= n 0) 1 (* n (fact (- n 1))))))
-  `(fact := lambda* a ,COMMA b = 0 ,COMMA / ,COMMA c ,COMMA *args ,COMMA * ,COMMA kwarg1 ,COMMA **kwargs : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
+  `(fact := lambda* a COMMA b = 0 COMMA / COMMA c COMMA *args COMMA * COMMA kwarg1 COMMA **kwargs : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))

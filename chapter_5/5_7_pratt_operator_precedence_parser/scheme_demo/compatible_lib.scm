@@ -40,7 +40,7 @@
         (memq 
           (quote sym) 
           (quote 
-            (QUOTE-SYMBOL COMMA SEMICOLON 
+            (QUOTE-SYMBOL SEMICOLON 
               OPEN-PAREN CLOSE-PAREN
               LEFT-BRACE RIGHT-BRACE)))
         ;; 0. This is used since (quote ' a b) etc can't work.
@@ -51,6 +51,10 @@
         ;; which will match QUOTE-SYMBOL or COMMA or SEMICOLON.
         ;; One way is just like here to not use if.
         ;; Or a bit routine work by writing the similar template for each inside QUOTE-SYMBOL, COMMA and SEMICOLON etc.
+        ;; 1.a. As https://stackoverflow.com/questions/79522809/how-to-avoid-evaluating-one-statement-excluded-by-predicate-during-the-condition?noredirect=1#comment140254192_79522809 shows,
+        ;; Here we can assert all COMMA etc are *reserved*, then we just use (*defsyntax (quote (sym arg1 ...))) with no conditional at all.
+        ;; (Notice in Scheme (eq? 'COMMA 'comma) returns same. So comma is also reserved.)
+        ;; 1.a.0. I have added one demo of that for comma in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm.
         (*defsyntax (quasiquote ((unquote sym) arg1 ...)))
         (*defsyntax (quote (sym arg1 ...))))
       )
