@@ -1,8 +1,14 @@
+As one reference, composition/ADT is like class-free said in https://stackoverflow.com/a/27595904/21294350 where `new Person, new Job` in `$employee = new Employee(new Person, new Job);` is like `spec`. https://r.je/you-do-not-need-inheritance-oop adds *one more* disadvantage of Inheritance that code re-usablility is inhibited beyond those listed in video https://www.youtube.com/watch?v=DxnYQRuLX7Q 45:31.
+
+Now one newer lecture https://www.youtube.com/watch?v=DxnYQRuLX7Q is available with almost same slides but a bit more detailed like 5 items listed in Prototypal inheritance disadvantages instead of 4 (actually the added 5 is said in the old video but not shown in the slide).
+
 To be compatible with the above example, we should use `def __init__(self, parent_instance): self.obj = parent_instance`, then `B = Child(A)` works fine.
 
 Currently, Firefox *doesn't support* that at all. See https://wordpress.com/forums/topic/rss-feed-doesnt-display-on-latest-firefox-browser/#post-3274026. So we even can't open that by  modifying the Settings https://www.reddit.com/r/firefox/comments/vybtvs/comment/ig2zlry/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button.
 
-What Quinten says is also said in video 30:26 and 50:25. Here security may be due to avoiding modifying one global variable which may influence *anywhere* in the program. This is said detailedly in https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421.
+What Quinten says is also said in video 7:49 and 25:14. Here security may be due to avoiding modifying one global variable which may influence *anywhere* in the program. This is said detailedly in https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421.
+
+What Quinten says is also said in [video](https://www.youtube.com/watch?v=DxnYQRuLX7Q) 30:26 and 50:25. Here security may be due to avoiding modifying one global variable which may influence *anywhere* in the program. This is said detailedly in https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421.
 
 You seems to have one typo that `newObj` doesn't have `text` property.
 
@@ -12,9 +18,9 @@ To be more specific about what Maximilian says, The book (also for the 2nd versi
 
 So the language corresponding to the above grammar can be also defined based on grammar S->a^kB, B->a|b which is one LL(k) grammar due to either a^k or a|b (i.e. at most k lookahead tokens) is checked (you can check https://cs.stackexchange.com/a/93148/161388 for how LL(1) is derived here).
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
-## TODO
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.
-  bottom-up due to recursive descent
+  bottom-up due to ~~recursive descent~~ shift-reduce.
+## TODO
 ## Notes
 - > Edsger Dijkstra's shunting yard algorithm is commonly used to implement operator-precedence parsers.
   [see](https://en.wikipedia.org/wiki/Shunting_yard_algorithm#Detailed_examples)
@@ -205,6 +211,8 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
         That is due to we destructure and construct one *new* object which can be [checked by `===` in JS](https://stackoverflow.com/questions/21457644/how-to-know-that-two-javascript-variable-point-to-the-same-memory-address#comment32380463_21457644).
       - own or inherited
         As the former says, here we *doesn't inherit* but just "destructure" the input `spec`.
+        Confusion may be for the programmer who can't differentiate among subclasses appropriately.
+        - ~~Also see https://r.je/you-do-not-need-inheritance-oop in https://stackoverflow.com/a/16872315/21294350 where ~~
       - retroactive heredity
         Again we have *no "inheritance"* at all (because only use that `spec` as one constructor *instead of reference*).
       - performance inhibiting
@@ -212,6 +220,22 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
   - So
     > Objects are class-free. We can add a new member to any object by ordinary assignment.
     just means we don't need to [modify class definition or add one "intermediary class"](https://stackoverflow.com/a/22856260/21294350) (also see [obj_access_property])
+#### Prototypal Inheritance advantages over classical inheritance
+- [Benefits of prototypal inheritance over classical]
+  - > Prototypal Inheritance is Simple
+    is right. But 
+    > In the same sense classes are just meta-data. ... It gives them a false sense of security. Well, we also know that *static* types are just *metadata*.
+    is wrong as https://stackoverflow.com/questions/2800964/benefits-of-prototypal-inheritance-over-classical#comment31540630_16872315 says
+    - so Post point 4 is a bit *inappropriate* (also said in https://stackoverflow.com/questions/2800964/benefits-of-prototypal-inheritance-over-classical#comment31102014_16872315 and https://stackoverflow.com/questions/2800964/benefits-of-prototypal-inheritance-over-classical#comment31540630_16872315).
+  - > Multiple inheritance.
+    maybe by `prototypes` or as QA1 example says with `spec`.
+    see https://stackoverflow.com/a/31236132/21294350
+  - Post point 3 is true but with some compromise as the above point 1 says
+    so
+    > Again, I think that's only because Java sucks so much.
+    is a bit *inappropriate*.
+  - > One valid argument is that not all languages which have classical inheritance support multiple inheritance. Again Java comes to mind. Yes Java has interfaces, but that's not sufficient.
+    so not elegant https://www.geeksforgeeks.org/how-to-implement-multiple-inheritance-by-using-interfaces-in-java/.
 ## Fredrikh Lundh
 - >  It still mutates tokens instances to become AST nodes
   - `symbol_table[id] = s` is fine due to [Python GC mechanism](https://stackoverflow.com/questions/25286171/when-does-python-delete-variables#comment140252478_25286230)
@@ -230,6 +254,19 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
     More specifically, both does the creation of `symbol` and the register of `led`/`nud`.
 - > but there’s a more practical description in the section “Evaluation order” in Python’s language reference.
   See [the oldest archive](https://web.archive.org/web/20121101045119/https://docs.python.org/3/reference/expressions.html#evaluation-order) which still has the precedence list in the section after "Evaluation order" instead of "Evaluation order" itself.
+## Eli Bendersky
+- As https://eli.thegreenplace.net/2010/01/02/top-down-operator-precedence-parsing#id7 says, so same but doesn't use all of them
+  > The code is similar to Lundh's, but uses classes in a more traditional manner.
+  i.e. not use @... .
+## Bob Nystrom
+- > His motivation is also to improve on Crockford's exposition.
+  - > Crockford mixes in extra stuff like tracking lexical scope that obscures the core idea.
+    Yes. It is unrelated with precedence although it can be implemented here due to [RD](https://gokcehan.github.io/notes/recursive-descent-parsing.html)...
+- > The tutorial is done in Java, as sort of the "lowest common denominator" among languages. In his own words,
+  > Like I said, if you can do this in Java, you can do it in any language.
+  - > I feel that the parser is lost in the [verbosity] making it quite the poor teaching language.
+    see [Benefits of prototypal inheritance over classical] 
+    > Hence this leads to more verbose code. ... Yes Java has interfaces, but that's not sufficient. Sometimes you really need multiple inheritance.
 # [Pratt algorithm](https://tdop.github.io/)
 ## 1
 skipped due to introduction of *historic* survey of the problem. (no need if just to understand the algorithm)
@@ -413,3 +450,4 @@ The 1st paragraph is same as thegreenplace codes although with small differences
 
 [Inheritance_and_the_prototype_chain]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain
 [obj_access_property]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects#accessing_properties
+[Benefits of prototypal inheritance over classical]:https://stackoverflow.com/a/16872315/21294350

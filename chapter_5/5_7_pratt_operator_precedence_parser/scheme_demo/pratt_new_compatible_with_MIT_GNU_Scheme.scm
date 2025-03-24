@@ -476,7 +476,7 @@
   (define params (prsmatch-modified ': 'COMMA stream))
   ;; 0. To allow multiple statements inside the body
   ;; I use {stmt1; stmt2; stmt3; ...} similar to perl 
-  ;; (not use Python because it uses NEWLINE etc as the delimeter) 
+  ;; (not use Python because it uses NEWLINE etc as the delimeter https://docs.python.org/3/reference/compound_stmts.html)
   ;; but here I enforce "foreach ... {}" etc to also end with ";".
   ;; Actually, this is already done in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_orig.scm.
   ;; 0.a. For {stmt1; stmt2; stmt3; ...}
