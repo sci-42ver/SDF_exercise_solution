@@ -1,3 +1,4 @@
+;; modified to show that x is searched in the top-level env
 (define-syntax double
   (syntax-rules ()
     ( (_) ((lambda () (+ x x))) ) ))

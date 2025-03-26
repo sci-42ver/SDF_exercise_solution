@@ -1,1 +1,2 @@
 - Download siod in https://download-mirror.savannah.gnu.org/releases/muesli/
+  - orig/ is run in siod

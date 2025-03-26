@@ -1,3 +1,4 @@
+; works in siod but not in MIT/GNU Scheme 
 (cond 
   (#t
     (define (id x)

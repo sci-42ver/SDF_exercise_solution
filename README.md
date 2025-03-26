@@ -1,3 +1,4 @@
+https://stackoverflow.com/questions/79522809/how-to-avoid-evaluating-one-statement-excluded-by-predicate-during-the-condition?noredirect=1#comment140254692_79522809
 @WillNess Thanks for your detailed description. Maybe it is better to say why I encountered with this problem. My homework needs me to write one simple parser for one infix expression. I used Pratt parsing as wikipedia hints. In scheme we can't have `'(... , ...)` to parse something like Python infix lambda `lambda arg1, arg2: body`. So I use interned symbol `(intern ",")` and store that inside one variable like `COMMA`. Then I use `if` to dispatch based on whether that symbol is special to use interned symbol *value* or simple to use the original representation. Continued...
 
 I don't use `COMMA` to allow some expression like `lambda COMMA COMMA arg2: body` to be be also parsed. More specifically, it will be tokenized to `(lambda COMMA COMMA arg2 : tokenized-body)`.

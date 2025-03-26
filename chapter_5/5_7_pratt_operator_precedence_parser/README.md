@@ -1,22 +1,4 @@
-As one reference, composition/ADT is like class-free said in https://stackoverflow.com/a/27595904/21294350 where `new Person, new Job` in `$employee = new Employee(new Person, new Job);` is like `spec`. https://r.je/you-do-not-need-inheritance-oop adds *one more* disadvantage of Inheritance that code re-usablility is inhibited beyond those listed in video https://www.youtube.com/watch?v=DxnYQRuLX7Q 45:31.
-
-Now one newer lecture https://www.youtube.com/watch?v=DxnYQRuLX7Q is available with almost same slides but a bit more detailed like 5 items listed in Prototypal inheritance disadvantages instead of 4 (actually the added 5 is said in the old video but not shown in the slide).
-
-To be compatible with the above example, we should use `def __init__(self, parent_instance): self.obj = parent_instance`, then `B = Child(A)` works fine.
-
-Currently, Firefox *doesn't support* that at all. See https://wordpress.com/forums/topic/rss-feed-doesnt-display-on-latest-firefox-browser/#post-3274026. So we even can't open that by  modifying the Settings https://www.reddit.com/r/firefox/comments/vybtvs/comment/ig2zlry/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button.
-
-What Quinten says is also said in video 7:49 and 25:14. Here security may be due to avoiding modifying one global variable which may influence *anywhere* in the program. This is said detailedly in https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421.
-
-What Quinten says is also said in [video](https://www.youtube.com/watch?v=DxnYQRuLX7Q) 30:26 and 50:25. Here security may be due to avoiding modifying one global variable which may influence *anywhere* in the program. This is said detailedly in https://security.stackexchange.com/questions/216421/global-variables-and-information-security#comment439249_216421.
-
-You seems to have one typo that `newObj` doesn't have `text` property.
-
-https://stackoverflow.com/a/10657843/21294350: To be more specific based on https://cs.stackexchange.com/a/93148/161388, here one lookahead token is needed for S, at least k+1 lookahead tokens are needed for A, and we don't have one *simpler* LL(k) *grammar* (better with one strict proof as p10 "Suppose now that we have an LL(k-1) grammar equivalent to G, ... which is in contradiction with (4)" in https://sci-hub.ru/10.1007/BF01946814) as ladypary shows for that one, so we have "LL(k+1) language that is not LL(k)".
-
-To be more specific about what Maximilian says, The book (also for the 2nd version) says "Fig. 8.11. An LL(k+1) *grammar* that is not LL(k)" for the above example. "An LL(k+1) grammar that is not LL(k)" is easily got due to we need at least k+1 "tokens of lookahead" https://en.wikipedia.org/wiki/LL_parser to decide whether S ends with a or b. Notice one formal language can have *possibly more than one* formal grammar (Its definition doesn't exclude that possibility https://en.wikipedia.org/wiki/Formal_language). Continued...
-
-So the language corresponding to the above grammar can be also defined based on grammar S->a^kB, B->a|b which is one LL(k) grammar due to either a^k or a|b (i.e. at most k lookahead tokens) is checked (you can check https://cs.stackexchange.com/a/93148/161388 for how LL(1) is derived here).
+Notice the 3rd can only work for the case with those spaces. So `print(""""A word that needs quotation marks"""")` won't work. This is probably related with how Python parse this string arg which may probably matches the first 3 closing quotes. (One new comment with the related description based on source codes by someone would be appreciated.)
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.
   bottom-up due to ~~recursive descent~~ shift-reduce.
@@ -51,6 +33,9 @@ So the language corresponding to the above grammar can be also defined based on 
 #### ensure understanding this algorithm
 - https://eli.thegreenplace.net/2012/08/02/parsing-expressions-by-precedence-climbing
   see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/precedence_climbing.py
+### vs shunting yard algorithm
+- same https://www.reddit.com/r/oilshell/comments/5l70p7/comment/dfqolgw/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button (IMHO due to shift-reduce and [all bottom-up](https://stackoverflow.com/q/79503869/21294350)).
+### [even more by Bourguet](https://www.oilshell.org/blog/2017/04/22.html)
 ## skipped
 - > tree rewrite rules
   since wikipedia doesn't say that detailedly.
@@ -236,7 +221,7 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
     is a bit *inappropriate*.
   - > One valid argument is that not all languages which have classical inheritance support multiple inheritance. Again Java comes to mind. Yes Java has interfaces, but that's not sufficient.
     so not elegant https://www.geeksforgeeks.org/how-to-implement-multiple-inheritance-by-using-interfaces-in-java/.
-## Fredrikh Lundh
+## [Fredrikh Lundh](https://web.archive.org/web/20101216050812/http://effbot.org/zone/simple-top-down-parsing.htm#multi-token-operators)
 - >  It still mutates tokens instances to become AST nodes
   - `symbol_table[id] = s` is fine due to [Python GC mechanism](https://stackoverflow.com/questions/25286171/when-does-python-delete-variables#comment140252478_25286230)
   - `self.first = expression(100)` is fine to [add *instance* member by one *method*](https://stackoverflow.com/a/12409963/21294350) which is different from JS object because the latter can be prototype while the former can't (although [with some hacks we can do that much less elegant](https://stackoverflow.com/a/1081925/21294350)).
@@ -267,6 +252,20 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
   - > I feel that the parser is lost in the [verbosity] making it quite the poor teaching language.
     see [Benefits of prototypal inheritance over classical] 
     > Hence this leads to more verbose code. ... Yes Java has interfaces, but that's not sufficient. Sometimes you really need multiple inheritance.
+# oilshell implementation
+## https://web.archive.org/web/20161202072939/http://effbot.org/zone/xml-scanner.htm
+- `scanner` may be also [one undocumented method](https://stackoverflow.com/a/37078969/21294350) like [`re.Scanner`](https://stackoverflow.com/a/693818/21294350) (also see https://lucumr.pocoo.org/2015/11/18/pythons-hidden-re-gems/)
+  I don't find [the definition for `re` class](https://github.com/search?q=repo%3Apython%2Fcpython%20%22class%20re%3A%22&type=code)
+  - > The scanner is a property of the underlying SRE pattern object where the engine keeps matching after it found a match for the next one.
+    - https://docs.python.org/3/library/functions.html#property
+      - ~~So the methods of "the underlying SRE pattern object"~~
+    - "the underlying SRE pattern object" just means `class re.Pattern` which can be checked by `type`.
+    - Anyway the behavior is [similar to `finditer`](https://stackoverflow.com/questions/37075691/method-regex-scanner-cannot-be-found-in-the-python-3-5-1-documentation-but-th#comment61735230_37078969).
+- `m.lastindex` is related with [the grouping order](https://docs.python.org/3/library/re.html#re.finditer)
+  > he string is scanned left-to-right, and matches are returned in the order found.
+  so here the last is the outer one.
+- [Triple quoted strings](https://stackoverflow.com/a/68849074/21294350)
+  > A docstring is *a string literal* that occurs as the first statement in a module, function, class, or method definition.
 # [Pratt algorithm](https://tdop.github.io/)
 ## 1
 skipped due to introduction of *historic* survey of the problem. (no need if just to understand the algorithm)
