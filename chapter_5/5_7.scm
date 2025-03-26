@@ -31,7 +31,7 @@
 ;; 2. mimic "cond->if".
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
-(load "5_7_regexp_lib.scm")
+(load "5_7_re_lib/5_7_regexp_lib.scm")
 ;; tokenizer
 (define (parse exp)
   (%parse exp split-lst partition-separtor-lst skipped-primitive-re-lst))

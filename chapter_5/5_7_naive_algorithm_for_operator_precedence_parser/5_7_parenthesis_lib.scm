@@ -2,7 +2,7 @@
 (load "../common-lib/stack_lib.scm")
 (load "../common-lib/pair_lib.scm")
 
-(load "5_7_regexp_lib.scm")
+(load "5_7_re_lib/5_7_regexp_lib.scm")
 (define (customized-stack-elem? data)
   (and (pair?* data) 
     (pair?* (get-left data))))
