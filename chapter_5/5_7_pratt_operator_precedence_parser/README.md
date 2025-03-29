@@ -261,9 +261,14 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
       - ~~So the methods of "the underlying SRE pattern object"~~
     - "the underlying SRE pattern object" just means `class re.Pattern` which can be checked by `type`.
     - Anyway the behavior is [similar to `finditer`](https://stackoverflow.com/questions/37075691/method-regex-scanner-cannot-be-found-in-the-python-3-5-1-documentation-but-th#comment61735230_37078969).
+      - Also said in effbot
+        > lazily constructed sequence
+        i.e. doc "iterator"
 - [`m.lastindex`](https://docs.python.org/3/library/re.html#re.Match.lastindex) is related with [the grouping order](https://docs.python.org/3/library/re.html#re.finditer)
   > he string is scanned left-to-right, and matches are returned in the order found.
-  so here the last is ~~the outer one~~ the last *matched* one.
+  so here the last is ~~the outer one~~ the last *matched* one. So
+  > For example, the expressions (a)b, ((a)(b)), and ((ab)) will have lastindex == 1 if applied to the string 'ab', while the expression (a)(b) will have lastindex == 2, if applied to the same string.
+  because for the latter 2 in the former list, the outer is the last match *finished*.
 - [Triple quoted strings](https://stackoverflow.com/a/68849074/21294350)
   > A docstring is *a string literal* that occurs as the first statement in a module, function, class, or method definition.
 # [Pratt algorithm](https://tdop.github.io/)

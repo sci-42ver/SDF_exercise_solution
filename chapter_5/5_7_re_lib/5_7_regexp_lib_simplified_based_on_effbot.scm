@@ -1,9 +1,11 @@
+;; Skip this due to MIT/GNU Scheme lacking ?:< etc.
+
 ; https://srfi.schemers.org/srfi-115/srfi-115.html#proc-regexp-match-submatch
 (define (group pat)
   (assert (valid-sre? pat))
   `($ ,pat)
   )
-(?: (\d+) | (\w+) | ( [\-\+\*/%!~<>=&^|?:,]+ ) | ([\(\)\[\]]) )
+; (?: (\d+) | (\w+) | ( [\-\+\*/%!~<>=&^|?:,]+ ) | ([\(\)\[\]]) )
 ; (define pat (regexp `(: (* space) (w/nocapture ,(group pat)) )))
 
 ; (regexp '(: (* space) numeric))
