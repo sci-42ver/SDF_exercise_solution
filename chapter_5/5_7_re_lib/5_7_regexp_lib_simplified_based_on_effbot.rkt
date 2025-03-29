@@ -97,6 +97,8 @@
       )
     )
   )
+;; __next__ can be implemented like SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; does for l in (pl l).
 (define (tokenize str)
   (stream-map
     %tokenize

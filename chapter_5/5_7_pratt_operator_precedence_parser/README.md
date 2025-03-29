@@ -252,7 +252,19 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
   - > I feel that the parser is lost in the [verbosity] making it quite the poor teaching language.
     see [Benefits of prototypal inheritance over classical] 
     > Hence this leads to more verbose code. ... Yes Java has interfaces, but that's not sufficient. Sometimes you really need multiple inheritance.
-# oilshell implementation
+# [oilshell implementation](https://www.oilshell.org/blog/2016/11/03.html)
+- > Many recursive algorithms like tree traversal are purely functional.
+  https://faculty.cs.niu.edu/~mcmahon/CS241/Notes/Data_Structures/binary_tree_traversals.html just visit without bookkeeping the state.
+- > The current token is a member on a Parser class, which is how you typically see parsing algorithms like recursive descent presented.
+  although not for wikipedia https://en.wikipedia.org/wiki/Recursive_descent_parser#C_implementation.
+- > Although I present it in Python, it's statically typed like Nystrom's code.
+  i.e. implicitly assign the *same* type to one variable. Otherwise, it is dynamic. See https://www.futurelearn.com/info/courses/python-in-hpc/0/steps/65121.
+- > The first thing to notice is that this style yields code that looks like a table.
+  See `null_lookup`, `left_lookup`.
+# oilshell series
+- [Code for the Shunting Yard Algorithm, and More](https://www.oilshell.org/blog/2017/04/22.html) is mostly skipped since its main idea is similar to Pratt as the above "vs shunting yard algorithm" says. "More" by bourguet is a bit of overkill.
+## TODO
+- > Concurrent parsers are easy.
 ## https://web.archive.org/web/20161202072939/http://effbot.org/zone/xml-scanner.htm
 - `scanner` may be also [one undocumented method](https://stackoverflow.com/a/37078969/21294350) like [`re.Scanner`](https://stackoverflow.com/a/693818/21294350) (also see https://lucumr.pocoo.org/2015/11/18/pythons-hidden-re-gems/)
   I don't find [the definition for `re` class](https://github.com/search?q=repo%3Apython%2Fcpython%20%22class%20re%3A%22&type=code)
