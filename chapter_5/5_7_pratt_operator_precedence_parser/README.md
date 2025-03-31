@@ -1,3 +1,7 @@
+2. "And, as is evident in the question, cppreference also classifies it as a unary operation.": It seems not since cppreference says "unary (level-2 non-cast) expressions" which implies unary is non-cast. Anyway this discussion about "unary" seems a bit too pedantic as you says "Words are flexible". 3. "Operations may be grammatically one thing and computationally another.": Could you say more about what this means?
+
+Now https://en.cppreference.com/w/c/language/operator_precedence#Notes says about that although without detailed explanation.
+
 Notice the 3rd can only work for the case with those spaces. So `print(""""A word that needs quotation marks"""")` won't work. This is probably related with how Python parse this string arg which may probably matches the first 3 closing quotes. (One new comment with the related description based on source codes by someone would be appreciated.)
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.
@@ -267,6 +271,10 @@ It is about a [POSIX-compatible](https://pubs.opengroup.org/onlinepubs/979991979
   - > 5.2/1 and 5.3/1 in C++03
     ~~at least for~~ also said in [draft](https://web.archive.org/web/20180922024431/https://cs.nyu.edu/courses/fall11/CSCI-GA.2110-003/documents/c++2003std.pdf)
     - [group meaning](https://stackoverflow.com/questions/25589257/what-does-left-to-right-associativity-mean#comment55868714_25589257)
+    - > With unary operators it would be more than surprising to group !!a as (!!)a, the language would also *have to supply a meaning* for the sub-expression !!, which currently it *doesn't have*.
+      So "prefix unary operators" can only have "right-to-left".
+    - > Then you'll see just how it is that precedence and associativity are defined by the grammar. The big trick is that every "high-precedence" type of expression IS-A "lower-precedence" type of expression.
+      since mul is always done before add, so we have `additive-expression + multiplicative-expression` classified as `additive-expression`, but not vice versa, otherwise we allow addition done before multiplication. <a id="how_to_get_precedence_from_grammar"></a>
 - https://en.cppreference.com/w/c/language/operator_precedence
   - > The operand of prefix ++ and -- can't be a type cast.
     because that value is not lvalue (e.g. `++((int) p)`).
@@ -281,6 +289,12 @@ It is about a [POSIX-compatible](https://pubs.opengroup.org/onlinepubs/979991979
   - > The standard itself doesn't specify precedence levels. They are derived from the grammar.
     Based on the https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf A.3.1 `postfix-expression` are based on primary-expression or self (left-recursive) or compound-literal.
     So primary-expression has the higher precedence order including "( expression )" where `expression` can be assignment-expression (i.e. the *lowest* precedence order elem).
+  - https://stackoverflow.com/a/79544622/21294350
+    - > And, as is evident in the question, cppreference also classifies it as a unary operation.
+      maybe not.
+      > unary (level-2 non-cast) expressions
+    - > But it doesn't do that.
+      it just means it does something similar to "multiplication" instead of saying that "It" doesn't modify "what the operation is".
 ## relation with review
 - > This results in a lot of mutation in the code, which goes against the grain of the parser as a pure function from tokens to a tree.
   Still holds in oilshell's implementation, e.g. `token.type = 'call'` etc.
