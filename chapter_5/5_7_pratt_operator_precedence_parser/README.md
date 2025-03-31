@@ -145,6 +145,7 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
 - > but you wouldn't do that in a "production" parser these days.
   it means https://stackoverflow.com/a/6388968/21294350 instead of https://en.wikipedia.org/wiki/Production_(computer_science).
 ## [Douglas Crockford](https://crockford.com/javascript/tdop/tdop.html)
+See [crockford_parse_implementation]
 - a
   - > JavaScript and Lua both use prototypal inheritance, and I still don't see any advantage of this style over classes.
     Anyway *they are same* in JS as [Inheritance_and_the_prototype_chain] says.
@@ -253,6 +254,7 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
     see [Benefits of prototypal inheritance over classical] 
     > Hence this leads to more verbose code. ... Yes Java has interfaces, but that's not sufficient. Sometimes you really need multiple inheritance.
 # [oilshell implementation](https://www.oilshell.org/blog/2016/11/03.html)
+It is about a [POSIX-compatible](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_06_04) shell arithmetic parser ([the standard](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap01.html#tag_18_01_02_01) doesn't include `**`)
 - > Many recursive algorithms like tree traversal are purely functional.
   https://faculty.cs.niu.edu/~mcmahon/CS241/Notes/Data_Structures/binary_tree_traversals.html just visit without bookkeeping the state.
 - > The current token is a member on a Parser class, which is how you typically see parsing algorithms like recursive descent presented.
@@ -261,7 +263,31 @@ Says why the author wants to use Pratt Parsing (because he wants to implement th
   i.e. implicitly assign the *same* type to one variable. Otherwise, it is dynamic. See https://www.futurelearn.com/info/courses/python-in-hpc/0/steps/65121.
 - > The first thing to notice is that this style yields code that looks like a table.
   See `null_lookup`, `left_lookup`.
-# oilshell series
+- https://stackoverflow.com/a/12963342/21294350
+  - > 5.2/1 and 5.3/1 in C++03
+    ~~at least for~~ also said in [draft](https://web.archive.org/web/20180922024431/https://cs.nyu.edu/courses/fall11/CSCI-GA.2110-003/documents/c++2003std.pdf)
+    - [group meaning](https://stackoverflow.com/questions/25589257/what-does-left-to-right-associativity-mean#comment55868714_25589257)
+- https://en.cppreference.com/w/c/language/operator_precedence
+  - > The operand of prefix ++ and -- can't be a type cast.
+    because that value is not lvalue (e.g. `++((int) p)`).
+    see https://en.cppreference.com/w/c/language/cast
+    > Every implicit conversion as if by assignment is allowed.
+    https://en.cppreference.com/w/c/language/conversion#Real_floating-integer_conversions for the above example.
+    > The value remains the same, but loses its lvalue properties (the address may no longer be taken).
+  - > The operand of sizeof can't be a type cast: the expression sizeof (int) * p is unambiguously interpreted as (sizeof(int)) * p, but not sizeof((int)*p).
+    This is due to sizeof conventions https://en.cppreference.com/w/c/language/sizeof.
+  - Here notes 1,2,4 all have no *necessary* restriction for parser.
+    > Some compilers ignore this rule and detect the invalidity semantically.
+  - > The standard itself doesn't specify precedence levels. They are derived from the grammar.
+    Based on the https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf A.3.1 `postfix-expression` are based on primary-expression or self (left-recursive) or compound-literal.
+    So primary-expression has the higher precedence order including "( expression )" where `expression` can be assignment-expression (i.e. the *lowest* precedence order elem).
+## relation with review
+- > This results in a lot of mutation in the code, which goes against the grain of the parser as a pure function from tokens to a tree.
+  Still holds in oilshell's implementation, e.g. `token.type = 'call'` etc.
+  It is similar to `token.arity`.
+## comparison with SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+Here both cares more about lbp,rbp relative relations instead of their values independently.
+# [oilshell series](https://www.oilshell.org/blog/2017/03/31.html#pratt-parsing-without-prototypal-inheritance-global-variables-virtual-dispatch-or-java-python)
 - [Code for the Shunting Yard Algorithm, and More](https://www.oilshell.org/blog/2017/04/22.html) is mostly skipped since its main idea is similar to Pratt as the above "vs shunting yard algorithm" says. "More" by bourguet is a bit of overkill.
 ## TODO
 - > Concurrent parsers are easy.
@@ -467,3 +493,5 @@ The 1st paragraph is same as thegreenplace codes although with small differences
 [Inheritance_and_the_prototype_chain]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain
 [obj_access_property]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects#accessing_properties
 [Benefits of prototypal inheritance over classical]:https://stackoverflow.com/a/16872315/21294350
+
+[crockford_parse_implementation]:https://crockford.com/javascript/tdop/parse.js
