@@ -1,3 +1,11 @@
+Re to 0: Later I transformed all `#lang` to `module` as https://docs.racket-lang.org/guide/Module_Syntax.html#%28part._hash-lang%29 shows and tried directly in `racket`. Then it seems that `racket file` is just doing something like running `racket` and then typing the file contents. Why it still `printf` is due to what your offered "reasons" link says. More specifically, it is due to "The *compile-time expressions* of a module that are evaluated by visiting include both the right-hand sides of define-syntax forms and the body of begin-for-syntax forms".
+
+Re to 0: Later I transformed all `#lang` to `module` as https://docs.racket-lang.org/guide/Module_Syntax.html#%28part._hash-lang%29 shows and tried directly in `racket`. Then it seems that `racket file` is just doing something like running `racket` and then typing the file contents. Continued...
+
+Why it still `printf` is due to what your offered "reasons" link says. More specifically, it is due to "The *compile-time expressions* of a module that are evaluated by visiting include both the right-hand sides of define-syntax forms and the body of begin-for-syntax forms".
+
+Now Firefox also supports "Device Mode" and still supports "Responsive Design Mode" but from "More Tools".
+
 2. "And, as is evident in the question, cppreference also classifies it as a unary operation.": It seems not since cppreference says "unary (level-2 non-cast) expressions" which implies unary is non-cast. Anyway this discussion about "unary" seems a bit too pedantic as you says "Words are flexible". 3. "Operations may be grammatically one thing and computationally another.": Could you say more about what this means?
 
 Now https://en.cppreference.com/w/c/language/operator_precedence#Notes says about that although without detailed explanation.
