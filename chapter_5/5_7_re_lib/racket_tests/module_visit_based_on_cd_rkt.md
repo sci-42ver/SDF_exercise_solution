@@ -1,3 +1,5 @@
+<!-- CHECKED -->
+
 This is one follow-up question of this QA answer https://stackoverflow.com/a/79543395/21294350.
 
 For `file.rkt`:

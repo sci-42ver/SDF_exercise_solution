@@ -1,3 +1,5 @@
+<!-- CHECKED see "Just read [the doc]" -->
+
 What `racket file.rkt` actually does to load that file?
 
 ---

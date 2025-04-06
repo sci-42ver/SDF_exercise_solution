@@ -4,6 +4,7 @@
   ; (current-directory "/tmp")
   (begin-for-syntax
     (printf "dir = ~a~n" (current-directory)))
+  (current-directory "/tmp")
   (displayln "test")
   (printf "phase level 0 dir = ~a~n" (current-directory))
 

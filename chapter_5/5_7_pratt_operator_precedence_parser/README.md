@@ -1,16 +1,8 @@
-Re to 0: Later I transformed all `#lang` to `module` as https://docs.racket-lang.org/guide/Module_Syntax.html#%28part._hash-lang%29 shows and tried directly in `racket`. Then it seems that `racket file` is just doing something like running `racket` and then typing the file contents. Why it still `printf` is due to what your offered "reasons" link says. More specifically, it is due to "The *compile-time expressions* of a module that are evaluated by visiting include both the right-hand sides of define-syntax forms and the body of begin-for-syntax forms".
+@Dilawar One old glibc doc https://ftp.gnu.org/old-gnu/Manuals/glibc-2.2.3/html_node/libc_650.html says about that. Based on the examples, if we have `encrypted_passwd = crypt(orig, salt);`, the verification is done based on `encrypted_passwd = crypt(orig, encrypted_passwd);`. So `salt` is not needed to be fixed. That verification is also shown in `man 3p crypt` by `strcmp(p->pw_passwd, crypt(oldpasswd, p->pw_passwd)) == 0`. How it works is complex and may be better asked in https://crypto.stackexchange.com/.
 
-Re to 0: Later I transformed all `#lang` to `module` as https://docs.racket-lang.org/guide/Module_Syntax.html#%28part._hash-lang%29 shows and tried directly in `racket`. Then it seems that `racket file` is just doing something like running `racket` and then typing the file contents. Continued...
+For the daily usage, we had better add some options, e.g. `PASSWD="foo";sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' $PASSWD) -e <date> user` https://askubuntu.com/a/1269947/2168145. Then we can `sudo userdel user -r` later since expiration is not enough to remove the temporary home dir.
 
-Why it still `printf` is due to what your offered "reasons" link says. More specifically, it is due to "The *compile-time expressions* of a module that are evaluated by visiting include both the right-hand sides of define-syntax forms and the body of begin-for-syntax forms".
-
-Now Firefox also supports "Device Mode" and still supports "Responsive Design Mode" but from "More Tools".
-
-2. "And, as is evident in the question, cppreference also classifies it as a unary operation.": It seems not since cppreference says "unary (level-2 non-cast) expressions" which implies unary is non-cast. Anyway this discussion about "unary" seems a bit too pedantic as you says "Words are flexible". 3. "Operations may be grammatically one thing and computationally another.": Could you say more about what this means?
-
-Now https://en.cppreference.com/w/c/language/operator_precedence#Notes says about that although without detailed explanation.
-
-Notice the 3rd can only work for the case with those spaces. So `print(""""A word that needs quotation marks"""")` won't work. This is probably related with how Python parse this string arg which may probably matches the first 3 closing quotes. (One new comment with the related description based on source codes by someone would be appreciated.)
+There is no need for thanks. Anyway that reference is offered by you. "I do not condone linking to a pirated copy of a copyrighted work": OK. Apologize for my neglect.
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.
   bottom-up due to ~~recursive descent~~ shift-reduce.
@@ -234,8 +226,18 @@ See [crockford_parse_implementation]
     is a bit *inappropriate*.
   - > One valid argument is that not all languages which have classical inheritance support multiple inheritance. Again Java comes to mind. Yes Java has interfaces, but that's not sufficient.
     so not elegant https://www.geeksforgeeks.org/how-to-implement-multiple-inheritance-by-using-interfaces-in-java/.
+### relation with oilshell implementation
+- a.
+  oilshell has ~~no~~ not much inheritance. It just uses `class` to avoid many *global* variables.
+  The only inheritances are `ParseError(Exception)` and `CompositeNode(Node)` which is similar to `symbol` -> `token`.
+  Anyway they are similar (see "Prototypal Inheritance advantages over classical inheritance") although the latter inherits class instead of object.
+- b.
+  oilshell changes to use table
+- c.
+  oilshell *also* does that implicitly due to `token.type = 'post' + token.type` etc. But that can be avoided if constructing one less robust parser, i.e. just using those types in tokenizer.
+- d. Same as a.
 ## [Fredrikh Lundh](https://web.archive.org/web/20101216050812/http://effbot.org/zone/simple-top-down-parsing.htm#multi-token-operators)
-- >  It still mutates tokens instances to become AST nodes
+- >  It *still mutates* tokens instances to become *AST nodes*
   - `symbol_table[id] = s` is fine due to [Python GC mechanism](https://stackoverflow.com/questions/25286171/when-does-python-delete-variables#comment140252478_25286230)
   - `self.first = expression(100)` is fine to [add *instance* member by one *method*](https://stackoverflow.com/a/12409963/21294350) which is different from JS object because the latter can be prototype while the former can't (although [with some hacks we can do that much less elegant](https://stackoverflow.com/a/1081925/21294350)).
     - [`__getattr__, __dict__`](https://docs.python.org/3/reference/datamodel.html)
@@ -252,19 +254,32 @@ See [crockford_parse_implementation]
     More specifically, both does the creation of `symbol` and the register of `led`/`nud`.
 - > but there’s a more practical description in the section “Evaluation order” in Python’s language reference.
   See [the oldest archive](https://web.archive.org/web/20121101045119/https://docs.python.org/3/reference/expressions.html#evaluation-order) which still has the precedence list in the section after "Evaluation order" instead of "Evaluation order" itself.
+### comparison with oilshell implementation
+- > It uses an unusual style of registering methods using decorators
+  > The current token is a global variable
+  oilshell avoids those.
 ## Eli Bendersky
 - As https://eli.thegreenplace.net/2010/01/02/top-down-operator-precedence-parsing#id7 says, so same but doesn't use all of them
-  > The code is similar to Lundh's, but uses classes in a more traditional manner.
-  i.e. not use @... .
+  > Which is also the source for *most* of the code in this article
+  - > The code is similar to Lundh's, but uses classes in a more traditional manner.
+    i.e. not use @... .
+### comparison with oilshell implementation
+- Just same as comparison in "Fredrikh Lundh".
 ## Bob Nystrom
 - > His motivation is also to improve on Crockford's exposition.
-  - > Crockford mixes in extra stuff like tracking lexical scope that obscures the core idea.
+  - > Crockford mixes in extra stuff like *tracking lexical scope that obscures the core* idea.
     Yes. It is unrelated with precedence although it can be implemented here due to [RD](https://gokcehan.github.io/notes/recursive-descent-parsing.html)...
-- > The tutorial is done in Java, as sort of the "lowest common denominator" among languages. In his own words,
-  > Like I said, if you can do this in Java, you can do it in any language.
-  - > I feel that the parser is lost in the [verbosity] making it quite the poor teaching language.
-    see [Benefits of prototypal inheritance over classical] 
-    > Hence this leads to more verbose code. ... Yes Java has interfaces, but that's not sufficient. Sometimes you really need multiple inheritance.
+- > The tutorial is done in Java, as sort of the "*lowest common denominator*" among languages. In his own words,
+  > Like I said, *if* you can do this in Java, you can do it in *any language*.
+  - > I really wish that *Java was not used* in this tutorial. I feel that the parser is lost in the [verbosity] making it quite the poor teaching language.
+    - see [Benefits of prototypal inheritance over classical] for the *general* verbosity due to using Java *class*.
+      > Hence this leads to more *verbose* code. ... Yes Java has interfaces, but that's not sufficient. Sometimes you really need multiple inheritance.
+      and OP
+      > JavaScript and Lua both use *prototypal inheritance*, and I still don't see any advantage of this style over classes. It might be *easier to implement*
+    - For here
+      > it really does obscure the algorithm with *extraneous classes, files, and directories*.
+### comparison with oilshell implementation
+- i.e. not much verbose, i.e. using as less codes as possible.
 # [oilshell implementation](https://www.oilshell.org/blog/2016/11/03.html)
 It is about a [POSIX-compatible](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_06_04) shell arithmetic parser ([the standard](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap01.html#tag_18_01_02_01) doesn't include `**`)
 - > Many recursive algorithms like tree traversal are purely functional.
@@ -331,6 +346,35 @@ Here both cares more about lbp,rbp relative relations instead of their values in
   because for the latter 2 in the former list, the outer is the last match *finished*.
 - [Triple quoted strings](https://stackoverflow.com/a/68849074/21294350)
   > A docstring is *a string literal* that occurs as the first statement in a module, function, class, or method definition.
+## https://www.oilshell.org/blog/2016/11/05.html
+- > There are two main classes: Parser and ParserSpec. The inputs are a stream of Token objects and the output is a tree of Node objects.
+  i.e. `self.lexer.__next__()` and `CompositeNode(token, [left])` etc.
+- > Pratt's technique wants a dynamic language, but dynamic language communities historically have had no use for the syntax that Pratt's technique conveniently realizes.
+  Lisp is "dynamic", so I don't what it meant at all which is also implied in "I believe this is *false*, and that the code I posted on Github and sketched in a previous entry proves it false.".
+  "syntax" here means
+  > the [Spartan denial](https://blog.codinghorror.com/spartan-programming/) of syntax
+  > spartan (practicing great self-denial)
+## https://www.oilshell.org/blog/2017/03/30.html
+- > Two tables of precedence, or two dynamically dispatched methods on token objects 
+  i.e. led and nud.
+- > Single Recursive Function
+  `compute_atom` *may* call `compute_expr` for `LEFTPAREN` and `compute_expr` must call `compute_expr` based on `op` and `compute_atom` for the initial elem.
+  > Mutually recursive functions
+  `expression` with `nud`/`led`.
+  - The above 2 are based on thegreenplace.
+  - TODO so Precedence Climbing is also "a recursive descent parser".
+  - The above about "Single Recursive Function" also holds for https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm#climbing where `P` corresponds to `compute_atom`.
+- > mutually recursive "plugins"
+  plugin is just led/nud instead of `expression`.
+- > Clang
+  [see](https://eli.thegreenplace.net/2012/08/02/parsing-expressions-by-precedence-climbing)
+  - > The role of compute_atom is played by Parser::ParseCastExpression.
+    implied by `ExprResult LHS = ParseCastExpression(AnyCastExpr, ...)`.
+  - > Precedence climbing
+    implied in https://github.com/llvm/llvm-project/blob/4182d2dcb5ecbfc34d41a6cd11810cd36844eddb/clang/lib/Parse/ParseExpr.cpp#L461 and https://github.com/llvm/llvm-project/blob/4182d2dcb5ecbfc34d41a6cd11810cd36844eddb/clang/lib/Parse/ParseExpr.cpp#L511 where the latter implies not using Pratt.
+    - > I determined this by scanning source code for a single table of integer precedences, and single recursive function with a precedence test.
+      table [see](https://github.com/llvm/llvm-project/blob/41f9a00818d42446168b9904f879c8ab39e7196d/clang/lib/Basic/OperatorPrecedence.cpp#L19)
+      "single recursive function" see the above `ParseRHSOfBinaryExpression`.
 # [Pratt algorithm](https://tdop.github.io/)
 ## 1
 skipped due to introduction of *historic* survey of the problem. (no need if just to understand the algorithm)

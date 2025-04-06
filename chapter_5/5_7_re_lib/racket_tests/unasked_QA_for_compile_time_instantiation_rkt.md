@@ -1,5 +1,7 @@
 <!-- Similar to module_visit.md -->
 
+<!-- see related https://stackoverflow.com/q/79554742/21294350 -->
+
 This is one follow-up question of [this QA answer][1].
 
 For `file.rkt` based on the above answer and [the doc][2]:
