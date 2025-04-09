@@ -1,6 +1,4 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
-(load "base_lib.scm")
-(load "common_lib_for_MIT_GNU_Scheme.scm")
 (load "compatible_lib.scm")
 
 ;;; orig
@@ -546,19 +544,6 @@
 (pl-assert 
   '(define fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))))
   `(fact := lambda* n : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
-
-;; Here all possible elements for parameter_list in SDF_exercises/chapter_5/5_7_naive_algorithm_for_operator_precedence_parser/5_7_precedence_lib.scm
-;; are included here (Based on memory for what is done to this program at some time after finishing this program).
 (pl-assert 
   '(define fact (lambda (a (= b 0) / c *args * kwarg1 **kwargs) (if (= n 0) 1 (* n (fact (- n 1))))))
   `(fact := lambda* a COMMA b = 0 COMMA / COMMA c COMMA *args COMMA * COMMA kwarg1 COMMA **kwargs : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
-
-;;;; Compatibility with Python
-;;; 0. Call https://docs.python.org/3/reference/expressions.html#calls
-;; Possible types:
-;; a. assignment_expression := (see SDF_exercises/chapter_5/5_7_related_python_behavior/assignment_expression_arg.py for its difference from keyword_item)
-;; [identifier ":="] expression
-;; b. *expression
-;; c. identifier=expression
-;; d. **expression
-;; In Scheme only the mere expression is supported natively.

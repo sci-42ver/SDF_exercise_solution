@@ -16,3 +16,8 @@
         (change-pair-right! val pair)))
     tagged-pairs
     ))
+
+(define (set-tagged-pairs! key val tagged-pairs)
+  (let ((pair (find-var key tagged-pairs)))
+    (set-cdr! pair val))
+  )

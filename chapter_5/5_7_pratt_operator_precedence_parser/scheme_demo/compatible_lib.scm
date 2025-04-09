@@ -60,18 +60,6 @@
       )
     ))
 
-; https://stackoverflow.com/a/42487783/21294350
-(define-syntax while
-  (syntax-rules ()
-    ;; Here the original form is (_ stack) here.
-    ((_ pred body ...) 
-      (do () 
-        ((not pred) (begin)) ; implicit "Unspecified return value"
-        body ...
-        )
-      )
-    ))
-
 (define (href hash-table key)
   (hash-table-ref/default hash-table key #f))
 (define (hset hash-table key datum) 

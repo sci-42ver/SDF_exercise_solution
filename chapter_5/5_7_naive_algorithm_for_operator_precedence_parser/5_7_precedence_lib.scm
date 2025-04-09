@@ -142,6 +142,7 @@
       ;; 0. skip "/" in parameter_list https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-parameter_list
       ;; See https://peps.python.org/pep-0570/#function-examples
       ;; See 0.a.: Due to no keyword parameter, so all are positional-only... 
+      ;; And 0.n. for summary.
       ;; 0.a. And also for parameter_star_kwargs etc https://stackoverflow.com/a/36908/21294350.
       ;; ~~Anyway~~ Although Scheme ~~doesn't have~~ has one native way to do unpack *hint* like "*" does (i.e. (proc . args)), but not for keyword parameter restriction "**".
       ;; The latter can be done in https://srfi.schemers.org/srfi-177/srfi-177.html (not in MIT/GNU Scheme) where "(c d e)" must be kw.
@@ -152,7 +153,7 @@
       ;; 0.c. Similarly no type hints "identifier [":" expression]".
       ;; 0.d. identifier checking seems off topic... https://docs.python.org/3/reference/lexical_analysis.html#grammar-token-python-grammar-identifier
       ;; https://unicode.org/reports/tr15/
-      ;; 0.n. so only something like (lambda a,b,c: a+b+c)(1,2,3) is considered https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions.
+      ;; 0.n. SO only something like (lambda a,b,c: a+b+c)(1,2,3) is considered https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions.
       ;; Then "a,b,c" can be manipulated like Binding,
       ;; i.e. comma-param-lst? should return (a,b,c)=> (a b c) parameter_list in Scheme.
       ;; 0.n+1. ALL IN ALL, https://tdop.github.io/ just uses the simplest lambda argument list where '",", getlist 25' should be '"," getlist 25' by (a getlist b) and 'is "EXPT"' notation.
@@ -160,7 +161,7 @@
       ;; Trivially parameter_list, parameter_list_no_posonly are all delimited by ",".
       ;; See SDF_exercises/chapter_5/5_7_related_python_behavior/parameter_list.py
       ;; where [","] in parameter_star_kwargs is only omitted when at the end and actually it must be at the end...
-      ;; 1. For define, skip Type parameter lists "func[T](a: T, b: T) -> T" https://peps.python.org/pep-0695/#summary-examples
+      ;; 1. For define, skip Type parameter lists "func[T](a: T, b: T) -> T" (i.e. type_params) https://peps.python.org/pep-0695/#summary-examples
       (new-delimit-exp (list "lambda" comma-param-lst? ":" obj?))
       )
     (new-from-left-to-right-precedence-items 

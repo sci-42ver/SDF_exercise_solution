@@ -62,13 +62,18 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define (make-lambda bvl use-env generate-body)
   ;; use the original lambda.
   (capture-syntactic-environment
-   (lambda (transform-env)
-     (close-syntax
-      `(,(close-syntax 'lambda transform-env)
-        ,bvl
-        ;; allow capture bvl
-        ,(capture-syntactic-environment
-          (lambda (use-env*)
-            (close-syntax (generate-body use-env*)
-                          transform-env))))
-      use-env))))
+    ;;; IGNORE IMHO since here it is using transform-env which is implied by that caller introduces no new binding when calling,
+    ;; we
+    ;;; Here bvl needs use-env similar to pattern, while lambda needs transform-env similar to make-rule.
+    ;; use-env* is needed for bindings introduced by lambda here.
+    (lambda (transform-env)
+      (close-syntax
+        `(,(close-syntax 'lambda transform-env)
+          ,bvl
+          ;; allow capture bvl
+          ,(capture-syntactic-environment
+            (lambda (use-env*)
+              ;; IMHO no need for one extra close-syntax, see https://stackoverflow.com/q/79559737/21294350.
+              (close-syntax (generate-body use-env*)
+                            transform-env))))
+        use-env))))

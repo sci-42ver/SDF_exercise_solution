@@ -1,4 +1,8 @@
 ;;; from doc https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/SC-Transformer-Definition.html#index-close_002dsyntax
+;; What the problem is
+;; > if the user of loop-until just happens to use, say, if for the identifier, it will be *inadvertently captured*.
+;; which can't be solved with "env" of sc-macro-transformer due to needing "loop" binding
+;; > but after the identifier loop has been added.
 (define-syntax loop-until
   (sc-macro-transformer
    (lambda (exp env)
@@ -101,3 +105,13 @@ lst
 ; (define set! 1)
 ; (define lst (list 0 2))
 ; (push set! lst)
+
+;;; make-syntactic-closure free-names usage
+;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/SC-Transformer-Definition.html
+;; 0. (make-syntactic-closure env '(exit) ...)
+;; To explicitly use exit introduced by call-with-current-continuation regardless of what exit binding may be introduced in body.
+;; This is just like aif it (see https://stackoverflow.com/q/79195343/21294350).
+;; 1. > the examples are similar except for the source of the identifier being left free. 
+;; i.e. one is from call/cc while the other is from lambda.
+;; > the identifier that is to be bound by let1 must be left free, so that it can be properly captured by the lambda in the output form. 
+;; same as "it" in aif.

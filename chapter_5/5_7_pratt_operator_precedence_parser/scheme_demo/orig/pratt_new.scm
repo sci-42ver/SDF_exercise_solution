@@ -121,7 +121,7 @@
                           ((eq? op 'get)
                            (if l
                              (let ((pop-val (pop l)))
-                               (writes nil l "poped elem:" pop-val "\n")
+                              ;  (writes nil l "poped elem:" pop-val "\n")
                                pop-val
                                )
                              (eof-val))
@@ -134,11 +134,18 @@
   (stream 'get nil))
 
 (define (toplevel-parse stream)
-  (if (eq? (eof-val) (token-peek stream))
-    (token-read stream)
-    ;; The start should bind nothing.
-    (prog1 (parse end-lbp stream)
-      (if (eq? '$ (token-peek stream)) (token-read stream)))))
+  ;; This won't be called here since l's length is at least one
+  ;; and (eq? (eof-val) '$) outputs () instead of t.
+  ;; So this can't detect the empty stream case.
+  ; (if (eq? (eof-val) (token-peek stream))
+  ;   (token-read stream)
+  ;   ;; The start should bind nothing.
+  ;   (prog1 (parse end-lbp stream)
+  ;     (if (eq? '$ (token-peek stream)) (token-read stream))))
+  ;; So we can just use
+  (prog1 (parse end-lbp stream)
+    (if (eq? '$ (token-peek stream)) (token-read stream)))
+  )
 
 (define (value-if-symbol x)
   (if (symbol? x)
@@ -341,7 +348,7 @@
         value))
 
 (define (defsyntax-macro form)
-  (writes nil "defsyntax-macro (cdr form)=>" (cdr form))
+  ; (writes nil "defsyntax-macro (cdr form)=>" (cdr form))
   (list '*defsyntax (list 'quote (cdr form))))
 ; ;; IMHO the above means
 ; (*defsyntax (list 'quote (cdr form)))
@@ -372,7 +379,7 @@
 (defsyntax $
            lbp end-lbp
            nud premterm-err)
-(writes nil "$ lbp" (get-syntax '$ 'lbp) "\n")
+; (writes nil "$ lbp" (get-syntax '$ 'lbp) "\n")
 
 (define comma-lbp 10)
 (defsyntax #.COMMA
@@ -571,7 +578,7 @@
   ;        nil)
   ;       ('else
   ;        ))
-  (writes nil "call open-paren-nud with" token "\n" stream "\n")
+  ; (writes nil "call open-paren-nud with" token "\n" stream "\n")
   (prsmatch* '#.CLOSE-PAREN '#.COMMA stream)
   )
 
@@ -651,3 +658,6 @@
 ;; > This is entirely a small matter of syntax (ha!).
 ;; 1.a. So all related possible argument elements in Python lambda are considered.
 (pl '(fact := lambda a #.COMMA b = 0 #.COMMA / #.COMMA c #.COMMA *args #.COMMA * #.COMMA kwarg1 #.COMMA **kwargs : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))
+
+(pl '())
+; ERROR: premature-termination-of-input (errobj $)

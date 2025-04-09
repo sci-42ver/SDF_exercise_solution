@@ -1,2 +1,5 @@
 - Download siod in https://download-mirror.savannah.gnu.org/releases/muesli/
   - orig/ is run in siod
+- Syntax compatibility with Python
+  - See SDF_exercises/chapter_5/5_7_naive_algorithm_for_operator_precedence_parser/5_7_precedence_lib.scm for the original intended compatibility
+  - See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm for the compatibility implemented later.

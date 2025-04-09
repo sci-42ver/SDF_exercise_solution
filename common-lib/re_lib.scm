@@ -1,0 +1,31 @@
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "logic_lib.scm")
+(load "string_lib.scm")
+; (cd "~/SICP_SDF/SDF_exercises/chapter_5/MIT_GNU_Scheme_re_lib")
+; (load "regexp.sld")
+(define (regexp-extract* re string #!optional start end)
+  (let ((last-match-end 0))
+    (regexp-fold re
+      (lambda (i m str acc)
+        (let ((sub-string-before (substring* str last-match-end (regexp-match-submatch-start m 0))))
+          (set! last-match-end (regexp-match-submatch-end m 0))
+          (append acc 
+            (if sub-string-before
+              (list sub-string-before m)
+              (list m))
+            )
+          )
+        )
+      '()
+      string
+      (lambda (i m str acc)
+        (let ((end-str (substring* str last-match-end)))
+          (and end-str (append acc (list end-str)))
+          acc)
+        )
+      ;; MIT/GNU Scheme seems to drop this arg implied by "(not (index-fixnum? object))" error.
+      ; (lambda (i finish str acc) acc)
+      (or* start 0)
+      (or* end (string-length string))
+      ))
+  )
