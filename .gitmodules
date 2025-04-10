@@ -1,3 +1,6 @@
 [submodule "chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo"]
 	path = chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo
 	url = git@github.com:sci-42ver/pratt-parsing-demo.git
+[submodule "chapter_5/MIT_GNU_Scheme_re_lib/irregex"]
+	path = chapter_5/MIT_GNU_Scheme_re_lib/irregex
+	url = git@github.com:ashinn/irregex.git

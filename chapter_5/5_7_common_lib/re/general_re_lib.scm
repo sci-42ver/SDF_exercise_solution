@@ -1,3 +1,4 @@
+;;; See irregex which implements neg-look-behind *internally* out of box.
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_7_common_lib/string_lib.scm")
 (define word-corrected '(or word (+ numeric)))
@@ -9,6 +10,7 @@
   (let ((last-end 0)
         (len (string-length exp)))
     (let ((res 
+            ;; This can't be wrapped with regexp-extract* since we need to *internal* neg-look-behind logic.
             (regexp-fold normal-pat
                           ;; IGNORE Here i is the index before m-start or 0 if m-start is 0.
                           ;; Emm... sometimes i is the index of m-start inclusive, while sometimes exclusive.

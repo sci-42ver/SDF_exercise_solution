@@ -36,52 +36,48 @@
       res)
     )
   )
-(var-str->var "(?? seg1)")
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "test_lib.scm")
+(assert equal? '(?? seg1) (var-str->var "(?? seg1)"))
 (define (string->str-list str)
   ; https://stackoverflow.com/a/29766822/21294350
   ;; not use char->name
   (map string (string->list str)))
 
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "re_lib.scm")
 ;; keep char here to avoid unnecessary match with (car-satisfies string?)
 (define (string->list-terms string)
-  ; (let ((split-str-seq 
-  ;         (regexp-partition 
-  ;           '(: "(" (or "?" "??") space (+ alphanumeric) ")") 
-  ;           string)))
-  ;   (fold
-  ;     (lambda (str res) 
-  ;       (cond 
-  ;         ((n:= 0 (string-length str)) res)
-  ;         (() consequent2))
-  ;       )
-  ;     )
-  ;   )
   (let ((last-match-end 0))
-    (regexp-fold '(: "(" (or "?" "??") space (+ alphanumeric) ")")
-                (lambda (i m str acc)
-                  ; (write-line 
-                  ;   (list i str 
-                  ;     (regexp-match-submatch m 0)
-                  ;     (regexp-match-submatch-start m 0)
-                  ;     ))
-                  (let ((sub-string-before (substring str last-match-end (regexp-match-submatch-start m 0))))
-                    (set! last-match-end (regexp-match-submatch-end m 0))
-                    (append acc (string->list sub-string-before) (list (var-str->var (regexp-match-submatch m 0))))
-                    )
-                  )
-                '()
-                string
-                (lambda (i m str acc)
-                  (append acc (string->list (substring str last-match-end)))
-                  )
-                ; 0
-                ; (string-length string)
-                )
+    ; (regexp-fold '(: "(" (or "?" "??") space (+ alphanumeric) ")")
+    ;             (lambda (i m str acc)
+    ;               (let ((sub-string-before (substring str last-match-end (regexp-match-submatch-start m 0))))
+    ;                 (set! last-match-end (regexp-match-submatch-end m 0))
+    ;                 (append acc (string->list sub-string-before) (list (var-str->var (regexp-match-submatch m 0))))
+    ;                 )
+    ;               )
+    ;             '()
+    ;             string
+    ;             (lambda (i m str acc)
+    ;               (append acc (string->list (substring str last-match-end)))
+    ;               )
+    ;             ; 0
+    ;             ; (string-length string)
+    ;             )
+    ;; Less efficient but more modular.
+    (regexp-extract**
+      '(: "(" (or "?" "??") space (+ alphanumeric) ")")
+      string
+      (lambda (match) (list (var-str->var (regexp-match-submatch match 0))))
+      string->list)
     )
   )
-(string->list-terms "(?? seg1)(?? seg1)")
-(string->list-terms "aa")
-(string->list-terms "gctgct")
+; (trace regexp-extract*)
+(assert equal? '((?? seg1) (?? seg1)) (string->list-terms "(?? seg1)(?? seg1)"))
+(assert equal? '(#\a #\a) (string->list-terms "aa"))
+(assert equal? '(#\g #\c #\t #\g #\c #\t) (string->list-terms "gctgct"))
+; (untrace regexp-extract*)
+
 ;;; IGNORE: Here I assume "unification of strings" same as "unification of two expressions" before
 ;; so that we just pass 2 str's to unifier.
 ;; The case 
@@ -164,22 +160,27 @@
     (let ((dict (unify lst1 lst2)))
       (write-line (list "dict:" dict))
       (and dict
-          ;; modified
-          (match:dict-substitution-for-str-transformed-lst dict lst1)
+          ;; modified. Here I export dict for the later assertion.
+          (list dict (match:dict-substitution-for-str-transformed-lst dict lst1))
           ))
     ))
-(str-unifier "(? seg1)(? seg1)" "aa")
-(str-unifier "(? seg1)(? seg1)" "gctgct")
-; ("dict:" #f)
+(define (str-unifier-assertion res pattern1 pattern2)
+  (assert equal? res (str-unifier pattern1 pattern2))
+  )
+(str-unifier-assertion '((dict (seg1 #\a ?)) "aa") "(? seg1)(? seg1)" "aa")
+(str-unifier-assertion #f "(? seg1)(? seg1)" "gctgct")
 
 ; (trace unify:dispatch)
 ; (trace maybe-grab-segment)
-(str-unifier "(?? seg1)(?? seg1)" "aa")
-(str-unifier "(?? seg1)(?? seg1)" "gctgct")
-; ("dict:" (dict (seg1 (#\g #\c #\t) ??)))
+(str-unifier-assertion 
+  '((dict (seg1 (#\a) ??)) "aa") 
+  "(?? seg1)(?? seg1)" "aa")
+(str-unifier-assertion 
+  '((dict (seg1 (#\g #\c #\t) ??)) "gctgct") 
+  "(?? seg1)(?? seg1)" "gctgct")
 
-(str-unifier
+(str-unifier-assertion 
+  '((dict (seg3 (#\g #\c #\t) ??) (var1 #\a ?) (seg2 (#\p #\k #\g #\c #\t) ??) (seg1 (#\g #\c #\t) ??)) "test1gctabcgctpkgctbcagct")
   "test1(?? seg1)abc(?? seg1)(?? seg2)bc(? var1)(?? seg3)"
   "test1gctabcgctpk(?? seg1)bca(?? seg1)"
   )
-; ("dict:" (dict (seg3 (#\g #\c #\t) ??) (var1 #\a ?) (seg2 (#\p #\k #\g #\c #\t) ??) (seg1 (#\g #\c #\t) ??)))
