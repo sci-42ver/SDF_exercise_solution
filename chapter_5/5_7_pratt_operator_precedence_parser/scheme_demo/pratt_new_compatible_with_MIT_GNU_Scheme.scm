@@ -551,6 +551,7 @@
 ;; are included here (Based on memory for what is done to this program at some time after finishing this program).
 (pl-assert 
   '(define fact (lambda (a (= b 0) / c *args * kwarg1 **kwargs) (if (= n 0) 1 (* n (fact (- n 1))))))
+  ;; test from SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib.scm
   `(fact := lambda* a COMMA b = 0 COMMA / COMMA c COMMA *args COMMA * COMMA kwarg1 COMMA **kwargs : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
 
 ;;;; Compatibility with Python

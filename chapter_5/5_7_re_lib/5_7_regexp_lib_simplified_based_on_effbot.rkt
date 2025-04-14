@@ -14,6 +14,8 @@
   ;; 2. Racket doesn't support named group.
   #px"\\s*(?:(\\d+)|(\\w+)|((?<!\\w)(?:\\*|\\*\\*)\\w+)|([\\-\\+\\*/%!~<>=&^|?:]+)|([\\(\\)\\[\\]~^!?:,]))"
   )
+;; Also see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; for one more detailed test case.
 (define test-book-exp
   "fact := lambda n, a,**kwargs,*args:
   if n == 0

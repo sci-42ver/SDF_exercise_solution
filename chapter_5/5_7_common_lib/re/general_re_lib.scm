@@ -1,7 +1,10 @@
 ;;; See irregex which implements neg-look-behind *internally* out of box.
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_7_common_lib/string_lib.scm")
-(define word-corrected '(or word (+ numeric)))
+
+(cd "~/SICP_SDF/SDF_exercises/")
+(load "common-lib/re_lib.scm")
+
 ;; 0. One workaround for neg-look-behind.
 ;; (i.e. `(: (neg-look-behind ,neg-pat) normal-pat)
 ;; 0.a. Actually here is more general since it has no restriction of "fixed length" for neg-pat.

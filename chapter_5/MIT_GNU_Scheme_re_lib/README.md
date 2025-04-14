@@ -18,7 +18,7 @@ But chibi-scheme's APIs differ a lot from MIT/GNU Scheme, so that it can't direc
     - > In the worst case, the NFA might be in *every state* at *each step*, but this results in at worst a *constant* amount of work independent of the length of the string, so arbitrarily large input strings can be processed in linear time.
       So step is at most $n$, and state is at most $k$ which is constant as the number of all possible characters.
     - > This is a dramatic improvement over the *exponential* time required by the backtracking approach. The efficiency comes from tracking the set of reachable states but not which paths were used to reach them. In an NFA with n nodes, there can only be n reachable states at any step, but there might be *$2^n$* paths through the NFA.
-      TODO IMHO n [nodes](https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton) implies *at most* $n-1$ reachable states.
+      ~~TODO IMHO n [nodes](https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton) implies *at most* $n-1$ reachable states.~~
       > (The run time is superlinear, because we are not keeping the regular expression constant as the input grows. For a regular expression of length m run on text of length n, the Thompson NFA requires O(mn) time.)
 # TODO
 - IrRegular meaning in IrRegular Expressions.

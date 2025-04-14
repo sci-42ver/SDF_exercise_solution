@@ -12,8 +12,9 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "re_lib.scm")
 (regexp-extract pat "192.168.0.1abdasdsa448cas1ca1sc8asc1" 1 3)
+;Value: ("92")
 
-;; Here regexp-match->list has the same structure as .
+;; Here regexp-match->list has the same structure as Racket regexp-match*	with values as match-select.
 ;; > beginning with the entire match 0.
 ;; https://docs.racket-lang.org/reference/regexp.html#%28def._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._regexp-match%2A%29%29
 ;; > The default of car means that the result is the list of matches without returning parenthesized sub-patterns.
@@ -24,7 +25,14 @@
     ;; 1. > Returns an regexp-match object if re successfully matches the entire string str from start (inclusive) to end (exclusive), 
     ;; > or #f is the match fails.
     (if (regexp-match? obj)
-      (regexp-match->list obj)
+      (begin
+        (write-line 
+          (list
+            (regexp-match-submatch obj 'number)
+            (regexp-match-submatch obj 'var)
+            (regexp-match-submatch-start obj 0)
+            ))
+        (regexp-match->list obj))
       obj)
     )
   (regexp-extract* pat "192.168.0.1abdasdsa448cas1ca1sc8asc1"))

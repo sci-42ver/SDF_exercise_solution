@@ -1,4 +1,4 @@
-;; regexp-fold
+;;; regexp-fold
 (regexp-fold 'word
               (lambda (i m str acc)
                 (let ((start (regexp-match-submatch-start m 0)) (end (regexp-match-submatch-end m 0)))
@@ -27,7 +27,7 @@
 ; (15 "to    be or not to be" "to" 16 18 " to")
 ; (18 "to    be or not to be" "be" 19 21 " be")
 
-;; word test
+;;; word test
 (define unsplitted-var 
   '(: 
     (? (or "*" "**"))

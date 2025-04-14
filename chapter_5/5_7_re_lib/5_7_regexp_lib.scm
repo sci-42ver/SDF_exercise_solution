@@ -77,6 +77,11 @@
   `((or ,left-parenthesis ,right-parenthesis) 
     ,@primitive-symbol-re-pat-or-proc-lst
     ,(make-or primitive-op-lst)))
+;; 0. > In an ASCII context this corresponds to space, tab, line feed, form feed, and carriage return. 
+;; So both " " and "\n" will be matched.
+;; 1. Default to use Unicode
+;; > This is the default.
+;; 1.a. see https://www.compart.com/en/unicode/category/Zs#UNC_CAT
 (define split-lst '((+ space)))
 
 ;; just as one demo

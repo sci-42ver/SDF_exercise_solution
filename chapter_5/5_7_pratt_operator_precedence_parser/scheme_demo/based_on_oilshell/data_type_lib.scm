@@ -23,3 +23,5 @@
 (define Token-type car)
 (define Token-val cadr)
 (define Token-type=? string=?)
+
+(define (Loc row col) (list row col))
