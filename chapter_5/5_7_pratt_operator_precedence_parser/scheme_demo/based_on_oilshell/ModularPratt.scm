@@ -20,7 +20,7 @@
                           ((eq? op 'get)
                            (if l
                              (let ((pop-val (pop l)))
-                              ;  (writes nil l "poped elem:" pop-val "\n")
+                               ;  (writes nil l "poped elem:" pop-val "\n")
                                pop-val
                                )
                              (eof-val))
@@ -145,46 +145,46 @@
   (set! comma (value-if-symbol* comma))
   (define (loop l)
     (cond ((eq? token (token-peek stream))
-          (token-read stream)
-          (reverse l))
+           (token-read stream)
+           (reverse l))
           ((eq? comma (token-peek stream))
-          (token-read stream)
-          ;; the reason is similar to the following.
-          (loop (cons (parse (lbp comma) stream) l)))
+           (token-read stream)
+           ;; the reason is similar to the following.
+           (loop (cons (parse (lbp comma) stream) l)))
           (else
-          (error 'comma-or-match-not-found (token-read stream)))))
+            (error 'comma-or-match-not-found (token-read stream)))))
   (cond ((eq? token (token-peek stream))
          ;; null argument
          (token-read stream)
          nil)
         (else
-         ;; to stop when encountering one comma.
-         (loop (list (parse (lbp comma) stream))))))
+          ;; to stop when encountering one comma.
+          (loop (list (parse (lbp comma) stream))))))
 
 (define (prsmatch* token comma stream)
   (set! token (value-if-symbol* token))
   (set! comma (value-if-symbol* comma))
   (define (loop l)
     (cond ((eq? token (token-peek stream))
-          (token-read stream)
-          (let* ((l* (reverse l))
+           (token-read stream)
+           (let* ((l* (reverse l))
                   (len (length l*)))
-            (cond
-              ;; > if the list contains at least one comma, it yields a tuple; 
-              ;; > otherwise, it yields the single expression that makes up the expression list.
-              ((= len 1) (car l*))
-              ((> len 1) (cons 'tuple l*))
-              (else
-                ;; just for safety here.
-                ;; IMHO `(list (parse comma-lbp stream))` implies >= 1.
-                (error 'this-should-not-happen l))
-              )
-            ))
+             (cond
+               ;; > if the list contains at least one comma, it yields a tuple; 
+               ;; > otherwise, it yields the single expression that makes up the expression list.
+               ((= len 1) (car l*))
+               ((> len 1) (cons 'tuple l*))
+               (else
+                 ;; just for safety here.
+                 ;; IMHO `(list (parse comma-lbp stream))` implies >= 1.
+                 (error 'this-should-not-happen l))
+               )
+             ))
           ((eq? comma (token-peek stream))
-          (token-read stream)
-          (loop (cons (parse (lbp comma) stream) l)))
+           (token-read stream)
+           (loop (cons (parse (lbp comma) stream) l)))
           (else
-          (error 'comma-or-match-not-found (token-read stream)))))
+            (error 'comma-or-match-not-found (token-read stream)))))
   ;; Based on https://docs.python.org/3/reference/expressions.html#parenthesized-forms
   (cond ((eq? token (token-peek stream))
          ;; null argument
@@ -192,7 +192,7 @@
          ; > An empty pair of parentheses yields an empty tuple object.
          (cons 'tuple nil))
         (else
-         (loop (list (parse (lbp comma) stream))))))
+          (loop (list (parse (lbp comma) stream))))))
 
 ;; This doesn't consider tuple.
 ; (define (prsmatch* token stream)
@@ -214,23 +214,23 @@
   (set! comma (value-if-symbol* comma))
   (define (loop l)
     (cond ((eq? token (token-peek stream))
-          (token-read stream)
-          (reverse l))
+           (token-read stream)
+           (reverse l))
           ((eq? comma (token-peek stream))
-          (token-read stream)
-          ;; Difference from the above, allowing {stmt;}
-          (cond ((eq? token (token-peek stream))
+           (token-read stream)
+           ;; Difference from the above, allowing {stmt;}
+           (cond ((eq? token (token-peek stream))
                   (token-read stream)
                   (reverse l))
-                (else
-                  (loop (cons (parse comma-lbp stream) l)))))
+                 (else
+                   (loop (cons (parse comma-lbp stream) l)))))
           (else
-          (error 'comma-or-match-not-found (token-read stream)))))
+            (error 'comma-or-match-not-found (token-read stream)))))
   (cond ((eq? token (token-peek stream))
          (token-read stream)
          nil)
         (else
-         (loop (list (parse comma-lbp stream))))))
+          (loop (list (parse comma-lbp stream))))))
 
 (define (delim-err token stream)
   (error 'illegal-use-of-delimiter token))
@@ -281,7 +281,7 @@
 (define comma-lbp 10)
 (defsyntax COMMA
            lbp comma-lbp
-          ;  rbp comma-lbp
+           ;  rbp comma-lbp
            nud delim-err)
 
 ;; lbp order
@@ -433,7 +433,7 @@
            nud lambda-nud
            led delim-err
            ;; no led, so no lbp.
-          ;  lbp 60
+           ;  lbp 60
            ;; See the above "So it is better to use nud/led procedure ..."
            ;; All related objects with lower lbp can be avoided by nud procedure.
            rbp 45

@@ -5,14 +5,14 @@
   (syntax-rules ()
     ;; Here the original form is (_ stack) here.
     ((_ stack) 
-      ;; prognify is implicitly done in template.
-      (let ((tmp stack))
-        ;; IMHO this is also ok.
-        ; (set! stack (cdr stack))
-        (set! stack (cdr tmp))
-        (car tmp)
-        )
-      )))
+     ;; prognify is implicitly done in template.
+     (let ((tmp stack))
+       ;; IMHO this is also ok.
+       ; (set! stack (cdr stack))
+       (set! stack (cdr tmp))
+       (car tmp)
+       )
+     )))
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "loop_lib.scm")

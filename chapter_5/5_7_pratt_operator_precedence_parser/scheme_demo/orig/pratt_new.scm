@@ -123,7 +123,7 @@
                           ((eq? op 'get)
                            (if l
                              (let ((pop-val (pop l)))
-                              ;  (writes nil l "poped elem:" pop-val "\n")
+                               ;  (writes nil l "poped elem:" pop-val "\n")
                                pop-val
                                )
                              (eof-val))
@@ -278,9 +278,9 @@
                       ((= len 1) (car l*))
                       ((> len 1) (cons 'tuple l*))
                       ('else
-                        ;; just for safety here.
-                        ;; IMHO `(list (parse comma-lbp stream))` implies >= 1.
-                        (error 'this-should-not-happen l))
+                       ;; just for safety here.
+                       ;; IMHO `(list (parse comma-lbp stream))` implies >= 1.
+                       (error 'this-should-not-happen l))
                       )
                     ))
                  ((eq? comma (token-peek stream))
@@ -386,7 +386,7 @@
 (define comma-lbp 10)
 (defsyntax #.COMMA
            lbp comma-lbp
-          ;  rbp comma-lbp
+           ;  rbp comma-lbp
            nud delim-err)
 
 ;; lbp order
@@ -531,7 +531,7 @@
            nud lambda-nud
            led delim-err
            ;; no led, so no lbp.
-          ;  lbp 60
+           ;  lbp 60
            ;; See the above "So it is better to use nud/led procedure ..."
            ;; All related objects with lower lbp can be avoided by nud procedure.
            rbp 45

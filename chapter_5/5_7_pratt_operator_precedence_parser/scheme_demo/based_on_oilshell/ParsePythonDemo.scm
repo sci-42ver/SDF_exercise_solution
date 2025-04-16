@@ -16,7 +16,7 @@
   (let ((spec (ParserSpec)))
     ;;; IGNORE No "--" etc in Python and language L (see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/README.md).
     ;;; Here just follow nud/led's in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
-    
+
     ;; $
     ;; All related data are manipulated either explicitly here or implicitly with default values.
     (spec 'Null -1 NullError (list ")" "]" ":" "eof"))
