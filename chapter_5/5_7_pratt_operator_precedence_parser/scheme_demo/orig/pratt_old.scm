@@ -1,4 +1,5 @@
 ; https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/scheme/code/parsing/pratt/pratt.scm
+;; Can't work for ulsiod.
 
 ;; -*-mode:lisp-*-
 ;;

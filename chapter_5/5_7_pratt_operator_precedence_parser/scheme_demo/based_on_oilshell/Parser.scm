@@ -34,6 +34,26 @@
                         got ~S" type token)))
                         (Next))
 
+  ;; added for PrsNary*
+  (define (AtValidNud?)
+    (let ((type (Token-type token)))
+      (or
+        ; (member type Null-Error-List)
+        (not 
+          (equal? 
+            NullError 
+            (get-nud (spec 'LookupNull type)))))
+      ))
+  (define (AtValidLed?)
+    (let ((type (Token-type token)))
+      (or
+        ; (member type Null-Error-List)
+        (not 
+          (equal? 
+            LeftError 
+            (get-led (spec 'LookupLeft type)))))
+      ))
+
   (define (ParseUntil rbp)
     (and
       (AtToken "eof")

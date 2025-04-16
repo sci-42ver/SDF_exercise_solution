@@ -17,16 +17,30 @@
       )
     )
   )
-;; allow trailing.
+;; allow trailing which is not allowed in Shell (in Bash $((1,)) throws error).
+;; TODO tests: 1,;1,2,;1,+2,;
 (define (PrsNary* token p)
-  
-  (let ((type (Token-type token)))
-    (let lp ((l (list (p 'ParseUntil (get-left-rbp token)))))
-      (if (p 'AtToken type)
-        (begin 
-          (p 'Eat type)
-          (lp (cons (p 'ParseUntil (get-left-rbp token)) l)))
-        (reverse l))
+  (define (cons* a b)
+    (if (null? a)
+      b
+      (cons a b))
+    )
+  ;; (p 'AtValidNud?) is more general than prsmatch-modified with just allowing other tokens. 
+  (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
+    '()
+    (let ((type (Token-type token)))
+      (let lp ((l (list (p 'ParseUntil (get-left-rbp token)))))
+        (if (p 'AtToken type)
+          (begin 
+            (p 'Eat type)
+            (lp 
+              (cons* 
+                (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
+                  '()
+                  (p 'ParseUntil (get-left-rbp token)))
+                l)))
+          (reverse l))
+        )
       )
     )
   )
@@ -39,7 +53,7 @@
   ;; 1. For the trailing comma https://docs.python.org/3/reference/expressions.html#expression-lists,
   ;; we check whether we can get one new nud, see the above.
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
-  (cons 'tuple (cons left (PrsNary token p)))
+  (cons 'tuple (cons left (PrsNary* token p)))
   ;;; IGNORE since tuple is returned and the 1st element may be also one tuple which should be concatenated,
   ;; we should not depend on the type of left.
 

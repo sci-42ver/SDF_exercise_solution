@@ -29,3 +29,5 @@
 ;; Same as SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; to make extension more flexible.
 (define COMMA-PREC 10)
+
+(define Null-Error-List (list ")" "]" ":" "eof"))

@@ -19,7 +19,7 @@
 
     ;; $
     ;; All related data are manipulated either explicitly here or implicitly with default values.
-    (spec 'Null -1 NullError (list ")" "]" ":" "eof"))
+    (spec 'Null -1 NullError )
     ;; 0. , is used in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
     ;; for lambda, (a1, a2) or proc(a1, a2)
     ;; So we can always construct one list for the parent

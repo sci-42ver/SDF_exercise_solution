@@ -8,6 +8,7 @@
     - just port from SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/orig/pratt_new.scm with `lambda` additions etc.
   - TODO
     - add "optional trailing comma" support.
+    - See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/README.md.
 - What to do next
   - https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm `r`
   - Implement "language L" in https://tdop.github.io/

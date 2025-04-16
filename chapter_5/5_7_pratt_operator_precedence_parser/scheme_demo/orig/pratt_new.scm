@@ -555,6 +555,8 @@
 (define (lambda-nud token stream)
   ;; 0. token must be lambda implied by nudcall.
   ;; 1. Here a,b,: is allowed as Python (see SDF_exercises/chapter_5/5_7_related_python_behavior/parameter_list.py).
+  ;; Also see '[","]' in https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-parameter_list
+  ;; 1.a. Also allowed in call [argument_list [","] | comprehension] https://docs.python.org/3/reference/expressions.html#calls
   (define params (prsmatch-modified ': '#.COMMA stream))
   ;; 0. To allow multiple statements inside the body
   ;; I use {stmt1; stmt2; stmt3; ...} similar to perl 
