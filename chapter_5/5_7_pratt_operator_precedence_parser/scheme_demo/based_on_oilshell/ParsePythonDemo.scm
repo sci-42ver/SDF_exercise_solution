@@ -34,7 +34,9 @@
     ;; So when used by other nud's like lambda or led's, "," is manipulated specifically.
     ;; This led is just used for the bare case "a, b".
     (spec 'Left COMMA-PREC LeftComma (list ","))
-    ;; CLOSE-PAREN is shown above. Here lbp is only needed to be less than all rbp's.
+    ;; 0. CLOSE-PAREN is shown above. Here lbp is only needed to be less than all rbp's.
+    ;; 1. LEFT-BRACE, SEMICOLON, RIGHT-BRACE are skipped due to they are not used in expression.
+    ;; parse-matchfix-modified have been used similarly in lambda manipulation there.
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

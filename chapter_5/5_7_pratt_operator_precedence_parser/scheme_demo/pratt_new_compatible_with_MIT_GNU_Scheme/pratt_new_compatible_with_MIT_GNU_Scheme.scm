@@ -323,6 +323,7 @@
            comma SEMICOLON
            match RIGHT-BRACE
            nud parse-matchfix-modified
+           ;; used for comparison with others' rbp's.
            lbp 200)
 
 (defsyntax RIGHT-BRACE
