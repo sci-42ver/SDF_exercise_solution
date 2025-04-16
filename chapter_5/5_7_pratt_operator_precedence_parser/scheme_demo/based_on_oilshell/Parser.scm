@@ -10,7 +10,7 @@
 
 (define EOF-TOKEN (Token "eof" "eof"))
 
-(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/common_lib/")
 (load "common_lib_for_MIT_GNU_Scheme.scm")
 
 (load-option 'format)

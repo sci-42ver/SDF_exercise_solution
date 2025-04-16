@@ -1,6 +1,6 @@
 """
 Better to add based on paper:
-1. nonud etc
+1. nonud etc (i.e. NullError in oilshell)
 
 add based on https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm (see "The new E is"):
 1. r

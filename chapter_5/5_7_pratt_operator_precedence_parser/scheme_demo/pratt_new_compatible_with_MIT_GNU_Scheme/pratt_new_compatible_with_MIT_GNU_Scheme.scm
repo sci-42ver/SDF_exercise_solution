@@ -1,8 +1,8 @@
-(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/common_lib/")
 (load "base_lib.scm")
 (load "common_lib_for_MIT_GNU_Scheme.scm")
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
-(load "compatible_lib.scm")
+(load "pratt_new_compatible_with_MIT_GNU_Scheme/compatible_lib.scm")
 
 ;;; orig
 ; (define COMMA (intern ","))
@@ -225,7 +225,8 @@
            (reverse l))
           ((eq? comma (token-peek stream))
            (token-read stream)
-           ;; Difference from the above, allowing {stmt;}
+           ;; 0. Different from parse-matchfix-modified for "LEFT-BRACE" allowing {stmt;}
+           ;; 
            (cond ((eq? token (token-peek stream))
                   (token-read stream)
                   (reverse l))

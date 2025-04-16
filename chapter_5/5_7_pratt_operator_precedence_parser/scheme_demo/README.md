@@ -9,6 +9,7 @@
   - TODO
     - add "optional trailing comma" support.
 - What to do next
+  - https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm `r`
   - Implement "language L" in https://tdop.github.io/
 - Python doc description
   - [continuation clause](https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-parameter_list) [see](https://web.archive.org/web/20250130172238/https://elhacker.info/manuales/OReilly%204%20GB%20Collection/O'Reilly%20-%20Python%20Cookbook.pdf)

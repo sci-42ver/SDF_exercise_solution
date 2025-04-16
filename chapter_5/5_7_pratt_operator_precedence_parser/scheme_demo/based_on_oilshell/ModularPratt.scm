@@ -1,5 +1,5 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
-(load "compatible_lib.scm")
+(load "pratt_new_compatible_with_MIT_GNU_Scheme/compatible_lib.scm")
 
 ;;; orig
 ; (define COMMA (intern ","))
