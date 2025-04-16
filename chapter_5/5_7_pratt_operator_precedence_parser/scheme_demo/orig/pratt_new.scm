@@ -18,6 +18,8 @@
 ;; $Id: pratt.scm,v 1.5 1996/03/01 19:39:36 gjc Exp $
 ;;
 
+;;; Compared with pratt_new_orig.scm, it adds lambda-nud etc.
+
 ;; The following terms may be useful in deciphering this code:
 
 ;; NUD -- NUll left Denotation (op has nothing to its left (prefix))

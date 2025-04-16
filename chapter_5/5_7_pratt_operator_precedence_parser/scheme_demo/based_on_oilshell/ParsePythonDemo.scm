@@ -3,18 +3,52 @@
 (load "5_7_tokenize_tests.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "data_type_lib.scm")
+(load "DataTypeLib.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
 (load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
 
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
+(load "ParserSpec.scm")
+(load "DenotationLib.scm")
+
 (define (MakePythonParserSpec)
-  body)
+  (let ((spec (ParserSpec)))
+    ;;; IGNORE No "--" etc in Python and language L (see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/README.md).
+    ;;; Here just follow nud/led's in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+    
+    ;; $
+    ;; All related data are manipulated either explicitly here or implicitly with default values.
+    (spec 'Null -1 NullError (list ")" "]" ":" "eof"))
+    ;; 0. , is used in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+    ;; for lambda, (a1, a2) or proc(a1, a2)
+    ;; So we can always construct one list for the parent
+    ;; 0.a. If we put "," inside the whole Python operator precedence list,
+    ;; then it should be higher than the top "(" to grab a1.
+    ;; Then arg1 + arg2 , arg3 will be arg1 + (arg2 , arg3) which is wrong.
+    ;; So it should be manipulated specifically.
+    ;; 0.b. Why LeftComma is offered in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/arith_parse.py
+    ;; is due to C & Shell has that sequence operator, i.e. "a, b" returns b after evaluating a.
+    ;; This is not in Python, but the latter offers tuple construction for that as arith_parse.py says.
+    ;; ---
+    ;; So when used by other nud's like lambda or led's, "," is manipulated specifically.
+    ;; This led is just used for the bare case "a, b".
+    (spec 'Left COMMA-PREC LeftComma (list ","))
+    ;; CLOSE-PAREN is shown above. Here lbp is only needed to be less than all rbp's.
+    ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))
   )
+
+(cd "~/SICP_SDF/SDF_exercises/common-lib/")
+(load "logic_lib.scm")
 (define (ParsePythonDemo str #!optional expected)
+  ;; Here I won't add one extra class wrapper for simplicity.
   (let ((res ((MakeParser str) 'Parse)))
-    
+    ;; assert is not same as Python with 2 args
+    (and* expected (assert (equal? res expected)))
+    ;; Use write to enable outputting cycle.
+    (format #t "~40S ~S~%" str res)
+    res
     )
   )

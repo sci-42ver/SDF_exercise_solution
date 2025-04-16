@@ -6,9 +6,9 @@
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "data_type_lib.scm")
+(load "DataTypeLib.scm")
 
-(define EOF-TOKEN (Token "eof", "eof"))
+(define EOF-TOKEN (Token "eof" "eof"))
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
 (load "common_lib_for_MIT_GNU_Scheme.scm")
@@ -79,6 +79,7 @@
     (Next)
     (ParseUntil 0)
     )
-  (define self (bundle AtToken Next Eat ParseUntil Parse))
+  (define self (bundle Parser? AtToken Next Eat ParseUntil Parse))
+  (define Parser? (make-bundle-predicate 'Parser))
   self
   )

@@ -1,6 +1,7 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
 (load "base_lib.scm")
 (load "common_lib_for_MIT_GNU_Scheme.scm")
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
 (load "compatible_lib.scm")
 
 ;;; orig
@@ -123,8 +124,8 @@
                            (or (get-syntax token 'comma) 'COMMA)
                            stream)))
 
-;; No need for comma if ending with "etc." https://www.grammarly.com/blog/commonly-confused-words/et-cetera-etc/ .
-;; will make a - b - c => (- a b c) etc.
+;; 0. will make a - b - c => (- a b c) etc (No need for comma if ending with "etc." https://www.grammarly.com/blog/commonly-confused-words/et-cetera-etc/ .).
+;; 1. Based on the structure shown in paper, here the led-corresponding token has been consumed.
 (define (prsnary token stream)
   (define (loop l)
     (if (eq? token (token-peek stream))
@@ -168,25 +169,25 @@
   (set! comma (value-if-symbol* comma))
   (define (loop l)
     (cond ((eq? token (token-peek stream))
-          (token-read stream)
-          (let* ((l* (reverse l))
-                  (len (length l*)))
-            (cond
-              ;; > if the list contains at least one comma, it yields a tuple; 
-              ;; > otherwise, it yields the single expression that makes up the expression list.
-              ((= len 1) (car l*))
-              ((> len 1) (cons 'tuple l*))
-              (else
-                ;; just for safety here.
-                ;; IMHO `(list (parse comma-lbp stream))` implies >= 1.
-                (error 'this-should-not-happen l))
-              )
-            ))
+            (token-read stream)
+            (let* ((len (length l))) ; reverse is done implicitly in prsnary.
+              (cond
+                ;; > if the list contains at least one comma, it yields a tuple; 
+                ;; > otherwise, it yields the single expression that makes up the expression list.
+                ((= len 1) (car l))
+                ((> len 1) (cons 'tuple l))
+                (else
+                  ;; just for safety here.
+                  ;; IMHO `(list (parse comma-lbp stream))` implies >= 1.
+                  (error 'this-should-not-happen l))
+                )
+              ))
           ((eq? comma (token-peek stream))
-          (token-read stream)
-          (loop (cons (parse (lbp comma) stream) l)))
+            (token-read stream)
+            ;; prsnary will consume all comma's
+            (loop (cons (car l) (prsnary comma stream))))
           (else
-          (error 'comma-or-match-not-found (token-read stream)))))
+            (error 'comma-or-match-not-found (token-read stream)))))
   ;; Based on https://docs.python.org/3/reference/expressions.html#parenthesized-forms
   (cond ((eq? token (token-peek stream))
          ;; null argument
@@ -194,6 +195,10 @@
          ; > An empty pair of parentheses yields an empty tuple object.
          (cons 'tuple nil))
         (else
+         ;;; Use lbp of the ending token instead of the current token's rbp.
+         ;; It is fine although not following the paper structure 
+         ;; (see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/tdop.py
+         ;; where for example NullParen uses nud.bp as the rbp.)
          (loop (list (parse (lbp comma) stream))))))
 
 ;; This doesn't consider tuple.

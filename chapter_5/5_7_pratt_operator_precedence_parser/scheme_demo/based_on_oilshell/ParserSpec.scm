@@ -8,7 +8,7 @@
   (error (list token "can't be used in infix position")))
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "data_type_lib.scm")
+(load "DataTypeLib.scm")
 
 ;;; I use bundle to mimic class.
 (define (ParserSpec)
@@ -61,5 +61,7 @@
         (get-right res)
         (error (list "Unexpected token" token))))
     )
-  (bundle Null Left LeftRightAssoc LookupNull LookupLeft)
+  (bundle ParserSpec? Null Left LeftRightAssoc LookupNull LookupLeft)
   )
+
+(define ParserSpec? (make-bundle-predicate 'ParserSpec))

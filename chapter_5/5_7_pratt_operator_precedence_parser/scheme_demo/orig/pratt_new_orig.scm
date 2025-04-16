@@ -18,6 +18,9 @@
 ;; $Id: pratt.scm,v 1.5 1996/03/01 19:39:36 gjc Exp $
 ;;
 
+;;; See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/README.md
+;; for the origin of this file.
+
 ;; The following terms may be useful in deciphering this code:
 
 ;; NUD -- NUll left Denotation (op has nothing to its left (prefix))
