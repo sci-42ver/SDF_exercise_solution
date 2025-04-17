@@ -26,8 +26,23 @@
 
 (define (Loc row col) (list row col))
 
-;; Same as SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; 0. Same value as SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; to make extension more flexible.
+;; 1. Naming convention follows oilshell Python implementation https://peps.python.org/pep-0008/#constants.
 (define COMMA-PREC 10)
+(define NULL-PAREN-PREC 0)
 
 (define Null-Error-List (list ")" "]" ":" "eof"))
+
+(define comma-token (Token "," ","))
+(define right-paren-token (Token ")" ")"))
+
+;; always return one list
+(define (get-possible-tuple-contents possible-tuple)
+  (cond
+    ((tuple? possible-tuple) (cdr possible-tuple))
+    (else (list possible-tuple)))
+  )
+
+;; see SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
+(define var-types (list "id" "get"))

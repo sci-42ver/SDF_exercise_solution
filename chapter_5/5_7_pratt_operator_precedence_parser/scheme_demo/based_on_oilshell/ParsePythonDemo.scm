@@ -19,7 +19,7 @@
 
     ;; $
     ;; All related data are manipulated either explicitly here or implicitly with default values.
-    (spec 'Null -1 NullError )
+    (spec 'Null -1 NullError Null-Error-List)
     ;; 0. , is used in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
     ;; for lambda, (a1, a2) or proc(a1, a2)
     ;; So we can always construct one list for the parent
@@ -37,6 +37,8 @@
     ;; 0. CLOSE-PAREN is shown above. Here lbp is only needed to be less than all rbp's.
     ;; 1. LEFT-BRACE, SEMICOLON, RIGHT-BRACE are skipped due to they are not used in expression.
     ;; parse-matchfix-modified have been used similarly in lambda manipulation there.
+    (spec 'Left 200 LeftFuncCall (list "("))
+    (spec 'Null NULL-PAREN-PREC NullParen (list "("))
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

@@ -651,6 +651,11 @@
 (pl '(#.OPEN-PAREN #.CLOSE-PAREN + #.OPEN-PAREN 2 #.CLOSE-PAREN))
 (pl '(#.OPEN-PAREN 1 #.COMMA 3 #.COMMA 7 #.CLOSE-PAREN + #.OPEN-PAREN 2 #.CLOSE-PAREN))
 
+;; not support trailing comma
+; (pl '(#.OPEN-PAREN 1 #.COMMA 3 #.COMMA 7 #.COMMA #.CLOSE-PAREN + #.OPEN-PAREN 2 #.CLOSE-PAREN))
+; > in err(illegal-use-of-delimiter)
+; ERROR: illegal-use-of-delimiter (errobj ))
+
 ; (lambda (n) )
 (pl '(fact := lambda n : if n = 0 then 1 else n * fact #.OPEN-PAREN n - 1 #.CLOSE-PAREN))
 ;; 0. see SDF_exercises/chapter_5/5_7_related_python_behavior/lambda_no_annotation.py

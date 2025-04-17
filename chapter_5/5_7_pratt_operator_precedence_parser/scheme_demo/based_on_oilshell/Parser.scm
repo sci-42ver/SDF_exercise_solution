@@ -14,6 +14,9 @@
 (load "common_lib_for_MIT_GNU_Scheme.scm")
 
 (load-option 'format)
+;; Here self arg is not needed due to the lexical scope.
+;; And that self isn't changed *normally* in Python https://stackoverflow.com/questions/1216356/is-it-safe-to-replace-a-self-object-by-another-object-of-the-same-type-in-a-meth#comment32152243_1216356 https://stackoverflow.com/a/1015602/21294350
+;; except for class redefining __new__.
 (define (Parser spec lexer)
   (define* token)
   ;; IMHO better to be like SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/tdop.py

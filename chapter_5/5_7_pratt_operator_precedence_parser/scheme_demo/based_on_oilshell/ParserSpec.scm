@@ -2,13 +2,9 @@
 (load "pair_lib.scm")
 (load "logic_lib.scm")
 
-(define (NullError p token bp)
-  (error (list token "can't be used in prefix position")))
-(define (LeftError p token left rbp)
-  (error (list token "can't be used in infix position")))
-
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
 (load "DataTypeLib.scm")
+(load "ExceptionLib.scm")
 
 ;;; I use bundle to mimic class.
 (define (ParserSpec)

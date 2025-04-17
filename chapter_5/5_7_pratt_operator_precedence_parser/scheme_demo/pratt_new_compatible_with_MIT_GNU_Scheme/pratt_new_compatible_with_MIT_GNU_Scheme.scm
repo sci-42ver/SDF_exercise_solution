@@ -184,8 +184,9 @@
              ))
           ((eq? comma (token-peek stream))
            (token-read stream)
-           ;; prsnary will consume all comma's
-           (loop (cons (car l) (prsnary comma stream))))
+           ;; prsnary will consume all comma's (but not supporting the trailing commma same as SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/orig/pratt_new.scm)
+            (loop (cons (car l) (prsnary comma stream)))
+           )
           (else
             (error 'comma-or-match-not-found (token-read stream)))))
   ;; Based on https://docs.python.org/3/reference/expressions.html#parenthesized-forms
@@ -549,6 +550,10 @@
 (pl-assert 
   '(+ (tuple 1 3 7) 2)
   `(,OPEN-PAREN 1 COMMA 3 COMMA 7 ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
+;; 
+; (pl-assert 
+;   '(+ (tuple 1 3 7) 2)
+;   `(,OPEN-PAREN 1 COMMA 3 COMMA 7 COMMA ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
 
 (pl-assert 
   '(define fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))))

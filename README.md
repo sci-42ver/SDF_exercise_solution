@@ -52,6 +52,7 @@ I don't use `COMMA` to allow some expression like `lambda COMMA COMMA arg2: body
   See "0. skip "/" in parameter_list ..." in `SDF_exercises/chapter_5/5_7_naive_algorithm_for_operator_precedence_parser/5_7_precedence_lib.scm`.
   - Here the exercise intends to implement transformation but not implement many new Scheme procedures for new Scheme features.
     so 0., 0.a., 0.b., 0.c., 0.d. are all skipped where 0.b. is supported in Racket.
+  - better tokenizer in SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm or other TODOs.
 ## related with complexity analysis: better done after CRLS
 - 4.18
 ## Only give basic implementation ideas
