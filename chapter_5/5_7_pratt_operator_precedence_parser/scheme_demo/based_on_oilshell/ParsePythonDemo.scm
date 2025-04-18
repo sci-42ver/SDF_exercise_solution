@@ -15,12 +15,12 @@
 (define (MakePythonParserSpec)
   (let ((spec (ParserSpec)))
     ;;; IGNORE No "--" etc in Python and language L (see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/README.md).
-    ;;; Here just follow nud/led's in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+    ;;; Here just follow nud/led's in pratt_new_compatible_with_MIT_GNU_Scheme.scm
 
     ;; $
     ;; All related data are manipulated either explicitly here or implicitly with default values.
     (spec 'Null -1 NullError Null-Error-List)
-    ;; 0. , is used in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+    ;; 0. , is used in pratt_new_compatible_with_MIT_GNU_Scheme.scm
     ;; for lambda, (a1, a2) or proc(a1, a2)
     ;; So we can always construct one list for the parent
     ;; 0.a. If we put "," inside the whole Python operator precedence list,
@@ -35,10 +35,19 @@
     ;; This led is just used for the bare case "a, b".
     (spec 'Left COMMA-PREC LeftComma (list ","))
     ;; 0. CLOSE-PAREN is shown above. Here lbp is only needed to be less than all rbp's.
-    ;; 1. LEFT-BRACE, SEMICOLON, RIGHT-BRACE are skipped due to they are not used in expression.
-    ;; parse-matchfix-modified have been used similarly in lambda manipulation there.
     (spec 'Left 200 LeftFuncCall (list "("))
     (spec 'Null NULL-PAREN-PREC NullParen (list "("))
+    ;; 1. IGNORE LEFT-BRACE, SEMICOLON, RIGHT-BRACE are skipped due to they are not used in expression (see https://en.cppreference.com/w/c/language/operator_precedence).
+    ;; parse-matchfix-modified have been used similarly in lambda and open-paren-nud manipulation there.
+    ;; SEMICOLON, RIGHT-BRACE are just like "," and ")" here both with default error led/nud's.
+    ;; 1.a. LEFT-BRACE, SEMICOLON, RIGHT-BRACE should be added since statement may be used in lambda.
+    ;; (I won't give one extensive support for Python statement... That is due to focus here is expr)
+    (spec 'Null NULL-PAREN-PREC NullBrace (list "{"))
+    ;; IGNORE For if – else (not offered in oilshell since it is not used in C-expr),
+    ;; we should do as https://docs.python.org/3/reference/expressions.html#if-expr
+    ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm
+    (spec 'Null NULL-IF-PREC NullIf (list "if"))
+    (spec 'Left LEFT-IF-PREC LeftIf (list "if"))
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

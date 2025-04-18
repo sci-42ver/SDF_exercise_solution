@@ -81,7 +81,7 @@
             (Next)
             (set! node ((get-led left-info) self t node (get-left-rbp null-info)))
             )
-    ;; similar to SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm to move assignment into predicate.
+    ;; similar to pratt_new_compatible_with_MIT_GNU_Scheme.scm to move assignment into predicate.
     ;; OK, this style is a bit too weird.
     ;; Anyway the above is imperative while pratt_new_compatible_with_MIT_GNU_Scheme is functional.
     ; (while 

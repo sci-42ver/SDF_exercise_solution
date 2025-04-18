@@ -172,6 +172,7 @@
                   (reverse l))
                  ((eq? comma (token-peek stream))
                   (token-read stream)
+                  ;; Allow the trailing comma.
                   (cond ((eq? token (token-peek stream))
                          (token-read stream)
                          (reverse l))

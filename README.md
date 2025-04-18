@@ -52,7 +52,7 @@ I don't use `COMMA` to allow some expression like `lambda COMMA COMMA arg2: body
   See "0. skip "/" in parameter_list ..." in `SDF_exercises/chapter_5/5_7_naive_algorithm_for_operator_precedence_parser/5_7_precedence_lib.scm`.
   - Here the exercise intends to implement transformation but not implement many new Scheme procedures for new Scheme features.
     so 0., 0.a., 0.b., 0.c., 0.d. are all skipped where 0.b. is supported in Racket.
-  - better tokenizer in SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm or other TODOs.
+  - better tokenizer in SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm or other TODOs in `grep 'TODO' ~/SICP_SDF/SDF_exercises/chapter_5/5_7*/**/*.scm -r`.
 ## related with complexity analysis: better done after CRLS
 - 4.18
 ## Only give basic implementation ideas
@@ -134,7 +134,7 @@ Just see "@% reference implementation checked".
 `grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" -r ./**/*.scm | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"`
 up to 30b5ddceb074ac5fe8928cde0764eb91980c93d6.
 1. I didn't check for md/rkt but just for my written codes (mostly are with scm suffix).
-2. Here IGNORE means that *has been finished*, SKIPPED means it hasn't been finished but skipped *forever* for some reason (e.g. it is not related with what this book intends to teach like `weak-memq`) and WAITED means it will be done in the future.
+2. Here **IGNORE** means that *has been finished*, **SKIPPED** means it hasn't been finished but skipped *forever* for some reason (e.g. it is not related with what this book intends to teach like `weak-memq`) and **WAITED** means it will be done in the future.
 3. See [this](https://stackoverflow.com/a/221929/21294350) for how glob is used.
 4. I skipped SICP related paths using [this](https://unix.stackexchange.com/a/493909/568529)
   `find . \( -type d \( -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o -type f -exec 'grep TODO --exclude="6.945_assignment_solution/ps[0-9]*/code/*.scm" | grep -v SDF_exercises | grep -v "IGNORE\|(cph)\|SKIPPED"' {} +`

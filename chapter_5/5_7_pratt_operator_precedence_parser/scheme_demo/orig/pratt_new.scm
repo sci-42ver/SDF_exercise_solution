@@ -361,7 +361,7 @@
 ;; IMHO the above means (Wrong. TODO (Maybe Done))
 ;; 0. Emm... I don't know how to pass $ etc without quote as quote elem's when not using the above macro.
 ;; Maybe as the above shows, we need to qoute for all which can be done with define-syntax to avoid evaluating those arg's in advance.
-;; See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; See pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; 1. Here dot is fine. See mapcar
 ; (define (defsyntax . args)
 ;   (defsyntax-macro (cons 'defsyntax args)))

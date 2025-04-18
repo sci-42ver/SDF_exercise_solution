@@ -33,6 +33,7 @@
     ; (neg-look-behind ,NUMBER-PATTERN)
     )
   )
+(define ADDITION-OPERATORS (list "{" ";" "}"))
 (define pat
   `(or
     ;; See SDF_exercises/chapter_5/5_7_re_tests/optional.scm for "?" behavior.
@@ -50,7 +51,7 @@
     ;; Also for "Line endings" (but we may introduce implicit newline, see SDF_exercises/chapter_5/5_7_tokenize_tests.scm).
     (=> ID ,WORDS)
     ;; regex replacement: '(.)' => '"$1" '
-    (=> OPERATOR-LEN-ONE (or "(" ")" "[" "]" "~" "^" "!" "?" ":" ","))
+    (=> OPERATOR-LEN-ONE (or "(" ")" "[" "]" ,@ADDITION-OPERATORS "~" "^" "!" "?" ":" ","))
     ;; Add "Line endings", more general than the Python doc example.
     (=> SKIP (+ space))
     (=> MISMATCH nonl)
@@ -235,4 +236,38 @@
     (operator-len-possibly-greater-than-one ":")
     (skip "\n      ")
     ("id" a)
+    finish-routine))
+
+(define test-lexer3
+  (Tokenize 
+    pat
+    field-names
+    ;; Just one artifical and a bit nonsense demo
+    "fact := lambda a,**45.23:
+      {a+a;a*2}"
+    ))
+; (pp (lexer-contents test-lexer3))
+(assert-lexer
+  test-lexer3
+  '(("id" fact)
+    (skip " ")
+    (operator-len-possibly-greater-than-one ":=")
+    (skip " ")
+    ("lambda" lambda)
+    (skip " ")
+    ("id" a)
+    (operator-len-one ",")
+    (operator-len-possibly-greater-than-one "**")
+    ("number" 45.23)
+    (operator-len-possibly-greater-than-one ":")
+    (skip "\n      ")
+    (operator-len-one "{")
+    ("id" a)
+    (operator-len-possibly-greater-than-one "+")
+    ("id" a)
+    (operator-len-one ";")
+    ("id" a)
+    (operator-len-possibly-greater-than-one "*")
+    ("number" 2)
+    (operator-len-one "}")
     finish-routine))

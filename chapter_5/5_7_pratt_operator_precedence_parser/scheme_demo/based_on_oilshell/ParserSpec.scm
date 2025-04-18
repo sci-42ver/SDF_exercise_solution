@@ -37,7 +37,7 @@
       tokens
       )
     )
-  ;; TODO SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm
+  ;; TODO pratt_new_compatible_with_MIT_GNU_Scheme.scm
   ;; also considers non-arithmetic expression, so lbp=rbp may not always hold.
   (define (Left bp led tokens)
     (_RegisterLed bp bp led tokens)

@@ -247,7 +247,7 @@
 
 ;; rbp order
 ;; IMHO since here 45 and 25 are greater than the same group of lbp's, it is fine to define if-rbp as 25.
-;; 25[then, else]<45[if]<70<80<100<120<139
+;; 25[then, else]<45[if]<60<65<70<80<100<120<139
 
 ;;; Notice then-rbp > ,-lbp doesn't imply then can grab something from ",". See "(eq? (token-peek stream) 'else)".
 ;; Similarly "if a ," (similar for ')' etc) is not allowed by if-nud, so if won't grab a.
@@ -542,6 +542,9 @@
   '(lambda (a) (begin (** a a) (* a 5)))
   `(lambda* a : ,LEFT-BRACE a ** a ,SEMICOLON a * 5 ,RIGHT-BRACE))
 
-(pl '(1 and* 2 and* 3))
+(pl-assert '(and* 1 2 3) '(1 and* 2 and* 3))
 ;; here and* should not use the greatest rbp...
-(pl '(1 and* 2 + 3 and* 3))
+(pl-assert '(and* 1 (+ 2 3) 3) '(1 and* 2 + 3 and* 3))
+
+;; Although := in Python has the lowest precedence, it won't does something like "1 and 2 := 3".
+;; TODO That is due to the grammar and its related constraint (https://stackoverflow.com/a/79544622/21294350), so the actual parser is complexer...

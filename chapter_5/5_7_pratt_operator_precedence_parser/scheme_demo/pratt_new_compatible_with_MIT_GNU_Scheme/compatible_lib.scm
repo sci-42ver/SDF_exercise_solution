@@ -54,7 +54,7 @@
        ;; 1.a. As https://stackoverflow.com/questions/79522809/how-to-avoid-evaluating-one-statement-excluded-by-predicate-during-the-condition?noredirect=1#comment140254192_79522809 shows,
        ;; Here we can assert all COMMA etc are *reserved*, then we just use (*defsyntax (quote (sym arg1 ...))) with no conditional at all.
        ;; (Notice in Scheme (eq? 'COMMA 'comma) returns same. So comma is also reserved.)
-       ;; 1.a.0. I have added one demo of that for comma in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm.
+       ;; 1.a.0. I have added one demo of that for comma in pratt_new_compatible_with_MIT_GNU_Scheme.scm.
        (*defsyntax (quasiquote ((unquote sym) arg1 ...)))
        (*defsyntax (quote (sym arg1 ...))))
      )
@@ -67,5 +67,5 @@
   datum)
 (define empty-hash-table (make-strong-eq-hash-table 0))
 
-;; Do replacement for SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme.scm:
+;; Do replacement for pratt_new_compatible_with_MIT_GNU_Scheme.scm:
 ;; Bash $ sed -i -f compatible.sed pratt_new_compatible_with_MIT_GNU_Scheme.scm
