@@ -1,3 +1,5 @@
+;; Port from SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/orig/pratt_new.scm
+;; but with some correction like open-paren-nud allowing the trailing comma to construct one tuple.
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/common_lib/")
 (load "base_lib.scm")
 (load "common_lib_for_MIT_GNU_Scheme.scm")
@@ -149,11 +151,12 @@
   (define (loop l)
     (cond ((eq? token (token-peek stream))
            (token-read stream)
-           (reverse l))
+           ;; reverse is already done by prsnary.
+           l)
           ((eq? comma (token-peek stream))
            (token-read stream)
-           ;; the reason is similar to the following.
-           (loop (cons (parse (lbp comma) stream) l)))
+           ;; prsnary will consume all comma's (but not supporting the trailing commma same as )
+           (loop (cons (car l) (prsnary comma stream))))
           (else
             (error 'comma-or-match-not-found (token-read stream)))))
   (cond ((eq? token (token-peek stream))
@@ -164,59 +167,6 @@
           ;; to stop when encountering one comma.
           (loop (list (parse (lbp comma) stream))))))
 
-(define (prsmatch* token comma stream)
-  (set! token (value-if-symbol* token))
-  (set! comma (value-if-symbol* comma))
-  (define (loop l)
-    (cond ((eq? token (token-peek stream))
-           (token-read stream)
-           (let* ((len (length l))) ; reverse is done implicitly in prsnary.
-             (cond
-               ;; > if the list contains at least one comma, it yields a tuple; 
-               ;; > otherwise, it yields the single expression that makes up the expression list.
-               ((= len 1) (car l))
-               ((> len 1) (cons 'tuple l))
-               (else
-                 ;; just for safety here.
-                 ;; IMHO `(list (parse comma-lbp stream))` implies >= 1.
-                 (error 'this-should-not-happen l))
-               )
-             ))
-          ((eq? comma (token-peek stream))
-           (token-read stream)
-           ;; prsnary will consume all comma's (but not supporting the trailing commma same as SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/orig/pratt_new.scm)
-            (loop (cons (car l) (prsnary comma stream)))
-           )
-          (else
-            (error 'comma-or-match-not-found (token-read stream)))))
-  ;; Based on https://docs.python.org/3/reference/expressions.html#parenthesized-forms
-  (cond ((eq? token (token-peek stream))
-         ;; null argument
-         (token-read stream)
-         ; > An empty pair of parentheses yields an empty tuple object.
-         (cons 'tuple nil))
-        (else
-          ;;; Use lbp of the ending token instead of the current token's rbp.
-          ;; It is fine although not following the paper structure 
-          ;; (see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/tdop.py
-          ;; where for example NullParen uses nud.bp as the rbp.)
-          (loop (list (parse (lbp comma) stream))))))
-
-;; This doesn't consider tuple.
-; (define (prsmatch* token stream)
-;   (cond ((eq? token (token-peek stream))
-;          ;; null argument
-;          (error 'empty-parenthesized-expression (token-read stream))
-;          )
-;         (else
-;          (define (loop lst)
-;            (cond ((eq? token (token-peek stream))
-;                   (token-read stream)
-;                   lst)
-;                  (else
-;                   (error 'match-not-found (token-read stream)))))
-;          (loop (list (parse comma-lbp stream))))))
-
 (define (prsmatch-modified token comma stream)
   (set! token (value-if-symbol* token))
   (set! comma (value-if-symbol* comma))
@@ -226,8 +176,6 @@
            (reverse l))
           ((eq? comma (token-peek stream))
            (token-read stream)
-           ;; 0. Different from parse-matchfix-modified for "LEFT-BRACE" allowing {stmt;}
-           ;; 
            (cond ((eq? token (token-peek stream))
                   (token-read stream)
                   (reverse l))
@@ -486,14 +434,14 @@
 ;; IMHO here it must be "parenthesized expression" in Python.
 ;; So no COMMA at all.
 (define (open-paren-nud token stream)
-  ;; The 1st is already done in prsmatch*.
-  ; (cond ((eq? (token-peek stream) 'CLOSE-PAREN)
-  ;        (token-read stream)
-  ;        nil)
-  ;       (else
-  ;        ))
   (writes nil "call open-paren-nud with" token "\n" stream "\n")
-  (prsmatch* 'CLOSE-PAREN 'COMMA stream)
+  (let ((intermediate (prsmatch-modified 'CLOSE-PAREN 'COMMA stream)))
+    (assert (list? intermediate))
+    (cond 
+      ;; Based on https://docs.python.org/3/reference/expressions.html#parenthesized-forms
+      ((= 1 (length intermediate)) (car intermediate))
+      (else (cons 'tuple intermediate)))
+    )
   )
 
 (define (open-paren-led token left stream)
@@ -517,8 +465,11 @@
 ; (trace pop token-read)
 ; (for-each (lambda (proc) (trace proc)) (list value-if-symbol get-syntax href hset))
 
+(cd "~/SICP_SDF/SDF_exercises/common-lib/")
+(load "test_lib.scm")
 (define (pl-assert expected exp)
-  (assert (equal? expected (pl exp))))
+  (let ((res (pl exp)))
+    (assert* (equal? expected res) (list "unequal" expected res))))
 
 (pl-assert 
   '(if (g a b) (> a b) (+ (* k c) (* a b)))
@@ -551,9 +502,9 @@
   '(+ (tuple 1 3 7) 2)
   `(,OPEN-PAREN 1 COMMA 3 COMMA 7 ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
 ;; 
-; (pl-assert 
-;   '(+ (tuple 1 3 7) 2)
-;   `(,OPEN-PAREN 1 COMMA 3 COMMA 7 COMMA ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
+(pl-assert 
+  '(+ (tuple 1 3 7) 2)
+  `(,OPEN-PAREN 1 COMMA 3 COMMA 7 COMMA ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
 
 (pl-assert 
   '(define fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))))
