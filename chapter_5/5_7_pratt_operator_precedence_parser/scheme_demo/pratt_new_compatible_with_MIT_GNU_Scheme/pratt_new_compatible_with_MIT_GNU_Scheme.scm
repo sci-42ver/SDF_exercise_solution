@@ -81,7 +81,8 @@
 
 (define (lbp token)
   (or (and (symbol? token) (value-if-symbol (get-syntax token 'lbp)))
-      ;; TODO Why 200
+      ;; IGNORE TODO Why 200 which is the greatest used number here.
+      ;; This is wrong. see the original "and" implementation.
       200))
 
 (define (rbp token)
@@ -242,7 +243,7 @@
            nud delim-err)
 
 ;; lbp order
-;; -1<5[),},then,else]<10[',',]<60[or]<65[and]<70<80<100<120<140<200
+;; -1<5[),},then,else]<10[',',]<60[or]<65[and]<70[not]<80<100<120<140<200
 
 ;; rbp order
 ;; IMHO since here 45 and 25 are greater than the same group of lbp's, it is fine to define if-rbp as 25.
@@ -273,7 +274,11 @@
            match RIGHT-BRACE
            nud parse-matchfix-modified
            ;; used for comparison with others' rbp's.
-           lbp 200)
+           ;; But that is used for led...
+           ;; since no such a{...} for (proc (begin ...)) where the latter should be a({...}).
+           ;; we don't need lbp here.
+           ;  lbp 200
+           )
 
 (defsyntax RIGHT-BRACE
            nud delim-err
@@ -381,11 +386,15 @@
 
 (defsyntax and*
            led parse-nary
-           lbp 65)
+           lbp 65
+           rbp 65
+           )
 
 (defsyntax or*
            led parse-nary
-           lbp 60)
+           lbp 60
+           rbp 60
+           )
 
 (defsyntax lambda*
            nud lambda-nud
@@ -512,17 +521,27 @@
 
 ;; Here all possible elements for parameter_list in SDF_exercises/chapter_5/5_7_naive_algorithm_for_operator_precedence_parser/5_7_precedence_lib.scm
 ;; are included here (Based on memory for what is done to this program at some time after finishing this program).
-(pl-assert 
-  '(define fact (lambda (a (= b 0) / c *args * kwarg1 **kwargs) (if (= n 0) 1 (* n (fact (- n 1))))))
+(pl-assert
+  ;; Here we assume define returns the value instead of that symbol, although not this case in MIT/GNU Scheme.
+  '(define fact (lambda (a (define k 2) (= b 0) / c *args * kwarg1 **kwargs) (if (= n 0) 1 (* n (fact (- n 1))))))
   ;; test from SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib.scm
-  `(fact := lambda* a COMMA b = 0 COMMA / COMMA c COMMA *args COMMA * COMMA kwarg1 COMMA **kwargs : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
+  `(fact := lambda* a COMMA k := 2 COMMA b = 0 COMMA / COMMA c COMMA *args COMMA * COMMA kwarg1 COMMA **kwargs : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
 
 ;;;; Compatibility with Python
 ;;; 0. Call https://docs.python.org/3/reference/expressions.html#calls
-;; Possible types:
+;; Possible arg types:
 ;; a. assignment_expression := (see SDF_exercises/chapter_5/5_7_related_python_behavior/assignment_expression_arg.py for its difference from keyword_item)
 ;; [identifier ":="] expression
 ;; b. *expression
 ;; c. identifier=expression
 ;; d. **expression
 ;; In Scheme only the mere expression is supported natively.
+;; For parsing, all can be supported although := inside arglist is a bit weird.
+
+(pl-assert
+  '(lambda (a) (begin (** a a) (* a 5)))
+  `(lambda* a : ,LEFT-BRACE a ** a ,SEMICOLON a * 5 ,RIGHT-BRACE))
+
+(pl '(1 and* 2 and* 3))
+;; here and* should not use the greatest rbp...
+(pl '(1 and* 2 + 3 and* 3))
