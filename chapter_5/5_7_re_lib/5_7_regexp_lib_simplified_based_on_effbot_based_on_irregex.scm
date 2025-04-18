@@ -215,11 +215,13 @@
 ;; See `man perlre`
 ;; > "/(?!foo)bar/" will not do what you want
 (irregex-search `(: (neg-look-ahead ,NUMBER-PATTERN) (* (~ "+"))) "45.23")
-;; Not same as perl... see `perl -e 'print "45.23"=~/^(?![\d.]+)[^+]*$/'` which returns nothing.
+;; Not same as perl... see `perl -e 'print "find" if "45.23"=~/^(?![\d.]+)[^+]*$/'` which returns nothing.
 ;; (see perlrequick for =~, https://perldoc.perl.org/builtin#false for false https://stackoverflow.com/a/1036353/21294350 which has no one perl... manpage).
 (irregex-match-substring 
   (irregex-match `(posix-string "(?![\d.]+)[^+]*") "45.23")
   0)
+;Value: "45.23"
+
 ; (lexer-contents test-lexer2)
 (assert-lexer
   test-lexer2

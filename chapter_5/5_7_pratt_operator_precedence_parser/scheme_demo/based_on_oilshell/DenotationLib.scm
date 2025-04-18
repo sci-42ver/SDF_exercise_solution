@@ -9,10 +9,11 @@
 ;;; different from oilshell (see the following). 
 ;; No corresponding one in pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;;; allow trailing which is not allowed in Shell (in Bash $((1,)) throws error).
-;; TODO tests: 1,;1,2,;1,+2,;
-;;; TODO Emm... Actually "," must have one much more complexer manipulation in Python which **can't be done by Pratt Parsing**.
+;; TODO tests: 1,;1,2,;1,+2,=>1,(+2),;
+;;; IGNORE TODO Emm... Actually "," must have one much more complexer manipulation in Python which **can't be done by Pratt Parsing**.
 ;; If using Pratt Parsing, then "+" should just consume the left and then try to find the rhs.
-;; 0. +'s rbp > ,'s lbp Then 1+2, is "(1+2)," and 1,+2, is "((1,)+2)," (wrong).
+;;; 0. +'s rbp > ,'s lbp Then 1+2, is "(1+2)," and 1,+2, is ~~"((1,)+2)," (wrong)~~
+;; 1,(+2), exceptedly (implied by 1,-2, results in (1, -2). It is flexible_expression_list).
 ;; 1. +'s rbp <= ,'s lbp Then the former example above is wrong with 1+(2,).
 (define (LeftComma p token left rbp)
   ;; 0. For SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/arith_parse.py
@@ -23,7 +24,7 @@
   ;; 1. For the trailing comma https://docs.python.org/3/reference/expressions.html#expression-lists,
   ;; we check whether we can get one new nud, see the above.
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
-  (cons 'tuple (cons left (PrsNary* token p)))
+  (PrsSeq parser delimeter left rbp 'tuple)
   ;;; IGNORE since tuple is returned and the 1st element may be also one tuple which should be concatenated,
   ;; we should not depend on the type of left.
 
@@ -34,14 +35,19 @@
 ;; to allow tuple besides (expr).
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme/")
 (load "compatible_lib.scm")
-(define (consume-elems-and-the-ending-paren p rbp)
-  (prog1 (p 'ParseUntil rbp) (p 'Eat ")")))
-;; 0. function as open-paren-nud.
+(define (consume-elems-and-the-ending-token p rbp ending-token-type header delimeter-token delimeter-prec)
+  (declare (ignore rbp))
+  (prog1
+    ;; Better to explicitly use one delimeter for future extension
+    ;; Otherwise, this may allow (a;b;c;d;) etc.
+    ; (p 'ParseUntil rbp)
+    (PrsPossibleSeq p delimeter-token delimeter-prec header delimeter-prec)
+    (p 'Eat ending-token-type)))
+;; 0. function as open-paren-nud based on prsmatch-modified.
 ;; 1. Different from oilshell (i.e. bash) to allow ()=>(tuple).
-(define (NullParen p token bp)
-  (declare (ignore token)) ; since delimeter is comma.
+(define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec)
   (cond 
-    ((p 'AtToken ")") (list 'tuple))
+    ((p 'AtToken ending-token-type) (list header))
     (else
       ;; 0. We can implicitly use LeftComma implied by grammar rule
       ;; Parenthesized form https://docs.python.org/3/reference/expressions.html#parenthesized-forms
@@ -54,8 +60,19 @@
       ;; 3.b. element list construction is implicitly done in ParseUntil.
       ;; 3.c. (error 'comma-or-match-not-found (token-read stream)) is implicitly done
       ;; by (p 'Eat ")") but more general to allow possible extension like (a;b;).
-      (consume-elems-and-the-ending-paren p bp)
+      (consume-elems-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec)
       ))
+  )
+(define (NullParen p token bp)
+  (declare (ignore token)) ; since delimeter is comma.
+  (consume-possible-elems-implicitly-and-the-ending-token 
+    p
+    bp ; unused
+    ")"
+    'tuple
+    comma-token
+    COMMA-PREC
+    )
   )
 
 ;; 0. Here different from pratt_new_compatible_with_MIT_GNU_Scheme.scm,
@@ -63,9 +80,34 @@
 ;; 1. Trivially same as oilshell.
 ;;; Tests LeftComma ones plus proc(), proc(a), proc(a,b), proc(a,b,).
 (define (LeftFuncCall p token left unused_rbp)
-  ;; borrowed
+  ;; borrowed from oilshell.
   (and (not (member (Token-type left) var-types))
     (ParseError (list left "can't be called"))
     )
   (cons left (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))
   )
+
+;; 0. Semicolon usage in C (checking the standard is a bit too complex https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf)
+;; so see https://www.geeksforgeeks.org/role-of-semicolon-in-various-programming-languages/#
+;; > Semicolons are end statements in C.
+;; > They are *not* used in between the control flow statements but are used in separating the *conditions in looping*. 
+;; For simplicity I only consider the 1st.
+;; 1. Similar to NullParen.
+(define (NullBrace p token bp)
+  (declare (ignore token)) ; since delimeter is comma.
+  (consume-possible-elems-implicitly-and-the-ending-token
+    p
+    bp 
+    "}"
+    'begin
+    semicolon-token
+    LEFT-SEMICOLON-PREC
+    )
+  )
+
+;; 0. Similar to C, here I allow something like "int a=1; int b=2;" without outer Braces.
+;; 1. Extension: Here I just allow this be one expr... Anyway book exercise doesn't say anything about grammar definition for that infix expression.
+(define (LeftSemicolon p token left rbp)
+  (PrsSeq parser delimeter left rbp 'begin)
+  )
+

@@ -42,7 +42,8 @@
     ;; SEMICOLON, RIGHT-BRACE are just like "," and ")" here both with default error led/nud's.
     ;; 1.a. LEFT-BRACE, SEMICOLON, RIGHT-BRACE should be added since statement may be used in lambda.
     ;; (I won't give one extensive support for Python statement... That is due to focus here is expr)
-    (spec 'Null NULL-PAREN-PREC NullBrace (list "{"))
+    (spec 'Null NULL-BRACE-PREC NullBrace (list "{"))
+    (spec 'Left LEFT-SEMICOLON-PREC LeftSemicolon (list ";"))
     ;; IGNORE For if – else (not offered in oilshell since it is not used in C-expr),
     ;; we should do as https://docs.python.org/3/reference/expressions.html#if-expr
     ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm

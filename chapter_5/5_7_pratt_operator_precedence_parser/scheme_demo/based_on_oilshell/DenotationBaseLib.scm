@@ -12,7 +12,7 @@
     )
   )
 
-(define (PrsNary* token p)
+(define (PrsNary* token p rbp)
   (define (cons* a b)
     (if (null? a)
       b
@@ -22,7 +22,7 @@
   (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
     '()
     (let ((type (Token-type token)))
-      (let lp ((l (list (p 'ParseUntil (get-left-rbp token)))))
+      (let lp ((l (list (p 'ParseUntil rbp))))
         (if (p 'AtToken type)
           (begin 
             (p 'Eat type)
@@ -30,7 +30,7 @@
               (cons* 
                 (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
                   '()
-                  (p 'ParseUntil (get-left-rbp token)))
+                  (p 'ParseUntil rbp))
                 l)))
           (reverse l))
         )
@@ -38,14 +38,15 @@
     )
   )
 
-;; Just like the above loop.
-; (define (PrsNaryAndEatEndingToken parameters)
-;   (let ((elms (PrsNary splitter-token parser)))
-;     (parser 'Eat (Token-type end-token))
-;     elms
-;     )
-;   )
+(define (PrsSeq parser delimeter left rbp header)
+  (cons header (cons left (PrsNary* delimeter parser rbp)))
+  )
 
-; (define (prsmatch end-token splitter-token parser)
-  
-;   )
+(define (PrsPossibleSeq parser delimeter rbp header delimeter-lbp)
+  (let ((first-elm (parser 'ParseUntil delimeter-lbp)))
+    (if (not (parser 'AtToken delimeter))
+      first-elm
+      (cons header (cons first-elm (PrsNary* delimeter parser rbp)))
+      )
+    )
+  )
