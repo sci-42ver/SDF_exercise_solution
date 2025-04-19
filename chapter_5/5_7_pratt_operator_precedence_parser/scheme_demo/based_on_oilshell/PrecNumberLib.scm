@@ -33,7 +33,7 @@
 
 ;; IMHO lambda should not bind anything at the right because it just manipulates with expr_list until ":".
 ;; so lexer list (lambda a := b : ...) will throw error(s).
-(define LAMBDA-RBP UNUSED-BASE-PREC) ; < COMMA-PREC
+(define LAMBDA-RBP BASE-PREC) ; < COMMA-PREC
 ;; 0. IGNORE Same value as pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; to make extension more flexible.
 ;; 0.a. See the above "See DenotationLib.scm ..."

@@ -12,7 +12,9 @@
     )
   )
 
-(define (PrsNary* token p rbp)
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "pred_lib.scm")
+(define (PrsNary* token p rbp #!optional elm-pred)
   (define (cons* a b)
     (if (null? a)
       b
@@ -22,7 +24,7 @@
   (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
     '()
     (let ((type (Token-type token)))
-      (let lp ((l (list (p 'ParseUntil rbp))))
+      (let lp ((l (list (check-pred elm-pred (p 'ParseUntil rbp)))))
         (if (p 'AtToken type)
           (begin 
             (p 'Eat type)
@@ -30,7 +32,7 @@
               (cons* 
                 (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
                   '()
-                  (p 'ParseUntil rbp))
+                  (check-pred elm-pred (p 'ParseUntil rbp)))
                 l)))
           (reverse l))
         )
@@ -44,30 +46,30 @@
     (cons header (cons left (PrsNary* delimeter parser rbp))))
   )
 
-(define (PrsPossibleSeq parser delimeter-token rbp header delimeter-lbp)
+(define (PrsPossibleSeq parser delimeter-token rbp header delimeter-lbp #!optional elm-pred)
   (let ((first-elm (parser 'ParseUntil delimeter-lbp)))
     (if (not (parser 'AtToken delimeter-token))
       first-elm
       (CompositeNode 
         delimeter-token
-        (cons header (cons first-elm (PrsNary* delimeter-token parser rbp))))
+        (cons header (cons first-elm (PrsNary* delimeter-token parser rbp elm-pred))))
       )
     )
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme/")
 (load "compatible_lib.scm")
-(define (consume-elems-and-the-ending-token p rbp ending-token-type header delimeter-token delimeter-prec)
+(define (consume-elems-and-the-ending-token p rbp ending-token-type header delimeter-token delimeter-prec #!optional elm-pred)
   (declare (ignore rbp))
   (prog1
     ;; Better to explicitly use one delimeter for future extension
     ;; Otherwise, this may allow (a;b;c;d;) etc.
     ; (p 'ParseUntil rbp)
-    (PrsPossibleSeq p delimeter-token delimeter-prec header delimeter-prec)
+    (PrsPossibleSeq p delimeter-token delimeter-prec header delimeter-prec elm-pred)
     (p 'Eat ending-token-type)))
 ;; 0. function as open-paren-nud based on prsmatch-modified.
 ;; 1. Different from oilshell (i.e. bash) to allow ()=>(tuple).
-(define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec)
+(define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec #!optional elm-pred)
   (cond 
     ((p 'AtToken ending-token-type) (CompositeNode (symbol->token header) (list header)))
     (else
@@ -82,6 +84,6 @@
       ;; 3.b. element list construction is implicitly done in ParseUntil.
       ;; 3.c. (error 'comma-or-match-not-found (token-read stream)) is implicitly done
       ;; by (p 'Eat ")") but more general to allow possible extension like (a;b;).
-      (consume-elems-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec)
+      (consume-elems-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec elm-pred)
       ))
   )

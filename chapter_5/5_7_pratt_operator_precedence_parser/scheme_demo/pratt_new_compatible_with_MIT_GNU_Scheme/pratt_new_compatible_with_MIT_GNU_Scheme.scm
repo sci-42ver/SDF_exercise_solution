@@ -243,11 +243,11 @@
            nud delim-err)
 
 ;; lbp order
-;; -1<5[),},then,else]<10[',',]<60[or]<65[and]<70[not]<80<100<120<140<200
+;; -1<5[),},then,else,:]<10[',',]<60[or]<65[and]<70[not]<80<100<120<140<200
 
 ;; rbp order
 ;; IMHO since here 45 and 25 are >= the same group of lbp's (in the same group delimited by lbp), it is fine to define if-rbp as 25.
-;; 25[then, else]<45[if]<60<65<70<80<100<120<139
+;; 25[then,else,:]<45[if]<60<65<70<80<100<120<139
 
 ;;; Notice then-rbp > ,-lbp doesn't imply then can grab something from ",". See "(eq? (token-peek stream) 'else)".
 ;; Similarly "if a ," (similar for ')' etc) is not allowed by if-nud, so if won't grab a.

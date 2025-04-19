@@ -1,3 +1,6 @@
+;;; This obviously can't catch some possible syntax errors in expr because the grammar of this exercise is *not shown explicitly*,
+;; And obviously we won't implement one parser like the actual one for Python or C etc.
+
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "loop_lib.scm")
 
@@ -39,11 +42,11 @@
 ;;;; TODO tests
 ;; besides those in pratt_new_compatible_with_MIT_GNU_Scheme.scm:
 ;; error (a+b;a**b)
-(define (NullParen p token bp)
+(define (NullParen p token unused-rbp)
   (declare (ignore token)) ; since delimeter is comma.
   (consume-possible-elems-implicitly-and-the-ending-token
     p
-    bp ; unused
+    unused-rbp
     ")"
     'tuple
     comma-token
@@ -57,7 +60,7 @@
 ;; 1. Trivially same as oilshell.
 ;;;; TODO tests
 ;; proc(), proc(a), proc(a,b), proc(a,b,) (actually all done above in NullParen).
-(define (LeftFuncCall p token left unused_rbp)
+(define (LeftFuncCall p token left unused-rbp)
   ;; borrowed from oilshell.
   (and (not (member (Token-type left) var-types))
     (ParseError (list left "can't be called"))
@@ -82,11 +85,12 @@
 ;; lambda a:{a+a} => (lambda (a) (+ a a))
 ;; lambda a:{a+a;a**5} => (lambda (a) (begin (+ a a) (** a 5)))
 ;; lambda a:{a+a;a**5;} => (lambda (a) (begin (+ a a) (** a 5)))
-(define (NullBrace p token bp)
+;; non-error {a,b} => (tuple a b)
+(define (NullBrace p token unused-rbp)
   (declare (ignore token)) ; since delimeter is comma.
   (consume-possible-elems-implicitly-and-the-ending-token
     p
-    bp 
+    unused-rbp
     "}"
     'begin
     semicolon-token
@@ -102,6 +106,39 @@
 ;; The last just means ";" is like "," but due to statement ending it binds nothing from others at the left.
 (define (LeftSemicolon p token left rbp)
   (PrsSeq parser delimeter left rbp 'begin)
+  )
+
+;;;; BEHAVIOR
+;; 0. same as pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; but 
+;; 0.a. ensures arg-node?
+;; 0.b. again here we allows "," in body, so rbp<COMMA-PREC.
+;; 1. not in oilshell
+;;;; TODO tests
+;; "lambda a;: ..." error
+;; "lambda a+b,: ..." error
+;; "lambda a,**b,*c,: ..." works
+(define (NullLambda p token rbp)
+  (declare (ignore token)) ; since delimeter is comma.
+  (let ((intermediate 
+          (consume-possible-elems-implicitly-and-the-ending-token
+            p
+            'unused-rbp
+            ":"
+            'lambda
+            comma-token
+            COMMA-PREC
+            arg-node?
+            )))
+    (let ((body (p 'ParseUntil rbp)))
+      (CompositeNode
+        token
+        (cons* 
+          'lambda
+          (get-tagged-lst-data intermediate)
+          body
+          )))
+    )
   )
 
 ;;;; BEHAVIOR

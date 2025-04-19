@@ -44,6 +44,8 @@
     ;; (I won't give one extensive support for Python statement... That is due to focus here is expr)
     (spec 'Null NULL-BRACE-PREC NullBrace (list "{"))
     (spec 'Left LEFT-SEMICOLON-PREC LeftSemicolon (list ";"))
+
+    (spec 'Null LAMBDA-RBP NullLambda (list "lambda"))
     ;; IGNORE For if – else (not offered in oilshell since it is not used in C-expr),
     ;; we should do as https://docs.python.org/3/reference/expressions.html#if-expr
     ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm
