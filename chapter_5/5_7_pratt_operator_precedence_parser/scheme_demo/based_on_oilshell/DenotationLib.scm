@@ -141,6 +141,23 @@
     )
   )
 
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
+(load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
+;;;; BEHAVIOR
+;; 0. same as pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; but 
+;; 0.a. ensures arg-node?
+;; 0.b. again here we allows "," in body, so rbp<COMMA-PREC.
+;; 1. not in oilshell
+;; 2. Use Python doc precedence ordering.
+;;;; TODO tests
+;; a+b:=c error
+;; a:=b,c
+(define (LeftDefine p token left rbp)
+  (assert (equal? ID-TAG-STR (get-GeneralNode-token-type left)))
+  (LeftBinaryOp p token left rbp)
+  )
+
 ;;;; BEHAVIOR
 ;; same as pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; less general than https://docs.python.org/3/reference/compound_stmts.html#the-if-statement

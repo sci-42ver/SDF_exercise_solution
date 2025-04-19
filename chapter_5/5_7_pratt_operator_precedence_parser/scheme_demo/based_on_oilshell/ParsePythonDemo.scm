@@ -51,6 +51,8 @@
     ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm
     (spec 'Null NULL-IF-PREC NullIf (list "if"))
     (spec 'Left LEFT-IF-PREC LeftIf (list "if"))
+
+    (spec 'Left :=-PREC LeftDefine (list ":="))
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

@@ -23,6 +23,7 @@
   (declare (ignore loc))
   (new-tagged-lst* Token-tag type val)
   )
+(define (Loc row col) (list row col))
 (define Token-type cadr)
 (define set-Token-type! 
   (lambda (token type) 
@@ -30,7 +31,7 @@
     (set-car! (cdr token) type)))
 (define Token-val caddr)
 (define Token-type=? string=?)
-(define Token? (tagged-list? Token-tag))
+(define Token? (tagged-list-pred Token-tag))
 
 (define (symbol->token sym)
   (assert (symbol? sym))
@@ -38,34 +39,51 @@
     (Token str str))
   )
 
-(define (Loc row col) (list row col))
+;; For simplicity, I just use cond instead of one table.
+(define (get-header str)
+  (assert (string? str))
+  (cond
+    ((equal? str ":=") 'define)
+    (else str))
+  )
+(define (get-header-for-token token)
+  (get-header (Token-val token))
+  )
 
+;;; Node
 (define NodeTag 'Node)
 (define (Node token)
   (assert (Token? token))
   (new-tagged-lst* NodeTag token))
-(define Node? (tagged-list? NodeTag))
+(define Node? (tagged-list-pred NodeTag))
 ;; To offer more info so that we can reject some corner cases like "lambda non-arg, ...: ...".
 (define CompositeNodeTag 'CompositeNode)
 (define (CompositeNode root-token expr)
   (assert (Token? root-token))
   (new-tagged-lst* CompositeNodeTag root-token expr)
   )
-(define CompositeNode? (tagged-list? CompositeNodeTag))
+(define CompositeNode? (tagged-list-pred CompositeNodeTag))
 
 (define (GeneralNode? node)
   (or (Node node) (CompositeNode? node))
   )
+;; Although here many possible duplicate assertions, it is safer.
 (define (get-GeneralNode-token general-node)
   (assert (GeneralNode? general-node))
   (cadr general-node)
   )
+(define (get-GeneralNode-token-type general-node)
+  (assert (GeneralNode? general-node))
+  (Token-type (get-GeneralNode-token general-node))
+  )
 
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
+(load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
 (define (arg-node? node)
   (assert (GeneralNode? node))
   (let ((type (Token-type (get-GeneralNode-token node))))
     (or
-      (equal? "id" type)
+      (equal? ID-TAG-STR type)
       (equal? "star-arg" type)
       )
     )
@@ -89,4 +107,4 @@
   )
 
 ;; see SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
-(define var-types (list "id" "get"))
+(define var-types (list ID-TAG-STR "get"))

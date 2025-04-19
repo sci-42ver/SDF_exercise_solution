@@ -87,3 +87,16 @@
       (consume-elems-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec elm-pred)
       ))
   )
+
+(define (LeftBinaryOp p token left rbp)
+  (CompositeNode
+    token
+    (cons*
+      ;; Here I assume to use ** etc even if it is not supported in original underlying interpreter.
+      ;; Then it is that interpreter's duty to define ** before using **.
+      (get-header-for-token token)
+      left
+      (p 'ParseUntil rbp)
+      )
+    )
+  )

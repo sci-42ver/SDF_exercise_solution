@@ -34,6 +34,8 @@
     )
   )
 (define ADDITION-OPERATORS (list "{" ";" "}"))
+(define ID-TAG 'ID)
+(define ID-TAG-STR (string->symbol ID-TAG))
 (define pat
   `(or
     ;; See SDF_exercises/chapter_5/5_7_re_tests/optional.scm for "?" behavior.
@@ -49,7 +51,7 @@
       (+ (or "-" "+" "*" "/" "%" "!" "~" "<" ">" "=" "&" "^" "|" "?" ":")))
     ;; Since 5.7 only needs "infix expression", no "Statement terminator" is needed.
     ;; Also for "Line endings" (but we may introduce implicit newline, see SDF_exercises/chapter_5/5_7_tokenize_tests.scm).
-    (=> ID ,WORDS)
+    (=> ,ID-TAG ,WORDS)
     ;; regex replacement: '(.)' => '"$1" '
     (=> OPERATOR-LEN-ONE (or "(" ")" "[" "]" ,@ADDITION-OPERATORS "~" "^" "!" "?" ":" ","))
     ;; Add "Line endings", more general than the Python doc example.
@@ -65,10 +67,10 @@
 (load "DataTypeLib.scm")
 
 (define field-names 
-  '(NUMBER
+  `(NUMBER
     STAR-ARG
     OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
-    ID
+    ,ID-TAG
     OPERATOR-LEN-ONE
     SKIP
     MISMATCH
@@ -92,10 +94,10 @@
                 (set! kind "number")
                 )
               ;; tdop doesn't consider keywords for expression
-              ((regexp-match-submatch match 'ID)
+              ((regexp-match-submatch match ID-TAG)
                 (if (member value keywords)
                   (set! kind value)
-                  (set! kind "id"))
+                  (set! kind ID-TAG-STR))
                 (set! value (string->symbol value))
                 )
               ((regexp-match-submatch match 'SKIP)

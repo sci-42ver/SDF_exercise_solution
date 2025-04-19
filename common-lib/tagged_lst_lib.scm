@@ -1,7 +1,7 @@
 (define (empty-tagged-lst tag) (list tag))
 (define (new-tagged-lst tag data) (cons tag data))
 (define (new-tagged-lst* tag . data) (cons tag data))
-(define (tagged-list? tag)
+(define (tagged-list-pred tag)
   (lambda (lst)
     (and (list? lst)
       (>= (length lst) 1)

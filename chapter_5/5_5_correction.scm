@@ -108,7 +108,7 @@
                                     ; (write-line "call new (variable? environment?) g:eval handler")
                                     (let ((val (lookup-variable-value var env)))
                                       (if (strict-compound-procedure? val)
-                                        (add-pair-to-tagged-pairs (new-pair var val) var-strict-compound-procedure-val-pairs))
+                                        (add-pair-to-tagged-pairs! (new-pair var val) var-strict-compound-procedure-val-pairs))
                                       val
                                       )  
                                     )
@@ -181,7 +181,7 @@
                   (procedure-body exp)
                   )
                 (procedure-environment* exp))))
-        (add-pair-to-tagged-pairs (new-pair exp val) scp-up-pairs)
+        (add-pair-to-tagged-pairs! (new-pair exp val) scp-up-pairs)
         val)
       (begin
         (error "should not duplicately traverse")
@@ -245,7 +245,7 @@
                 )
             (begin
               ;; not traversed 
-              (add-pair-to-tagged-pairs
+              (add-pair-to-tagged-pairs!
                 binding
                 var-strict-compound-procedure-val-pairs
                 )
@@ -357,7 +357,7 @@
 
 (define proc2 (lambda (x) (+ x y)))
 ; (trace eval*)
-; (trace add-pair-to-tagged-pairs)
+; (trace add-pair-to-tagged-pairs!)
 (equal?
   '((4 8 12) (5 6 7))
   (map 
