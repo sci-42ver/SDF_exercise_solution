@@ -19,7 +19,7 @@
 ;; except for class redefining __new__.
 (define (Parser spec lexer)
   (define* token)
-  ;; IMHO better to be like SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/tdop.py
+  ;; IMHO better to be like pratt-parsing-demo/tdop.py
   ;; see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/orig/pratt_new.scm
   ;; for why '($) is not good since it will make (eof-val) usage redundant.
   ; (set! lexer (append lexer `($)))

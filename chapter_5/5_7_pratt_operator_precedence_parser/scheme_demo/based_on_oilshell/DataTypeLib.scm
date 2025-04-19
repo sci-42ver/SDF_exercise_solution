@@ -44,8 +44,9 @@
 ;; here I assume RHS of expression_stmt just allow *any* expr. Also see https://stackoverflow.com/questions/79544489/level-2-expression-in-c#comment140282231_79544622 https://stackoverflow.com/a/63677576/21294350
 (define NULL-IF-PREC NULL-PAREN-PREC)
 
-;; It should not bind anything left from other op's because it is just one token to end statement.
-(define LEFT-SEMICOLON-PREC NULL-PAREN-PREC) ; > NULL-BRACE-PREC
+;; 0. It should not bind anything left from other op's because it is just one token to end statement.
+;; 1. "> NULL-BRACE-PREC" is not needed here since we explicitly assert ";" delimeter inside NullBrace.
+(define LEFT-SEMICOLON-PREC NULL-PAREN-PREC)
 
 ;;; IGNORE "," is not listed in Python precedence list.
 ;; Here I just assume , has one higher precedence than :=.

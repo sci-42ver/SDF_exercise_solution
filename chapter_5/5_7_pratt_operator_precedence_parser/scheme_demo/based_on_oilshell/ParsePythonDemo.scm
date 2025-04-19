@@ -27,7 +27,7 @@
     ;; then it should be higher than the top "(" to grab a1.
     ;; Then arg1 + arg2 , arg3 will be arg1 + (arg2 , arg3) which is wrong.
     ;; So it should be manipulated specifically.
-    ;; 0.b. Why LeftComma is offered in SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/arith_parse.py
+    ;; 0.b. Why LeftComma is offered in pratt-parsing-demo/arith_parse.py
     ;; is due to C & Shell has that sequence operator, i.e. "a, b" returns b after evaluating a.
     ;; This is not in Python, but the latter offers tuple construction for that as arith_parse.py says.
     ;; ---

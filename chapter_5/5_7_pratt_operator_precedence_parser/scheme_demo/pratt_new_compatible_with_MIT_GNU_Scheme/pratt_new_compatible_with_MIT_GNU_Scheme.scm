@@ -510,7 +510,6 @@
 (pl-assert 
   '(+ (tuple 1 3 7) 2)
   `(,OPEN-PAREN 1 COMMA 3 COMMA 7 ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
-;; 
 (pl-assert 
   '(+ (tuple 1 3 7) 2)
   `(,OPEN-PAREN 1 COMMA 3 COMMA 7 COMMA ,CLOSE-PAREN + ,OPEN-PAREN 2 ,CLOSE-PAREN))
@@ -537,6 +536,9 @@
 ;; d. **expression
 ;; In Scheme only the mere expression is supported natively.
 ;; For parsing, all can be supported although := inside arglist is a bit weird.
+
+; (pl '(lambda* a :)) ; throw error consistent with MIT/GNU Scheme convention
+; premature-termination-of-input $
 
 (pl-assert
   '(lambda (a) (begin (** a a) (* a 5)))

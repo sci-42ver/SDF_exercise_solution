@@ -75,6 +75,8 @@ Anyway this is enough just like pseudocode is enough for algorithm in CRLS.
   - IGNORE:
 - sci-42ver/SDF_exercise_solution
 - "Won't dig into" in SDF_notes.md
+### temporary
+- pratt_new_compatible_with_MIT_GNU_Scheme.scm
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 

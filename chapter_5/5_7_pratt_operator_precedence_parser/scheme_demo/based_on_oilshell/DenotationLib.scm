@@ -6,17 +6,19 @@
 (load "Parser.scm")
 (load "DenotationBaseLib.scm")
 
-;;; different from oilshell (see the following). 
+;;;; BEHAVIOR
+;; 0. different from oilshell (see the following).
 ;; No corresponding one in pratt_new_compatible_with_MIT_GNU_Scheme.scm
-;;; allow trailing which is not allowed in Shell (in Bash $((1,)) throws error).
-;; TODO tests: 1,;1,2,;1,+2,=>1,(+2),;
+;; 1. allow trailing which is not allowed in Shell (in Bash $((1,)) throws error).
+;;;; TODO tests
+;; 1,;1,2,;1,+2,=>1,(+2),;
 ;;; IGNORE TODO Emm... Actually "," must have one much more complexer manipulation in Python which **can't be done by Pratt Parsing**.
 ;; If using Pratt Parsing, then "+" should just consume the left and then try to find the rhs.
 ;;; 0. +'s rbp > ,'s lbp Then 1+2, is "(1+2)," and 1,+2, is ~~"((1,)+2)," (wrong)~~
 ;; 1,(+2), exceptedly (implied by 1,-2, results in (1, -2). It is flexible_expression_list).
 ;; 1. +'s rbp <= ,'s lbp Then the former example above is wrong with 1+(2,).
 (define (LeftComma p token left rbp)
-  ;; 0. For SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/arith_parse.py
+  ;; 0. For pratt-parsing-demo/arith_parse.py
   ;; a,b,c is same as ((a,b),c).
   ;; But here (tuple (tuple a b) c) is obviously different from (tuple a b c),
   ;; so similar to pratt_new_compatible_with_MIT_GNU_Scheme.scm
@@ -31,38 +33,12 @@
   ;;; IGNORE Here I returned (tuple ...)
   )
 
-;;; IGNORE different from SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/arith_parse.py
-;; to allow tuple besides (expr).
-(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme/")
-(load "compatible_lib.scm")
-(define (consume-elems-and-the-ending-token p rbp ending-token-type header delimeter-token delimeter-prec)
-  (declare (ignore rbp))
-  (prog1
-    ;; Better to explicitly use one delimeter for future extension
-    ;; Otherwise, this may allow (a;b;c;d;) etc.
-    ; (p 'ParseUntil rbp)
-    (PrsPossibleSeq p delimeter-token delimeter-prec header delimeter-prec)
-    (p 'Eat ending-token-type)))
-;; 0. function as open-paren-nud based on prsmatch-modified.
-;; 1. Different from oilshell (i.e. bash) to allow ()=>(tuple).
-(define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec)
-  (cond 
-    ((p 'AtToken ending-token-type) (list header))
-    (else
-      ;; 0. We can implicitly use LeftComma implied by grammar rule
-      ;; Parenthesized form https://docs.python.org/3/reference/expressions.html#parenthesized-forms
-      ;; is based on Expression lists https://docs.python.org/3/reference/expressions.html#expression-lists
-      ;; 1. see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/tests.py
-      ;; x[1,2] implies also considering tuple inherently.
-      ;; 2. Here I choose ParseUntil to reuse the above LeftComma for modularity.
-      ;; 3. Similar to loop in prsmatch-modified but with
-      ;; 3.a. ending-token consumption at the end
-      ;; 3.b. element list construction is implicitly done in ParseUntil.
-      ;; 3.c. (error 'comma-or-match-not-found (token-read stream)) is implicitly done
-      ;; by (p 'Eat ")") but more general to allow possible extension like (a;b;).
-      (consume-elems-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec)
-      ))
-  )
+;;;; BEHAVIOR 
+;; different from oilshell (see the following).
+;; same as pratt_new_compatible_with_MIT_GNU_Scheme.scm allowing tuple ()/(a,b[,]) etc where [] meansing optional besides (expr).
+;;;; TODO tests
+;; besides those in pratt_new_compatible_with_MIT_GNU_Scheme.scm:
+;; error (a+b;a**b)
 (define (NullParen p token bp)
   (declare (ignore token)) ; since delimeter is comma.
   (consume-possible-elems-implicitly-and-the-ending-token 
@@ -75,10 +51,12 @@
     )
   )
 
+;;;; BEHAVIOR
 ;; 0. Here different from pratt_new_compatible_with_MIT_GNU_Scheme.scm,
 ;; we can also allow trailing comma, so we do similar to open-paren-nud, i.e. the above NullParen.
 ;; 1. Trivially same as oilshell.
-;;; Tests LeftComma ones plus proc(), proc(a), proc(a,b), proc(a,b,).
+;;;; TODO tests
+;; proc(), proc(a), proc(a,b), proc(a,b,) (actually all done above in NullParen).
 (define (LeftFuncCall p token left unused_rbp)
   ;; borrowed from oilshell.
   (and (not (member (Token-type left) var-types))
@@ -87,12 +65,20 @@
   (cons left (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))
   )
 
+;;;; BEHAVIOR
 ;; 0. Semicolon usage in C (checking the standard is a bit too complex https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf)
 ;; so see https://www.geeksforgeeks.org/role-of-semicolon-in-various-programming-languages/#
 ;; > Semicolons are end statements in C.
 ;; > They are *not* used in between the control flow statements but are used in separating the *conditions in looping*. 
 ;; For simplicity I only consider the 1st.
 ;; 1. Similar to NullParen.
+;;;; TODO tests
+;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Lambda-Expressions.html#index-lambda-4
+;; needs at least one expr.
+;; lambda a:{} => (lambda (a) (begin))
+;; lambda a:{a+a} => (lambda (a) (+ a a))
+;; lambda a:{a+a;a**5} => (lambda (a) (begin (+ a a) (** a 5)))
+;; lambda a:{a+a;a**5;} => (lambda (a) (begin (+ a a) (** a 5)))
 (define (NullBrace p token bp)
   (declare (ignore token)) ; since delimeter is comma.
   (consume-possible-elems-implicitly-and-the-ending-token
@@ -105,8 +91,12 @@
     )
   )
 
+;;;; BEHAVIOR
 ;; 0. Similar to C, here I allow something like "int a=1; int b=2;" without outer Braces.
 ;; 1. Extension: Here I just allow this be one expr... Anyway book exercise doesn't say anything about grammar definition for that infix expression.
+;;;; TODO tests (the latter 2 for NullBrace containing ";")
+;; lambda a:a+a;a**5; => (begin (lambda (a) (+ a a)) (** a 5))
+;; The last just means ";" is like "," but due to statement ending it binds nothing from others at the left.
 (define (LeftSemicolon p token left rbp)
   (PrsSeq parser delimeter left rbp 'begin)
   )

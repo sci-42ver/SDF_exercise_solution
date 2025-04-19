@@ -7,7 +7,7 @@
 (load "common-lib/re_lib.scm")
 
 ; #px"\\s*(?:(\\d+)|(\\w+)|((?<!\\w)(?:\\*|\\*\\*)\\w+)|([\\-\\+\\*/%!~<>=&^|?:]+)|([\\(\\)\\[\\]~^!?:,]))"
-;; IGNORE I don't see any necessity for space here. Space there is kept to show as migration from SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/python_demo/pratt-parsing-demo/tdop.py.
+;; IGNORE I don't see any necessity for space here. Space there is kept to show as migration from pratt-parsing-demo/tdop.py.
 ;; IMHO the python doc https://docs.python.org/3/library/re.html#writing-a-tokenizer structure is better.
 (define WORDS `(+ ,word-corrected))
 ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Identifiers.html
