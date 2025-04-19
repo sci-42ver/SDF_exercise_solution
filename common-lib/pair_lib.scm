@@ -7,7 +7,7 @@
   (set-cdr! pair (cdr target)))
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "../common-lib/tagged_lst_lib.scm")
-(define get-pairs get-data)
+(define get-pairs get-tagged-lst-data)
 (define (add-pair-to-tagged-pairs pair tagged-pairs)
   (let ((pairs (get-pairs tagged-pairs)))
     (let ((val (assq (get-left pair) pairs)))

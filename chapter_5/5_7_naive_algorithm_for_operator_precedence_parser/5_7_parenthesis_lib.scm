@@ -119,13 +119,13 @@
 ;; 0.a. If parentheses are matched, then only one can contain the other totally but not partially.
 ;; i.e. there are only 3 relations with 2 for containment relation.
 (define (combine-non-application-parentheses str-lst)
-  (let* ((parenthesis-idx-pair-lst (get-data (parenthesis-idx-pair-stack str-lst)))
+  (let* ((parenthesis-idx-pair-lst (get-tagged-lst-data (parenthesis-idx-pair-stack str-lst)))
          (non-application-parenthesis-idx-pair-lst
           (filter 
             (lambda (pair) (non-application? pair)) 
             parenthesis-idx-pair-lst))
          (sorted-idx-pair-lst 
-          (get-data
+          (get-tagged-lst-data
             (new-stack
               (sort 
                 non-application-parenthesis-idx-pair-lst

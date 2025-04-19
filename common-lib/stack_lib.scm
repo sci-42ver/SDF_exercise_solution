@@ -114,7 +114,7 @@
 ;;; borrowed APIs from SDF_exercises/chapter_4/4_9_stack_lib.scm
 (define (new-stack data)
   (new-tagged-lst stack-tag data))
-(define stack-data get-data)
+(define stack-data get-tagged-lst-data)
 ;; push-stack is skipped due to perl doesn't do that.
 ;; stack-top is redundant with pop!.
 

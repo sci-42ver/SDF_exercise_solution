@@ -83,8 +83,8 @@
       (let ((cur-precedence-items (car rest-precedence-list)))
         (lp
           (%manipulate-precedence 
-            (get-tag cur-precedence-items)  
-            (get-data cur-precedence-items) 
+            (get-tagged-lst-tag cur-precedence-items)  
+            (get-tagged-lst-data cur-precedence-items) 
             transformed-item-list 
             precedence-list)
           (cdr precedence-list)
