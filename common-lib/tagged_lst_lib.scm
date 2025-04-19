@@ -1,5 +1,14 @@
 (define (empty-tagged-lst tag) (list tag))
 (define (new-tagged-lst tag data) (cons tag data))
+(define (tagged-list? tag)
+  (lambda (lst)
+    (and (list? lst)
+      (>= (length lst) 1)
+      ;; assume interned symbols
+      (eq? (car lst) tag)
+      )
+    )
+  )
 
 (define get-tag car)
 (define get-data cdr)

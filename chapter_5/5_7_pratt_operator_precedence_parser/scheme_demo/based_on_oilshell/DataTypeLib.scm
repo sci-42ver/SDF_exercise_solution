@@ -16,15 +16,37 @@
 (define get-left-rbp caddr)
 
 ;;; used by SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/Parser.scm
+(cd "~/SICP_SDF/SDF_exercises/common-lib/")
+(load "tagged_lst_lib.scm")
+(define Token-tag 'token)
 (define (Token type val #!optional loc)
   (declare (ignore loc))
-  (list type val)
+  (new-tagged-lst Token-tag (list type val))
   )
-(define Token-type car)
-(define Token-val cadr)
+(define Token-type cadr)
+(define set-Token-type! 
+  (lambda (token type) 
+    (assert (Token? token)) 
+    (set-car! (cdr token) type)))
+(define Token-val caddr)
 (define Token-type=? string=?)
+(define Token? (tagged-list? Token-tag))
+
+(define (symbol->token sym)
+  (assert (symbol? sym))
+  (let ((str (symbol->string sym)))
+    (Token str str))
+  )
 
 (define (Loc row col) (list row col))
+
+(define (Node token)
+  (assert (Token? token))
+  (list token))
+;; To offer more info so that we can reject some corner cases like "lambda non-arg, ...: ...".
+(define (CompositeNode root-token expr)
+  (list root-token expr)
+  )
 
 ;; borrow from oilshell (IMHO better than pratt_new_compatible_with_MIT_GNU_Scheme.scm which has no regular number pattern relation)
 (define PREC-STEP 6)
@@ -51,9 +73,11 @@
 ;;; IGNORE "," is not listed in Python precedence list.
 ;; Here I just assume , has one higher precedence than :=.
 ;;; See DenotationLib.scm comment for LeftComma, here comma should not be manipulated as one normal op.
-(define :=-PREC 0)
+(define :=-PREC NULL-PAREN-PREC)
 
-(define LAMBDA-RBP (+ PREC-STEP :=-PREC)) ; < COMMA-PREC
+;; IMHO lambda should not bind anything at the right because it just manipulates with expr_list until ":".
+;; so lexer list (lambda a := b : ...) will throw error(s).
+(define LAMBDA-RBP NULL-PAREN-PREC) ; < COMMA-PREC
 ;; 0. IGNORE Same value as pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; to make extension more flexible.
 ;; 0.a. See the above "See DenotationLib.scm ..."
@@ -65,9 +89,10 @@
 (define LEFT-IF-PREC (+ PREC-STEP COMMA-PREC))
 ;;;;;; END PREC DEFINITION
 
-(define Null-Error-List (list ")" "]" ":" "eof" ";" "}"))
+(define Null-Error-List (list ")" "]" ":" "eof" ";" "}" "then" "else"))
 
 (define comma-token (Token "," ","))
+; (define tuple-token comma-token)
 (define semicolon-token (Token ";" ";"))
 (define right-paren-token (Token ")" ")"))
 

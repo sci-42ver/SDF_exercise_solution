@@ -9,9 +9,9 @@
   - TODO
     - ~~add "optional trailing comma" support.~~ All done by `LeftComma` explicitly or implicitly with `ParseUntil`.
     - See SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/README.md.
-- What to do next
-  - https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm `r`
-  - Implement "language L" in https://tdop.github.io/
 - Python doc description
   - [continuation clause](https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-parameter_list) [see](https://web.archive.org/web/20250130172238/https://elhacker.info/manuales/OReilly%204%20GB%20Collection/O'Reilly%20-%20Python%20Cookbook.pdf)
     > beginning statement and continuation clause, respectively, where the latter normally makes sense only if it's an *else or elif*
+- **What to do next**
+  - https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm `r`
+  - Implement "language L" in https://tdop.github.io/

@@ -38,15 +38,19 @@
     )
   )
 
-(define (PrsSeq parser delimeter left rbp header)
-  (cons header (cons left (PrsNary* delimeter parser rbp)))
+(define (PrsSeq parser delimeter-token left rbp header)
+  (CompositeNode 
+    delimeter-token
+    (cons header (cons left (PrsNary* delimeter parser rbp))))
   )
 
-(define (PrsPossibleSeq parser delimeter rbp header delimeter-lbp)
+(define (PrsPossibleSeq parser delimeter-token rbp header delimeter-lbp)
   (let ((first-elm (parser 'ParseUntil delimeter-lbp)))
-    (if (not (parser 'AtToken delimeter))
+    (if (not (parser 'AtToken delimeter-token))
       first-elm
-      (cons header (cons first-elm (PrsNary* delimeter parser rbp)))
+      (CompositeNode 
+        delimeter-token
+        (cons header (cons first-elm (PrsNary* delimeter-token parser rbp))))
       )
     )
   )
@@ -65,7 +69,7 @@
 ;; 1. Different from oilshell (i.e. bash) to allow ()=>(tuple).
 (define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec)
   (cond 
-    ((p 'AtToken ending-token-type) (list header))
+    ((p 'AtToken ending-token-type) (CompositeNode (symbol->token header) (list header)))
     (else
       ;; 0. We can implicitly use LeftComma implied by grammar rule
       ;; Parenthesized form https://docs.python.org/3/reference/expressions.html#parenthesized-forms

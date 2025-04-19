@@ -26,7 +26,7 @@
   ;; 1. For the trailing comma https://docs.python.org/3/reference/expressions.html#expression-lists,
   ;; we check whether we can get one new nud, see the above.
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
-  (PrsSeq parser delimeter left rbp 'tuple)
+  (PrsSeq parser token left rbp 'tuple)
   ;;; IGNORE since tuple is returned and the 1st element may be also one tuple which should be concatenated,
   ;; we should not depend on the type of left.
 
@@ -41,7 +41,7 @@
 ;; error (a+b;a**b)
 (define (NullParen p token bp)
   (declare (ignore token)) ; since delimeter is comma.
-  (consume-possible-elems-implicitly-and-the-ending-token 
+  (consume-possible-elems-implicitly-and-the-ending-token
     p
     bp ; unused
     ")"
@@ -62,7 +62,10 @@
   (and (not (member (Token-type left) var-types))
     (ParseError (list left "can't be called"))
     )
-  (cons left (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))
+  (let ((res (cons left (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))))
+    (set-Token-type! token "call")
+    (CompositeNode token res)
+    )
   )
 
 ;;;; BEHAVIOR
@@ -101,3 +104,34 @@
   (PrsSeq parser delimeter left rbp 'begin)
   )
 
+;;;; BEHAVIOR
+;; same as pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; less general than https://docs.python.org/3/reference/compound_stmts.html#the-if-statement
+;; since ~~not allowing *conditional* else and also~~ no such a "elif".
+;; Here I allow "conditional else" as paper does.
+;; So "dangling else" is solved with {} https://en.wikipedia.org/wiki/Dangling_else instead of indent https://docs.python.org/3/reference/compound_stmts.html#compound-statements.
+;;;; TODO tests
+;; Here "if a,b then a,b, else b,a," is allowed.
+;; "if a then if b then s1 else s2" is same as "if a then { if b then s1 else s2 }".
+;; "if a then { if b then s1 } else s2"
+(define (NullIf p token bp)
+  (let* ((pred (p 'ParseUntil bp))
+         ;; different bp from pratt_new_compatible_with_MIT_GNU_Scheme.scm, but same behavior.
+         (consequent (begin (p 'Eat "then") (p 'ParseUntil bp))))
+    (set-Token-type! token "null-if")
+    (CompositeNode
+      token
+      (cons* 
+        'if
+        pred
+        then
+        (if (p 'AtToken "else")
+          (begin (p 'Eat "else") (p 'ParseUntil bp))
+          '())
+        ))
+    )
+  )
+
+(define (LeftIf p token left rbp)
+  
+  )
