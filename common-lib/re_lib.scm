@@ -2,7 +2,11 @@
 (load "logic_lib.scm")
 (load "string_lib.scm")
 
-(define word-corrected '(or word (+ numeric)))
+;; This is needed for MIT/GNU Scheme, but not irregex.
+;; see (irregex-search '(: bow (+ (& (or alphanumeric "_") (or any)))) "3") and (irregex-search 'word "3").
+;; which is same as `perl -e 'print "3"=~/\b(?:\d|\w)+\b/'`.
+;; The problem here for MIT/GNU Scheme is bow is a bit wrong.
+(define word-corrected '(or word (+ (or alphanumeric "_"))))
 
 ; (cd "~/SICP_SDF/SDF_exercises/chapter_5/MIT_GNU_Scheme_re_lib")
 ; (load "regexp.sld")

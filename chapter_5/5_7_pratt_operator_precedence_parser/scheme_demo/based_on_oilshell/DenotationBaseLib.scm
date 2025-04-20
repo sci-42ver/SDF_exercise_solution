@@ -2,11 +2,11 @@
 ;; 1. Just like loop in prsmatch but not read the ending token before reverse.
 (define (PrsNary token p)
   (let ((type (Token-type token)))
-    (let lp ((l (list (p 'ParseUntil (get-left-rbp token)))))
+    (let lp ((l (list (get-GeneralNode-val (p 'ParseUntil (get-left-rbp token))))))
       (if (p 'AtToken type)
         (begin 
           (p 'Eat type)
-          (lp (cons (p 'ParseUntil (get-left-rbp token)) l)))
+          (lp (cons (get-GeneralNode-val (p 'ParseUntil (get-left-rbp token))) l)))
         (reverse l))
       )
     )
@@ -14,6 +14,7 @@
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "pred_lib.scm")
+;; returns a list of expr's instead of GeneralNode's.
 (define (PrsNary* token p rbp #!optional elm-pred)
   (define (cons* a b)
     (if (null? a)
@@ -24,7 +25,10 @@
   (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
     '()
     (let ((type (Token-type token)))
-      (let lp ((l (list (check-pred elm-pred (p 'ParseUntil rbp)))))
+      (let lp ((l 
+                (list 
+                  (get-GeneralNode-val 
+                    (check-pred elm-pred (p 'ParseUntil rbp))))))
         (if (p 'AtToken type)
           (begin 
             (p 'Eat type)
@@ -32,7 +36,9 @@
               (cons* 
                 (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
                   '()
-                  (check-pred elm-pred (p 'ParseUntil rbp)))
+                  (get-GeneralNode-val
+                    (check-pred elm-pred (p 'ParseUntil rbp)))
+                  )
                 l)))
           (reverse l))
         )
@@ -43,7 +49,7 @@
 (define (PrsSeq parser delimeter-token left rbp header)
   (CompositeNode 
     delimeter-token
-    (cons header (cons left (PrsNary* delimeter parser rbp))))
+    (cons header (cons (get-GeneralNode-val left) (PrsNary* delimeter parser rbp))))
   )
 
 (define (PrsPossibleSeq parser delimeter-token rbp header delimeter-lbp #!optional elm-pred)
@@ -52,7 +58,9 @@
       first-elm
       (CompositeNode 
         delimeter-token
-        (cons header (cons first-elm (PrsNary* delimeter-token parser rbp elm-pred))))
+        (cons header 
+          (cons (get-GeneralNode-val first-elm) 
+            (PrsNary* delimeter-token parser rbp elm-pred))))
       )
     )
   )
@@ -95,8 +103,10 @@
       ;; Here I assume to use ** etc even if it is not supported in original underlying interpreter.
       ;; Then it is that interpreter's duty to define ** before using **.
       (get-header-for-token token)
-      left
-      (p 'ParseUntil rbp)
+      (get-GeneralNode-val left)
+      (get-GeneralNode-val (p 'ParseUntil rbp))
       )
     )
   )
+(define get-binary-left cadr)
+(define get-binary-right caddr)

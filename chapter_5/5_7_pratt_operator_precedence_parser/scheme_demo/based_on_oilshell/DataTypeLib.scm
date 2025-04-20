@@ -25,9 +25,9 @@
   )
 (define (Loc row col) (list row col))
 (define Token-type cadr)
-(define set-Token-type! 
+(define set-Token-type!
   (lambda (token type) 
-    (assert (Token? token)) 
+    (assert (and (Token? token) (Token-type=? type)))
     (set-car! (cdr token) type)))
 (define Token-val caddr)
 (define Token-type=? string=?)
@@ -56,6 +56,11 @@
   (assert (Token? token))
   (new-tagged-lst* NodeTag token))
 (define Node? (tagged-list-pred NodeTag))
+(define Node-Token cadr)
+(define (get-Node-val node)
+  (assert (Node? node))
+  (Token-val (Node-Token node))
+  )
 ;; To offer more info so that we can reject some corner cases like "lambda non-arg, ...: ...".
 (define CompositeNodeTag 'CompositeNode)
 (define (CompositeNode root-token expr)
@@ -63,6 +68,7 @@
   (new-tagged-lst* CompositeNodeTag root-token expr)
   )
 (define CompositeNode? (tagged-list-pred CompositeNodeTag))
+(define get-CompositeNode-expr caddr)
 
 (define (GeneralNode? node)
   (or (Node node) (CompositeNode? node))
@@ -76,9 +82,20 @@
   (assert (GeneralNode? general-node))
   (Token-type (get-GeneralNode-token general-node))
   )
+(define (not-GeneralNode-with-token-type general-node . types)
+  (assert (and (GeneralNode? general-node) (every Token-type=? types)))
+  (let ((type (get-GeneralNode-token-type general-node)))
+    (not (member type types)))
+  )
+(define (get-GeneralNode-val general-node)
+  (assert (GeneralNode? general-node))
+  (cond 
+    ((CompositeNode? general-node) (get-CompositeNode-expr general-node))
+    ((Node? general-node) (get-Node-val general-node)))
+  )
 
-(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
-(load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
+;; ID-TAG-STR uses 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm definition.
+;; To avoid load loop, here no explicit loading of that.
 (define (arg-node? node)
   (assert (GeneralNode? node))
   (let ((type (Token-type (get-GeneralNode-token node))))
@@ -100,10 +117,13 @@
 (define right-paren-token (Token ")" ")"))
 
 ;; always return one list
-(define (get-possible-tuple-contents possible-tuple)
-  (cond
-    ((tuple? possible-tuple) (cdr possible-tuple))
-    (else (list possible-tuple)))
+(define (get-possible-tuple-contents node-with-possible-tuple)
+  (assert (GeneralNode? node-with-possible-tuple))
+  (let ((node-val (get-GeneralNode-val node-with-possible-tuple)))
+    (cond
+      ((tuple? node-val) (cdr node-val))
+      (else (list node-val)))
+    )
   )
 
 ;; see SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm

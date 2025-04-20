@@ -43,7 +43,7 @@
     (_RegisterLed bp bp led tokens)
     )
   (define (LeftRightAssoc bp led tokens)
-    (_RegisterLed bp (- bp 1) led tokens)
+    (_RegisterLed bp (- bp RIGHT-ASSOC-MINUS) led tokens)
     )
   (define (LookupNull token)
     (let ((res (find-var token null-lookup)))

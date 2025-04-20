@@ -29,7 +29,7 @@
   ;; 1. For the trailing comma https://docs.python.org/3/reference/expressions.html#expression-lists,
   ;; we check whether we can get one new nud, see the above.
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
-  (PrsSeq parser token left rbp 'tuple)
+  (PrsSeq p token left rbp 'tuple)
   ;;; IGNORE since tuple is returned and the 1st element may be also one tuple which should be concatenated,
   ;; we should not depend on the type of left.
 
@@ -62,10 +62,10 @@
 ;; proc(), proc(a), proc(a,b), proc(a,b,) (actually all done above in NullParen).
 (define (LeftFuncCall p token left unused-rbp)
   ;; borrowed from oilshell.
-  (and (not (member (Token-type left) var-types))
+  (and (not (member (get-GeneralNode-token-type left) var-types))
     (ParseError (list left "can't be called"))
     )
-  (let ((res (cons left (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))))
+  (let ((res (cons (get-GeneralNode-val left) (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))))
     (set-Token-type! token "call")
     (CompositeNode token res)
     )
@@ -102,10 +102,11 @@
 ;; 0. Similar to C, here I allow something like "int a=1; int b=2;" without outer Braces.
 ;; 1. Extension: Here I just allow this be one expr... Anyway book exercise doesn't say anything about grammar definition for that infix expression.
 ;;;; TODO tests (the latter 2 for NullBrace containing ";")
-;; lambda a:a+a;a**5; => (begin (lambda (a) (+ a a)) (** a 5))
+;; 0. lambda a:a+a;a**5; => (begin (lambda (a) (+ a a)) (** a 5))
 ;; The last just means ";" is like "," but due to statement ending it binds nothing from others at the left.
+;; 1. a,b;c,d (begin (tuple a b) (tuple c d))
 (define (LeftSemicolon p token left rbp)
-  (PrsSeq parser delimeter left rbp 'begin)
+  (PrsSeq p token left rbp 'begin)
   )
 
 ;;;; BEHAVIOR
@@ -118,6 +119,7 @@
 ;; "lambda a;: ..." error
 ;; "lambda a+b,: ..." error
 ;; "lambda a,**b,*c,: ..." works
+;; "lambda a: b:=4" works
 (define (NullLambda p token rbp)
   (declare (ignore token)) ; since delimeter is comma.
   (let ((intermediate 
@@ -130,13 +132,13 @@
             COMMA-PREC
             arg-node?
             )))
-    (let ((body (p 'ParseUntil rbp)))
+    (let ((body-contents (get-GeneralNode-val (p 'ParseUntil rbp))))
       (CompositeNode
         token
         (cons* 
           'lambda
-          (get-tagged-lst-data intermediate)
-          body
+          (get-tagged-lst-data (get-GeneralNode-val intermediate))
+          body-contents
           )))
     )
   )
@@ -152,10 +154,15 @@
 ;; 2. Use Python doc precedence ordering.
 ;;;; TODO tests
 ;; a+b:=c error
-;; a:=b,c
-(define (LeftDefine p token left rbp)
+;; a:=b,c => (tuple (define a b) c)
+;; a:=b:=c error
+;; a:= lambda k:3+b+k is fine
+(define (LeftDefine p token left unused-rbp)
   (assert (equal? ID-TAG-STR (get-GeneralNode-token-type left)))
-  (LeftBinaryOp p token left rbp)
+  (set-Token-type! token "define")
+  ;; Python
+  ;; > assignment_expression ::= [identifier ":="] expression
+  (LeftBinaryOp p token left EXPR-BASE-PREC)
   )
 
 ;;;; BEHAVIOR
@@ -165,7 +172,8 @@
 ;; Here I allow "conditional else" as paper does.
 ;; So "dangling else" is solved with {} https://en.wikipedia.org/wiki/Dangling_else instead of indent https://docs.python.org/3/reference/compound_stmts.html#compound-statements.
 ;;;; TODO tests
-;; Here "if a,b then a,b, else b,a," is allowed.
+;; IGNORE Here "if a,b then a,b, else b,a," is allowed.
+;; Same as Python if a,b ... is forbidden.
 ;; "if a then if b then s1 else s2" is same as "if a then { if b then s1 else s2 }".
 ;; "if a then { if b then s1 } else s2"
 (define (NullIf p token bp)
@@ -177,15 +185,46 @@
       token
       (cons* 
         'if
-        pred
-        then
+        (get-GeneralNode-val pred)
+        (get-GeneralNode-val consequent)
         (if (p 'AtToken "else")
-          (begin (p 'Eat "else") (p 'ParseUntil bp))
+          (begin (p 'Eat "else") (get-GeneralNode-val (p 'ParseUntil bp)))
           '())
         ))
     )
   )
 
+;;;; BEHAVIOR
+;; not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
+;; similar to ** in Python, so similar to that in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
+;;;; TODO tests
+;; a:= 3+b if a**2 else b => (define a (if (** a 2) (+ 3 b) b))
+;; a:= lambda k:3+b+k if a else b;c error
+;; a:= 3+b+k if a else b;c => (begin (define a (if a (+ 3 b k) b)) c)
+;; a:= 3+b+k if a else {b;c} => (define a (if a (+ 3 b k) (begin b c)))
+;; a if b if b_pred else b_alt else a_alt => (if (if b_pred b b_alt) a a_alt)
+;; a if b else c if c_pred else c_alt => (if b a (if c_pred c c_alt)) https://stackoverflow.com/a/79497941/21294350
 (define (LeftIf p token left rbp)
-  
+  (define get-intermediate-consq get-binary-left)
+  (define get-intermediate-pred get-binary-right)
+  (let ((intermediate (LeftBinaryOp p token left rbp))) ; (if consq pred)
+    (let ((pred (get-intermediate-pred intermediate))
+          (consq (get-intermediate-consq intermediate)))
+      ;; Python
+      ;; > conditional_expression ::= or_test ["if" or_test "else" expression]
+      (assert (not-GeneralNode-with-token-type pred "lambda" "define"))
+      (assert (not-GeneralNode-with-token-type consq "lambda" "define"))
+      (p 'Eat "else")
+      (let ((alt (p 'ParseUntil EXPR-BASE-PREC)))
+        (CompositeNode
+          token
+          (cons* 
+            'if
+            (get-GeneralNode-val pred)
+            (get-GeneralNode-val consq)
+            (get-GeneralNode-val alt)
+            ))
+        )
+      )
+    )
   )
