@@ -13,7 +13,13 @@
     ,EXPR-LIST-TYPE-STR 
     ,STATEMENT-BLOCK-TYPE-STR 
     ,IF-STATEMENT-TYPE-STR))
-;; implicitly consider expr precedence is higher than non-expr-tag.
+;; 0. implicitly consider expr precedence is higher than non-expr-tag.
+;; 1. For left-if, 
+;; "lambda" & ":=" & "EXPR-LIST" & "LEFT-IF-TYPE-STR" (all the former accepts expression at the end) 
+;; & "STATEMENT-BLOCK" & "IF-STATEMENT" (these ends with statement) can't be its left.
+;; For the consq, ":=" & "EXPR-LIST" & "STATEMENT-BLOCK" can't be here due to their lbp<left-if-rbp.
+;; "lambda" & "IF-STATEMENT" are possible due to being nud.
+;; "LEFT-IF-TYPE-STR" is possible due to LeftRightAssoc.
 (define tag-below-OR `("lambda" ,LEFT-IF-TYPE-STR ,@non-expr-tag))
 
 ;;; Based on Python expr grammar
@@ -88,7 +94,7 @@
     )
   )
 
-;; maybe not same as Python one https://typing.python.org/en/latest/spec/generics.html#using-type-variable-tuples-in-functions
+;; maybe not same as Python one https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-defparameter => https://peps.python.org/pep-0646/ => https://typing.python.org/en/latest/spec/generics.html#using-type-variable-tuples-in-functions
 ;; > x: Array[Height, Width] = Array()
 (define (ensure-tuple . nodes)
   (assert (list-of-type? nodes GeneralNode?))

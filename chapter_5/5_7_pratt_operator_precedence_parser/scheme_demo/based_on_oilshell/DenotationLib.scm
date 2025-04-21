@@ -1,3 +1,6 @@
+;;; reference
+;; effbot (only checked for those not in oilshell and pratt_new_compatible_with_MIT_GNU_Scheme.scm) https://web.archive.org/web/20101216050812/http://effbot.org/zone/simple-top-down-parsing.htm#multi-token-operators
+
 ;;; This obviously can't catch some possible syntax errors in expr 
 ;; because the grammar of this exercise is *not shown explicitly* (so actually no exact definition for error...),
 ;; And obviously we won't implement one parser like the actual one for Python or C etc.
@@ -132,11 +135,15 @@
 ;; 0.a. ensures arg-node?
 ;; 0.b. again here we allows "," in body, so rbp<COMMA-PREC.
 ;; 1. not in oilshell
+;; 2. similar to effbot except
+;; 2.a. it uses explicit argument_list to check "token.id" without calling Parse
+;; 2.b. it doesn't allow trailing comma.
 ;;;; TODO tests
 ;; "lambda a;: ..." error
 ;; "lambda a+b,: ..." error
 ;; "lambda a,**b,*c,: ..." works
 ;; "lambda a: b:=4" works
+;; "lambda a: lambda b: a*b" works
 ;; pratt_new_compatible_with_MIT_GNU_Scheme.scm ones (not allowing := same as Python).
 ;;;; Won't implement
 ;; > If a parameter has a default value, all following parameters up until the “*” must also have a default value — 
@@ -229,11 +236,15 @@
   )
 
 ;;;; BEHAVIOR
-;; not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
-;; similar to ** in Python, so similar to that in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
+;; 0. not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
+;; 0.a. similar to effbot (but I don't know why it uses infix_r for "or" etc instead of "if")
+;; https://web.archive.org/web/20121101045119/https://docs.python.org/3/reference/expressions.html#comparisons
+;; uses "chain from left to right" (so a<b<c is not same as ((a<b) < c))
+;; 0.a.0. see SentinelLib.scm: here ensure-or-test-expr is necessary.
+;; 1. similar to ** in Python, so similar to that in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
 ;;;; TODO tests
 ;; a:= 3+b if a**2 else b => (define a (if (** a 2) (+ 3 b) b))
-;; a:= lambda k:3+b+k if a else b;c error
+;; a:= lambda k:3+b+k if a else b;c (not one error) => (begin (define a (lambda (k) (if a (+ 3 b k) b))) c)
 ;; a:= 3+b+k if a else b;c => (begin (define a (if a (+ 3 b k) b)) c)
 ;; a:= 3+b+k if a else {b;c} => (define a (if a (+ 3 b k) (begin b c)))
 ;; a if b if b_pred else b_alt else a_alt => (if (if b_pred b b_alt) a a_alt)
@@ -247,6 +258,7 @@
       ;; Python
       ;; > conditional_expression ::= or_test ["if" or_test "else" expression]
       (ensure-or-test-expr pred consq)
+
       (set-Token-type! token LEFT-IF-TYPE-STR)
       (p 'Eat "else")
       (let ((alt (p 'ParseUntil EXPR-BASE-PREC)))

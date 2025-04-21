@@ -23,13 +23,15 @@
 ;; since ; means end of one statement so that if-statement is ended.
 (define LEFT-SEMICOLON-PREC BASE-PREC)
 (define EXPR-BASE-PREC LEFT-SEMICOLON-PREC)
-(define STATEMENT-BASE-PREC LEFT-SEMICOLON-PREC)
+;; https://docs.python.org/3/reference/simple_stmts.html#expression-statements
+;; IMHO expr can be one statement so that they can share base-prec.
+(define STATEMENT-BASE-PREC EXPR-BASE-PREC)
 ;;; IGNORE different from pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; Here we allow "if a,b then ..." (this isn't allowed in Python due to assignment_expression can't be list https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-if_stmt) 
 ;; so its prec should be less than COMMA-PREC.
 ;;; Python
 ;; > if_stmt ::= "if" assignment_expression ":" suite
-(define NULL-IF-PREC EXPR-BASE-PREC)
+(define NULL-IF-PREC STATEMENT-BASE-PREC)
 ;; 0. IGNORE Same value as pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; to make extension more flexible.
 ;; 0.a. See the above "See DenotationLib.scm ..."
@@ -39,8 +41,8 @@
 ;; But here we allows that since := is define instead of "a named expression".
 ;; So the above means (tuple (define a b) c)
 (define COMMA-PREC EXPR-BASE-PREC)
-(define LEFT-COLON-PREC EXPR-BASE-PREC)
-(define Null-MUL-PREC EXPR-BASE-PREC)
+(define LEFT-COLON-PREC STATEMENT-BASE-PREC)
+; (define Null-MUL-PREC EXPR-BASE-PREC)
 
 ;;;;;; PYTHON EXPR BEGINNING
 ;;;; see https://docs.python.org/3/reference/expressions.html#operator-precedence
@@ -50,9 +52,11 @@
 ;;; := should grab b in "a;b := 2".
 (define :=-PREC (+ PREC-STEP EXPR-BASE-PREC))
 
-;; IMHO lambda should not bind anything at the right because it just manipulates with expr_list until ":".
-;; so lexer list (lambda a := b : ...) will throw error(s).
-(define LAMBDA-RBP STATEMENT-BASE-PREC) ; used for body parsing
+;; 0. IGNORE IMHO lambda should not bind anything at the right because it just manipulates with expr_list until ":".
+;; ~~so~~ lexer list (lambda a := b : ...) will throw error(s).
+;; That is checked by ensure-identifier.
+;; 1. Here lambda a: b;c won't bind "b;c" statement into body due to prec.
+(define LAMBDA-RBP EXPR-BASE-PREC) ; used for body parsing
 
 ;; should be greater than COMMA-PREC for Python since conditional_expression is one expr.
 ;; Although lambda_expr is also one expr, it is nud. LAMBDA-RBP< COMMA-PREC is to reuse LeftComma just like NullParen.

@@ -250,6 +250,11 @@ See [crockford_parse_implementation]
     More specifically, both does the creation of `symbol` and the register of `led`/`nud`.
 - > but there’s a more practical description in the section “Evaluation order” in Python’s language reference.
   See [the oldest archive](https://web.archive.org/web/20121101045119/https://docs.python.org/3/reference/expressions.html#evaluation-order) which still has the precedence list in the section after "Evaluation order" instead of "Evaluation order" itself.
+  - Its [3.3.0](https://www.python.org/downloads/release/python-330/) can't be [installed](https://askubuntu.com/a/244550/2168145) with error
+    ```bash
+    ./python -E -S -m sysconfig --generate-posix-vars
+    make: *** [Makefile:488: Lib/_sysconfigdata.py] Segmentation fault (core dumped)
+    ```
 ### comparison with oilshell implementation
 - > It uses an unusual style of registering methods using decorators
   > The current token is a global variable

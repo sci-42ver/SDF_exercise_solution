@@ -46,9 +46,10 @@
     (spec 'Left LEFT-SEMICOLON-PREC LeftSemicolon (list ";"))
 
     (spec 'Null LAMBDA-RBP NullLambda (list "lambda"))
-    (spec 'Null UNUSED-PREC-MARKING-END NullConstant (list "/" "*"))
-    (spec 'Left LEFT-COLON-PREC LeftColon (list ":"))
-    (spec 'Null Null-MUL-PREC NullMul (list "*"))
+    ; (spec 'Null UNUSED-PREC-MARKING-END NullConstant (list "/" "*"))
+    ; (spec 'Left LEFT-COLON-PREC LeftColon (list ":"))
+    ; (spec 'Null Null-MUL-PREC NullMul (list "*"))
+    
     ;; IGNORE For if – else (not offered in oilshell since it is not used in C-expr),
     ;; we should do as https://docs.python.org/3/reference/expressions.html#if-expr
     ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm
