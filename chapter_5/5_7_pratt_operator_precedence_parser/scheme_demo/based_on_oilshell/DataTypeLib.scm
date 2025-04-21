@@ -25,12 +25,23 @@
   )
 (define (Loc row col) (list row col))
 (define Token-type cadr)
+;; here token can be local due to we doesn't (set! token ...).
 (define set-Token-type!
   (lambda (token type) 
-    (assert (and (Token? token) (Token-type=? type)))
+    (assert (and (Token? token) (Token-type? type)))
     (set-car! (cdr token) type)))
+(define (set-Token-type-same-as-val! token)
+  (assert (Token? token))
+  (let ((val (Token-val token)))
+    (and
+      (not (equal? (Token-type token) val))
+      (set-Token-type! token val)
+      )
+    )
+  )
 (define Token-val caddr)
 (define Token-type=? string=?)
+(define Token-type? string?)
 (define Token? (tagged-list-pred Token-tag))
 
 (define (symbol->token sym)
@@ -83,7 +94,7 @@
   (Token-type (get-GeneralNode-token general-node))
   )
 (define (not-GeneralNode-with-token-type general-node . types)
-  (assert (and (GeneralNode? general-node) (every Token-type=? types)))
+  (assert (and (GeneralNode? general-node) (every Token-type? types)))
   (let ((type (get-GeneralNode-token-type general-node)))
     (not (member type types)))
   )
@@ -92,18 +103,6 @@
   (cond 
     ((CompositeNode? general-node) (get-CompositeNode-expr general-node))
     ((Node? general-node) (get-Node-val general-node)))
-  )
-
-;; ID-TAG-STR uses 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm definition.
-;; To avoid load loop, here no explicit loading of that.
-(define (arg-node? node)
-  (assert (GeneralNode? node))
-  (let ((type (Token-type (get-GeneralNode-token node))))
-    (or
-      (equal? ID-TAG-STR type)
-      (equal? "star-arg" type)
-      )
-    )
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
@@ -125,6 +124,3 @@
       (else (list node-val)))
     )
   )
-
-;; see SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
-(define var-types (list ID-TAG-STR "get"))

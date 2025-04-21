@@ -1,5 +1,9 @@
-;;; This obviously can't catch some possible syntax errors in expr because the grammar of this exercise is *not shown explicitly*,
+;;; This obviously can't catch some possible syntax errors in expr 
+;; because the grammar of this exercise is *not shown explicitly* (so actually no exact definition for error...),
 ;; And obviously we won't implement one parser like the actual one for Python or C etc.
+
+;;; DEBUG INFO: 
+;; ";;;; BEHAVIOR" and ";;;; TODO tests" number expected: 9 (by re pat "^\(define ")
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "loop_lib.scm")
@@ -29,7 +33,11 @@
   ;; 1. For the trailing comma https://docs.python.org/3/reference/expressions.html#expression-lists,
   ;; we check whether we can get one new nud, see the above.
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
-  (PrsSeq p token left rbp 'tuple)
+  (new-GeneralNode-simplified
+    (PrsSeq p token left rbp 'tuple)
+    token
+    EXPR-LIST-TYPE-STR
+    )
   ;;; IGNORE since tuple is returned and the 1st element may be also one tuple which should be concatenated,
   ;; we should not depend on the type of left.
 
@@ -62,12 +70,14 @@
 ;; proc(), proc(a), proc(a,b), proc(a,b,) (actually all done above in NullParen).
 (define (LeftFuncCall p token left unused-rbp)
   ;; borrowed from oilshell.
-  (and (not (member (get-GeneralNode-token-type left) var-types))
-    (ParseError (list left "can't be called"))
-    )
-  (let ((res (cons (get-GeneralNode-val left) (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))))
-    (set-Token-type! token "call")
-    (CompositeNode token res)
+  (ensure-var left)
+  ;; token is unused in NullParen
+  (new-GeneralNode-simplified
+    (cons 
+      (get-GeneralNode-val left) 
+      (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))
+    token
+    "call"
     )
   )
 
@@ -87,14 +97,16 @@
 ;; lambda a:{a+a;a**5;} => (lambda (a) (begin (+ a a) (** a 5)))
 ;; non-error {a,b} => (tuple a b)
 (define (NullBrace p token unused-rbp)
-  (declare (ignore token)) ; since delimeter is comma.
-  (consume-possible-elems-implicitly-and-the-ending-token
-    p
-    unused-rbp
-    "}"
-    'begin
-    semicolon-token
-    LEFT-SEMICOLON-PREC
+  (new-GeneralNode-simplified
+    (consume-possible-elems-implicitly-and-the-ending-token
+      p
+      unused-rbp
+      "}"
+      'begin
+      semicolon-token
+      LEFT-SEMICOLON-PREC
+      )
+    token
     )
   )
 
@@ -106,7 +118,12 @@
 ;; The last just means ";" is like "," but due to statement ending it binds nothing from others at the left.
 ;; 1. a,b;c,d (begin (tuple a b) (tuple c d))
 (define (LeftSemicolon p token left rbp)
-  (PrsSeq p token left rbp 'begin)
+  ; token won't be used in PrsNary* of PrsSeq, so fine to set-Token-type! beforehand.
+  (new-GeneralNode-simplified
+    (PrsSeq p token left rbp 'begin)
+    token
+    STATEMENT-BLOCK-TYPE-STR
+    )
   )
 
 ;;;; BEHAVIOR
@@ -120,6 +137,10 @@
 ;; "lambda a+b,: ..." error
 ;; "lambda a,**b,*c,: ..." works
 ;; "lambda a: b:=4" works
+;; pratt_new_compatible_with_MIT_GNU_Scheme.scm ones (not allowing := same as Python).
+;;;; Won't implement
+;; > If a parameter has a default value, all following parameters up until the “*” must also have a default value — 
+;; > this is a syntactic restriction that is not *expressed by the grammar*.
 (define (NullLambda p token rbp)
   (declare (ignore token)) ; since delimeter is comma.
   (let ((intermediate 
@@ -135,7 +156,7 @@
     (let ((body-contents (get-GeneralNode-val (p 'ParseUntil rbp))))
       (CompositeNode
         token
-        (cons* 
+        (cons*-wrapper 
           'lambda
           (get-tagged-lst-data (get-GeneralNode-val intermediate))
           body-contents
@@ -143,26 +164,39 @@
     )
   )
 
+;;;; BEHAVIOR
+;; trivial by returning self same as oilshell
+;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm, this is inherent inside nudcall.
+;;;; TODO tests
+;; /, * => return self. (also see lambda)
+(define (NullConstant p token unused-rbp)
+  (declare (ignore p))
+  (set-Token-type-same-as-val! token) ; type is string.
+  (CompositeNode token (string->symbol (Token-val token))) ; pass symbol to be eval'ed in Scheme.
+  )
+
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
 (load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
 ;;;; BEHAVIOR
-;; 0. same as pratt_new_compatible_with_MIT_GNU_Scheme.scm
-;; but 
-;; 0.a. ensures arg-node?
-;; 0.b. again here we allows "," in body, so rbp<COMMA-PREC.
+;; 0. same as pratt_new_compatible_with_MIT_GNU_Scheme.scm with different bp
+;; i.e. Use Python doc precedence ordering.
 ;; 1. not in oilshell
-;; 2. Use Python doc precedence ordering.
 ;;;; TODO tests
 ;; a+b:=c error
 ;; a:=b,c => (tuple (define a b) c)
 ;; a:=b:=c error
 ;; a:= lambda k:3+b+k is fine
+;; a:= b or c => (define a (or b c))
 (define (LeftDefine p token left unused-rbp)
-  (assert (equal? ID-TAG-STR (get-GeneralNode-token-type left)))
-  (set-Token-type! token "define")
-  ;; Python
-  ;; > assignment_expression ::= [identifier ":="] expression
-  (LeftBinaryOp p token left EXPR-BASE-PREC)
+  (ensure-identifier left)
+  ;; token-type is unused in LeftBinaryOp
+  (new-GeneralNode-simplified
+    ;; Python
+    ;; > assignment_expression ::= [identifier ":="] expression
+    (LeftBinaryOp p token left EXPR-BASE-PREC)
+    token 
+    :=-TYPE-STR
+    )  
   )
 
 ;;;; BEHAVIOR
@@ -180,10 +214,10 @@
   (let* ((pred (p 'ParseUntil bp))
          ;; different bp from pratt_new_compatible_with_MIT_GNU_Scheme.scm, but same behavior.
          (consequent (begin (p 'Eat "then") (p 'ParseUntil bp))))
-    (set-Token-type! token "null-if")
+    (set-Token-type! token IF-STATEMENT-TYPE-STR)
     (CompositeNode
       token
-      (cons* 
+      (cons*-wrapper
         'if
         (get-GeneralNode-val pred)
         (get-GeneralNode-val consequent)
@@ -212,13 +246,13 @@
           (consq (get-intermediate-consq intermediate)))
       ;; Python
       ;; > conditional_expression ::= or_test ["if" or_test "else" expression]
-      (assert (not-GeneralNode-with-token-type pred "lambda" "define"))
-      (assert (not-GeneralNode-with-token-type consq "lambda" "define"))
+      (ensure-or-test-expr pred consq)
+      (set-Token-type! token LEFT-IF-TYPE-STR)
       (p 'Eat "else")
       (let ((alt (p 'ParseUntil EXPR-BASE-PREC)))
         (CompositeNode
           token
-          (cons* 
+          (cons*-wrapper
             'if
             (get-GeneralNode-val pred)
             (get-GeneralNode-val consq)

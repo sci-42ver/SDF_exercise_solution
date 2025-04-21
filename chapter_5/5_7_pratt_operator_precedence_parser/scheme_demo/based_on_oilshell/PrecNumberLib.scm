@@ -8,6 +8,7 @@
 ;; lbp: 0#N( N{ N_if :=#<1#L; lambda#<2#,#<3#L_if#
 ;; rbp (=lbp or lbp-1)
 ;;; IGNORE Here I define one grammar precedence order list from high to low:
+(define UNUSED-PREC-MARKING-END -1)
 (define UNUSED-BASE-PREC 0)
 (define BASE-PREC 0) ; init rbp for parsing
 
@@ -38,6 +39,8 @@
 ;; But here we allows that since := is define instead of "a named expression".
 ;; So the above means (tuple (define a b) c)
 (define COMMA-PREC EXPR-BASE-PREC)
+(define LEFT-COLON-PREC EXPR-BASE-PREC)
+(define Null-MUL-PREC EXPR-BASE-PREC)
 
 ;;;;;; PYTHON EXPR BEGINNING
 ;;;; see https://docs.python.org/3/reference/expressions.html#operator-precedence

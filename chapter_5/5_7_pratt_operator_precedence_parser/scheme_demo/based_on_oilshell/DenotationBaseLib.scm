@@ -16,7 +16,7 @@
 (load "pred_lib.scm")
 ;; returns a list of expr's instead of GeneralNode's.
 (define (PrsNary* token p rbp #!optional elm-pred)
-  (define (cons* a b)
+  (define (cons-with-possible-first-elm a b)
     (if (null? a)
       b
       (cons a b))
@@ -33,7 +33,7 @@
           (begin 
             (p 'Eat type)
             (lp 
-              (cons* 
+              (cons-with-possible-first-elm
                 (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
                   '()
                   (get-GeneralNode-val
@@ -99,7 +99,7 @@
 (define (LeftBinaryOp p token left rbp)
   (CompositeNode
     token
-    (cons*
+    (cons*-wrapper
       ;; Here I assume to use ** etc even if it is not supported in original underlying interpreter.
       ;; Then it is that interpreter's duty to define ** before using **.
       (get-header-for-token token)
@@ -110,3 +110,74 @@
   )
 (define get-binary-left cadr)
 (define get-binary-right caddr)
+
+;; See DataTypeLib.scm: here set-Token-type! also works for local arg passed in. 
+(define-syntax new-GeneralNode-simplified
+  (syntax-rules ()
+    ((_ possible-general-node token type)
+      (begin
+        (assert 
+          (and
+            (Token? token)
+            (Token-type? type)))
+        (set-Token-type! token type)
+        (let ((intermediate possible-general-node))
+          (CompositeNode
+            token
+            (cond 
+              ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+              (else intermediate))
+            )
+          )
+        )
+      )
+    ((_ possible-general-node token)
+      (begin
+        (assert (and (Token? token)))
+        (let ((intermediate possible-general-node))  
+          (CompositeNode
+            token
+            (cond 
+              ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+              (else intermediate))
+            )
+          )
+        )
+      )
+    )
+  )
+
+(define-syntax new-GeneralNode
+  (syntax-rules ()
+    ((_ possible-general-node token type)
+      ;; This let is to avoid duplicate calculation
+      ;; token is assumed to be identifier able to be set!.
+      (let ((intermediate possible-general-node)
+            (type* type)
+            )
+        (assert 
+          (and
+            (Token? token)
+            (Token-type? type*)))
+        ;; Use syntax here to ensure this work for the caller token instead of that local argument.
+        (set-Token-type! token type*)
+        (CompositeNode
+          token
+          (cond 
+            ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+            (else intermediate))
+          )
+        )
+      )
+    )
+  )
+
+;; same as oilshell and pratt_new_compatible_with_MIT_GNU_Scheme.scm
+(define (NullPrefixOp p token rbp)
+  (CompositeNode
+    token
+    (cons*-wrapper
+      (get-header-for-token token)
+      (get-GeneralNode-val (p 'ParseUntil rbp)))
+    )
+  )

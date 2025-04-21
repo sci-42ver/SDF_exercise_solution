@@ -19,7 +19,7 @@
 
     ;; $
     ;; All related data are manipulated either explicitly here or implicitly with default values.
-    (spec 'Null -1 NullError Null-Error-List)
+    (spec 'Null UNUSED-PREC-MARKING-END NullError Null-Error-List)
     ;; 0. , is used in pratt_new_compatible_with_MIT_GNU_Scheme.scm
     ;; for lambda, (a1, a2) or proc(a1, a2)
     ;; So we can always construct one list for the parent
@@ -46,6 +46,9 @@
     (spec 'Left LEFT-SEMICOLON-PREC LeftSemicolon (list ";"))
 
     (spec 'Null LAMBDA-RBP NullLambda (list "lambda"))
+    (spec 'Null UNUSED-PREC-MARKING-END NullConstant (list "/" "*"))
+    (spec 'Left LEFT-COLON-PREC LeftColon (list ":"))
+    (spec 'Null Null-MUL-PREC NullMul (list "*"))
     ;; IGNORE For if – else (not offered in oilshell since it is not used in C-expr),
     ;; we should do as https://docs.python.org/3/reference/expressions.html#if-expr
     ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm
