@@ -16,6 +16,20 @@
   (*token-type-list* 'insert (make-prec-key 'Left ":=") :=-TYPE-STR)
   (*token-type-list* 'insert (make-prec-key 'Null "if") IF-STATEMENT-TYPE-STR)
   (*token-type-list* 'insert (make-prec-key 'Left "if") LEFT-IF-TYPE-STR)
+  ;; The rest ones in prec-list-higher-than-or-op doesn't have both nud and led.
+  (for-each
+    (lambda (op)
+      (let ((op-description
+              (cond 
+                ((equal? "-" op) "minus")
+                ((equal? "+" op) "plus"))
+              ))
+        (*token-type-list* 'insert (make-prec-key 'Left op) (string-append "left-" op-description))
+        (*token-type-list* 'insert (make-prec-key 'Null op) (string-append "null-" op-description))  
+        )
+      )
+    '("-" "+")
+    )
   )
 (init-token-type-list)
 (define ALL-TOKEN-TYPES (map cdr (hash-table->alist *token-type-list*)))

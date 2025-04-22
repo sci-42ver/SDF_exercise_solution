@@ -12,6 +12,7 @@
 (define UNUSED-BASE-BP 0)
 (define BASE-BP 0) ; init rbp for parsing
 
+;;;;;; Non-expr
 ;;; IMHO statement prec should be less than all expr prec, see https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-expression_stmt
 ;; here I assume RHS of expression_stmt just allow *any* expr. Also see https://stackoverflow.com/questions/79544489/level-2-expression-in-c#comment140282231_79544622 https://stackoverflow.com/a/63677576/21294350
 ;; 0. It should not bind anything left from other op's because it is just one token to end statement.
@@ -19,7 +20,6 @@
 ;; 2. Here we should not allow "if a;b then ..." because that makes ambiguity
 ;; since ; means end of one statement so that if-statement is ended.
 (define LEFT-SEMICOLON-BP BASE-BP)
-(define EXPR-BASE-BP LEFT-SEMICOLON-BP)
 ;; https://docs.python.org/3/reference/simple_stmts.html#expression-statements
 ;; IMHO expr can be one statement so that they can share base-prec.
 (define STATEMENT-BASE-BP EXPR-BASE-BP)
@@ -38,11 +38,10 @@
 ;; But here we allows that since := is define instead of "a named expression".
 ;; So the above means (tuple (define a b) c)
 (define COMMA-BP EXPR-BASE-BP)
-
-; (define LEFT-COLON-BP STATEMENT-BASE-BP)
-; (define Null-MUL-BP EXPR-BASE-BP)
+;;;;;; Non-expr end
 
 ;;;;;; PYTHON EXPR BEGINNING
+(define EXPR-BASE-BP LEFT-SEMICOLON-BP)
 ;;;; see https://docs.python.org/3/reference/expressions.html#operator-precedence
 ;;; IGNORE "," is not listed in Python precedence list.
 ;; Here I just assume , has one higher precedence than :=.
@@ -56,8 +55,9 @@
 ;; 1. Here lambda a: b;c won't bind "b;c" statement into body due to prec.
 (define LAMBDA-RBP EXPR-BASE-BP) ; used for body parsing
 
-;; should be greater than COMMA-BP for Python since conditional_expression is one expr.
-;; Although lambda_expr is also one expr, it is nud. LAMBDA-RBP< COMMA-BP is to reuse LeftComma just like NullParen.
+;; 0. should be greater than COMMA-BP for Python since conditional_expression is one expr.
+;; So a,b if c else d means (tuple a (if ...))
+;; 1. Although lambda_expr is also one expr, it is nud. LAMBDA-RBP< COMMA-BP is to reuse LeftComma just like NullParen.
 (define LEFT-IF-BP (+ BP-STEP (max :=-BP LAMBDA-RBP)))
 
 ;; TODO use one value based on precedence list.

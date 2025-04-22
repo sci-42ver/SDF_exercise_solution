@@ -176,23 +176,23 @@
     )
   )
 
-;;;; BEHAVIOR
-;; trivial by returning self same as oilshell
-;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm, this is inherent inside nudcall.
-;;;; TODO tests
-;; /, * => return self. (also see lambda)
-(define (NullConstant p token unused-rbp)
-  (declare (ignore p))
-  (set-Token-type-same-as-val! token) ; type is string.
-  (CompositeNode token (string->symbol (Token-val token))) ; pass symbol to be eval'ed in Scheme.
-  )
-
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
 (load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
 ;;;; BEHAVIOR
 ;; 0. same as pratt_new_compatible_with_MIT_GNU_Scheme.scm with different bp
 ;; i.e. Use Python doc precedence ordering.
 ;; 1. not in oilshell
+;; 2. Python doc
+;; skip: 
+;; "comprehension ::= assignment_expression comp_for"
+;; keep:
+;; (positional_item is only used in positional_arguments)
+;; > positional_arguments ::= positional_item ("," positional_item)*
+;; > positional_item      ::= assignment_expression | "*" expression
+;; and (flexible_expression is only used in flexible_expression_list)
+;; > flexible_expression      ::= assignment_expression | starred_expression
+;; > "flexible_expression_list ::= flexible_expression ("," flexible_expression)* [","]"
+;; Here flexible_expression_list and positional_arguments both has one optional ,-delimited list.
 ;;;; TODO tests
 ;; a+b:=c error
 ;; a:=b,c => (tuple (define a b) c)
@@ -254,6 +254,7 @@
 ;; a:= 3+b+k if a else {b;c} => (define a (if a (+ 3 b k) (begin b c)))
 ;; a if b if b_pred else b_alt else a_alt => (if (if b_pred b b_alt) a a_alt)
 ;; a if b else c if c_pred else c_alt => (if b a (if c_pred c c_alt)) https://stackoverflow.com/a/79497941/21294350
+;; a,b if c else d => (tuple a (if c b d))
 (define (LeftIf p token left rbp)
   (define get-intermediate-consq get-binary-left)
   (define get-intermediate-pred get-binary-right)
@@ -285,4 +286,15 @@
 ;; For or, left can't be those op's ending with expression.
 (define (LeftOr p token left rbp)
   
+  )
+
+;;;; BEHAVIOR
+;; trivial by returning self same as oilshell
+;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm, this is inherent inside nudcall.
+;;;; TODO tests
+;; /, * => return self. (also see lambda)
+(define (NullConstant p token unused-rbp)
+  (declare (ignore p))
+  (set-Token-type-same-as-val! token) ; type is string.
+  (CompositeNode token (string->symbol (Token-val token))) ; pass symbol to be eval'ed in Scheme.
   )

@@ -25,4 +25,5 @@
 ;; 1.b. For the consq, ":=" & "EXPR-LIST" & "STATEMENT-BLOCK" can't be here due to their lbp<left-if-rbp.
 ;; "lambda" & "IF-STATEMENT" are possible due to being nud.
 ;; "LEFT-IF-TYPE-STR" is possible due to LeftRightAssoc.
-(define tag-below-OR `("lambda" ,LEFT-IF-TYPE-STR ,@NON-EXPR-TAG-WITH-EXPR-AS-DATA-END))
+(define tag-with-precedence-lower-than-OR
+  `("lambda" ,LEFT-IF-TYPE-STR ,@NON-EXPR-TAG-WITH-EXPR-AS-DATA-END))

@@ -9,7 +9,7 @@
   (assert (list-of-type? nodes GeneralNode?))
   (for-each
     (lambda (node)
-      (assert (apply not-GeneralNode-with-token-type (cons node tag-below-OR)))
+      (assert (apply not-GeneralNode-with-token-type (cons node tag-with-precedence-lower-than-OR)))
       )
     nodes
     )
@@ -85,14 +85,15 @@
     )
   )
 
-(define (pred-ensuring-expr-below token)
+;; consistent means >= and other constraints (see ALL-NON-TOP-EXPR-TOKEN-TYPES)
+(define (pred-ensuring-expr-with-consistent-precedence token)
   (lambda (node)
     (member 
       (get-GeneralNode-token-type node)
-      (get-token-types-with-lower-prec (Token-type token)))
+      (get-expr-token-types-with-consistent-prec (Token-type token)))
     )
   )
 (define (elm-relative-assertion token . nodes)
-  (let ((pred (pred-ensuring-expr-below token)))
+  (let ((pred (pred-ensuring-expr-with-consistent-precedence token)))
     ())
   )

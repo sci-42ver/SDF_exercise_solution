@@ -2,13 +2,13 @@
 (load "SentinelBaseDataLib.scm")
 ;; token-type -> prec, then order it.
 ;; token-type is set by 
-(define (get-expr-token-types-with-lower-prec token-type)
+(define (get-expr-token-types-with-consistent-prec token-type)
   (assert (Token-type? token-type))
   (let ((cur-prec (get-prec token-type)))
     (append
       (filter
         (lambda (type)
-          (< (get-prec type) cur-prec)
+          (>= (get-prec type) cur-prec)
           )
         ALL-NON-TOP-EXPR-TOKEN-TYPES
         )
