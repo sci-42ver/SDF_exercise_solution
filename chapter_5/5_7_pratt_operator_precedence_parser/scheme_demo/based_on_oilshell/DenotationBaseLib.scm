@@ -1,12 +1,15 @@
 ;; 0. p is parser
 ;; 1. Just like loop in prsmatch but not read the ending token before reverse.
-(define (PrsNary token p)
+(cd "~/SICP_SDF/SDF_exercises/common-lib/")
+(load "base_procedure_lib.scm")
+(define (PrsNary token p rbp #!optional elm-relative-assertion)
+  (or elm-relative-assertion (set! elm-relative-assertion return-last))
   (let ((type (Token-type token)))
-    (let lp ((l (list (get-GeneralNode-val (p 'ParseUntil (get-left-rbp token))))))
+    (let lp ((l (list (get-GeneralNode-val (elm-relative-assertion token (p 'ParseUntil rbp))))))
       (if (p 'AtToken type)
         (begin 
           (p 'Eat type)
-          (lp (cons (get-GeneralNode-val (p 'ParseUntil (get-left-rbp token))) l)))
+          (lp (cons (get-GeneralNode-val (elm-relative-assertion token (p 'ParseUntil rbp))) l)))
         (reverse l))
       )
     )

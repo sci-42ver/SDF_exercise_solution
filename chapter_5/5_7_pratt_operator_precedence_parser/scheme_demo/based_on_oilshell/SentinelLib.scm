@@ -1,26 +1,5 @@
-;;;;;; Tag strings
-(define LEFT-IF-TYPE-STR "left-if")
-(define :=-TYPE-STR "define")
-(define EXPR-LIST-TYPE-STR "expr-list")
-(define STATEMENT-BLOCK-TYPE-STR "statement-block")
-(define IF-STATEMENT-TYPE-STR "null-if")
-;; see 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
-(define VAR-TYPES (list ID-TAG-STR "get"))
-(define TUPLE-TYPES `(,@VAR-TYPES "tuple"))
-
-(define non-expr-tag 
-  `(,:=-TYPE-STR 
-    ,EXPR-LIST-TYPE-STR 
-    ,STATEMENT-BLOCK-TYPE-STR 
-    ,IF-STATEMENT-TYPE-STR))
-;; 0. implicitly consider expr precedence is higher than non-expr-tag.
-;; 1. For left-if, 
-;; "lambda" & ":=" & "EXPR-LIST" & "LEFT-IF-TYPE-STR" (all the former accepts expression at the end) 
-;; & "STATEMENT-BLOCK" & "IF-STATEMENT" (these ends with statement) can't be its left.
-;; For the consq, ":=" & "EXPR-LIST" & "STATEMENT-BLOCK" can't be here due to their lbp<left-if-rbp.
-;; "lambda" & "IF-STATEMENT" are possible due to being nud.
-;; "LEFT-IF-TYPE-STR" is possible due to LeftRightAssoc.
-(define tag-below-OR `("lambda" ,LEFT-IF-TYPE-STR ,@non-expr-tag))
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
+(load "SentinelBaseLib.scm")
 
 ;;; Based on Python expr grammar
 ;; see https://docs.python.org/3/reference/expressions.html#conditional-expressions
@@ -104,4 +83,16 @@
       )
     nodes
     )
+  )
+
+(define (pred-ensuring-expr-below token)
+  (lambda (node)
+    (member 
+      (get-GeneralNode-token-type node)
+      (get-token-types-with-lower-prec (Token-type token)))
+    )
+  )
+(define (elm-relative-assertion token . nodes)
+  (let ((pred (pred-ensuring-expr-below token)))
+    ())
   )

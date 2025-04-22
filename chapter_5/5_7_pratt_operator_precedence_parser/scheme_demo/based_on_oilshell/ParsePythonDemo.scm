@@ -33,30 +33,27 @@
     ;; ---
     ;; So when used by other nud's like lambda or led's, "," is manipulated specifically.
     ;; This led is just used for the bare case "a, b".
-    (spec 'Left COMMA-PREC LeftComma (list ","))
+    (spec-with-implicit-prec 'Left LeftComma (list ","))
     ;; 0. CLOSE-PAREN is shown above. Here lbp is only needed to be less than all rbp's.
-    (spec 'Left 200 LeftFuncCall (list "("))
-    (spec 'Null NULL-PAREN-PREC NullParen (list "("))
+    (spec-with-implicit-prec 'Left LeftFuncCall (list "("))
+    (spec-with-implicit-prec 'Null NullParen (list "("))
     ;; 1. IGNORE LEFT-BRACE, SEMICOLON, RIGHT-BRACE are skipped due to they are not used in expression (see https://en.cppreference.com/w/c/language/operator_precedence).
     ;; parse-matchfix-modified have been used similarly in lambda and open-paren-nud manipulation there.
     ;; SEMICOLON, RIGHT-BRACE are just like "," and ")" here both with default error led/nud's.
     ;; 1.a. LEFT-BRACE, SEMICOLON, RIGHT-BRACE should be added since statement may be used in lambda.
     ;; (I won't give one extensive support for Python statement... That is due to focus here is expr)
-    (spec 'Null NULL-BRACE-PREC NullBrace (list "{"))
-    (spec 'Left LEFT-SEMICOLON-PREC LeftSemicolon (list ";"))
+    (spec-with-implicit-prec 'Null NullBrace (list "{"))
+    (spec-with-implicit-prec 'Left LeftSemicolon (list ";"))
 
-    (spec 'Null LAMBDA-RBP NullLambda (list "lambda"))
-    ; (spec 'Null UNUSED-PREC-MARKING-END NullConstant (list "/" "*"))
-    ; (spec 'Left LEFT-COLON-PREC LeftColon (list ":"))
-    ; (spec 'Null Null-MUL-PREC NullMul (list "*"))
+    (spec-with-implicit-prec 'Null NullLambda (list "lambda"))
     
     ;; IGNORE For if – else (not offered in oilshell since it is not used in C-expr),
     ;; we should do as https://docs.python.org/3/reference/expressions.html#if-expr
     ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm
-    (spec 'Null NULL-IF-PREC NullIf (list "if"))
-    (spec 'LeftRightAssoc LEFT-IF-PREC LeftIf (list "if"))
+    (spec-with-implicit-prec 'Null NullIf (list "if"))
+    (spec-with-implicit-prec 'LeftRightAssoc LeftIf (list "if"))
 
-    (spec 'Left :=-PREC LeftDefine (list ":="))
+    (spec-with-implicit-prec 'Left LeftDefine (list ":="))
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

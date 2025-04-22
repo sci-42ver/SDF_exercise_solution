@@ -39,7 +39,7 @@
   (new-GeneralNode-simplified
     (PrsSeq p token left rbp 'tuple)
     token
-    EXPR-LIST-TYPE-STR
+    (get-token-type-from-caller-and-op LeftComma token)
     )
   ;;; IGNORE since tuple is returned and the 1st element may be also one tuple which should be concatenated,
   ;; we should not depend on the type of left.
@@ -55,13 +55,18 @@
 ;; error (a+b;a**b)
 (define (NullParen p token unused-rbp)
   (declare (ignore token)) ; since delimeter is comma.
-  (consume-possible-elems-implicitly-and-the-ending-token
-    p
-    unused-rbp
-    ")"
-    'tuple
-    comma-token
-    COMMA-PREC
+  (new-GeneralNode-simplified
+    (consume-possible-elems-implicitly-and-the-ending-token
+      p
+      unused-rbp
+      ")"
+      'tuple
+      comma-token
+      COMMA-PREC
+      )
+    token
+    ;; needed to differentiate it from "a,b..." since the latter is not one expr but the former is.
+    (get-token-type-from-caller-and-op NullParen token)
     )
   )
 
@@ -80,7 +85,7 @@
       (get-GeneralNode-val left) 
       (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))
     token
-    "call"
+    (get-token-type-from-caller-and-op LeftFuncCall token)
     )
   )
 
@@ -91,6 +96,7 @@
 ;; > They are *not* used in between the control flow statements but are used in separating the *conditions in looping*. 
 ;; For simplicity I only consider the 1st.
 ;; 1. Similar to NullParen.
+;; So extension: Here I just allow this be one expr... Anyway book exercise doesn't say anything about grammar definition for that infix expression.
 ;;;; TODO tests
 ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Lambda-Expressions.html#index-lambda-4
 ;; needs at least one expr.
@@ -115,7 +121,6 @@
 
 ;;;; BEHAVIOR
 ;; 0. Similar to C, here I allow something like "int a=1; int b=2;" without outer Braces.
-;; 1. Extension: Here I just allow this be one expr... Anyway book exercise doesn't say anything about grammar definition for that infix expression.
 ;;;; TODO tests (the latter 2 for NullBrace containing ";")
 ;; 0. lambda a:a+a;a**5; => (begin (lambda (a) (+ a a)) (** a 5))
 ;; The last just means ";" is like "," but due to statement ending it binds nothing from others at the left.
@@ -125,7 +130,7 @@
   (new-GeneralNode-simplified
     (PrsSeq p token left rbp 'begin)
     token
-    STATEMENT-BLOCK-TYPE-STR
+    (get-token-type-from-caller-and-op LeftSemicolon token)
     )
   )
 
@@ -202,7 +207,7 @@
     ;; > assignment_expression ::= [identifier ":="] expression
     (LeftBinaryOp p token left EXPR-BASE-PREC)
     token 
-    :=-TYPE-STR
+    (get-token-type-from-caller-and-op LeftDefine token)
     )  
   )
 
@@ -221,7 +226,7 @@
   (let* ((pred (p 'ParseUntil bp))
          ;; different bp from pratt_new_compatible_with_MIT_GNU_Scheme.scm, but same behavior.
          (consequent (begin (p 'Eat "then") (p 'ParseUntil bp))))
-    (set-Token-type! token IF-STATEMENT-TYPE-STR)
+    (set-Token-type! token (get-token-type-from-caller-and-op NullIf token))
     (CompositeNode
       token
       (cons*-wrapper
@@ -259,7 +264,7 @@
       ;; > conditional_expression ::= or_test ["if" or_test "else" expression]
       (ensure-or-test-expr pred consq)
 
-      (set-Token-type! token LEFT-IF-TYPE-STR)
+      (set-Token-type! token (get-token-type-from-caller-and-op LeftIf token))
       (p 'Eat "else")
       (let ((alt (p 'ParseUntil EXPR-BASE-PREC)))
         (CompositeNode
@@ -273,4 +278,11 @@
         )
       )
     )
+  )
+;;;; BEHAVIOR
+;; Same as + etc in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary.
+;; So not same as oilshell LeftBinaryOp.
+;; For or, left can't be those op's ending with expression.
+(define (LeftOr p token left rbp)
+  
   )
