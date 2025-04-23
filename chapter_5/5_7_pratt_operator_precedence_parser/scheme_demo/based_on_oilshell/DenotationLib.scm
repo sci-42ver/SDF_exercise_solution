@@ -41,7 +41,7 @@
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
   ;; 2. See PrsSeq* comment for why we use new-GeneralNode instead of new-GeneralNode-simplified here.
   (new-GeneralNode
-    (PrsSeq* p token left rbp 'tuple)
+    (PrsSeq* p token left rbp (get-header-for-token token))
     token
     (get-token-type-from-caller-and-op LeftComma token)
     )
@@ -68,7 +68,7 @@
       ")"
       comma-token
       COMMA-PREC
-      'tuple
+      (get-header-for-token comma-token)
       )
     token
     ;; needed to differentiate it from "a,b..." since the latter is not one expr but the former is.
@@ -90,7 +90,7 @@
   ;; here I still use new-GeneralNode since API for NullParen may change later...
   (new-GeneralNode
     (cons 
-      (get-GeneralNode-val left) 
+      (get-GeneralNode-val left)
       (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))
     token
     (get-token-type-from-caller-and-op LeftFuncCall token)
@@ -121,7 +121,7 @@
       "}"
       semicolon-token
       LEFT-SEMICOLON-PREC
-      'begin
+      (get-header-for-token token)
       )
     token
     )
@@ -163,6 +163,7 @@
 ;; > this is a syntactic restriction that is not *expressed by the grammar*.
 (define (NullLambda p token rbp)
   (declare (ignore token)) ; since delimeter is comma.
+  (define header (get-header-for-token token))
   (let ((intermediate 
           (consume-possible-elems-implicitly-and-the-ending-token
             p
@@ -170,14 +171,14 @@
             ":"
             comma-token
             COMMA-PREC
-            'lambda
+            header
             arg-node?
             )))
     (let ((body-contents (get-GeneralNode-val (p 'ParseUntil rbp))))
       (CompositeNode
         token
         (cons*-wrapper 
-          'lambda
+          header
           (get-tagged-lst-data (get-GeneralNode-val intermediate))
           body-contents
           )))
@@ -238,7 +239,7 @@
     (CompositeNode
       token
       (cons*-wrapper
-        'if
+        (get-header-for-token token)
         (get-GeneralNode-val pred)
         (get-GeneralNode-val consequent)
         (if (p 'AtToken "else")
@@ -279,7 +280,7 @@
         (CompositeNode
           token
           (cons*-wrapper
-            'if
+            (get-header-for-token token)
             (get-GeneralNode-val pred)
             (get-GeneralNode-val consq)
             (get-GeneralNode-val alt)
@@ -296,8 +297,16 @@
 ;; a if b else c or d => (if b a (or c d))
 ;; a or b and c or not d => (or a (and b c) (not d))
 ;; a or b or error
-(define (LeftLogical p token left rbp) 
+(define (LeftLogical p token left rbp)
   (PrsSeqWithOpBetweenOrAndAwait p token left rbp))
+;;;; BEHAVIOR
+;; pratt_new_compatible_with_MIT_GNU_Scheme.scm doesn't implement
+;; Comparison with oilshell LeftBinaryOp: see the above.
+;;;; TODO tests
+;; "a or b and c or not d <= e and f or not g in h not in i == j & k ^ m | n"
+;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in i) (== i (& j (^ k (bitwise-or m n))))))))
+(define LeftBitwise LeftLogical)
+
 ;;;; BEHAVIOR
 ;; 0. > comparison    ::= or_expr (comp_operator or_expr)*
 ;; Here * implies lhs and rhs can be both comparison.
@@ -315,8 +324,8 @@
 ;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm, this is inherent inside nudcall.
 ;;;; TODO tests
 ;; /, * => return self. (also see lambda)
-(define (NullConstant p token unused-rbp)
-  (declare (ignore p))
-  (set-Token-type-same-as-val! token) ; type is string.
-  (CompositeNode token (string->symbol (Token-val token))) ; pass symbol to be eval'ed in Scheme.
-  )
+; (define (NullConstant p token unused-rbp)
+;   (declare (ignore p))
+;   (set-Token-type-same-as-val! token) ; type is string.
+;   (CompositeNode token (string->symbol (Token-val token))) ; pass symbol to be eval'ed in Scheme.
+;   )

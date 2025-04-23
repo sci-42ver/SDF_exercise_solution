@@ -56,6 +56,7 @@
     (spec-with-implicit-prec 'Left LeftDefine (list ":="))
     ;;;;;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm
     ;; All op's above "-" have been implemented.
+    ;; Then it has "-", "**", "/", "=" (i.e. "==" in Python), "not", "QUOTE-SYMBOL" left.
 
     ;;;; BEHAVIOR
     ;; See LeftLogical for or&and.
@@ -66,6 +67,9 @@
     (spec-with-implicit-prec 'Null NullPrefixOpWithSentinel (list "not"))
 
     (spec-with-implicit-prec 'Left PrsComparison (list COMPARISON-OP-LST))
+    (spec-with-implicit-prec 'Left LeftBitwise (list "&"))
+    (spec-with-implicit-prec 'Left LeftBitwise (list "^"))
+    (spec-with-implicit-prec 'Left LeftBitwise (list "|"))
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

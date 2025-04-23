@@ -309,6 +309,7 @@
            lbp 5
            rbp 25)
 
+;; binary-arithmetic
 (defsyntax -
            nud parse-prefix
            led parse-nary
@@ -321,6 +322,26 @@
            lbp 100
            rbp 100)
 
+;; power-arithmetic
+(defsyntax **
+           lbp 140
+           rbp 139
+           led parse-infix)
+
+;; definition
+(defsyntax :=
+           led parse-infix
+           header define
+           lbp 80
+           rbp 80)
+
+;; binary-arithmetic
+(defsyntax /
+           led parse-infix
+           nud identity
+           lbp 120
+           rbp 120)
+
 (defsyntax *
            led parse-nary
            nud identity
@@ -329,32 +350,7 @@
            rbp 120
            )
 
-(defsyntax =
-           ;;; IGNORE IMHO better with define/set! header.
-           ;; Which one to choose depends one the program structure...
-           ;;; The C = is := here. 
-           led parse-infix
-           lbp 80
-           rbp 80)
-
-(defsyntax **
-           lbp 140
-           rbp 139
-           led parse-infix)
-
-(defsyntax :=
-           led parse-infix
-           header define
-           lbp 80
-           rbp 80)
-
-
-(defsyntax /
-           led parse-infix
-           nud identity
-           lbp 120
-           rbp 120)
-
+;; comparison
 (defsyntax >
            led parse-infix
            lbp 80
@@ -375,15 +371,15 @@
            lbp 80
            rbp 80)
 
-(defsyntax not
-           nud parse-prefix
-           lbp 70
-           rbp 70)
+(defsyntax =
+           ;;; IGNORE IMHO better with define/set! header.
+           ;; Which one to choose depends one the program structure...
+           ;;; The C = is := here. 
+           led parse-infix
+           lbp 80
+           rbp 80)
 
-(defsyntax QUOTE-SYMBOL
-           nud parse-prefix
-           header quote)
-
+;; boolean-operation
 (defsyntax and*
            led parse-nary
            lbp 65
@@ -396,6 +392,17 @@
            rbp 60
            )
 
+(defsyntax not
+           nud parse-prefix
+           lbp 70
+           rbp 70)
+
+;; quote-operation
+(defsyntax QUOTE-SYMBOL
+           nud parse-prefix
+           header quote)
+
+;;; Added
 (defsyntax lambda*
            nud lambda-nud
            led delim-err

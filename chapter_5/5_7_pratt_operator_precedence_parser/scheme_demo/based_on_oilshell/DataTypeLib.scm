@@ -53,16 +53,22 @@
 ;; For simplicity, I just use cond instead of one table.
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "string_lib.scm")
-(define (get-header str)
-  (assert (string? str))
+;; Better to be based on denotation type.
+;; Here I just explicitly manipulate that inside denotation procedure.
+(define (get-header obj)
+  (assert (string? obj))
   (cond
-    ((equal? str ":=") 'define)
-    ((member str COMPARISON-OP-LST) 
+    ((equal? obj ":=") 'define)
+    ((member obj COMPARISON-OP-LST) 
       (symbol
         ;; chain behavior is implicitly done in PrsComparison.
         ; "chain-"
-        (string-replace* str " " "_")))
-    (else str))
+        (string-replace* obj " " "_")))
+    ((equal? obj "|") 'bitwise-or)
+    ((equal? obj "{") 'begin)
+    ((equal? obj ",") 'tuple)
+    (else
+      (Token-val->Scheme-val obj)))
   )
 (define (get-header-for-token token)
   (get-header (Token-val token))
@@ -75,9 +81,10 @@
   (new-tagged-lst* NodeTag token))
 (define Node? (tagged-list-pred NodeTag))
 (define Node-Token cadr)
+(define Token-val->Scheme-val string->symbol)
 (define (get-Node-val node)
   (assert (Node? node))
-  (Token-val (Node-Token node))
+  (Token-val->Scheme-val (Token-val (Node-Token node)))
   )
 ;; To offer more info so that we can reject some corner cases like "lambda non-arg, ...: ...".
 (define CompositeNodeTag 'CompositeNode)
