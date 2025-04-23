@@ -112,6 +112,8 @@
 (define (PrsSeqWithOpBetweenOrAndAwait parser delimeter-token left rbp #!optional header)
   (PrsSeq parser delimeter-token left rbp ensure-consistent)
   )
+(define (PrsSeqWithSentinel p token left rbp)
+  (PrsSeqWithOpBetweenOrAndAwait p token left rbp))
 
 (define (PrsPossibleSeq* parser delimeter-token rbp delimeter-lbp #!optional elm-pred header)
   (let ((first-elm (parser 'ParseUntil delimeter-lbp)))

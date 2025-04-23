@@ -66,10 +66,16 @@
     (spec-with-implicit-prec 'Left LeftLogical (list "and"))
     (spec-with-implicit-prec 'Null NullPrefixOpWithSentinel (list "not"))
 
-    (spec-with-implicit-prec 'Left PrsComparison (list COMPARISON-OP-LST))
+    (spec-with-implicit-prec 'Left PrsComparison COMPARISON-OP-LST)
+
     (spec-with-implicit-prec 'Left LeftBitwise (list "&"))
     (spec-with-implicit-prec 'Left LeftBitwise (list "^"))
     (spec-with-implicit-prec 'Left LeftBitwise (list "|"))
+
+    ;; > shift_expr ::= a_expr | shift_expr ("<<" | ">>") a_expr
+    ;; 0. Seq is implied similar to LeftLogical
+    ;; 1. a_expr implies we can still use ensure-consistent Sentinel.
+    (spec-with-implicit-prec 'Left PrsSeqWithSentinel SHIFT-OP-LST)
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

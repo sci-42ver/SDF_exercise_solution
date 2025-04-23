@@ -58,6 +58,11 @@
 ;; since := is not directly based on if/lambda
 ;; but if is directly based on or_test.
 (define COMPARISON-OP-LST '("in" "not in" "is" "is not" "<" "<=" ">" ">=" "!=" "=="))
+(define SHIFT-OP-LST '("<<" ">>"))
+;; PM means plus minus
+(define BINARY-PM-OP-LST '("+" "-"))
+(define OTHER-BINARY-OP-LST '("*" "@" "/" "//" "%"))
+(define UNARY-OP-LST '("+" "-" "~"))
 ;; Notice here we only put or-op which is used in (MakePythonParserSpec) instead of type-str.
 (define prec-list-higher-than-or-op
   `(,LEFT-IF-BP
@@ -73,13 +78,13 @@
       ;; 'left is same as 'Left.
       (left ("^"))
       (left ("&"))
-      (left ("<<" ">>"))
-      (left ("+" "-"))
-      (left ("*" "@" "/" "//" "%"))
+      (left ,SHIFT-OP-LST)
+      (left ,BINARY-PM-OP-LST)
+      (left ,OTHER-BINARY-OP-LST)
       ;; > u_expr ::= power | "-" u_expr | "+" u_expr | "~" u_expr
       ;; here rhs-lbp>=self-rbp
       ;; it allows "-+1 => -1" etc.
-      (null ("+" "-" "~"))
+      (null ,UNARY-OP-LST)
       ;; > power ::= (await_expr | primary) ["**" u_expr]
       ;; lhs-prec-level is higher than ** which is ensured by lhs-rbp>**-lbp
       ;; rhs allows *only* one nud u_expr or op's with prec >= self.

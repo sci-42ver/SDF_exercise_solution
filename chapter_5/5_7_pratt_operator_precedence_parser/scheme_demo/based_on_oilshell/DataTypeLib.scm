@@ -4,8 +4,12 @@
 (define (NullInfo #!optional nud bp)
   ;; Different from pratt_new_compatible_with_MIT_GNU_Scheme.scm
   ;; Here it defaults to be minimal bp. Anyway we should not rely the default value but always explicit set one expected bp.
+  ;; After all, here bp being 0 always means nud is NullError, so rbp won't be used.
   (list (or* nud NullError) (or* bp 0))
   )
+;; IMHO default bp being 0 is appropriate, since those unset ones should not bind anything,
+;; so its lbp is least.
+;; Then led won't be called, so similar to the above, rbp won't be used.
 (define (LeftInfo #!optional led lbp rbp)
   (list (or* led LeftError) (or* lbp 0) (or* rbp 0))
   )

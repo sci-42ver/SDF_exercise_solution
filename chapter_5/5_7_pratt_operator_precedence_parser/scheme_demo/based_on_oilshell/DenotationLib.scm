@@ -293,19 +293,22 @@
 ;; 0. Same as or/and in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary and with the same prec relation.
 ;; So not same as oilshell LeftBinaryOp.
 ;; 1. IGNORE For or, left can't be those op's ending with expression.
+;; 2. > or_test  ::= and_test | or_test "or" and_test
+;; Here "or_test" can be based on "or_test" implies seq.
 ;;;; TODO tests
 ;; a if b else c or d => (if b a (or c d))
-;; a or b and c or not d => (or a (and b c) (not d))
+;; a if b or c else d => (if (or b c) a d)
+;; a or b and c and not d => (or a (and b c (not d)))
 ;; a or b or error
-(define (LeftLogical p token left rbp)
-  (PrsSeqWithOpBetweenOrAndAwait p token left rbp))
+(define LeftLogical PrsSeqWithSentinel)
 ;;;; BEHAVIOR
 ;; pratt_new_compatible_with_MIT_GNU_Scheme.scm doesn't implement
 ;; Comparison with oilshell LeftBinaryOp: see the above.
+;; Similar to LeftLogical, seq is allowed.
 ;;;; TODO tests
 ;; "a or b and c or not d <= e and f or not g in h not in i == j & k ^ m | n"
 ;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in i) (== i (& j (^ k (bitwise-or m n))))))))
-(define LeftBitwise LeftLogical)
+(define LeftBitwise PrsSeqWithSentinel)
 
 ;;;; BEHAVIOR
 ;; 0. > comparison    ::= or_expr (comp_operator or_expr)*
