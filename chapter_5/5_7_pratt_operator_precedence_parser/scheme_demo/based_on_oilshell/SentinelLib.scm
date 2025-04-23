@@ -26,10 +26,6 @@
     )
   )
 
-(define (%ensure-type-in-list node lst)
-  (assert (and (GeneralNode? node) (list-of-type? lst Token-type?)))
-  (assert (member (get-GeneralNode-token-type node) lst))
-  )
 (define (%ensure-var node)
   (and (not (member (get-GeneralNode-token-type node) VAR-TYPES))
     (ParseError (list node "can't be called"))
@@ -73,6 +69,10 @@
     )
   )
 
+(define (%ensure-type-in-list node lst)
+  (assert (and (GeneralNode? node) (list-of-type? lst Token-type?)))
+  (assert (member (get-GeneralNode-token-type node) lst))
+  )
 ;; maybe not same as Python one https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-defparameter => https://peps.python.org/pep-0646/ => https://typing.python.org/en/latest/spec/generics.html#using-type-variable-tuples-in-functions
 ;; > x: Array[Height, Width] = Array()
 (define (ensure-tuple . nodes)
@@ -88,12 +88,15 @@
 ;; consistent means >= and other constraints (see ALL-NON-TOP-EXPR-TOKEN-TYPES)
 (define (pred-ensuring-expr-with-consistent-precedence token)
   (lambda (node)
-    (member 
-      (get-GeneralNode-token-type node)
-      (get-expr-token-types-with-consistent-prec (Token-type token)))
+    (assert
+      (member 
+        (get-GeneralNode-token-type node)
+        (get-expr-token-types-with-consistent-prec (Token-type token))))
     )
   )
-(define (elm-relative-assertion token . nodes)
+(define (ensure-consistent token return-handler . nodes)
   (let ((pred (pred-ensuring-expr-with-consistent-precedence token)))
-    ())
+    (for-each (lambda (node) (pred node)) nodes)
+    (return-handler nodes)
+    )
   )

@@ -124,3 +124,5 @@
       (else (list node-val)))
     )
   )
+
+(define ALL-DENOTATION-TYPES '(Null Left LeftRightAssoc))

@@ -2,7 +2,7 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "hash_table_lib.scm")
 (define (make-bidirectional-map hash-table-constructor)
-  (assert (and (procedure? hash-table-constructor) (equal? '(0 . 0) (procedure-arity hash-table-constructor))))
+  (assert (basic-hash-table-constructor? hash-table-constructor))
   (define key-val-table (hash-table-constructor))
   (define val-key-table (hash-table-constructor))
   (define (insert key val)
@@ -29,3 +29,28 @@
   (bundle bidirectional-map? insert getKey get)
   )
 (define bidirectional-map? (make-bundle-predicate 'bidirectional-map))
+
+(define (make-multi-bidirectional-map multi-hash-table-constructor)
+  (assert (basic-multi-hash-table-constructor? multi-hash-table-constructor))
+  (define keys-val-table (multi-hash-table-constructor))
+  ;; This is 1d
+  (define val-keys-table (multi-hash-table-constructor))
+  
+  (define (insert val . keys)
+    (multi-hash-set! keys-val-table val keys)
+    (let ((found-val (multi-hash-ref val-keys-table val)))
+      (and found-val 
+        (write-line 
+          (list "WARNING" val "will have more than one keys to map. Here we just reset.")))
+      (hash-table-set! val-keys-table val keys)
+      )
+    )
+  (define (getKeys val)
+    (hash-table-ref* val-keys-table val)
+    )
+  (define (get . keys)
+    (multi-hash-ref keys-val-table keys)
+    )
+  (bundle multi-bidirectional-map? insert getKey get)
+  )
+(define multi-bidirectional-map? (make-bundle-predicate 'multi-bidirectional-map))

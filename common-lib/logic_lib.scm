@@ -71,3 +71,6 @@
 
 (and* (default-object) 2)
 (and* 1 2)
+
+(define (use-possible-default-object-proc possible-default-object-proc . args)
+  (and* possible-default-object-proc (apply possible-default-object-proc args)))

@@ -1,7 +1,8 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
 (load "SentinelBaseDataLib.scm")
-;; token-type -> prec, then order it.
-;; token-type is set by 
+;; 0. For or etc,
+;; left can be or_test
+;; rhs won't be or-expr due to prec relation, i.e. self-rbp=self-lbp instead of rbp<lbp.
 (define (get-expr-token-types-with-consistent-prec token-type)
   (assert (Token-type? token-type))
   (let ((cur-prec (get-prec token-type)))
@@ -29,7 +30,7 @@
     )
   )
 (define (%get-token-type-from-caller-and-op caller op-str)
-  (*token-type-list* 'get (make-prec-key (get-caller-type caller) op-str))
+  (*token-type-list* 'get (get-caller-type caller) op-str)
   )
 (define (get-token-type-from-caller-and-op caller token)
   (%get-token-type-from-caller-and-op caller (Token-val token))

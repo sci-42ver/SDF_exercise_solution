@@ -1,14 +1,16 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
 (load "BpNumberBaseLib.scm")
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "multi_hash_table_lib.scm")
 ;; https://stackoverflow.com/a/61180123/21294350
 ;; TODO after CRLS: use the most efficient based on the needs here.
-(define *prec-list* (make-equal-hash-table))
-(define prec-key-tag 'prec-key)
-(define (make-prec-key denotation-type op-str)
-  (assert (and (symbol? denotation-type) (string? op-str)))
-  (new-tagged-lst* prec-key-tag denotation-type op-str)
-  )
-(define prec-key? (tagged-list-pred prec-key-tag))
+(define *prec-list* (make-multi-hash make-equal-hash-table))
+; (define prec-key-tag 'prec-key)
+; (define (make-prec-key denotation-type op-str)
+;   (assert (and (symbol? denotation-type) (string? op-str)))
+;   (new-tagged-lst* prec-key-tag denotation-type op-str)
+;   )
+; (define prec-key? (tagged-list-pred prec-key-tag))
 
 (define (spec-with-implicit-prec denotation-type handler op-lst)
   (assert
@@ -22,21 +24,39 @@
   )
 
 ;; Notice this is based on token-type already modified based on context, like null-if or left-if.
-(define (%get-prec prec-key)
-  (assert (prec-key? prec-key))
-  (let ((prec (hash-table-ref* *prec-list* prec-key)))
-    (and (not prec) (error (list "no prec is found for" prec-key)))
-    prec
+(define (%get-prec op-str #!optional denotation-type)
+  (assert (string? op-str))
+  (let ((possible-prec 
+          (apply multi-hash-ref 
+            (cons* *prec-list* op-str
+              (if (default-object? denotation-type)
+                '()
+                (list denotation-type))
+              ))))
+    (cond 
+      ((multi-hash-table? possible-prec)
+        (let ((all-possible-precs 
+                (filter-map 
+                  (lambda (type) (multi-hash-ref* *prec-list* op-str type)) 
+                  ALL-DENOTATION-TYPES)))
+          (assert (= 1 (length all-possible-precs)))
+          (car all-possible-precs)
+          )
+        )
+      ((number? possible-prec) possible-prec)
+      (else (error (list op-str "has no prec")))
+      )
     )
   )
 (define (get-prec-key-for-token-type token-type)
   (or
-    (*token-type-list* 'getKey token-type)
+    (*token-type-list* 'getKeys token-type)
+    (list token-type) ; with only one nud or led.
     )
   )
 (define (get-prec token-type)
   (assert (string? token-type))
-  (%get-prec (get-prec-key-for-token-type token-type))
+  (apply %get-prec (get-prec-key-for-token-type token-type))
   )
 
 ;; From Python

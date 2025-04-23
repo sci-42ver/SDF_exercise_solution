@@ -21,7 +21,10 @@
 ;; No corresponding one in pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; 1. allow trailing which is not allowed in Shell (in Bash $((1,)) throws error).
 ;;;; TODO tests
-;; 1,;1,2,;1,+2,=>1,(+2),;
+;; 1,+2,=>1,(+2),;
+;; Allow trailing comma by PrsSeq*->PrsNary*, so
+;; "left," & "left,arg1" & "left,arg1," & "left,arg1,*rest" (error for left of "*") 
+;; & "left,arg1,arg2" should work
 ;;; IGNORE TODO Emm... Actually "," must have one much more complexer manipulation in Python which **can't be done by Pratt Parsing**.
 ;; If using Pratt Parsing, then "+" should just consume the left and then try to find the rhs.
 ;;; 0. +'s rbp > ,'s lbp Then 1+2, is "(1+2)," and 1,+2, is ~~"((1,)+2)," (wrong)~~
@@ -37,7 +40,7 @@
   ;; we check whether we can get one new nud, see the above.
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
   (new-GeneralNode-simplified
-    (PrsSeq p token left rbp 'tuple)
+    (PrsSeq* p token left rbp 'tuple)
     token
     (get-token-type-from-caller-and-op LeftComma token)
     )
@@ -60,9 +63,9 @@
       p
       unused-rbp
       ")"
-      'tuple
       comma-token
       COMMA-PREC
+      'tuple
       )
     token
     ;; needed to differentiate it from "a,b..." since the latter is not one expr but the former is.
@@ -111,9 +114,9 @@
       p
       unused-rbp
       "}"
-      'begin
       semicolon-token
       LEFT-SEMICOLON-PREC
+      'begin
       )
     token
     )
@@ -126,9 +129,9 @@
 ;; The last just means ";" is like "," but due to statement ending it binds nothing from others at the left.
 ;; 1. a,b;c,d (begin (tuple a b) (tuple c d))
 (define (LeftSemicolon p token left rbp)
-  ; token won't be used in PrsNary* of PrsSeq, so fine to set-Token-type! beforehand.
+  ; token won't be used in PrsNary* of PrsSeq*, so fine to set-Token-type! beforehand.
   (new-GeneralNode-simplified
-    (PrsSeq p token left rbp 'begin)
+    (PrsSeq* p token left rbp 'begin)
     token
     (get-token-type-from-caller-and-op LeftSemicolon token)
     )
@@ -160,9 +163,9 @@
             p
             'unused-rbp
             ":"
-            'lambda
             comma-token
             COMMA-PREC
+            'lambda
             arg-node?
             )))
     (let ((body-contents (get-GeneralNode-val (p 'ParseUntil rbp))))
@@ -281,12 +284,15 @@
     )
   )
 ;;;; BEHAVIOR
-;; Same as + etc in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary.
+;; 0. Same as + etc in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary.
 ;; So not same as oilshell LeftBinaryOp.
-;; For or, left can't be those op's ending with expression.
-(define (LeftOr p token left rbp)
-  
-  )
+;; 1. IGNORE For or, left can't be those op's ending with expression.
+;;;; TODO tests
+;; a if b else c or d => (if b a (or c d))
+;; a or b and c or not d => (or a (and b c) (not d))
+;; a or b or error
+(define (LeftOr p token left rbp) 
+  (PrsSeqWithOpBetweenOrAndAwait p token left rbp))
 
 ;;;; BEHAVIOR
 ;; trivial by returning self same as oilshell

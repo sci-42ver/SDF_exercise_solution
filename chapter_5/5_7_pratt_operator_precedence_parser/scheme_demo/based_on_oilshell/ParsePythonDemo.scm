@@ -54,6 +54,13 @@
     (spec-with-implicit-prec 'LeftRightAssoc LeftIf (list "if"))
 
     (spec-with-implicit-prec 'Left LeftDefine (list ":="))
+    ;;;;;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm
+    ;; All op's above "-" have been implemented.
+
+    ;;; TODO tests see LeftOr
+    (spec-with-implicit-prec 'Left PrsSeqWithOpBetweenOrAndAwait (list "or"))
+    (spec-with-implicit-prec 'Left PrsSeqWithOpBetweenOrAndAwait (list "and"))
+    (spec-with-implicit-prec 'Left NullPrefixOpWithSentinel (list "not"))
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

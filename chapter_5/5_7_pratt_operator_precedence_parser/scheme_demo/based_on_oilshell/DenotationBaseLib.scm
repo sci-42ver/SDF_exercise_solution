@@ -3,13 +3,13 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib/")
 (load "base_procedure_lib.scm")
 (define (PrsNary token p rbp #!optional elm-relative-assertion)
-  (or elm-relative-assertion (set! elm-relative-assertion return-last))
+  (or* elm-relative-assertion (set! elm-relative-assertion return-last))
   (let ((type (Token-type token)))
-    (let lp ((l (list (get-GeneralNode-val (elm-relative-assertion token (p 'ParseUntil rbp))))))
+    (let lp ((l (list (get-GeneralNode-val (elm-relative-assertion token return-last (p 'ParseUntil rbp))))))
       (if (p 'AtToken type)
         (begin 
           (p 'Eat type)
-          (lp (cons (get-GeneralNode-val (elm-relative-assertion token (p 'ParseUntil rbp))) l)))
+          (lp (cons (get-GeneralNode-val (elm-relative-assertion token return-last (p 'ParseUntil rbp))) l)))
         (reverse l))
       )
     )
@@ -17,7 +17,7 @@
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "pred_lib.scm")
-;; returns a list of expr's instead of GeneralNode's.
+;; 0. returns a list of expr's instead of GeneralNode's.
 (define (PrsNary* token p rbp #!optional elm-pred)
   (define (cons-with-possible-first-elm a b)
     (if (null? a)
@@ -49,38 +49,51 @@
     )
   )
 
-(define (PrsSeq parser delimeter-token left rbp header)
+(define (%PrsSeq base-parse-proc parser delimeter-token left rbp #!optional elm-pred header)
   (CompositeNode 
     delimeter-token
-    (cons header (cons (get-GeneralNode-val left) (PrsNary* delimeter parser rbp))))
+    (cons (or* header (get-header-for-token delimeter-token)) 
+      (cons (get-GeneralNode-val left) (base-parse-proc delimeter parser rbp elm-pred)))))
+
+;; TODO better to make elm-relative-assertion and elm-pred have similar APIs.
+;; Why I used 2 inconsistent ones is due to I didn't have one *unchanged* plan for this a bit big project at least for one programming beginner book SDF.
+;; How to construct one *compiler* project (or sub-project here) from the ground can't be taught in that book...
+(define (PrsSeq parser delimeter-token left rbp #!optional elm-relative-assertion header)
+  (use-possible-default-object-proc elm-relative-assertion delimeter-token return-last left)
+  (%PrsSeq PrsNary parser delimeter-token left rbp elm-relative-assertion header)
+  )
+(define (PrsSeq* parser delimeter-token left rbp #!optional elm-pred header)
+  (assert (elm-pred left))
+  (%PrsSeq PrsNary* parser delimeter-token left rbp elm-pred header)
   )
 
-(define (PrsPossibleSeq parser delimeter-token rbp header delimeter-lbp #!optional elm-pred)
+(define (PrsSeqWithOpBetweenOrAndAwait parser delimeter-token left rbp #!optional header)
+  (PrsSeq p token left rbp ensure-consistent)
+  )
+
+(define (PrsPossibleSeq* parser delimeter-token rbp delimeter-lbp #!optional elm-pred header)
   (let ((first-elm (parser 'ParseUntil delimeter-lbp)))
+    (assert (elm-pred first-elm))
     (if (not (parser 'AtToken delimeter-token))
       first-elm
-      (CompositeNode 
-        delimeter-token
-        (cons header 
-          (cons (get-GeneralNode-val first-elm) 
-            (PrsNary* delimeter-token parser rbp elm-pred))))
+      (PrsSeq* parser delimeter-token first-elm rbp elm-pred header)
       )
     )
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme/")
 (load "compatible_lib.scm")
-(define (consume-elems-and-the-ending-token p rbp ending-token-type header delimeter-token delimeter-prec #!optional elm-pred)
+(define (consume-elems-and-the-ending-token p rbp ending-token-type delimeter-token delimeter-prec #!optional elm-pred header)
   (declare (ignore rbp))
   (prog1
     ;; Better to explicitly use one delimeter for future extension
     ;; Otherwise, this may allow (a;b;c;d;) etc.
     ; (p 'ParseUntil rbp)
-    (PrsPossibleSeq p delimeter-token delimeter-prec header delimeter-prec elm-pred)
+    (PrsPossibleSeq* p delimeter-token delimeter-prec delimeter-prec elm-pred header)
     (p 'Eat ending-token-type)))
 ;; 0. function as open-paren-nud based on prsmatch-modified.
 ;; 1. Different from oilshell (i.e. bash) to allow ()=>(tuple).
-(define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec #!optional elm-pred)
+(define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type delimeter-token delimeter-prec #!optional elm-pred header)
   (cond 
     ((p 'AtToken ending-token-type) (CompositeNode (symbol->token header) (list header)))
     (else
@@ -95,7 +108,7 @@
       ;; 3.b. element list construction is implicitly done in ParseUntil.
       ;; 3.c. (error 'comma-or-match-not-found (token-read stream)) is implicitly done
       ;; by (p 'Eat ")") but more general to allow possible extension like (a;b;).
-      (consume-elems-and-the-ending-token p bp ending-token-type header delimeter-token delimeter-prec elm-pred)
+      (consume-elems-and-the-ending-token p bp ending-token-type delimeter-token delimeter-prec elm-pred header)
       ))
   )
 
@@ -176,11 +189,17 @@
   )
 
 ;; same as oilshell and pratt_new_compatible_with_MIT_GNU_Scheme.scm
-(define (NullPrefixOp p token rbp)
-  (CompositeNode
-    token
-    (cons*-wrapper
-      (get-header-for-token token)
-      (get-GeneralNode-val (p 'ParseUntil rbp)))
+(define (NullPrefixOp p token rbp #!optional elm-relative-assertion)
+  (let ((right (p 'ParseUntil rbp)))
+    (use-possible-default-object-proc elm-relative-assertion token return-last right)
+    (CompositeNode
+      token
+      (cons*-wrapper
+        (get-header-for-token token)
+        (get-GeneralNode-val right))
+      )
     )
+  )
+(define (NullPrefixOpWithSentinel p token rbp)
+  (NullPrefixOp p token rbp ensure-consistent)
   )
