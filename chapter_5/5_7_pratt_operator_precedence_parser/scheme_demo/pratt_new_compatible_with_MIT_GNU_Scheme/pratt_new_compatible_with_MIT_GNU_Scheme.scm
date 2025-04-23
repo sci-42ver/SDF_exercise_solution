@@ -338,13 +338,14 @@
 ;; binary-arithmetic
 (defsyntax /
            led parse-infix
-           nud identity
+           ;; Scheme supports (/ 1)=>1 which means 1/nothing instead of /1. 
+           ;  nud identity
            lbp 120
            rbp 120)
 
 (defsyntax *
            led parse-nary
-           nud identity
+          ;  nud identity
            lbp 120
            ;; Must define rbp < (-lbp=200 here to avoid using default 200 which may grab proc-name unexpectedly.
            rbp 120

@@ -72,10 +72,24 @@
     (spec-with-implicit-prec 'Left LeftBitwise (list "^"))
     (spec-with-implicit-prec 'Left LeftBitwise (list "|"))
 
+    ;;;; BEHAVIOR
     ;; > shift_expr ::= a_expr | shift_expr ("<<" | ">>") a_expr
     ;; 0. Seq is implied similar to LeftLogical
     ;; 1. a_expr implies we can still use ensure-consistent Sentinel.
+    ;; 2. not in pratt_new_compatible_with_MIT_GNU_Scheme.scm
+    ;; oilshell uses LeftBinaryOp (so comparison is similar to LeftLogical)
+    ;;;; TODO tests
+    ;; a & b << c >> d => (& a (>> (<< b c) d))
     (spec-with-implicit-prec 'Left PrsSeqWithSentinel SHIFT-OP-LST)
+
+    ;;;; BEHAVIOR
+    ;; 0. similar to the above except pratt_new_compatible_with_MIT_GNU_Scheme.scm implements this with parse-nary.
+    ;; So see LeftLogical for comparison.
+    ;; 0.a. Here I allow (/ a b c) which means (/ a (* b c)) same as Scheme.
+    ;;;; TODO tests
+    ;; a * d + b << c => (<< (+ (* a d) b) c)
+    (spec-with-implicit-prec 'Left PrsSeqWithSentinel BINARY-PM-OP-LST)
+    (spec-with-implicit-prec 'Left PrsSeqWithSentinel OTHER-BINARY-OP-LST)
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

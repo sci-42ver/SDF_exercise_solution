@@ -291,6 +291,7 @@
   )
 ;;;; BEHAVIOR
 ;; 0. Same as or/and in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary and with the same prec relation.
+;; The differences are that here uses the different data representation; uses sentinel.
 ;; So not same as oilshell LeftBinaryOp.
 ;; 1. IGNORE For or, left can't be those op's ending with expression.
 ;; 2. > or_test  ::= and_test | or_test "or" and_test
