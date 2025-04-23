@@ -27,3 +27,5 @@
 ;; "LEFT-IF-TYPE-STR" is possible due to LeftRightAssoc.
 (define tag-with-precedence-lower-than-OR
   `("lambda" ,LEFT-IF-TYPE-STR ,@NON-EXPR-TAG-WITH-EXPR-AS-DATA-END))
+
+(define COMPARISON-TYPE-STR "comparison-expr")

@@ -1,5 +1,5 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "multi_hash_table_lib.scm")
+(load "hash_table_lib.scm")
 
 (define basic-multi-hash-table-constructor? basic-hash-table-constructor?)
 ;; assume no final val is hash-table.
@@ -21,9 +21,11 @@
 (define foldl fold)
 ;; Here hash-table-ref is expected to error if failure to lookup.
 ; create a new multidimensional hash table
-(define (make-multi-hash base-constructor)
+(define (%make-multi-hash base-constructor)
   (assert (basic-hash-table-constructor? base-constructor))
   (base-constructor))
+(define (make-multi-hash)
+  (%make-multi-hash default-hash-table-constructor))
 
 ; set a value given a non-empty sequence of keys
 (define (multi-hash-set! hash-table value . keys)

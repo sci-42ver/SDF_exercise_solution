@@ -109,7 +109,9 @@
 ;     ())
 ;   )
 
-;; Same behavior as Python
+;; Similar behavior to Python
+;; > The name of the last matched capturing group, or None if the group didn’t have a name, or if no group was matched at all.
+;; but only consider the part before "or None" and only consider those inside field-names.
 (define (match-lastgroup match field-names)
   ; (assert (regexp-match? match))
   (if (regexp-match? match)

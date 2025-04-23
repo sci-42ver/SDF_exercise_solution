@@ -55,9 +55,13 @@
     (cons (or* header (get-header-for-token delimeter-token)) 
       (cons (get-GeneralNode-val left) (base-parse-proc delimeter parser rbp elm-pred)))))
 
-;; TODO better to make elm-relative-assertion and elm-pred have similar APIs.
+;; 0. TODO better to make elm-relative-assertion and elm-pred have similar APIs.
 ;; Why I used 2 inconsistent ones is due to I didn't have one *unchanged* plan for this a bit big project at least for one programming beginner book SDF.
 ;; How to construct one *compiler* project (or sub-project here) from the ground can't be taught in that book...
+;; 1. Here delimeter-token type may be used by elm-relative-assertion, e.g. ensure-consistent,
+;; and to match delimeter tokens by type later.
+;; This is the same case for PrsSeq*->PrsNary*.
+;; So *NOT CHANGE* this delimeter-token type beforehand.
 (define (PrsSeq parser delimeter-token left rbp #!optional elm-relative-assertion header)
   (use-possible-default-object-proc elm-relative-assertion delimeter-token return-last left)
   (%PrsSeq PrsNary parser delimeter-token left rbp elm-relative-assertion header)
@@ -67,8 +71,46 @@
   (%PrsSeq PrsNary* parser delimeter-token left rbp elm-pred header)
   )
 
+;; similar to PrsSeq, but allow a<=b<c<d>e
+;; If using PrsSeq, after having (<= a b), either continue comparison or not based on AtToken.
+;; If continue, (ParseWithLeft still-same-rbp "b") => (< b c d).
+;; Then we have (and (<= a b) (< b c d))
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "tree_lib.scm")
+(define (%PrsComparison p token left rbp #!optional elm-relative-assertion header)
+  (let lp ((cur-node
+            (new-GeneralNode-with-new-val
+              (PrsSeq p token left rbp elm-relative-assertion header)
+              (lambda (expr) (list 'and expr))
+              )))
+    ;; notice here we use PrsComparison instead of %PrsComparison
+    (let ((type (get-token-type-from-caller-and-op PrsComparison token)))
+      (if (any (lambda (type) (p 'AtToken type)) COMPARISON-OP-LST)
+        ;; based on assumption that all op's in COMPARISON-OP-LST have the same rbp.
+        (let* ((cur-expr (get-GeneralNode-val cur-node))
+                (rest-expr 
+                    (get-GeneralNode-val
+                      (p
+                        'ParseWithLeft 
+                        (last-in-tree cur-expr) 
+                        rbp))))
+          (new-GeneralNode-simplified
+            (append cur-expr (get-tagged-lst-data rest-expr))
+            token
+            type
+            )
+          )
+        (new-GeneralNode-simplified
+          cur-node
+          token
+          type
+          )
+      ))
+  )
+)
+
 (define (PrsSeqWithOpBetweenOrAndAwait parser delimeter-token left rbp #!optional header)
-  (PrsSeq p token left rbp ensure-consistent)
+  (PrsSeq parser delimeter-token left rbp ensure-consistent)
   )
 
 (define (PrsPossibleSeq* parser delimeter-token rbp delimeter-lbp #!optional elm-pred header)
@@ -127,69 +169,8 @@
 (define get-binary-left cadr)
 (define get-binary-right caddr)
 
-;; See DataTypeLib.scm: here set-Token-type! also works for local arg passed in. 
-(define-syntax new-GeneralNode-simplified
-  (syntax-rules ()
-    ((_ possible-general-node token type)
-      (begin
-        (assert 
-          (and
-            (Token? token)
-            (Token-type? type)))
-        (set-Token-type! token type)
-        (let ((intermediate possible-general-node))
-          (CompositeNode
-            token
-            (cond 
-              ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
-              (else intermediate))
-            )
-          )
-        )
-      )
-    ((_ possible-general-node token)
-      (begin
-        (assert (and (Token? token)))
-        (let ((intermediate possible-general-node))  
-          (CompositeNode
-            token
-            (cond 
-              ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
-              (else intermediate))
-            )
-          )
-        )
-      )
-    )
-  )
-
-(define-syntax new-GeneralNode
-  (syntax-rules ()
-    ((_ possible-general-node token type)
-      ;; This let is to avoid duplicate calculation
-      ;; token is assumed to be identifier able to be set!.
-      (let ((intermediate possible-general-node)
-            (type* type)
-            )
-        (assert 
-          (and
-            (Token? token)
-            (Token-type? type*)))
-        ;; Use syntax here to ensure this work for the caller token instead of that local argument.
-        (set-Token-type! token type*)
-        (CompositeNode
-          token
-          (cond 
-            ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
-            (else intermediate))
-          )
-        )
-      )
-    )
-  )
-
-;; same as oilshell and pratt_new_compatible_with_MIT_GNU_Scheme.scm
-(define (NullPrefixOp p token rbp #!optional elm-relative-assertion)
+;; same as oilshell and parse-prefix in pratt_new_compatible_with_MIT_GNU_Scheme.scm
+(define (%NullPrefixOp p token rbp #!optional elm-relative-assertion)
   (let ((right (p 'ParseUntil rbp)))
     (use-possible-default-object-proc elm-relative-assertion token return-last right)
     (CompositeNode
@@ -200,6 +181,9 @@
       )
     )
   )
+(define (NullPrefixOp p token rbp)
+  (%NullPrefixOp p token rbp)
+  )
 (define (NullPrefixOpWithSentinel p token rbp)
-  (NullPrefixOp p token rbp ensure-consistent)
+  (%NullPrefixOp p token rbp ensure-consistent)
   )

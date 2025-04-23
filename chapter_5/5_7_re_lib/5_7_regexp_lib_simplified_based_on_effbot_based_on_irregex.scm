@@ -33,7 +33,7 @@
     ; (neg-look-behind ,NUMBER-PATTERN)
     )
   )
-(define ADDITION-OPERATORS (list "{" ";" "}"))
+(define ADDITIONAL-OPERATORS (list "{" ";" "}"))
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
 (load "group_name_lib.scm")
@@ -41,21 +41,25 @@
 (define pat
   `(or
     ;; See SDF_exercises/chapter_5/5_7_re_tests/optional.scm for "?" behavior.
-    (=> NUMBER ,NUMBER-PATTERN) ; better than tdop
+    (=> NUMBER ,NUMBER-PATTERN) ; better than tdop.py
+    ;; added
+    (=> OPERATOR-WITH-SPACE-INSIDE
+      (or "is not" "not in")
+      )
     (=> ,STAR-ARG-TAG 
       (: (look-behind ",") 
         (or 
           (: "*" (neg-look-ahead "*") ,IDENTIFIER-AS-ARG) 
           (: "**" ,IDENTIFIER-AS-ARG))))
-    ;; From tdop: maybe fail for some corner cases due to generality.
+    ;; From tdop.py: maybe fail for some corner cases due to generality.
     (=> OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
       ;; (Not for irregex) Use (intern "|") for or.
       (+ (or "-" "+" "*" "/" "%" "!" "~" "<" ">" "=" "&" "^" "|" "?" ":")))
-    ;; Since 5.7 only needs "infix expression", no "Statement terminator" is needed.
+    ;; IGNORE Since SDF exercise 5.7 only needs "infix expression", no "Statement terminator" is needed.
     ;; Also for "Line endings" (but we may introduce implicit newline, see SDF_exercises/chapter_5/5_7_tokenize_tests.scm).
+    
     (=> ,ID-TAG ,WORDS)
-    ;; regex replacement: '(.)' => '"$1" '
-    (=> OPERATOR-LEN-ONE (or "(" ")" "[" "]" ,@ADDITION-OPERATORS "~" "^" "!" "?" ":" ","))
+    (=> OPERATOR-LEN-ONE (or "(" ")" "[" "]" ,@ADDITIONAL-OPERATORS "~" "^" "!" "?" ":" ","))
     ;; Add "Line endings", more general than the Python doc example.
     (=> SKIP (+ space))
     (=> MISMATCH nonl)
@@ -68,8 +72,9 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/")
 (load "DataTypeLib.scm")
 
-(define field-names 
+(define field-names
   `(NUMBER
+    OPERATOR-WITH-SPACE-INSIDE
     ,STAR-ARG-TAG
     OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
     ,ID-TAG
@@ -79,7 +84,7 @@
     ))
 
 (define (Tokenize pat field-names input)
-  (define keywords '("if" "lambda" "then" "else"))
+  (define keywords '("if" "lambda" "then" "else" "is" "or" "and" "not" "in"))
   (coroutine*
     (for-each-elm-in-iterator 
       (let ((line-num 1) (line-start 0))
@@ -296,3 +301,28 @@
     (token "operator-len-possibly-greater-than-one" ":")
     (token "skip" " ")
     (token "id" a_b) finish-routine))
+
+(define test-lexer5
+  (Tokenize 
+    pat
+    field-names
+    ;; Just test _ recognition inside id.
+    "a is not b not in c <= d"
+    ))
+; (pp (lexer-contents test-lexer5))
+(assert-lexer
+  test-lexer5
+  '((token "id" a) (token "skip" " ")
+                  (token "operator-with-space-inside" "is not")
+                  (token "skip" " ")
+                  (token "id" b)
+                  (token "skip" " ")
+                  (token "operator-with-space-inside" "not in")
+                  (token "skip" " ")
+                  (token "id" c)
+                  (token "skip" " ")
+                  (token "operator-len-possibly-greater-than-one" "<=")
+                  (token "skip" " ")
+                  (token "id" d)
+                  finish-routine))
+

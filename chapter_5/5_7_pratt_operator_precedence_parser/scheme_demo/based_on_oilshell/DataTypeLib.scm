@@ -51,10 +51,17 @@
   )
 
 ;; For simplicity, I just use cond instead of one table.
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "string_lib.scm")
 (define (get-header str)
   (assert (string? str))
   (cond
     ((equal? str ":=") 'define)
+    ((member str COMPARISON-OP-LST) 
+      (symbol
+        ;; chain behavior is implicitly done in PrsComparison.
+        ; "chain-"
+        (string-replace* str " " "_")))
     (else str))
   )
 (define (get-header-for-token token)
@@ -126,3 +133,72 @@
   )
 
 (define ALL-DENOTATION-TYPES '(Null Left LeftRightAssoc))
+
+;; here set-Token-type! also works for local arg passed in. 
+(define-syntax new-GeneralNode-simplified
+  (syntax-rules ()
+    ((_ possible-general-node token type)
+      (begin
+        (assert 
+          (and
+            (Token? token)
+            (Token-type? type)))
+        (set-Token-type! token type)
+        (let ((intermediate possible-general-node))
+          (CompositeNode
+            token
+            (cond 
+              ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+              (else intermediate))
+            )
+          )
+        )
+      )
+    ((_ possible-general-node token)
+      (begin
+        (assert (and (Token? token)))
+        (let ((intermediate possible-general-node))  
+          (CompositeNode
+            token
+            (cond 
+              ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+              (else intermediate))
+            )
+          )
+        )
+      )
+    )
+  )
+
+(define-syntax new-GeneralNode
+  (syntax-rules ()
+    ((_ possible-general-node token type)
+      ;; This let is to avoid duplicate calculation
+      ;; token is assumed to be identifier able to be set!.
+      (let ((intermediate possible-general-node)
+            (type* type)
+            )
+        (assert 
+          (and
+            (Token? token)
+            (Token-type? type*)))
+        ;; Use syntax here to ensure this work for the caller token instead of that local argument.
+        (set-Token-type! token type*)
+        (CompositeNode
+          token
+          (cond 
+            ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+            (else intermediate))
+          )
+        )
+      )
+    )
+  )
+
+(define (new-GeneralNode-with-new-val general-node val-proc)
+  (assert (GeneralNode? general-node))
+  (CompositeNode
+    (get-GeneralNode-token general-node)
+    (val-proc (get-GeneralNode-val general-node))
+    )
+  )

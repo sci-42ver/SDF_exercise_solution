@@ -19,16 +19,18 @@
     )
   )
 
-(define (get-caller-type caller)
-  (assert (procedure? caller))
-  (let ((type (hash-table-ref* *handler-type-list* caller)))
+;; led-nud-caller means either led or nud.
+(define (get-caller-type led-nud-caller)
+  (assert (procedure? led-nud-caller))
+  (let ((type (hash-table-ref* *handler-type-list* led-nud-caller)))
     (and
       (not type)
-      (error (list "unrecognized caller" caller))
+      (error (list "unrecognized led-nud-caller" led-nud-caller))
       )
     type
     )
   )
+;; All caller-type's are implicitly set in spec-with-implicit-prec called by (MakePythonParserSpec).
 (define (%get-token-type-from-caller-and-op caller op-str)
   (*token-type-list* 'get (get-caller-type caller) op-str)
   )

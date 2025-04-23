@@ -4,13 +4,7 @@
 (load "multi_hash_table_lib.scm")
 ;; https://stackoverflow.com/a/61180123/21294350
 ;; TODO after CRLS: use the most efficient based on the needs here.
-(define *prec-list* (make-multi-hash make-equal-hash-table))
-; (define prec-key-tag 'prec-key)
-; (define (make-prec-key denotation-type op-str)
-;   (assert (and (symbol? denotation-type) (string? op-str)))
-;   (new-tagged-lst* prec-key-tag denotation-type op-str)
-;   )
-; (define prec-key? (tagged-list-pred prec-key-tag))
+(define *prec-list* (make-multi-hash))
 
 (define (spec-with-implicit-prec denotation-type handler op-lst)
   (assert
@@ -63,13 +57,17 @@
 ;; 0. Here I choose to start from if instead of :=
 ;; since := is not directly based on if/lambda
 ;; but if is directly based on or_test.
+(define COMPARISON-OP-LST '("in" "not in" "is" "is not" "<" "<=" ">" ">=" "!=" "=="))
+;; Notice here we only put or-op which is used in (MakePythonParserSpec) instead of type-str.
 (define prec-list-higher-than-or-op
   `(,LEFT-IF-BP
     .
     ((Left ("or"))
       (Left ("and"))
       (Null ("not"))
-      (Left ("in","<"))
+      ;; Add one total name since a<=b<c etc are thought as one whole object instead of (a<=b)<c.
+      ;; For details, see Python doc.
+      (Left (,@COMPARISON-OP-LST))
       (Left ("|"))
       ;; see SDF_exercises/scheme_primitive_tests/bundle.scm
       ;; 'left is same as 'Left.
@@ -102,7 +100,7 @@
                 (op-lst (cadr item)))
             (for-each
               (lambda (op)
-                (hash-table-set! *prec-list* (make-prec-key type op) bp)
+                (multi-hash-set! *prec-list* bp op type)
                 )
               op-lst
               )
@@ -115,17 +113,18 @@
 
 ;;; Initialization
 (define (init-prec-list)
-  (hash-table-set! *prec-list* (make-prec-key 'Left ",") COMMA-BP)
-  (hash-table-set! *prec-list* (make-prec-key 'Left "(") LEFT-PAREN-BP)
-  (hash-table-set! *prec-list* (make-prec-key 'Null "(") NULL-PAREN-BP)
-  (hash-table-set! *prec-list* (make-prec-key 'Null "{") NULL-BRACE-BP)
-  (hash-table-set! *prec-list* (make-prec-key 'Left ";") LEFT-SEMICOLON-BP)
-  (hash-table-set! *prec-list* (make-prec-key 'Null "if") NULL-IF-BP)
+  ;; regex: "\(make-prec-key ([^ ]+) ([^ ]+)\) ([^ ]+)\)" => "$3 $2 $1"
+  (multi-hash-set! *prec-list* COMMA-BP "," 'Left)
+  (multi-hash-set! *prec-list* LEFT-PAREN-BP "(" 'Left)
+  (multi-hash-set! *prec-list* NULL-PAREN-BP "(" 'Null)
+  (multi-hash-set! *prec-list* NULL-BRACE-BP "{" 'Null)
+  (multi-hash-set! *prec-list* LEFT-SEMICOLON-BP ";" 'Left)
+  (multi-hash-set! *prec-list* NULL-IF-BP "if" 'Null)
 
-  (hash-table-set! *prec-list* (make-prec-key 'Null "lambda") LAMBDA-RBP)
-  (hash-table-set! *prec-list* (make-prec-key 'Left "if") LEFT-IF-BP)
-  (hash-table-set! *prec-list* (make-prec-key 'Left ":=") :=-BP)
+  (multi-hash-set! *prec-list* LAMBDA-RBP "lambda" 'Null)
+  (multi-hash-set! *prec-list* LEFT-IF-BP "if" 'Left)
+  (multi-hash-set! *prec-list* :=-BP ":=" 'Left)
   (init-prec-list-higher-than-or-op)
   )
 (init-prec-list)
-(define *handler-type-list* (make-equal-hash-table))
+(define *handler-type-list* (default-hash-table-constructor))

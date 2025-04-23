@@ -3,7 +3,7 @@
 ;;; Initialization
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "bidirectional_map.scm")
-(define *token-type-list* (make-multi-bidirectional-map make-equal-hash-table))
+(define *token-type-list* (make-multi-bidirectional-map default-hash-table-constructor))
 ; (define (make-token-type-key caller op-str)
 ;   (assert (and (procedure? caller) (string? op-str)))
 ;   (list caller op-str)
@@ -30,6 +30,7 @@
       )
     '("-" "+")
     )
+  (*token-type-list* 'insert COMPARISON-TYPE-STR "if" 'Left)
   )
 (init-token-type-list)
 (define ALL-TOKEN-TYPES

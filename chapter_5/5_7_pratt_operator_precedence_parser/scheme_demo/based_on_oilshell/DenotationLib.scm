@@ -39,7 +39,8 @@
   ;; 1. For the trailing comma https://docs.python.org/3/reference/expressions.html#expression-lists,
   ;; we check whether we can get one new nud, see the above.
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
-  (new-GeneralNode-simplified
+  ;; 2. See PrsSeq* comment for why we use new-GeneralNode instead of new-GeneralNode-simplified here.
+  (new-GeneralNode
     (PrsSeq* p token left rbp 'tuple)
     token
     (get-token-type-from-caller-and-op LeftComma token)
@@ -58,6 +59,8 @@
 ;; error (a+b;a**b)
 (define (NullParen p token unused-rbp)
   (declare (ignore token)) ; since delimeter is comma.
+  ;; Here token is unused in possible-general-node generation.
+  ;; So it is fine to update its type beforehand.
   (new-GeneralNode-simplified
     (consume-possible-elems-implicitly-and-the-ending-token
       p
@@ -82,8 +85,10 @@
 (define (LeftFuncCall p token left unused-rbp)
   ;; borrowed from oilshell.
   (ensure-var left)
-  ;; token is unused in NullParen
-  (new-GeneralNode-simplified
+  ;; 0. token is unused in NullParen
+  ;; 1. Although it is fine to use new-GeneralNode-simplified, 
+  ;; here I still use new-GeneralNode since API for NullParen may change later...
+  (new-GeneralNode
     (cons 
       (get-GeneralNode-val left) 
       (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))
@@ -130,7 +135,7 @@
 ;; 1. a,b;c,d (begin (tuple a b) (tuple c d))
 (define (LeftSemicolon p token left rbp)
   ; token won't be used in PrsNary* of PrsSeq*, so fine to set-Token-type! beforehand.
-  (new-GeneralNode-simplified
+  (new-GeneralNode
     (PrsSeq* p token left rbp 'begin)
     token
     (get-token-type-from-caller-and-op LeftSemicolon token)
@@ -284,15 +289,26 @@
     )
   )
 ;;;; BEHAVIOR
-;; 0. Same as + etc in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary.
+;; 0. Same as or/and in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary and with the same prec relation.
 ;; So not same as oilshell LeftBinaryOp.
 ;; 1. IGNORE For or, left can't be those op's ending with expression.
 ;;;; TODO tests
 ;; a if b else c or d => (if b a (or c d))
 ;; a or b and c or not d => (or a (and b c) (not d))
 ;; a or b or error
-(define (LeftOr p token left rbp) 
+(define (LeftLogical p token left rbp) 
   (PrsSeqWithOpBetweenOrAndAwait p token left rbp))
+;;;; BEHAVIOR
+;; 0. > comparison    ::= or_expr (comp_operator or_expr)*
+;; Here * implies lhs and rhs can be both comparison.
+;; 1. not using parse-infix & LeftBinaryOp used by pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; Also not infix by effbot which is same for "<<" etc.
+;;;; TODO tests
+;; 0. based on or's one: "a or b and c or not d <= e and f or not g in h not in i == j"
+;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in i) (== i j)))))
+(define (PrsComparison p token left rbp)
+  (%PrsComparison p token left rbp ensure-consistent)
+  )
 
 ;;;; BEHAVIOR
 ;; trivial by returning self same as oilshell

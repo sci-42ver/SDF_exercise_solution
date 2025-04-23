@@ -57,10 +57,15 @@
     ;;;;;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm
     ;; All op's above "-" have been implemented.
 
-    ;;; TODO tests see LeftOr
-    (spec-with-implicit-prec 'Left PrsSeqWithOpBetweenOrAndAwait (list "or"))
-    (spec-with-implicit-prec 'Left PrsSeqWithOpBetweenOrAndAwait (list "and"))
-    (spec-with-implicit-prec 'Left NullPrefixOpWithSentinel (list "not"))
+    ;;;; BEHAVIOR
+    ;; See LeftLogical for or&and.
+    ;; For not (i.e. ! in oilshell), here we add Sentinel.
+    ;;;; TODO tests see LeftLogical
+    (spec-with-implicit-prec 'Left LeftLogical (list "or"))
+    (spec-with-implicit-prec 'Left LeftLogical (list "and"))
+    (spec-with-implicit-prec 'Null NullPrefixOpWithSentinel (list "not"))
+
+    (spec-with-implicit-prec 'Left PrsComparison (list COMPARISON-OP-LST))
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

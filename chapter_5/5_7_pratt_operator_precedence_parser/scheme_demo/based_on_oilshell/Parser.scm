@@ -57,19 +57,13 @@
             (get-led (spec 'LookupLeft type)))))
       ))
 
-  (define (ParseUntil rbp)
-    (and
-      (AtToken "eof")
-      (error "Unexpected end of input")
-      )
-    ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Top_002dLevel-Definitions.html
-    ;; > If variable is not bound, however, define binds variable to a new location in the current environment *before performing the assignment*
-    ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Assignments.html#index-set_0021-1
-    ;; > If expression is specified, *evaluates* expression and stores the resulting value in the location to which variable is bound.
-    (define cur-token token) ; set to the token val instead of passing ref val.
-    (Next)
-    (define null-info (spec 'LookupNull (Token-type cur-token)))
-    (define node ((get-nud null-info) self t (get-null-bp null-info)))
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Top_002dLevel-Definitions.html
+  ;; > If variable is not bound, however, define binds variable to a new location in the current environment *before performing the assignment*
+  ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Assignments.html#index-set_0021-1
+  ;; > If expression is specified, *evaluates* expression and stores the resulting value in the location to which variable is bound.
+  (define cur-token token) ; set to the token val instead of passing ref val.
+  
+  (define (ParseWithLeft rbp left)
     (define left-info)
     (while* #t
             (set! cur-token token)
@@ -79,7 +73,7 @@
               (break)
               )
             (Next)
-            (set! node ((get-led left-info) self t node (get-left-rbp null-info)))
+            (set! left ((get-led left-info) self t left (get-left-rbp null-info)))
             )
     ;; similar to pratt_new_compatible_with_MIT_GNU_Scheme.scm to move assignment into predicate.
     ;; OK, this style is a bit too weird.
@@ -94,7 +88,17 @@
     ;   (Next)
     ;   ...
     ;   )
-    node
+    )
+  (define (ParseUntil rbp)
+    (and
+      (AtToken "eof")
+      (error "Unexpected end of input")
+      )
+    (set! cur-token token)
+    (Next)
+    (define null-info (spec 'LookupNull (Token-type cur-token)))
+    (define node ((get-nud null-info) self t (get-null-bp null-info)))
+    (ParseWithLeft rbp node)
     )
   (define (Parse)
     (Next)

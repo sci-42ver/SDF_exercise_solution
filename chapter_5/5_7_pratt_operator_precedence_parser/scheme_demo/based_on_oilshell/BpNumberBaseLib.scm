@@ -22,13 +22,17 @@
 (define LEFT-SEMICOLON-BP BASE-BP)
 ;; https://docs.python.org/3/reference/simple_stmts.html#expression-statements
 ;; IMHO expr can be one statement so that they can share base-prec.
-(define STATEMENT-BASE-BP EXPR-BASE-BP)
+(define STATEMENT-BASE-BP LEFT-SEMICOLON-BP)
 ;;; IGNORE different from pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; Here we allow "if a,b then ..." (this isn't allowed in Python due to assignment_expression can't be list https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-if_stmt) 
 ;; so its prec should be less than COMMA-BP.
 ;;; Python
 ;; > if_stmt ::= "if" assignment_expression ":" suite
 (define NULL-IF-BP STATEMENT-BASE-BP)
+;;;;;; Non-expr end
+
+;;;;;; PYTHON EXPR BEGINNING
+(define EXPR-BASE-BP LEFT-SEMICOLON-BP)
 ;; 0. IGNORE Same value as pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; to make extension more flexible.
 ;; 0.a. See the above "See DenotationLib.scm ..."
@@ -38,10 +42,6 @@
 ;; But here we allows that since := is define instead of "a named expression".
 ;; So the above means (tuple (define a b) c)
 (define COMMA-BP EXPR-BASE-BP)
-;;;;;; Non-expr end
-
-;;;;;; PYTHON EXPR BEGINNING
-(define EXPR-BASE-BP LEFT-SEMICOLON-BP)
 ;;;; see https://docs.python.org/3/reference/expressions.html#operator-precedence
 ;;; IGNORE "," is not listed in Python precedence list.
 ;; Here I just assume , has one higher precedence than :=.

@@ -12,3 +12,14 @@
       )
     )
   )
+
+(define tree? list?)
+(define (last-in-tree tree)
+  (assert (tree? tree))
+  (let lp ((final (last tree)))
+    (if (tree? final)
+      (lp (last final))
+      final
+      )
+    )
+  )
