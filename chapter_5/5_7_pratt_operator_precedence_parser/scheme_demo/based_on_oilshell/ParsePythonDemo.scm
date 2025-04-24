@@ -58,6 +58,26 @@
     ;; All op's above "-" have been implemented.
     ;; Then it has "-", "**", "/", "=" (i.e. "==" in Python), "not", "QUOTE-SYMBOL" left.
 
+    ;;;;;; ensure-consistent check 
+    ;; 0. all binary ops in [or, and, &, ^, |, shift-op, a_expr-op, m_expr-op]
+    ;; has the pattern: self-expr = self-expr-one-level-up | self-expr self-op self-expr-one-level-up
+    ;; so ensure-consistent is fine where rhs can be also self-expr if we group from right to left instaed of with the reverse direction.
+    ;; 1. all unary-prefix ops in [not, u_expr-op]
+    ;; has pattern: self-expr = self-expr-one-level-up | self-op self-expr
+    ;; ensure-consistent is still fine since "self-op self-expr" can be only higher "self-op self-expr-one-level-up".
+    ;; the nested self-op is allowed by nud always.
+    ;; 2. binary ops in [comparison, ]
+    ;; has pattern: self-expr = self-expr-one-level-up (self-op self-expr-one-level-up)*
+    ;; This implicitly allows self-expr = self-expr (self-op self-expr)*
+    ;; So ensure-consistent is still fine
+    ;; 3. binary ops in [power, ]
+    ;; has pattern: self-expr = (self-expr-one-level-up | self-expr-two-levels-up) [self-op self-expr-one-level-down]
+    ;; So ensure-consistent won't work.
+    ;; > The power operator binds more tightly than unary operators on its left; it binds less tightly than unary operators on its right.
+    ;; 3.a. Here for **, 
+    ;; "u_expr ::= power" implies we can have "** power", i.e. rhs's prec >= self-prec plus u_expr-op.
+    ;; 3.b. Due to right to left, power ** rest can't happern since lhs must be grouped later than rhs.
+    ;; so lhs's prec > self-prec which is already implied by LeftRightAssoc.
     ;;;; BEHAVIOR
     ;; See LeftLogical for or&and.
     ;; For not (i.e. ! in oilshell), here we add Sentinel.
@@ -90,6 +110,15 @@
     ;; a * d + b << c => (<< (+ (* a d) b) c)
     (spec-with-implicit-prec 'Left PrsSeqWithSentinel BINARY-PM-OP-LST)
     (spec-with-implicit-prec 'Left PrsSeqWithSentinel OTHER-BINARY-OP-LST)
+
+    ;;;; BEHAVIOR
+    ;; Comparison see %NullPrefixOp.
+    ;;;; TODO tests
+    ;; +-a*b => (* (+ (- a)) b)
+    (spec-with-implicit-prec 'Null NullPrefixOpWithSentinel UNARY-OP-LST)
+
+    (spec-with-implicit-prec 'LeftRightAssoc PrsPower '("**"))
+    ;;;;;; ensure-consistent check finish
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

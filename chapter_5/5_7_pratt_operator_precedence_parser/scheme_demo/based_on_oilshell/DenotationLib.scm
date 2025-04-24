@@ -6,7 +6,7 @@
 ;; And obviously we won't implement one parser like the actual one for Python or C etc.
 
 ;;; DEBUG INFO: 
-;; ";;;; BEHAVIOR" and ";;;; TODO tests" number expected: 9 (by re pat "^\(define ")
+;; ";;;; BEHAVIOR" and ";;;; TODO tests" number is expected to be one more than the number for re pat "^\(define ".
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "loop_lib.scm")
@@ -324,9 +324,47 @@
   )
 
 ;;;; BEHAVIOR
+;; MIT/GNU Scheme supports only (expt z1 z2) https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Numerical-operations.html#index-expt.
+;; So here it is based on %LeftBinaryOpWithSentinel (comparison see LeftBinaryOp).
+;;;; TODO tests
+;; 0. TODO add tests related with primary
+;; 1. Notice different from the above "TODO tests", this add op with higher prec besides that with one level lower.
+;; 1.a. - await a ** -b ** ~c => (- (expt (await a) (- (expt b (~ c)))))
+;; This has lhs being higher, rhs being power or u_expr.
+;; 1.b. a ** await b => (expt a (await b))
+;; rhs being higher.
+;;; similar to LeftBinaryOpWithSentinel but with tweaks for prec Sentinel.
+(define (PrsPower p token left rbp)
+  (define (right-sentinel token return-handler . nodes)
+    ;; TODO I don't know the exact API for declare.
+    ; (declare (ignore token) (ignore return-handler))
+    (declare (ignore return-handler))
+    (let ((ret (car nodes)))
+      (assert 
+        (and 
+          (null? (cdr nodes))
+          ((lambda (node)
+            (or ((pred-ensuring-expr-with-consistent-precedence token) node)
+              (member (get-GeneralNode-token-type node)
+                (map
+                  (lambda (op-str) (*token-type-list* 'get op-str 'Null))
+                  BINARY-PM-OP-LST
+                  )
+                )
+              )
+            )
+            ret)
+          ))
+      ret
+      )
+    )
+  (%LeftBinaryOpWithSentinel p token left rbp right-sentinel)
+  )
+
+;;;; (IGNORE TEMPORARILY) BEHAVIOR
 ;; trivial by returning self same as oilshell
 ;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm, this is inherent inside nudcall.
-;;;; TODO tests
+;;;; (IGNORE TEMPORARILY) TODO tests
 ;; /, * => return self. (also see lambda)
 ; (define (NullConstant p token unused-rbp)
 ;   (declare (ignore p))

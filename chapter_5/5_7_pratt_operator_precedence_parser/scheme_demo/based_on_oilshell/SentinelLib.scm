@@ -88,17 +88,21 @@
 ;; consistent means >= and other constraints (see ALL-NON-TOP-EXPR-TOKEN-TYPES)
 (define (pred-ensuring-expr-with-consistent-precedence token)
   (lambda (node)
-    (assert
-      (member 
-        (get-GeneralNode-token-type node)
-        (get-expr-token-types-with-consistent-prec (Token-type token))))
+    (member 
+      (get-GeneralNode-token-type node)
+      (get-expr-token-types-with-consistent-prec (Token-type token)))
     )
   )
 (define (ensure-consistent token return-handler . nodes)
   (let ((pred (pred-ensuring-expr-with-consistent-precedence token)))
-    (for-each (lambda (node) (pred node)) nodes)
+    (for-each (lambda (node) (assert (pred node))) nodes)
     (return-handler nodes)
     )
   )
 
+(define (relative-sentinel? sentinel)
+  (and (procedure? sentinel)
+    (equal? '(2 . #f) (procedure-arity sentinel))
+    )
+  )
 

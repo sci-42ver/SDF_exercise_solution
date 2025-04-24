@@ -22,13 +22,15 @@
       (let ((op-description
               (cond 
                 ((equal? "-" op) "minus")
-                ((equal? "+" op) "plus"))
+                ((equal? "+" op) "plus")
+                (else (error (list "unknown op-description for" op "with both led and nud")))
+                )
               ))
         (*token-type-list* 'insert (string-append "left-" op-description) op 'Left)
         (*token-type-list* 'insert (string-append "null-" op-description) op 'Null)  
         )
       )
-    '("-" "+")
+    (lset-intersection BINARY-PM-OP-LST UNARY-OP-LST)
     )
   (*token-type-list* 'insert COMPARISON-TYPE-STR "if" 'Left)
   )

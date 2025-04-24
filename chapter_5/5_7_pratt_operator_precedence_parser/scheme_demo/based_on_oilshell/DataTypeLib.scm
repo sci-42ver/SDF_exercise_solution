@@ -71,6 +71,7 @@
     ((equal? obj "|") 'bitwise-or)
     ((equal? obj "{") 'begin)
     ((equal? obj ",") 'tuple)
+    ((equal? obj "**") 'expt)
     (else
       (Token-val->Scheme-val obj)))
   )
@@ -98,6 +99,17 @@
   )
 (define CompositeNode? (tagged-list-pred CompositeNodeTag))
 (define get-CompositeNode-expr caddr)
+
+(define (CompositeNode-with-binary-expr root-token left-node right-node)
+  (CompositeNode
+    token
+    (cons*-wrapper
+      (get-header-for-token token)
+      (get-GeneralNode-val left-node)
+      (get-GeneralNode-val right-node)
+      )
+    )
+  )
 
 (define (GeneralNode? node)
   (or (Node node) (CompositeNode? node))

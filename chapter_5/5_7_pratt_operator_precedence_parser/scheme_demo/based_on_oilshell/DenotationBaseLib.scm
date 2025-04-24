@@ -66,10 +66,12 @@
   (use-possible-default-object-proc elm-relative-assertion delimeter-token return-last left)
   (%PrsSeq PrsNary parser delimeter-token left rbp elm-relative-assertion header)
   )
-(define (PrsSeq* parser delimeter-token left rbp #!optional elm-pred header)
-  (assert (elm-pred left))
-  (%PrsSeq PrsNary* parser delimeter-token left rbp elm-pred header)
+
+(define (PrsSeqWithOpBetweenOrAndAwait parser delimeter-token left rbp #!optional header)
+  (PrsSeq parser delimeter-token left rbp ensure-consistent)
   )
+(define (PrsSeqWithSentinel p token left rbp)
+  (PrsSeqWithOpBetweenOrAndAwait p token left rbp))
 
 ;; similar to PrsSeq, but allow a<=b<c<d>e
 ;; If using PrsSeq, after having (<= a b), either continue comparison or not based on AtToken.
@@ -109,11 +111,10 @@
   )
 )
 
-(define (PrsSeqWithOpBetweenOrAndAwait parser delimeter-token left rbp #!optional header)
-  (PrsSeq parser delimeter-token left rbp ensure-consistent)
+(define (PrsSeq* parser delimeter-token left rbp #!optional elm-pred header)
+  (assert (elm-pred left))
+  (%PrsSeq PrsNary* parser delimeter-token left rbp elm-pred header)
   )
-(define (PrsSeqWithSentinel p token left rbp)
-  (PrsSeqWithOpBetweenOrAndAwait p token left rbp))
 
 (define (PrsPossibleSeq* parser delimeter-token rbp delimeter-lbp #!optional elm-pred header)
   (let ((first-elm (parser 'ParseUntil delimeter-lbp)))
@@ -156,22 +157,37 @@
       ))
   )
 
+;; same as LeftBinaryOp in oilshell and parse-infix in pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; except using different data structures.
 (define (LeftBinaryOp p token left rbp)
-  (CompositeNode
+  (CompositeNode-with-binary-expr
     token
-    (cons*-wrapper
-      ;; Here I assume to use ** etc even if it is not supported in original underlying interpreter.
-      ;; Then it is that interpreter's duty to define ** before using **.
-      (get-header-for-token token)
-      (get-GeneralNode-val left)
-      (get-GeneralNode-val (p 'ParseUntil rbp))
-      )
-    )
+    left 
+    (p 'ParseUntil rbp))
   )
 (define get-binary-left cadr)
 (define get-binary-right caddr)
+;; Just add Sentinels.
+(define (%LeftBinaryOpWithSentinel p token left rbp #!optional right-relative-sentinel left-relative-sentinel)
+  (for-each
+    (lambda (sentinel) (and* sentinel (assert (relative-sentinel? sentinel))))
+    (list right-relative-sentinel left-relative-sentinel)
+    )
+  ((or* left-relative-sentinel ensure-consistent) token return-last left)
+  (let ((right (p 'ParseUntil rbp)))
+    ((or* right-relative-sentinel ensure-consistent) token return-last right)
+    (CompositeNode-with-binary-expr
+      token
+      left 
+      right)
+    )
+  )
+(define (LeftBinaryOpWithSentinel p token left rbp)
+  (%LeftBinaryOpWithSentinel p token left rbp)
+  )
 
 ;; same as oilshell and parse-prefix in pratt_new_compatible_with_MIT_GNU_Scheme.scm
+;; except using different data structures; add Sentinel.
 (define (%NullPrefixOp p token rbp #!optional elm-relative-assertion)
   (let ((right (p 'ParseUntil rbp)))
     (use-possible-default-object-proc elm-relative-assertion token return-last right)
