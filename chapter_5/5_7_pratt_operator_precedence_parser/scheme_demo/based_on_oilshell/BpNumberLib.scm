@@ -6,29 +6,53 @@
 ;; TODO after CRLS: use the most efficient based on the needs here.
 (define *prec-list* (make-multi-hash))
 
-(define (spec-with-implicit-prec denotation-type handler op-lst)
+(define (spec-with-implicit-prec spec denotation-type handler op-lst #!optional header-lst prec token-type)
   (assert
     (and 
       (denotation-type? denotation-type) 
       (procedure? handler) 
       (list-of-type? op-lst string?)))
   (hash-table-set! *handler-type-list* handler denotation-type)
+  (for-each
+    (lambda (val-lst-with-table)
+      (let ((table (car val-lst-with-table))
+            (val-lst (cdr val-lst-with-table)))
+        (and* val-lst
+          (begin
+            (assert (= (length op-lst) (length val-lst)))
+            (for-each
+              (lambda (op val) (multi-hash-set! table val op denotation-type))
+              op-lst val-lst
+              )
+            ))
+        )
+      )
+    (list 
+      (cons *header-table* header-lst) 
+      (cons *token-type-list* token-type-lst)
+      ;; for consistency
+      (cons *prec-list*
+        (if (default-object? prec)
+          (default-object)
+          (map (lambda (ignore) prec) op-lst)
+          )
+        )
+      )
+    )
   ;; assume op-lst having the same prec.
-  (spec denotation-type (get-prec (car op-lst)) handler op-lst)
+  (spec denotation-type (%get-prec (car op-lst) denotation-type) handler op-lst)
   )
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "list_lib.scm")
+;;; Similar to get-header.
 ;; Notice this is based on token-type already modified based on context, like null-if or left-if.
 (define (%get-prec op-str #!optional denotation-type)
   (assert (string? op-str))
   (let ((possible-prec 
-          (apply multi-hash-ref 
-            (cons* *prec-list* op-str
-              (if (default-object? denotation-type)
-                '()
-                (list denotation-type))
-              ))))
+          (apply-with-no-default-object-arg multi-hash-ref 
+            *prec-list* op-str denotation-type
+            )))
     (cond 
       ((multi-hash-table? possible-prec)
         (get-the-only-elm
@@ -42,15 +66,22 @@
       )
     )
   )
-(define (get-prec-key-for-token-type token-type)
+(define (get-prec-key-for-token token)
   (or
-    (*token-type-list* 'getKeys token-type)
-    (list token-type) ; with only one nud or led.
+    (*token-type-list* 'getKeys (Token-type token))
+    (list (Token-val token)) ; with only one nud or led.
     )
   )
-(define (get-prec token-type)
+(define (get-prec token)
+  (assert (Token? token))
+  (apply %get-prec (get-prec-key-for-token token))
+  )
+(define (get-prec-by-token-type token-type)
   (assert (string? token-type))
-  (apply %get-prec (get-prec-key-for-token-type token-type))
+  (let ((prec-key (*token-type-list* 'getKeys token-type)))
+    (assert prec-key)
+    (apply %get-prec prec-key)
+    )
   )
 
 ;; From Python

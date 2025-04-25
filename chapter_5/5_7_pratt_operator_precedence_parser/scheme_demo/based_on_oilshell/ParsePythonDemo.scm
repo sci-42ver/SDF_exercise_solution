@@ -33,27 +33,27 @@
     ;; ---
     ;; So when used by other nud's like lambda or led's, "," is manipulated specifically.
     ;; This led is just used for the bare case "a, b".
-    (spec-with-implicit-prec 'Left LeftComma (list ","))
+    (spec-with-implicit-prec spec 'Left LeftComma (list ","))
     ;; 0. CLOSE-PAREN is shown above. Here lbp is only needed to be less than all rbp's.
-    (spec-with-implicit-prec 'Left LeftFuncCall (list "("))
-    (spec-with-implicit-prec 'Null NullParen (list "("))
+    (spec-with-implicit-prec spec 'Left LeftFuncCall (list "("))
+    (spec-with-implicit-prec spec 'Null NullParen (list "("))
     ;; 1. IGNORE LEFT-BRACE, SEMICOLON, RIGHT-BRACE are skipped due to they are not used in expression (see https://en.cppreference.com/w/c/language/operator_precedence).
     ;; parse-matchfix-modified have been used similarly in lambda and open-paren-nud manipulation there.
     ;; SEMICOLON, RIGHT-BRACE are just like "," and ")" here both with default error led/nud's.
     ;; 1.a. LEFT-BRACE, SEMICOLON, RIGHT-BRACE should be added since statement may be used in lambda.
     ;; (I won't give one extensive support for Python statement... That is due to focus here is expr)
-    (spec-with-implicit-prec 'Null NullBrace (list "{"))
-    (spec-with-implicit-prec 'Left LeftSemicolon (list ";"))
+    (spec-with-implicit-prec spec 'Null NullBrace (list "{"))
+    (spec-with-implicit-prec spec 'Left LeftSemicolon (list ";"))
 
-    (spec-with-implicit-prec 'Null NullLambda (list "lambda"))
+    (spec-with-implicit-prec spec 'Null NullLambda (list "lambda"))
     
     ;; IGNORE For if – else (not offered in oilshell since it is not used in C-expr),
     ;; we should do as https://docs.python.org/3/reference/expressions.html#if-expr
     ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm
-    (spec-with-implicit-prec 'Null NullIf (list "if"))
-    (spec-with-implicit-prec 'LeftRightAssoc LeftIf (list "if"))
+    (spec-with-implicit-prec spec 'Null NullIf (list "if"))
+    (spec-with-implicit-prec spec 'LeftRightAssoc LeftIf (list "if"))
 
-    (spec-with-implicit-prec 'Left LeftDefine (list ":="))
+    (spec-with-implicit-prec spec 'Left LeftDefine (list ":="))
     ;;;;;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm
     ;; it has "QUOTE-SYMBOL" left.
 
@@ -87,15 +87,15 @@
     ;; See LeftLogical for or&and.
     ;; For not (i.e. ! in oilshell), here we add Sentinel.
     ;;;; TODO tests see LeftLogical
-    (spec-with-implicit-prec 'Left LeftLogical (list "or"))
-    (spec-with-implicit-prec 'Left LeftLogical (list "and"))
-    (spec-with-implicit-prec 'Null NullPrefixOpWithSentinel (list "not"))
+    (spec-with-implicit-prec spec 'Left LeftLogical (list "or"))
+    (spec-with-implicit-prec spec 'Left LeftLogical (list "and"))
+    (spec-with-implicit-prec spec 'Null NullPrefixOpWithSentinel (list "not"))
 
-    (spec-with-implicit-prec 'Left PrsComparison COMPARISON-OP-LST)
+    (spec-with-implicit-prec spec 'Left PrsComparison COMPARISON-OP-LST)
 
-    (spec-with-implicit-prec 'Left LeftBitwise (list "&"))
-    (spec-with-implicit-prec 'Left LeftBitwise (list "^"))
-    (spec-with-implicit-prec 'Left LeftBitwise (list "|"))
+    (spec-with-implicit-prec spec 'Left LeftBitwise (list "&"))
+    (spec-with-implicit-prec spec 'Left LeftBitwise (list "^"))
+    (spec-with-implicit-prec spec 'Left LeftBitwise (list "|"))
 
     ;;;; BEHAVIOR
     ;; > shift_expr ::= a_expr | shift_expr ("<<" | ">>") a_expr
@@ -105,7 +105,7 @@
     ;; oilshell uses LeftBinaryOp (so comparison is similar to LeftLogical)
     ;;;; TODO tests
     ;; a & b << c >> d => (& a (>> (<< b c) d))
-    (spec-with-implicit-prec 'Left PrsSeqWithSentinel SHIFT-OP-LST)
+    (spec-with-implicit-prec spec 'Left PrsSeqWithSentinel SHIFT-OP-LST)
 
     ;;;; BEHAVIOR
     ;; 0. similar to the above except pratt_new_compatible_with_MIT_GNU_Scheme.scm implements this with parse-nary.
@@ -113,16 +113,16 @@
     ;; 0.a. Here I allow (/ a b c) which means (/ a (* b c)) same as Scheme.
     ;;;; TODO tests
     ;; a * d + b << c => (<< (+ (* a d) b) c)
-    (spec-with-implicit-prec 'Left PrsSeqWithSentinel BINARY-PM-OP-LST)
-    (spec-with-implicit-prec 'Left PrsSeqWithSentinel OTHER-BINARY-OP-LST)
+    (spec-with-implicit-prec spec 'Left PrsSeqWithSentinel BINARY-PM-OP-LST)
+    (spec-with-implicit-prec spec 'Left PrsSeqWithSentinel OTHER-BINARY-OP-LST)
 
     ;;;; BEHAVIOR
     ;; Comparison see %NullPrefixOp.
     ;;;; TODO tests
     ;; +-a*b => (* (+ (- a)) b)
-    (spec-with-implicit-prec 'Null NullPrefixOpWithSentinel UNARY-OP-LST)
+    (spec-with-implicit-prec spec 'Null NullPrefixOpWithSentinel UNARY-OP-LST)
 
-    (spec-with-implicit-prec 'LeftRightAssoc PrsPower '("**"))
+    (spec-with-implicit-prec spec 'LeftRightAssoc PrsPower '("**"))
 
     ;;;; BEHAVIOR
     ;; trivially not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell shell parser
@@ -130,13 +130,13 @@
     ;;;; TODO tests
     ;; TODO for primary
     ;; await await a => error
-    (spec-with-implicit-prec 'Null PrsAwait AWAIT-OP-LST)
+    (spec-with-implicit-prec spec 'Null PrsAwait AWAIT-OP-LST)
     ;;;;;; ensure-consistent check finish
 
     ;; > attributeref ::= primary "." identifier
     ;; Here primary can be atom like "literal"
-    ;; So "1".__eq__ and "1".__eq__("2") is fine https://stackoverflow.com/a/65474446/21294350.
-    (spec-with-implicit-prec 'Null PrsAwait AWAIT-OP-LST)
+    ;; So '"1" . __eq__' (allow space inside) and "1".__eq__("2") is fine https://stackoverflow.com/a/65474446/21294350.
+    (spec-with-implicit-prec spec 'Null PrsAttribute '(".") '("get-attrib") MAX-BP)
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

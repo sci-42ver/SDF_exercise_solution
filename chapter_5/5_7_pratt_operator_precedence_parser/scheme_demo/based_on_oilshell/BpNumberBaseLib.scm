@@ -61,7 +61,8 @@
 (define LEFT-IF-BP (+ BP-STEP (max :=-BP LAMBDA-RBP)))
 
 ;; TODO use one value based on precedence list.
-(define LEFT-PAREN-BP 200)
+(define MAX-BP 200)
+(define LEFT-PAREN-BP MAX-BP)
 (define NULL-PAREN-BP UNUSED-BASE-BP)
 ;; 0. similarly only stop on } and allow any expr/stmt inside.
 ;; 1. Here I put this into the top of the Python precedence list due to similarity with "(expr...)".

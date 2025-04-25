@@ -90,7 +90,7 @@
   (lambda (node)
     (member 
       (get-GeneralNode-token-type node)
-      (get-expr-token-types-with-consistent-prec (Token-type token)))
+      (get-expr-token-types-with-consistent-prec token))
     )
   )
 (define (ensure-consistent token return-handler . nodes)

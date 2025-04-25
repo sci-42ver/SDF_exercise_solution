@@ -86,7 +86,7 @@
               (lambda (expr) (list 'and expr))
               )))
     ;; notice here we use PrsComparison instead of %PrsComparison
-    (let ((type (get-token-type-from-caller-and-op PrsComparison token)))
+    (let ((final-node-type (get-token-type-from-caller-and-op PrsComparison token)))
       (if (any (lambda (type) (p 'AtToken type)) COMPARISON-OP-LST)
         ;; based on assumption that all op's in COMPARISON-OP-LST have the same rbp.
         (let* ((cur-expr (get-GeneralNode-val cur-node))
@@ -99,13 +99,13 @@
           (new-GeneralNode-simplified
             (append cur-expr (get-tagged-lst-data rest-expr))
             token
-            type
+            final-node-type
             )
           )
         (new-GeneralNode-simplified
           cur-node
           token
-          type
+          final-node-type
           )
       ))
   )

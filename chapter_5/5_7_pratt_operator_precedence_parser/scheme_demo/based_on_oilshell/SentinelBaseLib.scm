@@ -3,13 +3,13 @@
 ;; 0. For or etc,
 ;; left can be or_test
 ;; rhs won't be or-expr due to prec relation, i.e. self-rbp=self-lbp instead of rbp<lbp.
-(define (get-expr-token-types-with-consistent-prec token-type)
-  (assert (Token-type? token-type))
-  (let ((cur-prec (get-prec token-type)))
+(define (get-expr-token-types-with-consistent-prec token)
+  (assert (Token? token))
+  (let ((cur-prec (get-prec token)))
     (append
       (filter
         (lambda (type)
-          (>= (get-prec type) cur-prec)
+          (>= (get-prec-by-token-type type) cur-prec)
           )
         ALL-NON-TOP-EXPR-TOKEN-TYPES
         )
@@ -32,7 +32,11 @@
   )
 ;; All caller-type's are implicitly set in spec-with-implicit-prec called by (MakePythonParserSpec).
 (define (%get-token-type-from-caller-and-op caller op-str)
-  (*token-type-list* 'get (get-caller-type caller) op-str)
+  (let ((type (*token-type-list* 'get (get-caller-type caller) op-str)))
+    ;; only allowed to use in appropriate places.
+    (assert type)
+    type
+    )
   )
 (define (get-token-type-from-caller-and-op caller token)
   (%get-token-type-from-caller-and-op caller (Token-val token))

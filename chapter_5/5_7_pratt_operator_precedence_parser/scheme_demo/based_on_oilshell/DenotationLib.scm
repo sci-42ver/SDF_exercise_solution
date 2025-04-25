@@ -375,10 +375,18 @@
   )
 
 ;;;; BEHAVIOR
-;; not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
+;; 0. not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
 ;; similar to effbot where '"(name)"' and 'self.second = token' do Sentinel jobs.
+;; 1. Similar to LeftFuncCall with "primary" as left.
+;; 2. > attributeref ::= primary "." identifier
+;; > primary ::= atom | ...
+;; > atom      ::= identifier | literal | enclosure
+;; So "." may bind the recent possible atom both left and right.
+;; So it is fine to use the same lbp and rbp.
 ;;;; TODO tests
-;; await 
+;; await a . b => (await (get a b))
+;; a[b,c].d => {a[b,c]}.d (use {} for enforced ordering)
+;; a.b[c,d] => {a.b}[c,d]
 (define (PrsAttribute p token left rbp)
   (%LeftBinaryOpWithSentinel ensure-identifier ensure-primary)
   )

@@ -32,7 +32,11 @@
       )
     (lset-intersection BINARY-PM-OP-LST UNARY-OP-LST)
     )
-  (*token-type-list* 'insert COMPARISON-TYPE-STR "if" 'Left)
+  (for-each
+    (lambda (op)
+      (*token-type-list* 'insert COMPARISON-TYPE-STR op 'Left))
+    COMPARISON-OP-LST
+    )
   )
 (init-token-type-list)
 (define ALL-TOKEN-TYPES
