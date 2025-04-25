@@ -124,19 +124,16 @@
 
     (spec-with-implicit-prec spec 'LeftRightAssoc PrsPower '("**"))
 
-    ;;;; BEHAVIOR
-    ;; trivially not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell shell parser
-    ;; Also not in the old Python effbot parser implementation
-    ;;;; TODO tests
-    ;; TODO for primary
-    ;; await await a => error
     (spec-with-implicit-prec spec 'Null PrsAwait AWAIT-OP-LST)
     ;;;;;; ensure-consistent check finish
 
     ;; > attributeref ::= primary "." identifier
     ;; Here primary can be atom like "literal"
     ;; So '"1" . __eq__' (allow space inside) and "1".__eq__("2") is fine https://stackoverflow.com/a/65474446/21294350.
-    (spec-with-implicit-prec spec 'Null PrsAttribute '(".") '("get-attrib") MAX-BP)
+    (spec-with-implicit-prec spec 'Left PrsAttribute '(".") '("get-attrib") MAX-BP)
+    ;;; For simplicity, from here I won't implement Sentinel. Anyway it can be done similar to the above.
+    ;; If you are interested, you can do that.
+    ; (spec-with-implicit-prec spec 'Left PrsSubscription '("[") '("sublist") MAX-BP)
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

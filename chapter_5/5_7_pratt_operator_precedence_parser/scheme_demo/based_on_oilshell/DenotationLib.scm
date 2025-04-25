@@ -355,6 +355,12 @@
   (%LeftBinaryOpWithSentinel p token left rbp right-sentinel)
   )
 
+;;;; BEHAVIOR
+;; trivially not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell shell parser
+;; Also not in the old Python effbot parser implementation
+;;;; TODO tests
+;; TODO for primary
+;; await await a => error
 (define (PrsAwait p token rbp)
   (define (right-sentinel token return-handler . nodes)
     (sentinel-for-one-node 
@@ -384,12 +390,29 @@
 ;; So "." may bind the recent possible atom both left and right.
 ;; So it is fine to use the same lbp and rbp.
 ;;;; TODO tests
-;; await a . b => (await (get a b))
+;; await a . b => (await (get-attrib a b))
 ;; a[b,c].d => {a[b,c]}.d (use {} for enforced ordering)
 ;; a.b[c,d] => {a.b}[c,d]
 (define (PrsAttribute p token left rbp)
   (%LeftBinaryOpWithSentinel ensure-identifier ensure-primary)
   )
+
+;;;;;; Both of these: see LeftFuncCall.
+;;;; BEHAVIOR
+;;;; TODO tests
+;;;;;; This is similar to LeftFuncCall
+;; Former
+;; > subscription ::= primary "[" flexible_expression_list "]"
+;; > flexible_expression_list ::= flexible_expression ("," flexible_expression)* [","]
+;; Latter
+;; > call ::= primary "(" [argument_list [","] | comprehension] ")"
+;; > argument_list        ::= positional_arguments ["," starred_and_keywords] ["," keywords_arguments] | ...
+;; You can see the former has "flexible_expression" for each item
+;; while the latter has more possible types of items.
+;; So the difference is just delimeter and related Sentinel's.
+;; So I won't implement this again.
+(define (PrsSubscription p token left rbp)
+  (error 'similar-to-LeftFuncCall-so-skipped))
 
 ;;;; (IGNORE TEMPORARILY) BEHAVIOR
 ;; trivial by returning self same as oilshell
