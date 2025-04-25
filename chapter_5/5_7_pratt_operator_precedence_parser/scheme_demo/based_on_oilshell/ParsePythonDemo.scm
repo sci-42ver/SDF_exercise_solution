@@ -131,9 +131,11 @@
     ;; Here primary can be atom like "literal"
     ;; So '"1" . __eq__' (allow space inside) and "1".__eq__("2") is fine https://stackoverflow.com/a/65474446/21294350.
     (spec-with-implicit-prec spec 'Left PrsAttribute '(".") '("get-attrib") MAX-BP)
-    ;;; For simplicity, from here I won't implement Sentinel. Anyway it can be done similar to the above.
+    ;;; 0. For simplicity, from here I won't implement Sentinel. Anyway it can be done similar to the above.
     ;; If you are interested, you can do that.
+    ;;; 1. IGNORE Also here [] has different parsing rules for Subscription and Slicing,
     ; (spec-with-implicit-prec spec 'Left PrsSubscription '("[") '("sublist") MAX-BP)
+    ; (spec-with-implicit-prec spec 'Left PrsSlicing '("[") '("slicing") MAX-BP)
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

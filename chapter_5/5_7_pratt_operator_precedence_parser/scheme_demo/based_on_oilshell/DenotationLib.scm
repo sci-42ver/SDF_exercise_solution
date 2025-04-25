@@ -412,7 +412,92 @@
 ;; So the difference is just delimeter and related Sentinel's.
 ;; So I won't implement this again.
 (define (PrsSubscription p token left rbp)
-  (error 'similar-to-LeftFuncCall-so-skipped))
+  (error 'should-be-combined-with-PrsSlicing))
+
+;;;;;; Both of these: see PrsSubscription.
+;;;; BEHAVIOR
+;;;; TODO tests
+;; Still similar to LeftFuncCall but actually more like subscription.
+;; Former
+;; > slicing      ::= primary "[" slice_list "]"
+;; > slice_list   ::= slice_item ("," slice_item)* [","]
+;; > slice_item   ::= expression | proper_slice
+;; > proper_slice ::= [lower_bound] ":" [upper_bound] [ ":" [stride] ]
+;; Latter
+;; > subscription ::= primary "[" flexible_expression_list "]"
+;; > flexible_expression_list ::= flexible_expression ("," flexible_expression)* [","]
+;; > flexible_expression      ::= assignment_expression | starred_expression
+;; > starred_expression       ::= ["*"] or_expr
+;; You can see they are just almost same but with different possible types of elems.
+;;;; Implementation design
+;; 0. Notice "assignment_expression" is not contained in "expression" (Either checking through the grammar or checking "if matching := test := 2:" in Python).
+;; So [] parsing should manipulate "," inside to ensure consistency of slice_item or flexible_expression.
+;; Based on COMMA-BP being EXPR-BASE-BP, that can be done similar to LeftComma.
+;; 0.a. starred_expression can done trivially like "not" etc with the different Sentinel.
+;; 0.b. Here I implement proper_slice as one demo (actually similar to Ternary Operators).
+(define (PrsSlicing p token left rbp)
+  (error 'similar-to-LeftComma-based-on-proper-slice))
+
+;;;; BEHAVIOR
+;; 0. oilshell uses C ?: different from here.
+;; effbot only has lambda and dict related with ":" (Notice it doesn't manipulate set and dict simultaneously).
+;; 1. [ ":" [stride] ] is different from '[":"] [stride]' since the former [stride] depends on ":" existence.
+;;;; TODO tests
+;; Just test all cases.
+;; 2*2*(1+1*2) where 1*2 means having the last ":" and then stride has 2 cases.
+;; {a}:{b}{:{c}}
+;; cases from right to left
+;; 0. "" or ":" or ":c"
+;; So
+;;;
+;; :b
+;; :b:
+;; :b:c
+;;;
+;; :
+;; ::
+;; ::c
+;;;
+;; a:
+;; a::
+;; a::c
+;;;
+;; a:b
+;; a:b:
+;; a:b:c
+(define (prs-proper-slice p token rbp)
+  (assert (= rbp EXPR-BASE-BP))
+  (define (prs-elm) (list (p 'ParseUntil rbp)))
+  (define (prs-bound)
+    (if (p 'AtToken ":")
+      '()
+      ;; stop at ":" whose lbp is UNUSED-BP-MARKING-END < EXPR-BASE-BP.
+      (prs-elm)))
+  (let ((lower_bound (prs-bound)))
+    (p 'Eat ":")
+    (let ((upper_bound (prs-bound)))
+      (let ((stride
+              (if (p 'AtToken ":")
+                (begin
+                  (p 'Eat ":")
+                  (if (any (lambda (end-op) (p 'AtToken end-op)) '("," "]"))
+                    '()
+                    (prs-elm))
+                  )
+                '()
+                )
+              ))
+        ;; used as `(get-slice ,primary ,@results-here) by caller
+        (append lower_bound (list ":") upper_bound
+          (if (null? stride)
+            '() ; drop the mere ending ":" if existing.
+            (cons ":" stride)
+            )
+          )
+        )
+      )
+    )
+  )
 
 ;;;; (IGNORE TEMPORARILY) BEHAVIOR
 ;; trivial by returning self same as oilshell

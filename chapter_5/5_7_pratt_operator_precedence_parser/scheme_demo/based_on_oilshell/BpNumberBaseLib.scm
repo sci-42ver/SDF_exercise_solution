@@ -33,6 +33,7 @@
 
 ;;;;;; PYTHON EXPR BEGINNING
 (define EXPR-BASE-BP LEFT-SEMICOLON-BP)
+(assert (< UNUSED-BP-MARKING-END EXPR-BASE-BP))
 ;; 0. IGNORE Same value as pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; to make extension more flexible.
 ;; 0.a. See the above "See DenotationLib.scm ..."
