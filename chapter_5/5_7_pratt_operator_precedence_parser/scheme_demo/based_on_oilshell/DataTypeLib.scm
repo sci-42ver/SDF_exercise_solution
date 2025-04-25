@@ -54,26 +54,51 @@
     (Token str str))
   )
 
+(define denotation-type? symbol?)
+
 ;; For simplicity, I just use cond instead of one table.
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "string_lib.scm")
-;; Better to be based on denotation type.
+;; 0. Better to be based on denotation type.
 ;; Here I just explicitly manipulate that inside denotation procedure.
-(define (get-header obj)
-  (assert (string? obj))
-  (cond
-    ((equal? obj ":=") 'define)
-    ((member obj COMPARISON-OP-LST) 
-      (symbol
-        ;; chain behavior is implicitly done in PrsComparison.
-        ; "chain-"
-        (string-replace* obj " " "_")))
-    ((equal? obj "|") 'bitwise-or)
-    ((equal? obj "{") 'begin)
-    ((equal? obj ",") 'tuple)
-    ((equal? obj "**") 'expt)
-    (else
-      (Token-val->Scheme-val obj)))
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "multi_hash_table_lib.scm")
+(define *header-table* (make-multi-hash))
+(define (init-header-table)
+  (multi-hash-set! *header-table* 'define ":=")
+  (for-each
+    (lambda (op-str)
+      (multi-hash-set! 
+        *header-table* 
+        (symbol
+          ;; chain behavior is implicitly done in PrsComparison.
+          ; "chain-"
+          (string-replace* op-str " " "_"))
+        op-str))
+    COMPARISON-OP-LST
+    )
+  (multi-hash-set! *header-table* 'bitwise-or "|")
+  (multi-hash-set! *header-table* 'begin "{")
+  (multi-hash-set! *header-table* 'tuple ",")
+  (multi-hash-set! *header-table* 'expt "**")
+  )
+(init-header-table)
+(define (get-header op-str #!optional denotation-type)
+  (assert (string? op-str))
+  (and* denotation-type (assert (denotation-type? denotation-type)))
+  (let ((val (apply-with-no-default-object-arg multi-hash-ref* *header-table* op-str denotation-type)))
+    (cond 
+      ((multi-hash-table? val)
+       (assert (default-object? denotation-type))
+       (get-the-only-elm
+          (filter-map 
+            (lambda (type) (multi-hash-ref* val type)) 
+            ALL-DENOTATION-TYPES)
+          )
+       )
+      (val val)
+      (else (Token-val->Scheme-val op-str)))
+    )
   )
 (define (get-header-for-token token)
   (get-header (Token-val token))

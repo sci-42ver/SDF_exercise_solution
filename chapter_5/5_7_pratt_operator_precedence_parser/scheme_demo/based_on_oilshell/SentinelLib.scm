@@ -116,3 +116,7 @@
     ret)
   )
 
+;; TODO
+(define (ensure-primary node)
+  #t
+  )

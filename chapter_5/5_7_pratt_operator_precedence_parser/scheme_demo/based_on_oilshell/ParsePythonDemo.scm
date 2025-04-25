@@ -55,8 +55,7 @@
 
     (spec-with-implicit-prec 'Left LeftDefine (list ":="))
     ;;;;;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm
-    ;; All op's above "-" have been implemented.
-    ;; Then it has "-", "**", "/", "=" (i.e. "==" in Python), "not", "QUOTE-SYMBOL" left.
+    ;; it has "QUOTE-SYMBOL" left.
 
     ;;;;;; ensure-consistent check
     ;; 0. all binary ops in [or, and, &, ^, |, shift-op, a_expr-op, m_expr-op]
@@ -83,6 +82,7 @@
     ;; infix_r & infix has no seq.
     ;; prefix has no Sentinel.
     ;; 1. IMHO "infix("not", 60)" is inappropriate since it allows a not b.
+    
     ;;;; BEHAVIOR
     ;; See LeftLogical for or&and.
     ;; For not (i.e. ! in oilshell), here we add Sentinel.
@@ -132,6 +132,11 @@
     ;; await await a => error
     (spec-with-implicit-prec 'Null PrsAwait AWAIT-OP-LST)
     ;;;;;; ensure-consistent check finish
+
+    ;; > attributeref ::= primary "." identifier
+    ;; Here primary can be atom like "literal"
+    ;; So "1".__eq__ and "1".__eq__("2") is fine https://stackoverflow.com/a/65474446/21294350.
+    (spec-with-implicit-prec 'Null PrsAwait AWAIT-OP-LST)
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

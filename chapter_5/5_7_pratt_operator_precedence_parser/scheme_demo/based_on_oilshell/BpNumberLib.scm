@@ -9,7 +9,7 @@
 (define (spec-with-implicit-prec denotation-type handler op-lst)
   (assert
     (and 
-      (symbol? denotation-type) 
+      (denotation-type? denotation-type) 
       (procedure? handler) 
       (list-of-type? op-lst string?)))
   (hash-table-set! *handler-type-list* handler denotation-type)
@@ -17,6 +17,8 @@
   (spec denotation-type (get-prec (car op-lst)) handler op-lst)
   )
 
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "list_lib.scm")
 ;; Notice this is based on token-type already modified based on context, like null-if or left-if.
 (define (%get-prec op-str #!optional denotation-type)
   (assert (string? op-str))
@@ -29,12 +31,10 @@
               ))))
     (cond 
       ((multi-hash-table? possible-prec)
-        (let ((all-possible-precs 
-                (filter-map 
-                  (lambda (type) (multi-hash-ref* *prec-list* op-str type)) 
-                  ALL-DENOTATION-TYPES)))
-          (assert (= 1 (length all-possible-precs)))
-          (car all-possible-precs)
+        (get-the-only-elm
+          (filter-map 
+            (lambda (type) (multi-hash-ref* *prec-list* op-str type)) 
+            ALL-DENOTATION-TYPES)
           )
         )
       ((number? possible-prec) possible-prec)

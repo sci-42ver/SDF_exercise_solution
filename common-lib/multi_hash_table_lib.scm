@@ -45,6 +45,7 @@
          hash-table
          keys))
 
+;; will automatically throw errors if trying to ref about one key for one non-hash-table.
 (define (multi-hash-ref* hash-table . keys)
   (foldl (lambda (k h) (hash-table-ref* h k))
          hash-table

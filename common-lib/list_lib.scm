@@ -15,3 +15,8 @@
       )
     )
   )
+
+(define (get-the-only-elm lst)
+  (assert (= 1 (length lst)))
+  (car lst)
+  )

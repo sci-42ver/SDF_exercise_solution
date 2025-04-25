@@ -33,7 +33,7 @@
     ; (neg-look-behind ,NUMBER-PATTERN)
     )
   )
-(define ADDITIONAL-OPERATORS (list "{" ";" "}"))
+(define ADDITIONAL-OPERATORS (list "{" ";" "}" "."))
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
 (load "group_name_lib.scm")
@@ -326,3 +326,21 @@
                   (token "id" d)
                   finish-routine))
 
+(define test-lexer6
+  (Tokenize 
+    pat
+    field-names
+    ;; Just test _ recognition inside id.
+    "3.14==f(b).val"
+    ))
+; (pp (lexer-contents test-lexer6))
+(assert-lexer
+  test-lexer6
+  '((token "number" 3.14) (token "operator-len-possibly-greater-than-one" "==")
+                       (token "id" f)
+                       (token "operator-len-one" "(")
+                       (token "id" b)
+                       (token "operator-len-one" ")")
+                       (token "operator-len-one" ".")
+                       (token "id" val)
+                       finish-routine))

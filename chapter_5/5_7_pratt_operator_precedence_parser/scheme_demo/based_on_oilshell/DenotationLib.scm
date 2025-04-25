@@ -374,6 +374,15 @@
   (NullPrefixOpWithCustomSentinel p token rbp right-sentinel)
   )
 
+;;;; BEHAVIOR
+;; not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
+;; similar to effbot where '"(name)"' and 'self.second = token' do Sentinel jobs.
+;;;; TODO tests
+;; await 
+(define (PrsAttribute p token left rbp)
+  (%LeftBinaryOpWithSentinel ensure-identifier ensure-primary)
+  )
+
 ;;;; (IGNORE TEMPORARILY) BEHAVIOR
 ;; trivial by returning self same as oilshell
 ;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm, this is inherent inside nudcall.
