@@ -205,3 +205,7 @@
 (define (NullPrefixOpWithSentinel p token rbp)
   (%NullPrefixOp p token rbp ensure-consistent)
   )
+(define (NullPrefixOpWithCustomSentinel p token rbp sentinel)
+  (assert (relative-sentinel? sentinel))
+  (%NullPrefixOp p token rbp sentinel)
+  )

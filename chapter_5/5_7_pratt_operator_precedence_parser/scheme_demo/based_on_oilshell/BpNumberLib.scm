@@ -63,6 +63,7 @@
 (define BINARY-PM-OP-LST '("+" "-"))
 (define OTHER-BINARY-OP-LST '("*" "@" "/" "//" "%"))
 (define UNARY-OP-LST '("+" "-" "~"))
+(define AWAIT-OP-LST '("await"))
 ;; Notice here we only put or-op which is used in (MakePythonParserSpec) instead of type-str.
 (define prec-list-higher-than-or-op
   `(,LEFT-IF-BP
@@ -91,7 +92,7 @@
       (left ("**"))
       ;; > await_expr ::= "await" primary
       ;; no nud
-      (null ("await"))
+      (null ,AWAIT-OP-LST)
       ))
   )
 (define (init-prec-list-higher-than-or-op)

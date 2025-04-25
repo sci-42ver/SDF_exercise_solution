@@ -296,6 +296,7 @@
 ;; 1. IGNORE For or, left can't be those op's ending with expression.
 ;; 2. > or_test  ::= and_test | or_test "or" and_test
 ;; Here "or_test" can be based on "or_test" implies seq.
+;; 3. effbot uses wrong infix_r as the above says IMHO.
 ;;;; TODO tests
 ;; a if b else c or d => (if b a (or c d))
 ;; a if b or c else d => (if (or b c) a d)
@@ -304,8 +305,8 @@
 (define LeftLogical PrsSeqWithSentinel)
 ;;;; BEHAVIOR
 ;; pratt_new_compatible_with_MIT_GNU_Scheme.scm doesn't implement
-;; Comparison with oilshell LeftBinaryOp: see the above.
-;; Similar to LeftLogical, seq is allowed.
+;; Comparison with oilshell LeftBinaryOp: see the above "LeftLogical".
+;; Similar to that, seq is allowed.
 ;;;; TODO tests
 ;; "a or b and c or not d <= e and f or not g in h not in i == j & k ^ m | n"
 ;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in i) (== i (& j (^ k (bitwise-or m n))))))))
@@ -338,27 +339,39 @@
   (define (right-sentinel token return-handler . nodes)
     ;; TODO I don't know the exact API for declare.
     ; (declare (ignore token) (ignore return-handler))
-    (declare (ignore return-handler))
-    (let ((ret (car nodes)))
-      (assert 
-        (and 
-          (null? (cdr nodes))
-          ((lambda (node)
-            (or ((pred-ensuring-expr-with-consistent-precedence token) node)
-              (member (get-GeneralNode-token-type node)
-                (map
-                  (lambda (op-str) (*token-type-list* 'get op-str 'Null))
-                  BINARY-PM-OP-LST
-                  )
+    (sentinel-for-one-node 
+      (lambda (token node)
+        (or ((pred-ensuring-expr-with-consistent-precedence token) node)
+            (member (get-GeneralNode-token-type node)
+              (map
+                (lambda (op-str) (*token-type-list* 'get op-str 'Null))
+                BINARY-PM-OP-LST
                 )
               )
-            )
-            ret)
-          ))
-      ret
-      )
+          )
+        )
+      token return-handler nodes)
     )
   (%LeftBinaryOpWithSentinel p token left rbp right-sentinel)
+  )
+
+(define (PrsAwait p token rbp)
+  (define (right-sentinel token return-handler . nodes)
+    (sentinel-for-one-node 
+      (lambda (token node)
+        (and ((pred-ensuring-expr-with-consistent-precedence token) node)
+          (not
+            (member (get-GeneralNode-token-type node)
+              (map
+                (lambda (op-str) (*token-type-list* 'get op-str 'Null))
+                AWAIT-OP-LST
+                )
+              ))
+          )
+        )
+      token return-handler nodes)
+    )
+  (NullPrefixOpWithCustomSentinel p token rbp right-sentinel)
   )
 
 ;;;; (IGNORE TEMPORARILY) BEHAVIOR

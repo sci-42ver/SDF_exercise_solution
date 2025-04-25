@@ -106,3 +106,13 @@
     )
   )
 
+(define (sentinel-for-one-node sentinel-proc token return-handler . nodes)
+  (declare (ignore return-handler))
+  (let ((ret (car nodes)))
+    (assert 
+      (and 
+        (null? (cdr nodes))
+        (sentinel-proc token ret)))
+    ret)
+  )
+

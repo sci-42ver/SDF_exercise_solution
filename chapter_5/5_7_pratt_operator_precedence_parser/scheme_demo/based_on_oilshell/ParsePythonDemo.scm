@@ -58,7 +58,7 @@
     ;; All op's above "-" have been implemented.
     ;; Then it has "-", "**", "/", "=" (i.e. "==" in Python), "not", "QUOTE-SYMBOL" left.
 
-    ;;;;;; ensure-consistent check 
+    ;;;;;; ensure-consistent check
     ;; 0. all binary ops in [or, and, &, ^, |, shift-op, a_expr-op, m_expr-op]
     ;; has the pattern: self-expr = self-expr-one-level-up | self-expr self-op self-expr-one-level-up
     ;; so ensure-consistent is fine where rhs can be also self-expr if we group from right to left instaed of with the reverse direction.
@@ -78,6 +78,11 @@
     ;; "u_expr ::= power" implies we can have "** power", i.e. rhs's prec >= self-prec plus u_expr-op.
     ;; 3.b. Due to right to left, power ** rest can't happern since lhs must be grouped later than rhs.
     ;; so lhs's prec > self-prec which is already implied by LeftRightAssoc.
+    ;;;;;; effbot implementation check
+    ;; 0. Just see "The Python Expression Grammar" part.
+    ;; infix_r & infix has no seq.
+    ;; prefix has no Sentinel.
+    ;; 1. IMHO "infix("not", 60)" is inappropriate since it allows a not b.
     ;;;; BEHAVIOR
     ;; See LeftLogical for or&and.
     ;; For not (i.e. ! in oilshell), here we add Sentinel.
@@ -118,6 +123,14 @@
     (spec-with-implicit-prec 'Null NullPrefixOpWithSentinel UNARY-OP-LST)
 
     (spec-with-implicit-prec 'LeftRightAssoc PrsPower '("**"))
+
+    ;;;; BEHAVIOR
+    ;; trivially not in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell shell parser
+    ;; Also not in the old Python effbot parser implementation
+    ;;;; TODO tests
+    ;; TODO for primary
+    ;; await await a => error
+    (spec-with-implicit-prec 'Null PrsAwait AWAIT-OP-LST)
     ;;;;;; ensure-consistent check finish
     ))
 (define (MakeParser str)
