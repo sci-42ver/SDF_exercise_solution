@@ -136,6 +136,39 @@
     ;;; 1. IGNORE Also here [] has different parsing rules for Subscription and Slicing,
     ; (spec-with-implicit-prec spec 'Left PrsSubscription '("[") '("sublist") MAX-BP)
     ; (spec-with-implicit-prec spec 'Left PrsSlicing '("[") '("slicing") MAX-BP)
+    
+    ;;;; BEHAVIOR for NullParen (detailed)
+    ;; 0. Notice for "parenth_form", we need to ensure "[starred_expression]"
+    ;; IMHO that can be combined with expr_list as I have done in NullParen.
+    ;; 0.a. See https://docs.python.org/3/reference/grammar.html for tuple definition not shown in https://docs.python.org/3/reference/expressions.html#expression-lists
+    ;; 0.a.0. Why
+    ;; > In that case, a | must be used before the first alternative
+    ;; 0.a.1. IGNORE Notice these 2 are not compatible in some way at least for list_display which allows assignment_expression while the latter only has "assignment_expression" for genexps or args.
+    ;; The latter has "list: '[' [star_named_expressions] ']'"
+    ;; The former has "list_display ::= "[" [flexible_expression_list | ...] "]""
+    ;; star_named_expression in the latter means similar to flexible_expression
+    ;; where starred_expression < "'*' bitwise_or" plus "expression !':='".
+    ;; Actually "[lambda n: n]" is fine, so use the latter link although I have used the former for all the above...
+    ;; 0.a.1.0. The latter has
+    ;; > star_named_expression:
+    ;; > | '*' bitwise_or 
+    ;; > | named_expression
+    ;; > 
+    ;; > named_expression:
+    ;; > | assignment_expression
+    ;; > | expression !':='
+    ;; so it adds "named_expression".
+    ;; 0.a.2. Here I skipped generator_expression/genexp (probably similar. I won't dig into the routine comparison.)
+    ;; and also yield_atom/group-yield_expr-part.
+    ;; Anyway they are just some specific syntaxes without introducing new parsing techniques.
+    ;; 0.a.2.a. I have implemented parenth_form/group-named_expression-part.
+    ;; SO in summary, consume-possible-elems-implicitly-and-the-ending-token in NullParen
+    ;; should use named_expression-sentinel for ([...:=]elm) part (parenth_form)
+    ;; while use star_named_expression's one for ()/(elm,)/(elm,...[,]) parts (* part is skipped due to similarity with "not").
+    ;; 1. Comparison see NullParen
+    ;;;; TODO tests
+
+    
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

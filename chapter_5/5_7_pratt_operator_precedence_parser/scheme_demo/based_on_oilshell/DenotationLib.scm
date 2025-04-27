@@ -55,8 +55,10 @@
 ;; different from oilshell (see the following).
 ;; same as pratt_new_compatible_with_MIT_GNU_Scheme.scm allowing tuple ()/(a,b[,]) etc where [] meansing optional besides (expr).
 ;;;; TODO tests
-;; besides those in pratt_new_compatible_with_MIT_GNU_Scheme.scm:
+;; 0. besides those related with tuple in pratt_new_compatible_with_MIT_GNU_Scheme.scm:
 ;; error (a+b;a**b)
+;; 1. based on https://docs.python.org/3/reference/grammar.html
+;; (a:=1)
 (define (NullParen p token unused-rbp)
   (declare (ignore token)) ; since delimeter is comma.
   ;; Here token is unused in possible-general-node generation.

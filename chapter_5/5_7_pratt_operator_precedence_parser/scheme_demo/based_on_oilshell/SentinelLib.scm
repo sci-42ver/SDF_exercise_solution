@@ -116,7 +116,7 @@
     ret)
   )
 
-;; TODO
+;; Just check the Token-type similar to the above.
 (define (ensure-primary node)
-  #t
+  'ignored
   )
