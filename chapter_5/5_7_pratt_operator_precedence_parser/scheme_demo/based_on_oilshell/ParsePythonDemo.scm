@@ -168,7 +168,25 @@
     ;; 1. Comparison see NullParen
     ;;;; TODO tests
 
-    
+    ;;;; BEHAVIOR for list
+    ;; Here I will still use https://docs.python.org/3/reference/expressions.html#list-displays as the main reference
+    ;; because it is more descriptive although the latter one is more exact.
+    ;; As the above implies, list_display (list display) means (list | listcomp) in the latter although has less support.
+    ;; IGNORE By searching '"["', this is the mere expr about list.
+    ;; 0. > list: '[' [star_named_expressions] ']'
+    ;; Similar to tuple but allows [arg] to be one list.
+    ;; 1. Again "listcomp" is skipped.
+
+    ;;;; BEHAVIOR for set
+    ;; just same as list but with the different delimeters.
+    ;; > set: '{' star_named_expressions '}'
+
+    ;;;; BEHAVIOR for dict
+    ;; > dict: '{' [double_starred_kvpairs] '}'
+    ;; > double_starred_kvpair:
+    ;; > | '**' bitwise_or 
+    ;; > | kvpair
+    ;; So same as set but with "*"=>"**" & enforced mapping with ":="=>":".
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))
