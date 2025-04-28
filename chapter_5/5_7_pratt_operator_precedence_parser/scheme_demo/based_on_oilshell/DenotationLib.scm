@@ -501,13 +501,15 @@
     )
   )
 
-;;;; (IGNORE TEMPORARILY) BEHAVIOR
+;;;; BEHAVIOR
 ;; trivial by returning self same as oilshell
 ;; For pratt_new_compatible_with_MIT_GNU_Scheme.scm, this is inherent inside nudcall.
-;;;; (IGNORE TEMPORARILY) TODO tests
-;; /, * => return self. (also see lambda)
-; (define (NullConstant p token unused-rbp)
-;   (declare (ignore p))
-;   (set-Token-type-same-as-val! token) ; type is string.
-;   (CompositeNode token (string->symbol (Token-val token))) ; pass symbol to be eval'ed in Scheme.
-;   )
+;;;; TODO tests
+;; 1.2
+;; AbC
+(define (NullConstant p token unused-rbp)
+  (declare (ignore p))
+  (set-Token-type-same-as-val! token) ; type is string.
+  ;; See 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
+  (CompositeNode token (Token-val token))
+  )

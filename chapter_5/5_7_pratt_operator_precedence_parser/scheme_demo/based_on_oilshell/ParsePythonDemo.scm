@@ -187,6 +187,8 @@
     ;; > | '**' bitwise_or 
     ;; > | kvpair
     ;; So same as set but with "*"=>"**" & enforced mapping with ":="=>":".
+
+    (spec-with-implicit-prec spec 'Null NullConstant `(,ID-TAG-STR, "number") '("unused" "unused") UNUSED-BP-MARKING-END)
     ))
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))

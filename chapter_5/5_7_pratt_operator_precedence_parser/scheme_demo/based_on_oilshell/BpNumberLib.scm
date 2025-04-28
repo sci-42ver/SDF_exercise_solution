@@ -6,7 +6,7 @@
 ;; TODO after CRLS: use the most efficient based on the needs here.
 (define *prec-list* (make-multi-hash))
 
-(define (spec-with-implicit-prec spec denotation-type handler op-lst #!optional header-lst prec token-type)
+(define (spec-with-implicit-prec spec denotation-type handler op-lst #!optional header-lst prec token-type-lst)
   (assert
     (and 
       (denotation-type? denotation-type) 
