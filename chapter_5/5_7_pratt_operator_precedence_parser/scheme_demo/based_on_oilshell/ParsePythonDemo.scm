@@ -1,16 +1,19 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
-(load "5_7_tokenize_lib.scm")
-(load "5_7_tokenize_tests.scm")
+; (load "5_7_tokenize_lib.scm")
+(cd "~/SICP_SDF/SDF_exercises/chapter_5")
+; (load "5_7_tokenize_tests.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "DataTypeLib.scm")
-
-(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
-(load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
+; (load "DataTypeLib.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "ParserSpec.scm")
-(load "DenotationLib.scm")
+; (load "ParserSpec.scm")
+; (load "DenotationLib.scm")
+
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
+; (load "SentinelLib.scm")
+(cd "~/SICP_SDF/SDF_exercises/common-lib/")
+; (load "application_lib.scm")
 
 (define (MakePythonParserSpec)
   (let ((spec (ParserSpec)))
@@ -19,7 +22,7 @@
 
     ;; $
     ;; All related data are manipulated either explicitly here or implicitly with default values.
-    (spec 'Null UNUSED-PREC-MARKING-END NullError Null-Error-List)
+    (spec 'Null UNUSED-BASE-BP NullError Null-Error-List)
     ;; 0. , is used in pratt_new_compatible_with_MIT_GNU_Scheme.scm
     ;; for lambda, (a1, a2) or proc(a1, a2)
     ;; So we can always construct one list for the parent
@@ -131,6 +134,9 @@
     ;; Here primary can be atom like "literal"
     ;; So '"1" . __eq__' (allow space inside) and "1".__eq__("2") is fine https://stackoverflow.com/a/65474446/21294350.
     (spec-with-implicit-prec spec 'Left PrsAttribute '(".") '("get-attrib") MAX-BP)
+    ;; similar to the above
+    (spec-with-implicit-prec spec 'Null NullPrefixOp '("'") '("quote") MAX-BP)
+
     ;;; 0. For simplicity, from here I won't implement Sentinel. Anyway it can be done similar to the above.
     ;; If you are interested, you can do that.
     ;;; 1. IGNORE Also here [] has different parsing rules for Subscription and Slicing,
@@ -189,18 +195,21 @@
     ;; So same as set but with "*"=>"**" & enforced mapping with ":="=>":".
 
     (spec-with-implicit-prec spec 'Null NullConstant `(,ID-TAG-STR, "number") '("unused" "unused") UNUSED-BP-MARKING-END)
+    spec
     ))
+
 (define (MakeParser str)
   (Parser (MakePythonParserSpec) (Tokenize str))
   )
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib/")
-(load "logic_lib.scm")
+; (load "logic_lib.scm")
+;; i.e. ParseShell in oilshell
 (define (ParsePythonDemo str #!optional expected)
   ;; Here I won't add one extra class wrapper for simplicity.
   (let ((res ((MakeParser str) 'Parse)))
     ;; assert is not same as Python with 2 args
-    (and* expected (assert (equal? res expected)))
+    (and* expected (assert* (equal? expected res) (list "unequal" expected res)))
     ;; Use write to enable outputting cycle.
     (format #t "~40S ~S~%" str res)
     res

@@ -44,7 +44,7 @@
     (token-read stream)
     ;; The start should bind nothing.
     (prog1 (parse end-lbp stream)
-      (if (eq? '$ (token-peek stream)) (token-read stream)))))
+      (if (eq? '$ (token-peek stream)) (token-read stream) (error 'lack-end-token)))))
 
 (define (value-if-symbol x)
   (if (symbol? x)
@@ -530,9 +530,9 @@
 ;; are included here (Based on memory for what is done to this program at some time after finishing this program).
 (pl-assert
   ;; Here we assume define returns the value instead of that symbol, although not this case in MIT/GNU Scheme.
-  '(define fact (lambda (a (define k 2) (= b 0) / c *args * kwarg1 **kwargs) (if (= n 0) 1 (* n (fact (- n 1))))))
+  '(define fact (lambda (a (define k 2) (= b 0) c *args kwarg1 **kwargs) (if (= n 0) 1 (* n (fact (- n 1))))))
   ;; test from SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib.scm
-  `(fact := lambda* a COMMA k := 2 COMMA b = 0 COMMA / COMMA c COMMA *args COMMA * COMMA kwarg1 COMMA **kwargs : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
+  `(fact := lambda* a COMMA k := 2 COMMA b = 0 COMMA c COMMA *args COMMA kwarg1 COMMA **kwargs : if* n = 0 then 1 else* n * fact ,OPEN-PAREN n - 1 ,CLOSE-PAREN))
 
 ;;;; Compatibility with Python
 ;;; 0. Call https://docs.python.org/3/reference/expressions.html#calls

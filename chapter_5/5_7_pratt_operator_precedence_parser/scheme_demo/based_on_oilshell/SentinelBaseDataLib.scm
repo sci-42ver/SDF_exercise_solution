@@ -1,5 +1,3 @@
-(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "SentinelConstantTypeStrLib.scm")
 ;;; Initialization
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "bidirectional_map.scm")
@@ -30,7 +28,7 @@
         (*token-type-list* 'insert (string-append "null-" op-description) op 'Null)  
         )
       )
-    (lset-intersection BINARY-PM-OP-LST UNARY-OP-LST)
+    (lset-intersection equal? BINARY-PM-OP-LST UNARY-OP-LST)
     )
   (for-each
     (lambda (op)
@@ -38,9 +36,11 @@
     COMPARISON-OP-LST
     )
   )
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
+(load "SentinelConstantTypeStrLib.scm")
 (init-token-type-list)
 (define ALL-TOKEN-TYPES
-  (get-val-lst-for-multi-hash-table *token-type-list*)
+  (get-val-lst-for-multi-hash-table (*token-type-list* 'get-keys-val-table))
   )
 (define ALL-EXPR-TOKEN-TYPES
   (remove 

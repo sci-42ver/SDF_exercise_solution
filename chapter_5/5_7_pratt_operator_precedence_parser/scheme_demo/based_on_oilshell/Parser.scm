@@ -6,28 +6,40 @@
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "DataTypeLib.scm")
-
-(define EOF-TOKEN (Token "eof" "eof"))
+; (load "DataTypeLib.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/common_lib/")
-(load "common_lib_for_MIT_GNU_Scheme.scm")
+; (load "common_lib_for_MIT_GNU_Scheme.scm")
 
 (load-option 'format)
 ;; Here self arg is not needed due to the lexical scope.
 ;; And that self isn't changed *normally* in Python https://stackoverflow.com/questions/1216356/is-it-safe-to-replace-a-self-object-by-another-object-of-the-same-type-in-a-meth#comment32152243_1216356 https://stackoverflow.com/a/1015602/21294350
 ;; except for class redefining __new__.
+(define (pop lexer)
+  (assert (lexer? lexer))
+  (if (lexer 'alive?)
+    (lexer 'next)
+    (error "no more elements in lexer"))
+  )
 (define (Parser spec lexer)
+  (assert (and (ParserSpec? spec) (lexer? lexer)))
   (define* token)
   ;; IMHO better to be like pratt-parsing-demo/tdop.py
   ;; see SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/orig/pratt_new.scm
   ;; for why '($) is not good since it will make (eof-val) usage redundant.
   ; (set! lexer (append lexer `($)))
-  (set! lexer (append lexer `(,EOF-TOKEN)))
+  ; (set! lexer (append lexer `(,EOF-TOKEN)))
+  ;; see 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
+  ;; here lexer is one proc.
+
   (define (AtToken token_type)
     (Token-type=? (Token-type token) token_type))
   (define (Next)
-    (set! token (pop lexer))
+    (let ((elm (pop lexer)))
+      (if (meet-finish-elem? elm)
+        (error "no more elements in lexer")
+        (set! token elm))
+      )
     )
   (define (Eat type)
     (and (not (AtToken type))
@@ -88,23 +100,29 @@
     ;   (Next)
     ;   ...
     ;   )
+    left
     )
   (define (ParseUntil rbp)
     (and
+      ;; Normally the end is done by break if (>= rbp (get-left-lbp left-info)).
+      ;; So we use one token with -1 prec to mark ending which is not used by other nud/led's to avoid ambiguity.
       (AtToken "eof")
-      (error "Unexpected end of input")
+      (error "Unexpected end of input when we needs one nud")
       )
     (set! cur-token token)
     (Next)
     (define null-info (spec 'LookupNull (Token-type cur-token)))
     (define node ((get-nud null-info) self t (get-null-bp null-info)))
-    (ParseWithLeft rbp node)
+    (prog1
+      (ParseWithLeft rbp node)
+      ;; Added by toplevel-parse in pratt_new_compatible_with_MIT_GNU_Scheme.scm
+      (and (AtToken "eof") (Eat "eof")))
     )
   (define (Parse)
     (Next)
     (ParseUntil 0)
     )
-  (define self (bundle Parser? AtToken Next Eat ParseUntil Parse))
   (define Parser? (make-bundle-predicate 'Parser))
+  (define self (bundle Parser? AtToken Next Eat ParseUntil Parse))
   self
   )

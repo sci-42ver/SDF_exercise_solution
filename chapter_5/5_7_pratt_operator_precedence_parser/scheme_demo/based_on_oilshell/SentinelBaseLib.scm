@@ -1,5 +1,5 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "SentinelBaseDataLib.scm")
+; (load "SentinelBaseDataLib.scm")
 ;; 0. For or etc,
 ;; left can be or_test
 ;; rhs won't be or-expr due to prec relation, i.e. self-rbp=self-lbp instead of rbp<lbp.

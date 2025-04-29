@@ -1,7 +1,7 @@
 ;; 0. p is parser
 ;; 1. Just like loop in prsmatch but not read the ending token before reverse.
 (cd "~/SICP_SDF/SDF_exercises/common-lib/")
-(load "base_procedure_lib.scm")
+; (load "base_procedure_lib.scm")
 (define (PrsNary token p rbp #!optional elm-relative-assertion)
   (or* elm-relative-assertion (set! elm-relative-assertion return-last))
   (let ((type (Token-type token)))
@@ -16,7 +16,7 @@
   )
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "pred_lib.scm")
+; (load "pred_lib.scm")
 ;; 0. returns a list of expr's instead of GeneralNode's.
 (define (PrsNary* token p rbp #!optional elm-pred)
   (define (cons-with-possible-first-elm a b)
@@ -78,7 +78,7 @@
 ;; If continue, (ParseWithLeft still-same-rbp "b") => (< b c d).
 ;; Then we have (and (<= a b) (< b c d))
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "tree_lib.scm")
+; (load "tree_lib.scm")
 (define (%PrsComparison p token left rbp #!optional elm-relative-assertion header)
   (let lp ((cur-node
             (new-GeneralNode-with-new-val
@@ -127,7 +127,7 @@
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/pratt_new_compatible_with_MIT_GNU_Scheme/")
-(load "compatible_lib.scm")
+; (load "compatible_lib.scm")
 (define (consume-elems-and-the-ending-token p rbp ending-token-type delimeter-token delimeter-prec #!optional elm-pred header)
   (declare (ignore rbp))
   (prog1

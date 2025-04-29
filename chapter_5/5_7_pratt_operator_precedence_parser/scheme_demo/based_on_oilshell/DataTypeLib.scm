@@ -20,8 +20,6 @@
 (define get-left-rbp caddr)
 
 ;;; used by SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/Parser.scm
-(cd "~/SICP_SDF/SDF_exercises/common-lib/")
-(load "tagged_lst_lib.scm")
 (define Token-tag 'token)
 (define (Token type val #!optional loc)
   (declare (ignore loc))
@@ -46,6 +44,8 @@
 (define Token-val caddr)
 (define Token-type=? string=?)
 (define Token-type? string?)
+(cd "~/SICP_SDF/SDF_exercises/common-lib/")
+(load "tagged_lst_lib.scm")
 (define Token? (tagged-list-pred Token-tag))
 
 (define (symbol->token sym)
@@ -58,12 +58,14 @@
 
 ;; For simplicity, I just use cond instead of one table.
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "string_lib.scm")
+; (load "string_lib.scm")
 ;; 0. Better to be based on denotation type.
 ;; Here I just explicitly manipulate that inside denotation procedure.
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "multi_hash_table_lib.scm")
 (define *header-table* (make-multi-hash))
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
+(load "based_on_oilshell/BpNumberLib.scm")
 (define (init-header-table)
   (multi-hash-set! *header-table* 'define ":=")
   (for-each
@@ -161,9 +163,10 @@
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "BpNumberLib.scm")
+; (load "BpNumberLib.scm")
 
 (define Null-Error-List (list ")" "]" ":" "eof" ";" "}" "then" "else"))
+(define EOF-TOKEN (Token "eof" "eof"))
 
 (define comma-token (Token "," ","))
 ; (define tuple-token comma-token)

@@ -4,9 +4,9 @@
 (define basic-multi-hash-table-constructor? basic-hash-table-constructor?)
 ;; assume no final val is hash-table.
 (define (get-val-lst-for-multi-hash-table multi-hash-table)
-  (assert (multi-hash-table? hash-table))
-  (let ((possible-table-list (get-val-lst hash-table)))
-    (if (list-of-types? possible-table-list hash-table?)
+  (assert (multi-hash-table? multi-hash-table))
+  (let ((possible-table-list (get-val-lst multi-hash-table)))
+    (if (list-of-type? possible-table-list multi-hash-table?)
       (append-map
         get-val-lst-for-multi-hash-table
         possible-table-list

@@ -15,7 +15,8 @@
       ;   )
       (and found-val 
         (write-line 
-          (list "WARNING" val "will have more than one keys to map. Here we just reset.")))
+          (list "WARNING" val 
+            "will have more than one keys to map. Here we just reset.to key" key)))
       (hash-table-set! val-key-table val key)
       )
     )
@@ -38,7 +39,7 @@
   
   (define (insert val . keys)
     (multi-hash-set! keys-val-table val keys)
-    (let ((found-val (multi-hash-ref val-keys-table val)))
+    (let ((found-val (multi-hash-ref* val-keys-table val)))
       (and found-val 
         (write-line 
           (list "WARNING" val "will have more than one keys to map. Here we just reset.")))
@@ -46,11 +47,17 @@
       )
     )
   (define (getKeys val)
+    (hash-table-ref val-keys-table val)
+    )
+  (define (getKeys* val)
     (hash-table-ref* val-keys-table val)
     )
   (define (get . keys)
     (multi-hash-ref keys-val-table keys)
     )
-  (bundle multi-bidirectional-map? insert getKey get)
+  ;; For convenient usage although a bit not good to expose private member...
+  (define (get-keys-val-table)
+    keys-val-table)
+  (bundle multi-bidirectional-map? insert getKeys get getKeys* get-keys-val-table)
   )
 (define multi-bidirectional-map? (make-bundle-predicate 'multi-bidirectional-map))

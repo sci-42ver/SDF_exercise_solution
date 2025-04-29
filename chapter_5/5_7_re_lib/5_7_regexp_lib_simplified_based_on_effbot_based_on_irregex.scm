@@ -72,7 +72,7 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/")
 (load "DataTypeLib.scm")
 
-(define field-names
+(define FIELD-NAMES
   `(NUMBER
     OPERATOR-WITH-SPACE-INSIDE
     ,STAR-ARG-TAG
@@ -83,10 +83,10 @@
     MISMATCH
     ))
 
-(define (Tokenize pat field-names input)
+(define (%Tokenize pat field-names input)
   (define keywords '("if" "lambda" "then" "else" "is" "or" "and" "not" "in"))
   (coroutine*
-    (for-each-elm-in-iterator 
+    (for-each-elm-in-iterator
       (let ((line-num 1) (line-start 0))
         (lambda (match)
           (let ((value (regexp-match-submatch match 0))
@@ -122,13 +122,16 @@
             )
           ))
       (regexp-finditer pat input))
+    (yield EOF-TOKEN)
     )
   )
 
+(define lexer? coroutine?)
+
 (define test-lexer 
-  (Tokenize 
+  (%Tokenize 
     pat
-    field-names
+    FIELD-NAMES
     "fact := lambda a,b=0,/,c,*args,*,kwarg1,**kwargs:
       if n == 0
       then 1
@@ -155,6 +158,9 @@
       ; (write-line res)
       )
     (reverse res))
+  )
+(define (meet-finish-elem? elem)
+  (equal? elem 'finish-routine)
   )
 (define (assert-lexer lexer expected)
   (assert
@@ -212,12 +218,13 @@
     (token "operator-len-possibly-greater-than-one" "-")
     (token "number" 1)
     (token "operator-len-one" ")")
+    (token "eof" "eof")
     finish-routine)
   )
 (define test-lexer2
-  (Tokenize 
+  (%Tokenize 
     pat
-    field-names
+    FIELD-NAMES
     ;; Just one artifical and a bit nonsense demo
     "fact := lambda a,**45.23:
       a"
@@ -249,12 +256,13 @@
     (token "operator-len-possibly-greater-than-one" ":")
     (token "skip" "\n      ")
     (token "id" a)
+    (token "eof" "eof")
     finish-routine))
 
 (define test-lexer3
-  (Tokenize 
+  (%Tokenize 
     pat
-    field-names
+    FIELD-NAMES
     ;; Just one artifical and a bit nonsense demo
     "fact := lambda a,**45.23:
       {a+a;a*2}"
@@ -283,12 +291,13 @@
     (token "operator-len-possibly-greater-than-one" "*")
     (token "number" 2)
     (token "operator-len-one" "}")
+    (token "eof" "eof")
     finish-routine))
 
 (define test-lexer4
-  (Tokenize 
+  (%Tokenize 
     pat
-    field-names
+    FIELD-NAMES
     ;; Just test _ recognition inside id.
     "lambda a_b: a_b"
     ))
@@ -300,12 +309,13 @@
     (token "id" a_b)
     (token "operator-len-possibly-greater-than-one" ":")
     (token "skip" " ")
-    (token "id" a_b) finish-routine))
+    (token "id" a_b) (token "eof" "eof")
+ finish-routine))
 
 (define test-lexer5
-  (Tokenize 
+  (%Tokenize 
     pat
-    field-names
+    FIELD-NAMES
     ;; Just test _ recognition inside id.
     "a is not b not in c <= d"
     ))
@@ -324,12 +334,13 @@
                   (token "operator-len-possibly-greater-than-one" "<=")
                   (token "skip" " ")
                   (token "id" d)
+                  (token "eof" "eof")
                   finish-routine))
 
 (define test-lexer6
-  (Tokenize 
+  (%Tokenize 
     pat
-    field-names
+    FIELD-NAMES
     ;; Just test _ recognition inside id.
     "3.14==f(b).val"
     ))
@@ -343,4 +354,9 @@
                        (token "operator-len-one" ")")
                        (token "operator-len-one" ".")
                        (token "id" val)
+                       (token "eof" "eof")
                        finish-routine))
+
+(define (Tokenize str)
+  (%Tokenize pat FIELD-NAMES str)  
+  )

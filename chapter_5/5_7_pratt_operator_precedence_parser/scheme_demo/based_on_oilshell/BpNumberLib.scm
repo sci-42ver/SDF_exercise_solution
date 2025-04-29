@@ -1,7 +1,5 @@
-(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "BpNumberBaseLib.scm")
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "multi_hash_table_lib.scm")
+; (load "multi_hash_table_lib.scm")
 ;; https://stackoverflow.com/a/61180123/21294350
 ;; TODO after CRLS: use the most efficient based on the needs here.
 (define *prec-list* (make-multi-hash))
@@ -44,7 +42,7 @@
   )
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "list_lib.scm")
+; (load "list_lib.scm")
 ;;; Similar to get-header.
 ;; Notice this is based on token-type already modified based on context, like null-if or left-if.
 (define (%get-prec op-str #!optional denotation-type)
@@ -96,6 +94,8 @@
 (define UNARY-OP-LST '("+" "-" "~"))
 (define AWAIT-OP-LST '("await"))
 ;; Notice here we only put or-op which is used in (MakePythonParserSpec) instead of type-str.
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
+(load "BpNumberBaseLib.scm")
 (define prec-list-higher-than-or-op
   `(,LEFT-IF-BP
     .
@@ -120,7 +120,7 @@
       ;; > power ::= (await_expr | primary) ["**" u_expr]
       ;; lhs-prec-level is higher than ** which is ensured by lhs-rbp>**-lbp
       ;; rhs allows *only* one nud u_expr or op's with prec >= self.
-      (left ("**"))
+      (LeftRightAssoc ("**"))
       ;; > await_expr ::= "await" primary
       ;; no nud
       (null ,AWAIT-OP-LST)
@@ -159,7 +159,7 @@
   (multi-hash-set! *prec-list* NULL-IF-BP "if" 'Null)
 
   (multi-hash-set! *prec-list* LAMBDA-RBP "lambda" 'Null)
-  (multi-hash-set! *prec-list* LEFT-IF-BP "if" 'Left)
+  (multi-hash-set! *prec-list* LEFT-IF-BP "if" 'LeftRightAssoc)
   (multi-hash-set! *prec-list* :=-BP ":=" 'Left)
   (init-prec-list-higher-than-or-op)
   )

@@ -9,12 +9,12 @@
 ;; ";;;; BEHAVIOR" and ";;;; TODO tests" number is expected to be one more than the number for re pat "^\(define ".
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "loop_lib.scm")
+; (load "loop_lib.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/")
-(load "DataTypeLib.scm")
-(load "Parser.scm")
-(load "DenotationBaseLib.scm")
+; (load "DataTypeLib.scm")
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/")
+; (load "Parser.scm")
 
 ;;;; BEHAVIOR
 ;; 0. different from oilshell (see the following).
@@ -188,7 +188,7 @@
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
-(load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
+; (load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
 ;;;; BEHAVIOR
 ;; 0. same as pratt_new_compatible_with_MIT_GNU_Scheme.scm with different bp
 ;; i.e. Use Python doc precedence ordering.
@@ -291,6 +291,9 @@
       )
     )
   )
+
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/")
+(load "DenotationBaseLib.scm")
 ;;;; BEHAVIOR
 ;; 0. Same as or/and in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary and with the same prec relation.
 ;; The differences are that here uses the different data representation; uses sentinel.

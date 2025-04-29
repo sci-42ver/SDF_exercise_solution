@@ -1,10 +1,10 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "pair_lib.scm")
-(load "logic_lib.scm")
+; (load "logic_lib.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "DataTypeLib.scm")
-(load "ExceptionLib.scm")
+; (load "DataTypeLib.scm")
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
+; (load "ExceptionLib.scm")
 
 ;;; I use bundle to mimic class.
 (define (ParserSpec)

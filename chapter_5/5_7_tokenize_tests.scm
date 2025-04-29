@@ -15,15 +15,15 @@
   then 1
   else n*fact(n-1)")
 
-(assert (equal? (parse test-exp1) '("b" "**" "2" "-" "4" "*" "a" "*" "c")))
-(assert (equal? (parse test-exp2) expected-parsed-test-exp2))
-(assert (equal? (parse test-book-exp) '("fact" ":=" "lambda" "n" ":" "if" "n" "==" "0" "then" "1" "else" "n" "*" "fact" "(" "n" "-" "1" ")")))
-(assert (equal? (parse test-exp4) '("b" "**" "m" "-" "n" "*" "a" "*" "c")))
+(assert (equal? (tokenize test-exp1) '("b" "**" "2" "-" "4" "*" "a" "*" "c")))
+(assert (equal? (tokenize test-exp2) expected-parsed-test-exp2))
+(assert (equal? (tokenize test-book-exp) '("fact" ":=" "lambda" "n" ":" "if" "n" "==" "0" "then" "1" "else" "n" "*" "fact" "(" "n" "-" "1" ")")))
+(assert (equal? (tokenize test-exp4) '("b" "**" "m" "-" "n" "*" "a" "*" "c")))
 
-(parse test-exp5)
+(tokenize test-exp5)
 (assert 
   (equal? 
-    (parse test-exp5) 
+    (tokenize test-exp5) 
     '("fact" ":=" "lambda" 
       "a" "," 
       "b" "=" "0" "," 
