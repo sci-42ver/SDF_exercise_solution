@@ -19,9 +19,12 @@
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib/")
 (load "re_lib.scm")
-(for-each-elm-in-iterator 
-  (lambda (elm) (write-line `(iter ,elm))) 
-  (regexp-finditer 'numeric "123"))
+; (for-each-elm-in-iterator 
+;   (lambda (elm) (write-line `(iter ,elm))) 
+;   (regexp-finditer 'numeric "123"))
+;; res
+; (iter #(*irregex-match-tag* #(#[compound-procedure 12] #[compiled-procedure 13 ("list" #x1) #x1c #xe2d824] #[compiled-procedure 14 ("list" #x2a) #x1c #xe31c94] #[compiled-procedure 15 ("list" #x30) #x1c #xe3283c] #[compound-procedure 16] #f) () ("123" 0 3) 0 ("123" 0 3) 1 #f #f #f #f))
+;; ...
 
 (lambda (ignore) (begin))
 (define-syntax coroutine*
@@ -53,19 +56,19 @@
         (yield `(iter ,elm))
         ) 
       (regexp-finditer 'numeric "123"))
-    ;; Here we will implicitly return 'finish-routine caused by coroutine.
+    ;; Here we will implicitly return FINISH-MARK caused by coroutine.
     )
   )
 
-(iterator-wrapped 'next)
-(iterator-wrapped 'next)
-(iterator-wrapped 'next)
-;Value: (iter #[regexp-match 19 "3"])
-(iterator-wrapped 'next)
-;Value: (iter finish-routine)
-(iterator-wrapped 'next)
-;Value: finish-routine
-(iterator-wrapped 'next)
-;Value: coroutine-iteration-finished
-(iterator-wrapped 'next)
-;Value: coroutine-iteration-finished
+; (iterator-wrapped 'next)
+; (iterator-wrapped 'next)
+; (iterator-wrapped 'next)
+; ;Value: (iter #[regexp-match 19 "3"])
+; (iterator-wrapped 'next)
+; ;Value: (iter finish-routine)
+; (iterator-wrapped 'next)
+; ;Value: finish-routine
+; (iterator-wrapped 'next)
+; ;Value: coroutine-iteration-finished
+; (iterator-wrapped 'next)
+; ;Value: coroutine-iteration-finished

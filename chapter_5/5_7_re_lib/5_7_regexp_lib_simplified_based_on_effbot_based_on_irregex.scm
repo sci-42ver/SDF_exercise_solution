@@ -160,7 +160,7 @@
     (reverse res))
   )
 (define (meet-finish-elem? elem)
-  (equal? elem 'finish-routine)
+  (equal? elem FINISH-MARK)
   )
 (define (assert-lexer lexer expected)
   (assert

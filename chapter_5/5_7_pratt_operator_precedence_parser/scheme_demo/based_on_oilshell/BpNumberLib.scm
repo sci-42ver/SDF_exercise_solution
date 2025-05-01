@@ -74,6 +74,7 @@
   (assert (Token? token))
   (apply %get-prec (get-prec-key-for-token token))
   )
+;; one alternative for get-prec-key-for-token.
 (define (get-prec-by-token-type token-type)
   (assert (string? token-type))
   (let ((prec-key (*token-type-list* 'getKeys token-type)))

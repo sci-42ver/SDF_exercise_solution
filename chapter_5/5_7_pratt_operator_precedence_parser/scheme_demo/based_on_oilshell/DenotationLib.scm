@@ -237,6 +237,7 @@
   (let* ((pred (p 'ParseUntil bp))
          ;; different bp from pratt_new_compatible_with_MIT_GNU_Scheme.scm, but same behavior.
          (consequent (begin (p 'Eat "then") (p 'ParseUntil bp))))
+    (write-line "finish then")
     (set-Token-type! token (get-token-type-from-caller-and-op NullIf token))
     (CompositeNode
       token

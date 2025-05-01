@@ -38,7 +38,11 @@
     (let ((elm (pop lexer)))
       (if (meet-finish-elem? elm)
         (error "no more elements in lexer")
-        (set! token elm))
+        (begin
+          (set! token elm)
+          (write-line "finish running Next")
+          (bkpt 'Next-END)
+          ))
       )
     )
   (define (Eat type)
@@ -110,8 +114,12 @@
       (error "Unexpected end of input when we needs one nud")
       )
     (set! cur-token token)
+    (write-line "to run Next")
     (Next)
+    (bkpt 'Next-end-inside-ParseUntil)
+    (write-line "finish running Next outside")
     (define null-info (spec 'LookupNull (Token-type cur-token)))
+    (write-line (list "null-info" null-info))
     (define node ((get-nud null-info) self t (get-null-bp null-info)))
     (prog1
       (ParseWithLeft rbp node)
@@ -124,5 +132,7 @@
     )
   (define Parser? (make-bundle-predicate 'Parser))
   (define self (bundle Parser? AtToken Next Eat ParseUntil Parse))
+  (trace ParseUntil)
+  (trace Next)
   self
   )

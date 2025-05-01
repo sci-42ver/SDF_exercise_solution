@@ -16,7 +16,7 @@
       (and found-val 
         (write-line 
           (list "WARNING" val 
-            "will have more than one keys to map. Here we just reset.to key" key)))
+            "will have more than one keys to map. Here we just reset to key" key)))
       (hash-table-set! val-key-table val key)
       )
     )
@@ -42,7 +42,7 @@
     (let ((found-val (multi-hash-ref* val-keys-table val)))
       (and found-val 
         (write-line 
-          (list "WARNING" val "will have more than one keys to map. Here we just reset.")))
+          (list "WARNING" val "will have more than one keys to map. Here we just reset to keys" keys)))
       (hash-table-set! val-keys-table val keys)
       )
     )

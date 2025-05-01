@@ -57,7 +57,10 @@
         (get-right res)
         (error (list "Unexpected token" token))))
     )
-  (bundle ParserSpec? Null Left LeftRightAssoc LookupNull LookupLeft)
+  (let ((res (bundle ParserSpec? Null Left LeftRightAssoc LookupNull LookupLeft)))
+    (trace LookupNull)
+    res
+    )
   )
 
 (define ParserSpec? (make-bundle-predicate 'ParserSpec))
