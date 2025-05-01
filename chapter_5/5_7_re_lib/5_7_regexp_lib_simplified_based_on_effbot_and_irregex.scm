@@ -360,3 +360,10 @@
 (define (Tokenize str)
   (%Tokenize pat FIELD-NAMES str)  
   )
+
+(define (pop lexer)
+  (assert (lexer? lexer))
+  (if (lexer 'alive?)
+    (lexer 'next)
+    (error "no more elements in lexer"))
+  )

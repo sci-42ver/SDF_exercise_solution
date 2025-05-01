@@ -34,14 +34,18 @@
     (set-car! (cdr token) type)))
 (define (set-Token-type-same-as-val! token)
   (assert (Token? token))
-  (let ((val (Token-val token)))
+  (let ((val-str (Token-val-str token)))
     (and
-      (not (equal? (Token-type token) val))
-      (set-Token-type! token val)
+      (not (equal? (Token-type token) val-str))
+      (set-Token-type! token val-str)
       )
     )
   )
 (define Token-val caddr)
+(define (Token-val-str obj)
+  (assert (Token? obj))
+  (->str (Token-val obj))
+  )
 (define Token-type=? string=?)
 (define Token-type? string?)
 (cd "~/SICP_SDF/SDF_exercises/common-lib/")
@@ -103,7 +107,7 @@
     )
   )
 (define (get-header-for-token token)
-  (get-header (Token-val token))
+  (get-header (Token-val-str token))
   )
 
 ;;; Node
@@ -113,7 +117,12 @@
   (new-tagged-lst* NodeTag token))
 (define Node? (tagged-list-pred NodeTag))
 (define Node-Token cadr)
-(define Token-val->Scheme-val string->symbol)
+(define (Token-val->Scheme-val obj)
+  (cond 
+    ((symbol? obj) obj)
+    ((string? obj) (string->symbol obj))
+    (else (error (list "Token-val->Scheme-val can't recognize" obj))))
+  )
 (define (get-Node-val node)
   (assert (Node? node))
   (Token-val->Scheme-val (Token-val (Node-Token node)))
@@ -139,7 +148,7 @@
   )
 
 (define (GeneralNode? node)
-  (or (Node node) (CompositeNode? node))
+  (or (Node? node) (CompositeNode? node))
   )
 ;; Although here many possible duplicate assertions, it is safer.
 (define (get-GeneralNode-token general-node)

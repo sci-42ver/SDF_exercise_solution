@@ -15,12 +15,6 @@
 ;; Here self arg is not needed due to the lexical scope.
 ;; And that self isn't changed *normally* in Python https://stackoverflow.com/questions/1216356/is-it-safe-to-replace-a-self-object-by-another-object-of-the-same-type-in-a-meth#comment32152243_1216356 https://stackoverflow.com/a/1015602/21294350
 ;; except for class redefining __new__.
-(define (pop lexer)
-  (assert (lexer? lexer))
-  (if (lexer 'alive?)
-    (lexer 'next)
-    (error "no more elements in lexer"))
-  )
 (define (Parser spec lexer)
   (assert (and (ParserSpec? spec) (lexer? lexer)))
   (define* token)
@@ -36,22 +30,17 @@
     (Token-type=? (Token-type token) token_type))
   (define (Next)
     (let ((elm (pop lexer)))
-      (if (meet-finish-elem? elm)
-        (error "no more elements in lexer")
-        (begin
-          (set! token elm)
-          (write-line "finish running Next")
-          (bkpt 'Next-END)
-          ))
+      (set! token elm)
+      ; (write-line "finish running Next")
+      ; (bkpt 'Next-END)
       )
     )
   (define (Eat type)
     (and (not (AtToken type))
          ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Format.html#index-format
          ;; Here the ending ~ is to avoid put unnecessary newline and spaces inside that string.
-         (error (format #f "expected ~S, ~
-                        got ~S" type token)))
-                        (Next))
+         (error (format #f "expected ~S, got ~S" type token)))
+    (Next))
 
   ;; added for PrsNary*
   (define (AtValidNud?)
@@ -77,19 +66,19 @@
   ;; > If variable is not bound, however, define binds variable to a new location in the current environment *before performing the assignment*
   ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Assignments.html#index-set_0021-1
   ;; > If expression is specified, *evaluates* expression and stores the resulting value in the location to which variable is bound.
-  (define cur-token token) ; set to the token val instead of passing ref val.
-  
+  (define token-to-manipulate token) ; set to the token val instead of passing ref val.
+
   (define (ParseWithLeft rbp left)
     (define left-info)
     (while* #t
-            (set! cur-token token)
-            (set! left-info (spec 'LookupLeft (Token-type cur-token)))
+            (set! token-to-manipulate token)
+            (set! left-info (spec 'LookupLeft (Token-type token-to-manipulate)))
             (and
               (>= rbp (get-left-lbp left-info))
               (break)
               )
             (Next)
-            (set! left ((get-led left-info) self t left (get-left-rbp null-info)))
+            (set! left ((get-led left-info) self token-to-manipulate left (get-left-rbp left-info)))
             )
     ;; similar to pratt_new_compatible_with_MIT_GNU_Scheme.scm to move assignment into predicate.
     ;; OK, this style is a bit too weird.
@@ -98,8 +87,8 @@
     ;   (< rbp 
     ;     (get-lbp 
     ;       (begin 
-    ;         (set! cur-token token)
-    ;         (set! left-info (spec 'LookupLeft (Token-type cur-token)))
+    ;         (set! token-to-manipulate token)
+    ;         (set! left-info (spec 'LookupLeft (Token-type token-to-manipulate)))
     ;         left-info)))
     ;   (Next)
     ;   ...
@@ -113,14 +102,13 @@
       (AtToken "eof")
       (error "Unexpected end of input when we needs one nud")
       )
-    (set! cur-token token)
-    (write-line "to run Next")
+    (set! token-to-manipulate token)
+    ; (write-line "to run Next")
     (Next)
-    (bkpt 'Next-end-inside-ParseUntil)
-    (write-line "finish running Next outside")
-    (define null-info (spec 'LookupNull (Token-type cur-token)))
-    (write-line (list "null-info" null-info))
-    (define node ((get-nud null-info) self t (get-null-bp null-info)))
+    ; (write-line "finish running Next outside")
+    (define null-info (spec 'LookupNull (Token-type token-to-manipulate)))
+    ; (write-line (list "null-info" null-info))
+    (define node ((get-nud null-info) self token-to-manipulate (get-null-bp null-info)))
     (prog1
       (ParseWithLeft rbp node)
       ;; Added by toplevel-parse in pratt_new_compatible_with_MIT_GNU_Scheme.scm

@@ -30,3 +30,10 @@
 (define (string-replace* string char-str1 char-str2)
   (string-replace string (string->char char-str1) (string->char char-str2))
   )
+
+(define (->str obj)
+  (cond 
+    ((symbol? obj) (symbol->string obj))
+    ((string? obj) obj)
+    (else (error (list "->str can't recognize" obj))))
+  )

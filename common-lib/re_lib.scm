@@ -66,8 +66,8 @@
 ;; > but the smart allocator saves some of that time when it can reuse recently discarded objects.
 
 ;; See lecs/6.001_fall_2007_recitation/codes/rec20/coroutine/demo-implementation.scm
-(cd "~/SICP_SDF/lecs/6.001_fall_2007_recitation/codes/rec20/coroutine/")
-(load "demo-implementation.scm")
+; (cd "~/SICP_SDF/lecs/6.001_fall_2007_recitation/codes/rec20/coroutine/")
+; (load "demo-implementation.scm")
 (define (regexp-finditer re string #!optional start end)
   (coroutine
     (lambda (yield)
@@ -86,7 +86,7 @@
       )
     )
   )
-(define test-iter (regexp-finditer 'numeric "123"))
+; (define test-iter (regexp-finditer 'numeric "123"))
 ; (regexp-match->list (test-iter 'next))
 ; ;Value: ("1")
 ; (regexp-match->list (test-iter 'next))
@@ -127,4 +127,18 @@
         )
       field-names
       ))
+  )
+
+(define (regexp-findall re string #!optional start end)
+  (regexp-fold 
+    re
+    (lambda (i m str acc)
+      (cons m acc)
+      )
+    '()
+    string
+    (lambda (i m str acc) (reverse acc))
+    (or* start 0)
+    (or* end (string-length string))
+    )
   )

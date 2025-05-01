@@ -2,7 +2,8 @@
 (load "pratt_new_compatible_with_MIT_GNU_Scheme/compatible_lib.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
-(load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
+; (load "5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm")
+(load "5_7_regexp_lib_simplified_based_on_effbot_and_irregex_not_using_coroutine.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
 (load "Parser.scm")
@@ -20,6 +21,10 @@
 ; (load "SentinelLib.scm")
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "application_lib.scm")
+(load "string_lib.scm")
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
+(load "SentinelBaseLib.scm")
+(load "SentinelLib.scm")
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
 (load "ParsePythonDemo.scm")
 
@@ -87,6 +92,7 @@
     )
   )
 
+; (trace multi-hash-ref)
 (pl-assert 
   '(if (g a b) (> a b) (+ (* k c) (* a b)))
   "if g(a,b) then a>b else k * c + a * b"

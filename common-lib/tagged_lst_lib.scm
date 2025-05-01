@@ -22,7 +22,8 @@
 (define (find-var var tagged-lst) 
   (let ((data (get-tagged-lst-data tagged-lst)))
     (assert (every list? data))
-    (assq var data)
+    ;; allow var to be string.
+    (assoc var data)
     )
   )
 

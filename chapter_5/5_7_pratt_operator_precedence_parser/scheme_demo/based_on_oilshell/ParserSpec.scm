@@ -19,6 +19,7 @@
     (for-each
       (lambda (token)
         (set-tagged-pairs! token (NullInfo nud bp) null-lookup)
+        ; (bkpt 'Null null-lookup)
         (if (not (find-var token left-lookup))
           (set-tagged-pairs! token (LeftInfo) left-lookup)
           )
@@ -29,7 +30,7 @@
   (define (_RegisterLed lbp rbp led tokens)
     (for-each
       (lambda (token)
-        (set-tagged-pairs! token (LeftInfo lbp rbp led) left-lookup)
+        (set-tagged-pairs! token (LeftInfo led lbp rbp) left-lookup)
         (if (not (find-var token null-lookup))
           (set-tagged-pairs! token (NullInfo) null-lookup)
           )

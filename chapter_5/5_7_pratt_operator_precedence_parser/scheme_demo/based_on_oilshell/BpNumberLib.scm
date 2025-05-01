@@ -67,7 +67,7 @@
 (define (get-prec-key-for-token token)
   (or
     (*token-type-list* 'getKeys (Token-type token))
-    (list (Token-val token)) ; with only one nud or led.
+    (list (->str (Token-val token))) ; with only one nud or led.
     )
   )
 (define (get-prec token)

@@ -32,12 +32,12 @@
   )
 ;; All caller-type's are implicitly set in spec-with-implicit-prec called by (MakePythonParserSpec).
 (define (%get-token-type-from-caller-and-op caller op-str)
-  (let ((type (*token-type-list* 'get (get-caller-type caller) op-str)))
+  (let ((type (*token-type-list* 'get op-str (get-caller-type caller))))
     ;; only allowed to use in appropriate places.
     (assert type)
     type
     )
   )
 (define (get-token-type-from-caller-and-op caller token)
-  (%get-token-type-from-caller-and-op caller (Token-val token))
+  (%get-token-type-from-caller-and-op caller (Token-val-str token))
   )

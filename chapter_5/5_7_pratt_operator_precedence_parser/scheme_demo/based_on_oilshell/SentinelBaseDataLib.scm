@@ -10,6 +10,8 @@
   (*token-type-list* 'insert EXPR-LIST-TYPE-STR "," 'Left)
   (*token-type-list* 'insert NULL-PAREN-TYPE-STR "(" 'Null)
   (*token-type-list* 'insert LEFT-PAREN-TYPE-STR "(" 'Left)
+  (assert (*token-type-list* 'get "(" 'Left))
+  ; (bkpt 'init-token-type-list *token-type-list*)
   (*token-type-list* 'insert STATEMENT-BLOCK-TYPE-STR ";" 'Left)
   (*token-type-list* 'insert :=-TYPE-STR ":=" 'Left)
   (*token-type-list* 'insert IF-STATEMENT-TYPE-STR "if" 'Null)

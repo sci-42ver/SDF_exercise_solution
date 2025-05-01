@@ -32,6 +32,7 @@
   (assert (not (null? keys)))
   (let loop ((hash hash-table)
              (keys keys))
+    ; (write-line (list "multi-hash-set! has keys" keys))
     (cond ((null? (cdr keys))
            (hash-table-set! hash (car keys) value))
           (else
@@ -41,6 +42,7 @@
 
 ; retrieve a value given a non-empty sequence of keys
 (define (multi-hash-ref hash-table . keys)
+  ; (write-line (list "multi-hash-ref" hash-table keys))
   (foldl (lambda (k h) (hash-table-ref h k))
          hash-table
          keys))

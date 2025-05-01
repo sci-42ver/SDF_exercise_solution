@@ -69,7 +69,7 @@
       unused-rbp
       ")"
       comma-token
-      COMMA-PREC
+      COMMA-BP
       (get-header-for-token comma-token)
       )
     token
@@ -93,7 +93,7 @@
   (new-GeneralNode
     (cons 
       (get-GeneralNode-val left)
-      (get-possible-tuple-contents (NullParen p token NULL-PAREN-PREC)))
+      (get-possible-tuple-contents (NullParen p token NULL-PAREN-BP)))
     token
     (get-token-type-from-caller-and-op LeftFuncCall token)
     )
@@ -122,7 +122,7 @@
       unused-rbp
       "}"
       semicolon-token
-      LEFT-SEMICOLON-PREC
+      LEFT-SEMICOLON-BP
       (get-header-for-token token)
       )
     token
@@ -148,7 +148,7 @@
 ;; 0. same as pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; but 
 ;; 0.a. ensures arg-node?
-;; 0.b. again here we allows "," in body, so rbp<COMMA-PREC.
+;; 0.b. again here we allows "," in body, so rbp<COMMA-BP.
 ;; 1. not in oilshell
 ;; 2. similar to effbot except
 ;; 2.a. it uses explicit argument_list to check "token.id" without calling Parse
@@ -172,7 +172,7 @@
             'unused-rbp
             ":"
             comma-token
-            COMMA-PREC
+            COMMA-BP
             header
             arg-node?
             )))
@@ -216,7 +216,7 @@
   (new-GeneralNode-simplified
     ;; Python
     ;; > assignment_expression ::= [identifier ":="] expression
-    (LeftBinaryOp p token left EXPR-BASE-PREC)
+    (LeftBinaryOp p token left EXPR-BASE-BP)
     token 
     (get-token-type-from-caller-and-op LeftDefine token)
     )  
@@ -279,7 +279,7 @@
 
       (set-Token-type! token (get-token-type-from-caller-and-op LeftIf token))
       (p 'Eat "else")
-      (let ((alt (p 'ParseUntil EXPR-BASE-PREC)))
+      (let ((alt (p 'ParseUntil EXPR-BASE-BP)))
         (CompositeNode
           token
           (cons*-wrapper
@@ -347,7 +347,7 @@
     ; (declare (ignore token) (ignore return-handler))
     (sentinel-for-one-node 
       (lambda (token node)
-        (or ((pred-ensuring-expr-with-consistent-precedence token) node)
+        (or ((pred-ensuring-expr-with-consistent-BPedence token) node)
             (member (get-GeneralNode-token-type node)
               (map
                 (lambda (op-str) (*token-type-list* 'get op-str 'Null))
@@ -371,7 +371,7 @@
   (define (right-sentinel token return-handler . nodes)
     (sentinel-for-one-node 
       (lambda (token node)
-        (and ((pred-ensuring-expr-with-consistent-precedence token) node)
+        (and ((pred-ensuring-expr-with-consistent-BPedence token) node)
           (not
             (member (get-GeneralNode-token-type node)
               (map
@@ -513,7 +513,10 @@
 ;; AbC
 (define (NullConstant p token unused-rbp)
   (declare (ignore p))
-  (set-Token-type-same-as-val! token) ; type is string.
+  ;; TODO why I did this before?
+  ;; type is already one string after %Tokenize is done.
+  ; (set-Token-type-same-as-val! token) ; type is string.
+  
   ;; See 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
   (CompositeNode token (Token-val token))
   )

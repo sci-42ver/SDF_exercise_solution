@@ -79,6 +79,7 @@ Anyway this is enough just like pseudocode is enough for algorithm in CRLS.
 - pratt_new_compatible_with_MIT_GNU_Scheme.scm
 - effbot
 - 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
+- bkpt
 # SDF_exercise_solution
 exercise solution for Software Design for Flexibility (SDF)
 
