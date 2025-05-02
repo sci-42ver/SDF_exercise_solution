@@ -70,6 +70,7 @@
       ")"
       comma-token
       COMMA-BP
+      (default-object) ; to be ignored
       (get-header-for-token comma-token)
       )
     token
@@ -245,8 +246,8 @@
         (get-header-for-token token)
         (get-GeneralNode-val pred)
         (get-GeneralNode-val consequent)
-        (if (p 'AtToken "else")
-          (begin (p 'Eat "else") (get-GeneralNode-val (p 'ParseUntil bp)))
+        (if (p 'AtTokenType "else")
+          (begin (p 'Eat "else") (list (get-GeneralNode-val (p 'ParseUntil bp))))
           '())
         ))
     )
@@ -317,6 +318,10 @@
 ;; "a or b and c or not d <= e and f or not g in h not in i == j & k ^ m | n"
 ;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in i) (== i (& j (^ k (bitwise-or m n))))))))
 (define LeftBitwise PrsSeqWithSentinel)
+
+(define (PrsPlusMinusWithSentinel p token left rbp)
+  (set-Token-type! token (get-token-type-from-caller-and-op PrsPlusMinusWithSentinel token))
+  (PrsSeqWithSentinel p token left rbp))
 
 ;;;; BEHAVIOR
 ;; 0. > comparison    ::= or_expr (comp_operator or_expr)*
@@ -475,7 +480,7 @@
   (assert (= rbp EXPR-BASE-BP))
   (define (prs-elm) (list (p 'ParseUntil rbp)))
   (define (prs-bound)
-    (if (p 'AtToken ":")
+    (if (p 'AtTokenType ":")
       '()
       ;; stop at ":" whose lbp is UNUSED-BP-MARKING-END < EXPR-BASE-BP.
       (prs-elm)))
@@ -483,10 +488,10 @@
     (p 'Eat ":")
     (let ((upper_bound (prs-bound)))
       (let ((stride
-              (if (p 'AtToken ":")
+              (if (p 'AtTokenType ":")
                 (begin
                   (p 'Eat ":")
-                  (if (any (lambda (end-op) (p 'AtToken end-op)) '("," "]"))
+                  (if (any (lambda (end-op) (p 'AtTokenType end-op)) '("," "]"))
                     '()
                     (prs-elm))
                   )

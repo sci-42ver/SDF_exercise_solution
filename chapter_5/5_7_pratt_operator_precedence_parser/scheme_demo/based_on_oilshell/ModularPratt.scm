@@ -22,6 +22,8 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "application_lib.scm")
 (load "string_lib.scm")
+(load "pred_lib.scm")
+(load "base_procedure_lib.scm")
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
 (load "SentinelBaseLib.scm")
 (load "SentinelLib.scm")
@@ -85,14 +87,21 @@
   (syntax-rules ()
     ((_ expected exp)
       (begin
-        ; (ParsePythonDemo exp expected)
-        (ParsePythonDemo exp)
+        (ParsePythonDemo exp expected)
+        ; (ParsePythonDemo exp)
         )
       )
     )
   )
 
+(trace NullParen)
+(trace PrsNary*)
+(trace return-last)
+(trace ensure-consistent)
 ; (trace multi-hash-ref)
+; (trace multi-hash-ref*)
+(trace get-expr-token-types-with-consistent-prec)
+
 (pl-assert 
   '(if (g a b) (> a b) (+ (* k c) (* a b)))
   "if g(a,b) then a>b else k * c + a * b"

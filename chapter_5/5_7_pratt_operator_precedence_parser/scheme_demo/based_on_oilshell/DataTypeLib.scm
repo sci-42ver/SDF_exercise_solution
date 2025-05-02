@@ -183,6 +183,7 @@
 (define right-paren-token (Token ")" ")"))
 
 ;; always return one list
+(define tuple? (tagged-list-pred 'tuple))
 (define (get-possible-tuple-contents node-with-possible-tuple)
   (assert (GeneralNode? node-with-possible-tuple))
   (let ((node-val (get-GeneralNode-val node-with-possible-tuple)))

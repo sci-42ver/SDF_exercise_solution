@@ -48,14 +48,15 @@
 (define (%get-prec op-str #!optional denotation-type)
   (assert (string? op-str))
   (let ((possible-prec 
-          (apply-with-no-default-object-arg multi-hash-ref 
+          (apply-with-no-default-object-arg multi-hash-ref
             *prec-list* op-str denotation-type
             )))
     (cond 
       ((multi-hash-table? possible-prec)
         (get-the-only-elm
           (filter-map 
-            (lambda (type) (multi-hash-ref* *prec-list* op-str type)) 
+            (lambda (type) 
+              (multi-hash-ref* *prec-list* op-str type)) 
             ALL-DENOTATION-TYPES)
           )
         )
@@ -66,7 +67,7 @@
   )
 (define (get-prec-key-for-token token)
   (or
-    (*token-type-list* 'getKeys (Token-type token))
+    (*token-type-list* 'getKeys* (Token-type token))
     (list (->str (Token-val token))) ; with only one nud or led.
     )
   )
@@ -77,7 +78,7 @@
 ;; one alternative for get-prec-key-for-token.
 (define (get-prec-by-token-type token-type)
   (assert (string? token-type))
-  (let ((prec-key (*token-type-list* 'getKeys token-type)))
+  (let ((prec-key (*token-type-list* 'getKeys* token-type)))
     (assert prec-key)
     (apply %get-prec prec-key)
     )
@@ -127,6 +128,7 @@
       (null ,AWAIT-OP-LST)
       ))
   )
+(define bp-val-list-higher-than-or-op '())
 (define (init-prec-list-higher-than-or-op)
   (let ((base-bp (car prec-list-higher-than-or-op))
         (prec-lst (cdr prec-list-higher-than-or-op)))
@@ -142,6 +144,9 @@
                 )
               op-lst
               )
+            ;; For debug
+            (set! bp-val-list-higher-than-or-op 
+              (cons (list bp item) bp-val-list-higher-than-or-op))
             (lp (+ depth 1) (cdr rest-lst))
             )
           ))

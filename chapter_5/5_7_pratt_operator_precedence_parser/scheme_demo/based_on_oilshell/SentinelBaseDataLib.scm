@@ -15,7 +15,7 @@
   (*token-type-list* 'insert STATEMENT-BLOCK-TYPE-STR ";" 'Left)
   (*token-type-list* 'insert :=-TYPE-STR ":=" 'Left)
   (*token-type-list* 'insert IF-STATEMENT-TYPE-STR "if" 'Null)
-  (*token-type-list* 'insert LEFT-IF-TYPE-STR "if" 'Left)
+  (*token-type-list* 'insert LEFT-IF-TYPE-STR "if" 'LeftRightAssoc)
   ;; The rest ones in prec-list-higher-than-or-op doesn't have both nud and led.
   (for-each
     (lambda (op)
@@ -36,8 +36,33 @@
     (lambda (op)
       ;; Here we have '("WARNING" "comparison-expr" "will have more than one keys to map. Here we just reset to keys" ("not in" left))' etc.
       ;; That is fine since 'getKeys is only used at last by get-prec and all these have the same prec.
-      (*token-type-list* 'insert COMPARISON-TYPE-STR op 'Left))
+      ; (*token-type-list* 'insert COMPARISON-TYPE-STR op 'Left)
+      ;; The above one is not used since "get-prec" is used for the original type.
+      ;; Although we can set! COMPARISON-TYPE-STR for that token, but that may influence the rest APIs.
+      (*token-type-list* 'insert op op 'Left)
+      )
     COMPARISON-OP-LST
+    )
+  (for-each
+    (lambda (op)
+      (*token-type-list* 'insert op op 'Left)
+      )
+    (append SHIFT-OP-LST OTHER-BINARY-OP-LST
+      (list "or" "and")
+      (list "|" "^" "&")
+      )
+    )
+  (for-each
+    (lambda (op)
+      (*token-type-list* 'insert op op 'Null)
+      )
+    (cons "not" AWAIT-OP-LST)
+    )
+  (for-each
+    (lambda (op)
+      (*token-type-list* 'insert op op 'LeftRightAssoc)
+      )
+    '("**")
     )
   )
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")

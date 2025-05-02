@@ -7,7 +7,7 @@
 (define-syntax prog1
   (syntax-rules ()
     ;; Here the original form is (_ stack) here.
-    ((_ elm1 elm2) 
+    ((_ elm1 elm2)
      (let ((tmp elm1))
        elm2
        tmp)

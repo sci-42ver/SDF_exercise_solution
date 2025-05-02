@@ -2,6 +2,6 @@
   (lambda (a) a)
   )
 
-(define return-last
-  (lambda a (last a))
+(define (return-last lst)
+  (last lst)
   )

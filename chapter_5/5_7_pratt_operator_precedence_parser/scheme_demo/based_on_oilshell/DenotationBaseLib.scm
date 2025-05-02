@@ -6,7 +6,7 @@
   (or* elm-relative-assertion (set! elm-relative-assertion return-last))
   (let ((type (Token-type token)))
     (let lp ((l (list (get-GeneralNode-val (elm-relative-assertion token return-last (p 'ParseUntil rbp))))))
-      (if (p 'AtToken type)
+      (if (p 'AtTokenType type)
         (begin 
           (p 'Eat type)
           (lp (cons (get-GeneralNode-val (elm-relative-assertion token return-last (p 'ParseUntil rbp))) l)))
@@ -25,19 +25,20 @@
       (cons a b))
     )
   ;; (p 'AtValidNud?) is more general than prsmatch-modified with just allowing other tokens. 
-  (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
+  (if (or (p 'AtTokenType "eof") (not (p 'AtValidNud?)))
     '()
     (let ((type (Token-type token)))
       (let lp ((l 
                 (list 
                   (get-GeneralNode-val 
                     (check-pred elm-pred (p 'ParseUntil rbp))))))
-        (if (p 'AtToken type)
+        ; (bkpt 'PrsNary* l)
+        (if (p 'AtTokenType type)
           (begin 
             (p 'Eat type)
             (lp 
               (cons-with-possible-first-elm
-                (if (or (p 'AtToken "eof") (not (p 'AtValidNud?)))
+                (if (or (p 'AtTokenType "eof") (not (p 'AtValidNud?)))
                   '()
                   (get-GeneralNode-val
                     (check-pred elm-pred (p 'ParseUntil rbp)))
@@ -53,7 +54,7 @@
   (CompositeNode 
     delimeter-token
     (cons (or* header (get-header-for-token delimeter-token)) 
-      (cons (get-GeneralNode-val left) (base-parse-proc delimeter parser rbp elm-pred)))))
+      (cons (get-GeneralNode-val left) (base-parse-proc delimeter-token parser rbp elm-pred)))))
 
 ;; 0. TODO better to make elm-relative-assertion and elm-pred have similar APIs.
 ;; Why I used 2 inconsistent ones is due to I didn't have one *unchanged* plan for this a bit big project at least for one programming beginner book SDF.
@@ -80,30 +81,56 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 ; (load "tree_lib.scm")
 (define (%PrsComparison p token left rbp #!optional elm-relative-assertion header)
+  (define (get-data-in-possible-and-expr expr)
+    (cond 
+      (((tagged-list-pred 'and) expr) (get-tagged-lst-data expr))
+      ((list? expr)
+        (assert 
+          (any 
+            (lambda (tag) ((tagged-list-pred tag) expr))
+            (map string->symbol COMPARISON-OP-LST)
+            ))
+        expr
+        )
+      (else (error (list expr "should be combined with Comparison expr")))
+      )
+    )
   (let lp ((cur-node
             (new-GeneralNode-with-new-val
               (PrsSeq p token left rbp elm-relative-assertion header)
               (lambda (expr) (list 'and expr))
               )))
     ;; notice here we use PrsComparison instead of %PrsComparison
-    (let ((final-node-type (get-token-type-from-caller-and-op PrsComparison token)))
-      (if (any (lambda (type) (p 'AtToken type)) COMPARISON-OP-LST)
+    (let ((final-node-type 
+            ;; See init-token-type-list for why this is unused.
+            ; (get-token-type-from-caller-and-op PrsComparison token)
+            COMPARISON-TYPE-STR
+            ))
+      (if (any (lambda (type) (p 'AtTokenType type)) COMPARISON-OP-LST)
         ;; based on assumption that all op's in COMPARISON-OP-LST have the same rbp.
         (let* ((cur-expr (get-GeneralNode-val cur-node))
-                (rest-expr 
+               (rest-expr
                     (get-GeneralNode-val
                       (p
                         'ParseWithLeft 
                         (last-in-tree cur-expr) 
                         rbp))))
           (new-GeneralNode-simplified
-            (append cur-expr (get-tagged-lst-data rest-expr))
+            (append cur-expr (get-data-in-possible-and-expr rest-expr))
             token
             final-node-type
             )
           )
         (new-GeneralNode-simplified
-          cur-node
+          (new-GeneralNode-with-new-val
+            cur-node
+            (lambda (expr) 
+              (let ((val (get-tagged-lst-data expr)))
+                (assert (= 1 (length val)))
+                (car val)
+                )
+              )
+            )
           token
           final-node-type
           )
@@ -112,16 +139,20 @@
 )
 
 (define (PrsSeq* parser delimeter-token left rbp #!optional elm-pred header)
-  (assert (elm-pred left))
+  (and* elm-pred (assert (elm-pred left)))
   (%PrsSeq PrsNary* parser delimeter-token left rbp elm-pred header)
   )
 
 (define (PrsPossibleSeq* parser delimeter-token rbp delimeter-lbp #!optional elm-pred header)
   (let ((first-elm (parser 'ParseUntil delimeter-lbp)))
-    (assert (elm-pred first-elm))
-    (if (not (parser 'AtToken delimeter-token))
-      first-elm
-      (PrsSeq* parser delimeter-token first-elm rbp elm-pred header)
+    (and* elm-pred (assert (elm-pred first-elm)))
+    (let ((type (Token-type delimeter-token)))
+      (if (not (parser 'AtTokenType type))
+        first-elm
+        (begin
+          (parser 'Eat type) ; ensure delimeter is eaten before PrsSeq*.
+          (PrsSeq* parser delimeter-token first-elm rbp elm-pred header))
+        )
       )
     )
   )
@@ -140,7 +171,7 @@
 ;; 1. Different from oilshell (i.e. bash) to allow ()=>(tuple).
 (define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type delimeter-token delimeter-prec #!optional elm-pred header)
   (cond 
-    ((p 'AtToken ending-token-type) (CompositeNode (symbol->token header) (list header)))
+    ((p 'AtTokenType ending-token-type) (CompositeNode (symbol->token header) (list header)))
     (else
       ;; 0. We can implicitly use LeftComma implied by grammar rule
       ;; Parenthesized form https://docs.python.org/3/reference/expressions.html#parenthesized-forms

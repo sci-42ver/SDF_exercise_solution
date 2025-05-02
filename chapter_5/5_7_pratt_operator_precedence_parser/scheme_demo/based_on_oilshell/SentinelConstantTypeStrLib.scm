@@ -7,7 +7,8 @@
 (define STATEMENT-BLOCK-TYPE-STR "statement-block")
 (define IF-STATEMENT-TYPE-STR "null-if")
 ;; see 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
-(define VAR-TYPES (list ID-TAG-STR "get"))
+;; Here "get" for x[idx] in LeftIndex is skipped.
+(define VAR-TYPES (list ID-TAG-STR))
 (define TUPLE-TYPES `(,@VAR-TYPES "tuple"))
 
 ;; with-expr-as-data-end means these things all have grammar ending with expression.

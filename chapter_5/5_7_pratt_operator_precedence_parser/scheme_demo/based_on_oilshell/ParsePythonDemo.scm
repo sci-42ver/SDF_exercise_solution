@@ -116,7 +116,7 @@
     ;; 0.a. Here I allow (/ a b c) which means (/ a (* b c)) same as Scheme.
     ;;;; TODO tests
     ;; a * d + b << c => (<< (+ (* a d) b) c)
-    (spec-with-implicit-prec spec 'Left PrsSeqWithSentinel BINARY-PM-OP-LST)
+    (spec-with-implicit-prec spec 'Left PrsPlusMinusWithSentinel BINARY-PM-OP-LST)
     (spec-with-implicit-prec spec 'Left PrsSeqWithSentinel OTHER-BINARY-OP-LST)
 
     ;;;; BEHAVIOR
@@ -194,7 +194,7 @@
     ;; > | kvpair
     ;; So same as set but with "*"=>"**" & enforced mapping with ":="=>":".
 
-    (spec-with-implicit-prec spec 'Null NullConstant `(,ID-TAG-STR, "number") '("unused" "unused") UNUSED-BP-MARKING-END)
+    (spec-with-implicit-prec spec 'Null NullConstant `(,ID-TAG-STR "number") '("unused" "unused") UNUSED-BP-MARKING-END)
     spec
     ))
 
@@ -207,11 +207,12 @@
 ;; i.e. ParseShell in oilshell
 (define (ParsePythonDemo str #!optional expected)
   ;; Here I won't add one extra class wrapper for simplicity.
-  (let ((res ((MakeParser str) 'Parse)))
+  (let* ((res ((MakeParser str) 'Parse))
+         (res-expr (get-GeneralNode-val res)))
     ;; assert is not same as Python with 2 args
-    (and* expected (assert* (equal? expected res) (list "unequal" expected res)))
+    (and* expected (assert* (equal? expected res-expr) (list "unequal" expected res-expr)))
     ;; Use write to enable outputting cycle.
-    (format #t "~40S ~S~%" str res)
+    (format #t "~40S ~S~%~40S~%" str res res-expr)
     res
     )
   )

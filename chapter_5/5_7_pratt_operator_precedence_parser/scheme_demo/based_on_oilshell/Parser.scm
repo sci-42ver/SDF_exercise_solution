@@ -26,17 +26,18 @@
   ;; see 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
   ;; here lexer is one proc.
 
-  (define (AtToken token_type)
+  (define (AtTokenType token_type)
     (Token-type=? (Token-type token) token_type))
   (define (Next)
     (let ((elm (pop lexer)))
       (set! token elm)
+      token
       ; (write-line "finish running Next")
       ; (bkpt 'Next-END)
       )
     )
   (define (Eat type)
-    (and (not (AtToken type))
+    (and (not (AtTokenType type))
          ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Format.html#index-format
          ;; Here the ending ~ is to avoid put unnecessary newline and spaces inside that string.
          (error (format #f "expected ~S, got ~S" type token)))
@@ -78,6 +79,7 @@
               (break)
               )
             (Next)
+            ;; the current token is the elem after the comma.
             (set! left ((get-led left-info) self token-to-manipulate left (get-left-rbp left-info)))
             )
     ;; similar to pratt_new_compatible_with_MIT_GNU_Scheme.scm to move assignment into predicate.
@@ -99,7 +101,7 @@
     (and
       ;; Normally the end is done by break if (>= rbp (get-left-lbp left-info)).
       ;; So we use one token with -1 prec to mark ending which is not used by other nud/led's to avoid ambiguity.
-      (AtToken "eof")
+      (AtTokenType "eof")
       (error "Unexpected end of input when we needs one nud")
       )
     (set! token-to-manipulate token)
@@ -112,15 +114,18 @@
     (prog1
       (ParseWithLeft rbp node)
       ;; Added by toplevel-parse in pratt_new_compatible_with_MIT_GNU_Scheme.scm
-      (and (AtToken "eof") (Eat "eof")))
+      (and (AtTokenType "eof") (write-line "all tokens are used")))
     )
   (define (Parse)
     (Next)
     (ParseUntil 0)
     )
   (define Parser? (make-bundle-predicate 'Parser))
-  (define self (bundle Parser? AtToken Next Eat ParseUntil Parse))
+  (define self (bundle Parser? AtTokenType Next Eat ParseUntil Parse AtValidNud? AtValidLed?))
   (trace ParseUntil)
   (trace Next)
+  (trace AtTokenType)
+  (trace ParseWithLeft)
+  (trace Eat)
   self
   )
