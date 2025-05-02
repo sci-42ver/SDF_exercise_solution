@@ -124,6 +124,7 @@
       "}"
       semicolon-token
       LEFT-SEMICOLON-BP
+      (default-object) ; to be ignored
       (get-header-for-token token)
       )
     token
@@ -167,6 +168,12 @@
 (define (NullLambda p token rbp)
   (declare (ignore token)) ; since delimeter is comma.
   (define header (get-header-for-token token))
+  (define (get-possible-tagged-lst-data obj)
+    (cond 
+      ((list? obj) (get-tagged-lst-data obj))
+      ;; For (elm) => elm.
+      (else obj))
+    )
   (let ((intermediate 
           (consume-possible-elems-implicitly-and-the-ending-token
             p
@@ -174,16 +181,16 @@
             ":"
             comma-token
             COMMA-BP
-            header
             arg-node?
+            header
             )))
     (let ((body-contents (get-GeneralNode-val (p 'ParseUntil rbp))))
       (CompositeNode
         token
         (cons*-wrapper 
           header
-          (get-tagged-lst-data (get-GeneralNode-val intermediate))
-          body-contents
+          (get-possible-tagged-lst-data (get-GeneralNode-val intermediate))
+          (list body-contents)
           )))
     )
   )

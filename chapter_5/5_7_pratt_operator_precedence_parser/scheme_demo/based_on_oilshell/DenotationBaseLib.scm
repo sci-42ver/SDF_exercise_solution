@@ -171,7 +171,9 @@
 ;; 1. Different from oilshell (i.e. bash) to allow ()=>(tuple).
 (define (consume-possible-elems-implicitly-and-the-ending-token p bp ending-token-type delimeter-token delimeter-prec #!optional elm-pred header)
   (cond 
-    ((p 'AtTokenType ending-token-type) (CompositeNode (symbol->token header) (list header)))
+    ((p 'AtTokenType ending-token-type) 
+      (p 'Eat ending-token-type)
+      (CompositeNode (symbol->token header) (list header)))
     (else
       ;; 0. We can implicitly use LeftComma implied by grammar rule
       ;; Parenthesized form https://docs.python.org/3/reference/expressions.html#parenthesized-forms
@@ -220,6 +222,7 @@
 ;; same as oilshell and parse-prefix in pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; except using different data structures; add Sentinel.
 (define (%NullPrefixOp p token rbp #!optional elm-relative-assertion)
+  (set-Token-type! token (get-token-type-from-caller-and-op NullPrefixOp token))
   (let ((right (p 'ParseUntil rbp)))
     (use-possible-default-object-proc elm-relative-assertion token return-last right)
     (CompositeNode

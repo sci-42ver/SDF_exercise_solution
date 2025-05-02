@@ -31,4 +31,4 @@
 
 (define COMPARISON-TYPE-STR "comparison-expr")
 
-(define CONSTANT-TYPE-STR `(,ID-TAG-STR "number"))
+(define CONSTANT-TYPE-STR `(,ID-TAG-STR ,NUMBER-TAG-STR ,STAR-ARG-TAG-STR))

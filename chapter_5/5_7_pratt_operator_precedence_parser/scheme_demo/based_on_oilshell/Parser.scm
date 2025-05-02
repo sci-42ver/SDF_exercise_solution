@@ -74,6 +74,7 @@
     (while* #t
             (set! token-to-manipulate token)
             (set! left-info (spec 'LookupLeft (Token-type token-to-manipulate)))
+            ; (write-line (list left-info token-to-manipulate))
             (and
               (>= rbp (get-left-lbp left-info))
               (break)

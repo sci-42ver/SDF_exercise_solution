@@ -60,6 +60,7 @@
     )
   (let ((res (bundle ParserSpec? Null Left LeftRightAssoc LookupNull LookupLeft)))
     (trace LookupNull)
+    (trace Null)
     res
     )
   )

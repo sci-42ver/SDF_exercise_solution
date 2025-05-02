@@ -5,3 +5,5 @@
 (define STAR-ARG-TAG 'STAR-ARG)
 (define STAR-ARG-TAG-STR (symbol->string STAR-ARG-TAG))
 
+(define NUMBER-TAG 'NUMBER)
+(define NUMBER-TAG-STR (symbol->string NUMBER-TAG))

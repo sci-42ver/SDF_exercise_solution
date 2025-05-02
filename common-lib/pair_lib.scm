@@ -24,7 +24,9 @@
 (define (set-tagged-pairs! key val tagged-pairs)
   (let ((pair (find-var key tagged-pairs)))
     (if pair
-      (set-cdr! pair val)
+      (begin
+        (write-line (list "INFO set-tagged-pairs! resets" pair "val to" val))
+        (set-cdr! pair (list val)))
       (%add-pair-to-tagged-pairs! (list key val) tagged-pairs))
     )
   )

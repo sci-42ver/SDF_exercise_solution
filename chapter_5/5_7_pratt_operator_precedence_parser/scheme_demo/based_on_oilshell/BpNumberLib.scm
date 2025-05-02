@@ -18,7 +18,7 @@
             (val-lst (cdr val-lst-with-table)))
         (and* val-lst
           (begin
-            (assert (= (length op-type-lst) (length val-lst)))
+            (assert* (= (length op-type-lst) (length val-lst)) (list op-type-lst val-lst))
             (for-each
               (lambda (op val) (multi-hash-set! table val op denotation-type))
               op-type-lst val-lst

@@ -46,7 +46,7 @@
     (=> OPERATOR-WITH-SPACE-INSIDE
       (or "is not" "not in")
       )
-    (=> ,STAR-ARG-TAG 
+    (=> ,STAR-ARG-TAG
       (: (look-behind ",") 
         (or 
           (: "*" (neg-look-ahead "*") ,IDENTIFIER-AS-ARG) 

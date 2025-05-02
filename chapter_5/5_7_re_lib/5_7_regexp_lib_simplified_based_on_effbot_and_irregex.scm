@@ -41,7 +41,7 @@
 (define pat
   `(or
     ;; See SDF_exercises/chapter_5/5_7_re_tests/optional.scm for "?" behavior.
-    (=> NUMBER ,NUMBER-PATTERN) ; better than tdop.py
+    (=> ,NUMBER-TAG ,NUMBER-PATTERN) ; better than tdop.py
     ;; added
     (=> OPERATOR-WITH-SPACE-INSIDE
       (or "is not" "not in")

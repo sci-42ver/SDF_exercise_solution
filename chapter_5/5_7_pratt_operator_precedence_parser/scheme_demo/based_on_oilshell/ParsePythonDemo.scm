@@ -194,7 +194,7 @@
     ;; > | kvpair
     ;; So same as set but with "*"=>"**" & enforced mapping with ":="=>":".
 
-    (spec-with-implicit-prec spec 'Null NullConstant CONSTANT-TYPE-STR '("unused" "unused") UNUSED-BP-MARKING-END)
+    (spec-with-implicit-prec spec 'Null NullConstant CONSTANT-TYPE-STR (map (lambda (ignore) "unused") CONSTANT-TYPE-STR) UNUSED-BP-MARKING-END)
     spec
     ))
 

@@ -1,7 +1,7 @@
 (define (->list obj)
   (cond 
     ((list? obj) obj)
-    ((number? obj) (list obj))
+    ((or (symbol? obj) (number? obj)) (list obj))
     (else (error (list "->list can't recognize" obj))))
   )
 
