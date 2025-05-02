@@ -1,6 +1,7 @@
 ;;; Initialization
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 (load "bidirectional_map.scm")
+;; This *token-type-list* is based on context, so not same as that got from tokenizer.
 (define *token-type-list* (make-multi-bidirectional-map default-hash-table-constructor))
 ; (define (make-token-type-key caller op-str)
 ;   (assert (and (procedure? caller) (string? op-str)))

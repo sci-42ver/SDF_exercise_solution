@@ -138,9 +138,9 @@
 
 (define (CompositeNode-with-binary-expr root-token left-node right-node)
   (CompositeNode
-    token
+    root-token
     (cons*-wrapper
-      (get-header-for-token token)
+      (get-header-for-token root-token)
       (get-GeneralNode-val left-node)
       (get-GeneralNode-val right-node)
       )

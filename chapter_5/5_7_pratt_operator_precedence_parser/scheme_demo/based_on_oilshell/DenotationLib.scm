@@ -350,9 +350,10 @@
   (define (right-sentinel token return-handler . nodes)
     ;; TODO I don't know the exact API for declare.
     ; (declare (ignore token) (ignore return-handler))
-    (sentinel-for-one-node 
+    (apply-with-ending-list
+      sentinel-for-one-node
       (lambda (token node)
-        (or ((pred-ensuring-expr-with-consistent-BPedence token) node)
+        (or ((pred-ensuring-expr-with-consistent-precedence token) node)
             (member (get-GeneralNode-token-type node)
               (map
                 (lambda (op-str) (*token-type-list* 'get op-str 'Null))
@@ -376,7 +377,7 @@
   (define (right-sentinel token return-handler . nodes)
     (sentinel-for-one-node 
       (lambda (token node)
-        (and ((pred-ensuring-expr-with-consistent-BPedence token) node)
+        (and ((pred-ensuring-expr-with-consistent-precedence token) node)
           (not
             (member (get-GeneralNode-token-type node)
               (map

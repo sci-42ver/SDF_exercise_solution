@@ -4,12 +4,13 @@
 ;; TODO after CRLS: use the most efficient based on the needs here.
 (define *prec-list* (make-multi-hash))
 
-(define (spec-with-implicit-prec spec denotation-type handler op-lst #!optional header-lst prec token-type-lst)
+;; op-type-lst is based on how LookupNull etc are used.
+(define (spec-with-implicit-prec spec denotation-type handler op-type-lst #!optional header-lst prec token-type-lst)
   (assert
     (and 
       (denotation-type? denotation-type) 
       (procedure? handler) 
-      (list-of-type? op-lst string?)))
+      (list-of-type? op-type-lst string?)))
   (hash-table-set! *handler-type-list* handler denotation-type)
   (for-each
     (lambda (val-lst-with-table)
@@ -17,10 +18,10 @@
             (val-lst (cdr val-lst-with-table)))
         (and* val-lst
           (begin
-            (assert (= (length op-lst) (length val-lst)))
+            (assert (= (length op-type-lst) (length val-lst)))
             (for-each
               (lambda (op val) (multi-hash-set! table val op denotation-type))
-              op-lst val-lst
+              op-type-lst val-lst
               )
             ))
         )
@@ -32,13 +33,13 @@
       (cons *prec-list*
         (if (default-object? prec)
           (default-object)
-          (map (lambda (ignore) prec) op-lst)
+          (map (lambda (ignore) prec) op-type-lst)
           )
         )
       )
     )
-  ;; assume op-lst having the same prec.
-  (spec denotation-type (%get-prec (car op-lst) denotation-type) handler op-lst)
+  ;; assume op-type-lst having the same prec.
+  (spec denotation-type (%get-prec (car op-type-lst) denotation-type) handler op-type-lst)
   )
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")

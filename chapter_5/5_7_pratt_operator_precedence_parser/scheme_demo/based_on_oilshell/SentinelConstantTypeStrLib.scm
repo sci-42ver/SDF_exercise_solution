@@ -30,3 +30,5 @@
   `("lambda" ,LEFT-IF-TYPE-STR ,@NON-EXPR-TAG-WITH-EXPR-AS-DATA-END))
 
 (define COMPARISON-TYPE-STR "comparison-expr")
+
+(define CONSTANT-TYPE-STR `(,ID-TAG-STR "number"))

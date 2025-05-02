@@ -1,3 +1,8 @@
+;; define-syntax put first to make all the following can use that, see https://stackoverflow.com/q/79147397/21294350.
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "list_lib.scm")
+(load "application_lib.scm")
+
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
 (load "pratt_new_compatible_with_MIT_GNU_Scheme/compatible_lib.scm")
 
@@ -20,7 +25,6 @@
 (load "SentinelBaseDataLib.scm")
 ; (load "SentinelLib.scm")
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "application_lib.scm")
 (load "string_lib.scm")
 (load "pred_lib.scm")
 (load "base_procedure_lib.scm")
@@ -101,24 +105,33 @@
 ; (trace multi-hash-ref)
 ; (trace multi-hash-ref*)
 (trace get-expr-token-types-with-consistent-prec)
+(trace sentinel-for-one-node)
 
 (pl-assert 
   '(if (g a b) (> a b) (+ (* k c) (* a b)))
   "if g(a,b) then a>b else k * c + a * b"
   )
 
+;; 0. = should == in ex 5.7.
+;; 1. TODO how to assert for one error to happen which is said in one former lib of one rec/lec etc.
 ; (pl-assert 
-;   '(= (f a) (+ a (/ b c))) 
-;   "f ( a ) = a + b / c")
+;   '(define (f a) (+ a (/ b c))) 
+;   "f ( a ) := a + b / c")
+;Assertion failed: (equal? id-tag-str (get-generalnode-token-type node))
 
-; (pl-assert 
-;   '(g) 
-;   "g ( )")
+;; it is interpreter's responsibility to define ==.
+(pl-assert 
+  '(== (f a) (+ a (/ b c))) 
+  "f ( a ) == a + b / c")
 
-; ;; tests from SDF_exercises/chapter_5/5_7.scm
-; (pl-assert 
-;   '(- (** b 2) (* 4 a c)) 
-;   "b ** 2 - 4 * a * c")
+(pl-assert 
+  '(g) 
+  "g ( )")
+
+;; tests from SDF_exercises/chapter_5/5_7.scm
+(pl-assert
+  '(- (expt b 2) (* 4 a c))
+  "b ** 2 - 4 * a * c")
 ; (pl-assert 
 ;   '(/ (+ (- b) (sqrt discriminant)) (* 2 a))
 ;   "( - b + sqrt ( discriminant ) ) / ( 2 * a )")

@@ -83,8 +83,8 @@
     MISMATCH
     ))
 
-(cd "~/SICP_SDF/SDF_exercises/common-lib")
-(load "list_lib.scm")
+; (cd "~/SICP_SDF/SDF_exercises/common-lib")
+; (load "list_lib.scm")
 (define (%Tokenize pat field-names input)
   (define keywords '("if" "lambda" "then" "else" "is" "or" "and" "not" "in"))
   (append

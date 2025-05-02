@@ -38,8 +38,10 @@
   (define val-keys-table (multi-hash-table-constructor))
   
   (define (insert val . keys)
-    (apply multi-hash-set! (cons* keys-val-table val keys))
-    (assert (apply multi-hash-ref (cons keys-val-table keys)))
+    (apply-with-ending-list
+      multi-hash-set!
+      keys-val-table val keys)
+    (assert (apply-with-ending-list multi-hash-ref keys-val-table keys))
     (let ((found-val (multi-hash-ref* val-keys-table val)))
       (and found-val 
         (write-line 
@@ -57,7 +59,7 @@
     ; (write-line 
     ;   (list "make-multi-bidirectional-map get" 
     ;     (cons keys-val-table keys)))
-    (apply multi-hash-ref (cons keys-val-table keys))
+    (apply-with-ending-list multi-hash-ref keys-val-table keys)
     )
   ;; For convenient usage although a bit not good to expose private member...
   (define (get-keys-val-table)

@@ -15,7 +15,7 @@
         )
       ;; needed because they are atom or primary https://docs.python.org/3/reference/expressions.html.
       `(,LEFT-PAREN-TYPE-STR ,NULL-PAREN-TYPE-STR "{"
-        ,ID-TAG-STR ; just atom in Python grammar.
+        ,@CONSTANT-TYPE-STR ; just atom in Python grammar.
         )
       )
     )
