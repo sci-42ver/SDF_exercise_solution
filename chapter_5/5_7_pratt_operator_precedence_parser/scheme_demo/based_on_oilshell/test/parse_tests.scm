@@ -95,3 +95,68 @@
 (pl-assert
   '(lambda (a **b *c) (+ a (g b) c))
   "lambda a,**b,*c,: a+g(b)+c")
+(pl-assert
+  '(lambda (a **b *c) (define b 4))
+  "lambda a,**b,*c,: b:=4")
+(pl-assert
+  '(lambda (a) (lambda (b) (* a b c)))
+  "lambda a: lambda b: a*b*c")
+
+;;; NullIf
+;; Here we allow this. You can add sentinel to forbid this.
+(pl-assert
+  '(if (tuple a b) a b)
+  "if a,b then a else b")
+(pl-assert
+  '(if a (if b s1 s2))
+  "if a then if b then s1 else s2")
+(pl-assert
+  '(if a (if b s1) s2)
+  "if a then { if b then s1 } else s2")
+
+;;; LeftIf
+(pl-assert
+  '(define a (if (expt a 2) (+ 3 b) b))
+  "a:= 3+b if a**2 else b")
+(pl-assert
+  '(begin (define a (lambda (k) (if a (+ 3 b k) b))) c)
+  "a:= lambda k:3+b+k if a else b;c")
+(pl-assert
+  '(begin (define a (if a (+ 3 b k) b)) c)
+  "a:= 3+b+k if a else b;c")
+(pl-assert
+  '(define a (if a (+ 3 b k) (begin b c)))
+  "a:= 3+b+k if a else {b;c}")
+;; error-expected
+; (pl-assert
+;   '(if (if b_pred b b_alt) a a_alt)
+;   "a if b if b_pred else b_alt else a_alt")
+; ((compositenode (token "left-if" if) (if b_pred b b_alt)) "has tag in" ("lambda" "left-if" "statement-block" "null-if" "expr-list" ...))
+(pl-assert
+  '(if b a (if c_pred c c_alt))
+  "a if b else c if c_pred else c_alt")
+(pl-assert
+  '(tuple a (if c b d))
+  "a,b if c else d")
+
+;;; LeftDefine
+; (pl-assert
+;   'error-expected
+;   "a+b:=c")
+; ((compositenode (token "left-plus" "+") (+ a b)) "isn't one identifier")
+(pl-assert
+  '(tuple (define a b) c)
+  "a:=b,c")
+(trace LeftDefine)
+;; This needs sentinel since assignment_expression is not one expression which can be checked by "a:=2,"
+;; You can add that similar to how other sentinels are added.
+; (pl-assert
+;   'error-expected
+;   "a:=b:=c")
+
+(pl-assert
+  '(define a (lambda (k) (+ 3 b k)))
+  "a:= lambda k:3+b+k")
+(pl-assert
+  '(define a (or b c))
+  "a:= b or c")

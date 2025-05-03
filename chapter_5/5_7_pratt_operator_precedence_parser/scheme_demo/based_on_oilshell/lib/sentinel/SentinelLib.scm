@@ -9,7 +9,10 @@
   (assert (list-of-type? nodes GeneralNode?))
   (for-each
     (lambda (node)
-      (assert (apply not-GeneralNode-with-token-type (cons node tag-with-precedence-lower-than-OR)))
+      (assert* 
+        (apply not-GeneralNode-with-token-type (cons node tag-with-precedence-lower-than-OR))
+        (list node "has tag in" tag-with-precedence-lower-than-OR)
+        )
       )
     nodes
     )
@@ -20,7 +23,10 @@
   (assert (list-of-type? nodes GeneralNode?))
   (for-each
     (lambda (node)
-      (assert (equal? ID-TAG-STR (get-GeneralNode-token-type node)))
+      (assert* 
+        (equal? ID-TAG-STR (get-GeneralNode-token-type node))
+        (list node "isn't one identifier")
+        )
       )
     nodes
     )

@@ -276,27 +276,27 @@
 ;; a if b else c if c_pred else c_alt => (if b a (if c_pred c c_alt)) https://stackoverflow.com/a/79497941/21294350
 ;; a,b if c else d => (tuple a (if c b d))
 (define (LeftIf p token left rbp)
-  (define get-intermediate-consq get-binary-left)
-  (define get-intermediate-pred get-binary-right)
-  (let ((intermediate (LeftBinaryOp p token left rbp))) ; (if consq pred)
-    (let ((pred (get-intermediate-pred intermediate))
-          (consq (get-intermediate-consq intermediate)))
-      ;; Python
-      ;; > conditional_expression ::= or_test ["if" or_test "else" expression]
-      (ensure-or-test-expr pred consq)
+  ; (define get-intermediate-consq get-binary-left)
+  ; (define get-intermediate-pred get-binary-right)
+  ;; This is unused since we need the type of pred for sentinel.
+  ; (let ((intermediate (LeftBinaryOp p token left rbp))) ; (if consq pred)
+  (let ((pred (p 'ParseUntil rbp))
+        (consq left))
+    ;; Python
+    ;; > conditional_expression ::= or_test ["if" or_test "else" expression]
+    (ensure-or-test-expr pred consq)
 
-      (set-Token-type! token (get-token-type-from-caller-and-op LeftIf token))
-      (p 'Eat "else")
-      (let ((alt (p 'ParseUntil EXPR-BASE-BP)))
-        (CompositeNode
-          token
-          (cons*-wrapper
-            (get-header-for-token token)
-            (get-GeneralNode-val pred)
-            (get-GeneralNode-val consq)
-            (get-GeneralNode-val alt)
-            ))
-        )
+    (set-Token-type! token (get-token-type-from-caller-and-op LeftIf token))
+    (p 'Eat "else")
+    (let ((alt (p 'ParseUntil EXPR-BASE-BP)))
+      (CompositeNode
+        token
+        (cons*-wrapper
+          (get-header-for-token token)
+          (get-GeneralNode-val pred)
+          (get-GeneralNode-val consq)
+          (list (get-GeneralNode-val alt))
+          ))
       )
     )
   )
