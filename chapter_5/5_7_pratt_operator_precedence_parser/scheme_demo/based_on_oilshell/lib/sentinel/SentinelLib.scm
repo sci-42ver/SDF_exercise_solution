@@ -48,24 +48,27 @@
 ;; "=" is also used in complexer https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-assignment_stmt
 (define (arg-node? . nodes)
   (assert (list-of-type? nodes GeneralNode?))
-  (for-each
-    (lambda (node)
-      (let ((type (get-GeneralNode-token-type node)))
-        (let ((res
-                (or
-                  (equal? ID-TAG-STR type)
-                  ; (equal? STAR-ARG-TAG-STR type)
-                  ; (equal? "/" type)
-                  ; (equal? "*" type)
-                  )
-                ))
-          ; (assert res)
-          res
+  (every
+    (lambda (elm) elm)
+    (map
+      (lambda (node)
+        (let ((type (get-GeneralNode-token-type node)))
+          (let ((res
+                  (or
+                    (equal? ID-TAG-STR type)
+                    (equal? STAR-ARG-TAG-STR type)
+                    ; (equal? "/" type)
+                    ; (equal? "*" type)
+                    )
+                  ))
+            ; (assert res)
+            res
+            )
           )
+        
         )
-      
+      nodes
       )
-    nodes
     )
   )
 

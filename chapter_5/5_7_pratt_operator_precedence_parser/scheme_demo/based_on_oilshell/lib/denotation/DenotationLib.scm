@@ -113,8 +113,8 @@
 ;; needs at least one expr.
 ;; lambda a:{} => (lambda (a) (begin))
 ;; lambda a:{a+a} => (lambda (a) (+ a a))
-;; lambda a:{a+a;a**5} => (lambda (a) (begin (+ a a) (** a 5)))
-;; lambda a:{a+a;a**5;} => (lambda (a) (begin (+ a a) (** a 5)))
+;; lambda a:{a+a;a**5} => (lambda (a) (begin (+ a a) (expt a 5)))
+;; lambda a:{a+a;a**5;} => (lambda (a) (begin (+ a a) (expt a 5)))
 ;; non-error {a,b} => (tuple a b)
 (define (NullBrace p token unused-rbp)
   (new-GeneralNode-simplified
@@ -134,7 +134,7 @@
 ;;;; BEHAVIOR
 ;; 0. Similar to C, here I allow something like "int a=1; int b=2;" without outer Braces.
 ;;;; TODO tests (the latter 2 for NullBrace containing ";")
-;; 0. lambda a:a+a;a**5; => (begin (lambda (a) (+ a a)) (** a 5))
+;; 0. lambda a:a+a;a**5; => (begin (lambda (a) (+ a a)) (expt a 5))
 ;; The last just means ";" is like "," but due to statement ending it binds nothing from others at the left.
 ;; 1. a,b;c,d (begin (tuple a b) (tuple c d))
 (define (LeftSemicolon p token left rbp)
@@ -268,7 +268,7 @@
 ;; 0.a.0. see SentinelLib.scm: here ensure-or-test-expr is necessary.
 ;; 1. similar to ** in Python, so similar to that in pratt_new_compatible_with_MIT_GNU_Scheme.scm and oilshell
 ;;;; TODO tests
-;; a:= 3+b if a**2 else b => (define a (if (** a 2) (+ 3 b) b))
+;; a:= 3+b if a**2 else b => (define a (if (expt a 2) (+ 3 b) b))
 ;; a:= lambda k:3+b+k if a else b;c (not one error) => (begin (define a (lambda (k) (if a (+ 3 b k) b))) c)
 ;; a:= 3+b+k if a else b;c => (begin (define a (if a (+ 3 b k) b)) c)
 ;; a:= 3+b+k if a else {b;c} => (define a (if a (+ 3 b k) (begin b c)))

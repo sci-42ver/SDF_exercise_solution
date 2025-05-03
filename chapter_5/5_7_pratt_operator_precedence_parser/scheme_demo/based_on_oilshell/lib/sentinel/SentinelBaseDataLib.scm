@@ -66,6 +66,18 @@
     '("**")
     )
   )
+(define (subtype type)
+  (assert (string? type))
+  (cond 
+    ((any (lambda (type*) (equal? type type*)) '("left-plus" "null-plus"))
+      "+")
+    ((any (lambda (type*) (equal? type type*)) '("left-minus" "null-minus"))
+      "-")
+    (else
+      (write-line (list "no available subtype for" type))
+      type
+      ))
+  )
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
 (load "lib/sentinel/SentinelConstantTypeStrLib.scm")
 (init-token-type-list)

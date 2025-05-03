@@ -70,3 +70,28 @@
 (pl-assert
   '(tuple a b)
   "{a,b}")
+
+;;; LeftSemicolon
+(pl-assert
+  '(begin (lambda (a) (+ a a)) (expt a 5))
+  "lambda a:a+a;a**5;")
+(pl-assert
+  '(begin (tuple a b) (tuple c d))
+  "a,b;c,d")
+
+;;; NullLambda
+; (pl-assert
+;   'error-expected
+;   "lambda a;: a")
+;expected ":", got (token ";" ";")
+(trace arg-node?)
+; (pl-assert
+;   'error-expected
+;   "lambda a+b,: a")
+; (#[compound-procedure 117 arg-node?] (compositenode (token "left-plus" "+") (+ a b)) "fails")
+
+;; left for interpreter to manipulate with "**b *c" 
+(trace PrsNary)
+(pl-assert
+  '(lambda (a **b *c) (+ a (g b) c))
+  "lambda a,**b,*c,: a+g(b)+c")

@@ -160,11 +160,12 @@
 ;; Here all possible elements for parameter_list in SDF_exercises/chapter_5/5_7_naive_algorithm_for_operator_precedence_parser/5_7_precedence_lib.scm
 ;; are included here (Based on memory for what is done to this program at some time after finishing this program).
 (pl-assert
-  '(define fact (lambda (a (define k 2) b c *args kwarg1 **kwargs) (if (== n 0) 1 (* n (fact (- n 1))))))
+  '(define fact (lambda (a k b c *args kwarg1 **kwargs) (if (== n 0) 1 (* n (fact (- n 1))))))
   ;; 0. Here b=0 is not considered for simplicity.
   ;; 1. Notice here we need "**kwargs" immediate follows "," otherwise it can't
   ;; be differentiated from "a **kwargs" etc.
-  "fact := lambda a , k := 2 , b , c ,*args , kwarg1 ,**kwargs : if n == 0 then 1 else n * fact ( n - 1 )")
+  ;; 2. k := 2 is excluded by arg-node?.
+  "fact := lambda a , k , b , c ,*args , kwarg1 ,**kwargs : if n == 0 then 1 else n * fact ( n - 1 )")
 
 ;;;; Compatibility with Python
 ;;; 0. Call https://docs.python.org/3/reference/expressions.html#calls

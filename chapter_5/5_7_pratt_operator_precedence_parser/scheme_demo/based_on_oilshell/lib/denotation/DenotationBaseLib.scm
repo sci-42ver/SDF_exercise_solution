@@ -6,11 +6,32 @@
   (or* elm-relative-assertion (set! elm-relative-assertion return-last))
   (let ((type (Token-type token)))
     (let lp ((l (list (get-GeneralNode-val (elm-relative-assertion token return-last (p 'ParseUntil rbp))))))
-      (if (p 'AtTokenType type)
-        (begin 
-          (p 'Eat type)
-          (lp (cons (get-GeneralNode-val (elm-relative-assertion token return-last (p 'ParseUntil rbp))) l)))
-        (reverse l))
+      (let ((cur-subtype (subtype type)))
+        (let ((check1 (p 'AtTokenType type))
+              (check2 (p 'AtTokenType cur-subtype)))
+          (cond 
+            (check1
+              (p 'Eat type)
+              (lp 
+                (cons 
+                  (get-GeneralNode-val 
+                    (elm-relative-assertion 
+                      token return-last (p 'ParseUntil rbp))) 
+                  l))
+              )
+            (check2 
+              (p 'Eat cur-subtype)
+              (lp 
+                (cons 
+                  (get-GeneralNode-val 
+                    (elm-relative-assertion 
+                      token return-last (p 'ParseUntil rbp))) 
+                  l))
+              )
+            (else (reverse l))
+            )
+          )
+        )
       )
     )
   )
@@ -31,7 +52,7 @@
       (let lp ((l 
                 (list 
                   (get-GeneralNode-val 
-                    (check-pred elm-pred (p 'ParseUntil rbp))))))
+                    (check-pred elm-pred return-last (p 'ParseUntil rbp))))))
         ; (bkpt 'PrsNary* l)
         (if (p 'AtTokenType type)
           (begin 
@@ -41,7 +62,7 @@
                 (if (or (p 'AtTokenType "eof") (not (p 'AtValidNud?)))
                   '()
                   (get-GeneralNode-val
-                    (check-pred elm-pred (p 'ParseUntil rbp)))
+                    (check-pred elm-pred return-last (p 'ParseUntil rbp)))
                   )
                 l)))
           (reverse l))
@@ -145,7 +166,7 @@
 
 (define (PrsPossibleSeq* parser delimeter-token rbp delimeter-lbp #!optional elm-pred header)
   (let ((first-elm (parser 'ParseUntil delimeter-lbp)))
-    (and* elm-pred (assert (elm-pred first-elm)))
+    (and* elm-pred (assert* (elm-pred first-elm) (list elm-pred first-elm "fails")))
     (let ((type (Token-type delimeter-token)))
       (if (not (parser 'AtTokenType type))
         first-elm
