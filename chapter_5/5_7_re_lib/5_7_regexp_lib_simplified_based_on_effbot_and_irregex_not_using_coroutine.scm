@@ -70,7 +70,7 @@
 ; (load "iterator_lib.scm")
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/")
-(load "DataTypeLib.scm")
+(load "lib/type/DataTypeLib.scm")
 
 (define FIELD-NAMES
   `(NUMBER

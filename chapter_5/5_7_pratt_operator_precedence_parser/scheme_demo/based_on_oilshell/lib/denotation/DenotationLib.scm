@@ -302,7 +302,7 @@
   )
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/")
-(load "DenotationBaseLib.scm")
+(load "lib/denotation/DenotationBaseLib.scm")
 ;;;; BEHAVIOR
 ;; 0. Same as or/and in pratt_new_compatible_with_MIT_GNU_Scheme.scm with parse-nary and with the same prec relation.
 ;; The differences are that here uses the different data representation; uses sentinel.

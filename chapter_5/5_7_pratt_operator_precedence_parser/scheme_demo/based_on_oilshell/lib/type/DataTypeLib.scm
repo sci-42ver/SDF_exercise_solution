@@ -69,7 +69,7 @@
 (load "multi_hash_table_lib.scm")
 (define *header-table* (make-multi-hash))
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/")
-(load "based_on_oilshell/BpNumberLib.scm")
+(load "based_on_oilshell/lib/bp/BpNumberLib.scm")
 (define (init-header-table)
   (multi-hash-set! *header-table* 'define ":=")
   (for-each

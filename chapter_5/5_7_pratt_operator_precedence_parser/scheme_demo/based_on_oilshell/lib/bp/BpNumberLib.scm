@@ -98,7 +98,7 @@
 (define AWAIT-OP-LST '("await"))
 ;; Notice here we only put or-op which is used in (MakePythonParserSpec) instead of type-str.
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "BpNumberBaseLib.scm")
+(load "lib/bp/BpNumberBaseLib.scm")
 (define prec-list-higher-than-or-op
   `(,LEFT-IF-BP
     .

@@ -67,7 +67,7 @@
     )
   )
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
-(load "SentinelConstantTypeStrLib.scm")
+(load "lib/sentinel/SentinelConstantTypeStrLib.scm")
 (init-token-type-list)
 (define ALL-TOKEN-TYPES
   (get-val-lst-for-multi-hash-table (*token-type-list* 'get-keys-val-table))
