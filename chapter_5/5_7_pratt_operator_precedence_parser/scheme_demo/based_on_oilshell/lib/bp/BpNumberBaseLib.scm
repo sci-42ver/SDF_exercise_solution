@@ -10,7 +10,8 @@
 ;;; IGNORE Here I define one grammar precedence order list from high to low:
 (define UNUSED-BP-MARKING-END -1)
 (define UNUSED-BASE-BP 0)
-(define BASE-BP 0) ; init rbp for parsing
+;; To allow "," etc able to grab the thing on the left.
+(define BASE-BP (+ BP-STEP 0)) ; init rbp for parsing
 
 ;;;;;; Non-expr
 ;;; IMHO statement prec should be less than all expr prec, see https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-expression_stmt

@@ -142,7 +142,7 @@
     (cons*-wrapper
       (get-header-for-token root-token)
       (get-GeneralNode-val left-node)
-      (get-GeneralNode-val right-node)
+      (list (get-GeneralNode-val right-node))
       )
     )
   )

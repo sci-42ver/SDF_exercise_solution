@@ -92,8 +92,8 @@
   (syntax-rules ()
     ((_ expected exp)
       (begin
-        ; (ParsePythonDemo exp expected)
-        (ParsePythonDemo exp)
+        (ParsePythonDemo exp expected)
+        ; (ParsePythonDemo exp)
         )
       )
     )
@@ -181,7 +181,7 @@
 ;Unexpected end of input when we needs one nud
 
 (pl-assert
-  '(lambda (a) (begin (** a a) (* a 5)))
+  '(lambda (a) (begin (expt a a) (* a 5)))
   "lambda a : { a ** a ; a * 5 }")
 
 (pl-assert '(and 1 2 3) "1 and 2 and 3")
@@ -190,3 +190,6 @@
 
 ;; Although := in Python has the lowest precedence, it won't does something like "1 and 2 := 3".
 ;; TODO That is due to the grammar and its related constraint (https://stackoverflow.com/a/79544622/21294350), so the actual parser is complexer...
+
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/test")
+(load "parse_tests.scm")

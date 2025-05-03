@@ -23,13 +23,13 @@
 ;;;; TODO tests
 ;; 1,+2,=>1,(+2),;
 ;; Allow trailing comma by PrsSeq*->PrsNary*, so
-;; "left," & "left,arg1" & "left,arg1," & "left,arg1,*rest" (error for left of "*") 
+;; "left," & "left,arg1" & "left,arg1," & "left,arg1,*rest"
 ;; & "left,arg1,arg2" should work
 ;;; IGNORE TODO Emm... Actually "," must have one much more complexer manipulation in Python which **can't be done by Pratt Parsing**.
 ;; If using Pratt Parsing, then "+" should just consume the left and then try to find the rhs.
 ;;; 0. +'s rbp > ,'s lbp Then 1+2, is "(1+2)," and 1,+2, is ~~"((1,)+2)," (wrong)~~
 ;; 1,(+2), exceptedly (implied by 1,-2, results in (1, -2). It is flexible_expression_list).
-;; 1. +'s rbp <= ,'s lbp Then the former example above is wrong with 1+(2,).
+;; 1. IGNORE +'s rbp <= ,'s lbp Then the former example above is wrong with 1+(2,).
 (define (LeftComma p token left rbp)
   ;; 0. For pratt-parsing-demo/arith_parse.py
   ;; a,b,c is same as ((a,b),c).
@@ -41,7 +41,7 @@
   ;; Emm... I won't dig into the complex syntax grammar rules to find the detailed examples where trailing "," is allowed...
   ;; 2. See PrsSeq* comment for why we use new-GeneralNode instead of new-GeneralNode-simplified here.
   (new-GeneralNode
-    (PrsSeq* p token left rbp (get-header-for-token token))
+    (PrsSeq* p token left rbp (default-object) (get-header-for-token token))
     token
     (get-token-type-from-caller-and-op LeftComma token)
     )
@@ -140,7 +140,7 @@
 (define (LeftSemicolon p token left rbp)
   ; token won't be used in PrsNary* of PrsSeq*, so fine to set-Token-type! beforehand.
   (new-GeneralNode
-    (PrsSeq* p token left rbp 'begin)
+    (PrsSeq* p token left rbp (default-object) 'begin)
     token
     (get-token-type-from-caller-and-op LeftSemicolon token)
     )
@@ -172,7 +172,7 @@
     (cond 
       ((list? obj) (get-tagged-lst-data obj))
       ;; For (elm) => elm.
-      (else obj))
+      (else (list obj)))
     )
   (let ((intermediate 
           (consume-possible-elems-implicitly-and-the-ending-token

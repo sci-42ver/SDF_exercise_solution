@@ -210,7 +210,7 @@
   (let* ((res ((MakeParser str) 'Parse))
          (res-expr (get-GeneralNode-val res)))
     ;; assert is not same as Python with 2 args
-    (and* expected (assert* (equal? expected res-expr) (list "unequal" expected res-expr)))
+    (and* expected (assert* (equal? expected res-expr) (pp (list "unequal" expected res-expr))))
     ;; Use write to enable outputting cycle.
     (format #t "~40S ~S~%~40S~%" str res res-expr)
     res
