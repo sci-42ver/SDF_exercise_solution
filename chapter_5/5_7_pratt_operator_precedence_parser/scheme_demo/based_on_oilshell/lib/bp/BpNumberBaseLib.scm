@@ -33,7 +33,8 @@
 ;;;;;; Non-expr end
 
 ;;;;;; PYTHON EXPR BEGINNING
-(define EXPR-BASE-BP LEFT-SEMICOLON-BP)
+;; to allow {a,b}.
+(define EXPR-BASE-BP (+ BP-STEP LEFT-SEMICOLON-BP))
 (assert (< UNUSED-BP-MARKING-END EXPR-BASE-BP))
 ;; 0. IGNORE Same value as pratt_new_compatible_with_MIT_GNU_Scheme.scm
 ;; to make extension more flexible.
