@@ -74,7 +74,7 @@
          (procedure-parameters exp)
          (procedure-body exp)
          )
-       (procedure-environment exp))
+       (procedure-environment* exp))
      )
     (else exp))
   )

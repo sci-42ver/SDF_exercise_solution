@@ -1,5 +1,8 @@
 ;; based on SDF_exercises/chapter_5/5_5.scm when with problems shown by SDF_exercises/chapter_5/5_5_loop_problem.scm
-;; also see https://stackoverflow.com/q/79484080/21294350
+
+;; also see https://stackoverflow.com/q/79484080/21294350 
+;; > This post is hidden. It was automatically deleted last month by CommunityBot.
+;; (In a nutshell, this tricky problem is not solved...)
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5")
 (load "5_5_preparation.scm")
