@@ -84,14 +84,15 @@
 ;   'error-expected
 ;   "lambda a;: a")
 ;expected ":", got (token ";" ";")
-(trace arg-node?)
+
+; (trace arg-node?)
 ; (pl-assert
 ;   'error-expected
 ;   "lambda a+b,: a")
 ; (#[compound-procedure 117 arg-node?] (compositenode (token "left-plus" "+") (+ a b)) "fails")
 
 ;; left for interpreter to manipulate with "**b *c" 
-(trace PrsNary)
+; (trace PrsNary)
 (pl-assert
   '(lambda (a **b *c) (+ a (g b) c))
   "lambda a,**b,*c,: a+g(b)+c")
@@ -147,7 +148,8 @@
 (pl-assert
   '(tuple (define a b) c)
   "a:=b,c")
-(trace LeftDefine)
+
+; (trace LeftDefine)
 ;; This needs sentinel since assignment_expression is not one expression which can be checked by "a:=2,"
 ;; You can add that similar to how other sentinels are added.
 ; (pl-assert
@@ -207,8 +209,8 @@
 (pl-assert
   '(expt (get-attrib a elm) pow)
   "a.elm**pow")
-(trace NullPrefixOpWithSentinel)
-(trace NullPrefixOpWithCustomSentinel)
+; (trace NullPrefixOpWithSentinel)
+; (trace NullPrefixOpWithCustomSentinel)
 (pl-assert
   '(- (expt (await a) (- (expt b (~ c)))))
   "- await a ** -b ** ~c")

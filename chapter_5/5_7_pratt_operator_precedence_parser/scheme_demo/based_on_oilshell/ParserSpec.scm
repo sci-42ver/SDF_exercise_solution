@@ -59,8 +59,8 @@
         (error (list "Unexpected token" token))))
     )
   (let ((res (bundle ParserSpec? Null Left LeftRightAssoc LookupNull LookupLeft)))
-    (trace LookupNull)
-    (trace Null)
+    ; (trace LookupNull)
+    ; (trace Null)
     res
     )
   )

@@ -1,5 +1,8 @@
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/MIT_GNU_Scheme_re_lib/")
+(define old-every every)
 (load "irregex/irregex.scm")
+;; Just use MIT/GNU Scheme every which is more general. 
+(define every old-every)
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib/")
 (load "re_lib.scm")

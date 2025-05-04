@@ -213,7 +213,7 @@
     ;; assert is not same as Python with 2 args
     (and* expected (assert* (equal? expected res-expr) (pp (list "unequal" expected res-expr))))
     ;; Use write to enable outputting cycle.
-    (format #t "~40S ~S~%~40S~%" str res res-expr)
-    res
+    (format #t "~80S~% ~S~%~80S~%" str res res-expr)
+    res-expr
     )
   )

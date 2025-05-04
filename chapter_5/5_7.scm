@@ -2,6 +2,8 @@
 (load "../software/sdf/manager/load.scm")
 (manage 'new 'generic-interpreter)
 
+(write-line "2")
+
 ;;;; > Such an infix parser can be found on the *website for this book*.
 ;;; https://mitpress.mit.edu/9780262045490/software-design-for-flexibility/
 ;; doesn't have related things about codes
@@ -30,27 +32,45 @@
 ;; 1. need to consider "syntax"s for "simple arithmetic expressions", "precedence rules".
 ;; 2. mimic "cond->if".
 
-(cd "~/SICP_SDF/SDF_exercises/chapter_5")
-(load "5_7_tokenize_lib.scm")
-(load "5_7_tokenize_tests.scm")
+; (cd "~/SICP_SDF/SDF_exercises/chapter_5")
+; (load "5_7_tokenize_lib.scm")
+; (load "5_7_tokenize_tests.scm")
 
-(define (infix->polish str-lst)
-  (assert (every string? str-lst))
-
+(define (infix->polish str)
+  (assert (string? str))
+  (ParsePythonDemo str)
   )
+
+(define (infix? exp) (tagged-list? exp 'infix))
+(define infix-str cadr)
+(define-generic-procedure-handler g:eval
+  (match-args infix? environment?)
+  (lambda (expression environment)
+    (g:eval (infix->polish (infix-str expression)) environment)))
+(define == =)
+
+(cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
+(load "ModularPratt.scm")
+
+(init)
 
 ;;;; tests
 ;;; old-example from 6-945 2009
-; (define (quadratic a b c)
-;   (let ((discriminant (infix "b**2-4*a*c")))
-;     (infix "(-b+sqrt(discriminant))/(2*a)")))
+(define (quadratic a b c)
+  (let ((discriminant (infix "b**2-4*a*c")))
+    (infix "(-b+sqrt(discriminant))/(2*a)")))
+;; solution for a*x^2+b*x+c
+(equal? 2 (quadratic 1 -3 2))
 
 ;;; book
 ;; here some spaces are necessary to make codes work.
-; (infix
-;   "fact := lambda n:
-;   if n == 0
-;   then 1
-;   else n*fact(n-1)")
-; (fact 6) ; The Lisp procedure is now defined
-; (infix "fact(5)") ; And it can be used in infix notation.
+(infix
+"fact := lambda n:
+if n == 0
+then 1
+else n*fact(n-1)")
+
+; (define fact (lambda (n) (if (== n 0) 1 (* n (fact (- n 1))))))
+; (define fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))))
+(equal? 720 (fact 6))
+(equal? 120 (infix "fact(5)"))
