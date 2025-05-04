@@ -160,3 +160,26 @@
 (pl-assert
   '(define a (or b c))
   "a:= b or c")
+
+;;; LeftLogical & NullPrefixOpWithSentinel for "not"
+(pl-assert
+  '(if b a (or c d))
+  "a if b else c or d")
+(pl-assert
+  '(if (or b c) a d)
+  "a if b or c else d")
+(pl-assert
+  '(or a (and b c (not d)))
+  "a or b and c and not d")
+; (pl-assert
+;   'error-expected
+;   "a or b or")
+;Unexpected end of input when we needs one nud
+
+;;; PrsComparison
+(pl-assert
+  '(or a (and b c) (and (not (<= d e)) f) (not (and (in g h) (not_in h i) (== i j))))
+  ; '(and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in h i) (== i j)))))
+  "a or b and c or not d <= e and f or not g in h not in i == j")
+
+

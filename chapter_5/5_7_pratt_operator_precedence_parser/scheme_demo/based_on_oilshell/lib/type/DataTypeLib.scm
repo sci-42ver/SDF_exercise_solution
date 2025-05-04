@@ -136,6 +136,16 @@
 (define CompositeNode? (tagged-list-pred CompositeNodeTag))
 (define get-CompositeNode-expr caddr)
 
+(define (reconstruct-node-with-expr expr)
+  (cond 
+    ((symbol? expr)
+      (CompositeNode (Token ID-TAG-STR expr) expr)
+      )
+    (else
+      (error (list "unknown" expr "for reconstruction"))
+      ))
+  )
+
 (define (CompositeNode-with-binary-expr root-token left-node right-node)
   (CompositeNode
     root-token

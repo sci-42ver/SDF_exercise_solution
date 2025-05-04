@@ -122,7 +122,7 @@
     (ParseUntil 0)
     )
   (define Parser? (make-bundle-predicate 'Parser))
-  (define self (bundle Parser? AtTokenType Next Eat ParseUntil Parse AtValidNud? AtValidLed?))
+  (define self (bundle Parser? AtTokenType Next Eat ParseUntil ParseWithLeft Parse AtValidNud? AtValidLed?))
   (trace ParseUntil)
   (trace Next)
   (trace AtTokenType)

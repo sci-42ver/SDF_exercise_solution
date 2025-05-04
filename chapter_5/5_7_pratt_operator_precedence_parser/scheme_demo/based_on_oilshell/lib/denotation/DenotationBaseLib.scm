@@ -102,7 +102,7 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 ; (load "tree_lib.scm")
 (define (%PrsComparison p token left rbp #!optional elm-relative-assertion header)
-  (define (get-data-in-possible-and-expr expr)
+  (define (get-data-lst-in-possible-and-expr expr)
     (cond 
       (((tagged-list-pred 'and) expr) (get-tagged-lst-data expr))
       ((list? expr)
@@ -111,9 +111,9 @@
             (lambda (tag) ((tagged-list-pred tag) expr))
             (map string->symbol COMPARISON-OP-LST)
             ))
-        expr
+        (list expr)
         )
-      (else (error (list expr "should be combined with Comparison expr")))
+      (else (error (list expr "isn't one expr able to be combined with Comparison expr")))
       )
     )
   (let lp ((cur-node
@@ -134,10 +134,15 @@
                     (get-GeneralNode-val
                       (p
                         'ParseWithLeft 
-                        (last-in-tree cur-expr) 
-                        rbp))))
+                        ;; to allow the following COMPARISON-OP able to grab the element on the left.
+                        (- rbp CHAINING-DIFF)
+                        ;; TODO Emm... This needs passing in one node instead of just one expr.
+                        ;; So we either keep all nodes constructed around which will just have one O(1) space multiplier.
+                        ;; or we just reconstruct the node here.
+                        (reconstruct-node-with-expr (last-in-tree cur-expr))
+                        ))))
           (new-GeneralNode-simplified
-            (append cur-expr (get-data-in-possible-and-expr rest-expr))
+            (append cur-expr (get-data-lst-in-possible-and-expr rest-expr))
             token
             final-node-type
             )
@@ -250,7 +255,7 @@
       token
       (cons*-wrapper
         (get-header-for-token token)
-        (get-GeneralNode-val right))
+        (list (get-GeneralNode-val right)))
       )
     )
   )

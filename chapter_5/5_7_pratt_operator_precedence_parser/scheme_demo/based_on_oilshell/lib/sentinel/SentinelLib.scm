@@ -104,7 +104,10 @@
   )
 (define (ensure-consistent token return-handler . nodes)
   (let ((pred (pred-ensuring-expr-with-consistent-precedence token)))
-    (for-each (lambda (node) (assert (pred node))) nodes)
+    (for-each 
+      (lambda (node) 
+        (assert* (pred node) (list pred "for" node "fails"))) 
+      nodes)
     (return-handler nodes)
     )
   )

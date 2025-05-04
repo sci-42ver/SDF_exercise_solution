@@ -82,7 +82,10 @@
 (load "lib/sentinel/SentinelConstantTypeStrLib.scm")
 (init-token-type-list)
 (define ALL-TOKEN-TYPES
-  (get-val-lst-for-multi-hash-table (*token-type-list* 'get-keys-val-table))
+  (append
+    (get-val-lst-for-multi-hash-table (*token-type-list* 'get-keys-val-table))
+    (list COMPARISON-TYPE-STR)
+    )
   )
 (define ALL-EXPR-TOKEN-TYPES
   (remove 

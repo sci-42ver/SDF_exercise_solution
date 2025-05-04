@@ -79,7 +79,14 @@
 ;; one alternative for get-prec-key-for-token.
 (define (get-prec-by-token-type token-type)
   (assert (string? token-type))
-  (let ((prec-key (*token-type-list* 'getKeys* token-type)))
+  (let ((prec-key 
+          (cond 
+            ((equal? token-type COMPARISON-TYPE-STR) 
+              ;; This can't be in *token-type-list*, otherwise (<= 'Left) etc will have 2 maps...
+              (*token-type-list* 'getKeys* (car COMPARISON-OP-LST)))
+            (else 
+              (*token-type-list* 'getKeys* token-type)))
+          ))
     (assert prec-key)
     (apply %get-prec prec-key)
     )

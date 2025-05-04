@@ -1,6 +1,7 @@
 ;; borrow from oilshell (IMHO better than pratt_new_compatible_with_MIT_GNU_Scheme.scm which has no regular number pattern relation)
 (define BP-STEP 6)
 (define RIGHT-ASSOC-MINUS 1)
+(define CHAINING-DIFF RIGHT-ASSOC-MINUS)
 (assert (> BP-STEP RIGHT-ASSOC-MINUS))
 
 ;;; Prec list:
