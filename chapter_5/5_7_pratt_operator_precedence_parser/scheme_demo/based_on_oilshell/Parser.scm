@@ -70,18 +70,20 @@
   (define token-to-manipulate token) ; set to the token val instead of passing ref val.
 
   (define (ParseWithLeft rbp left)
+    (define r +inf.0)
     (define left-info)
     (while* #t
             (set! token-to-manipulate token)
             (set! left-info (spec 'LookupLeft (Token-type token-to-manipulate)))
             ; (write-line (list left-info token-to-manipulate))
             (and
-              (>= rbp (get-left-lbp left-info))
+              (>= r rbp (get-left-lbp left-info))
               (break)
               )
             (Next)
             ;; the current token is the elem after the comma.
             (set! left ((get-led left-info) self token-to-manipulate left (get-left-rbp left-info)))
+            (set! r (get-left-nbp left-info))
             )
     ;; similar to pratt_new_compatible_with_MIT_GNU_Scheme.scm to move assignment into predicate.
     ;; OK, this style is a bit too weird.
@@ -99,6 +101,7 @@
     left
     )
   (define (ParseUntil rbp)
+    (assert (>= rbp 0))
     (and
       ;; Normally the end is done by break if (>= rbp (get-left-lbp left-info)).
       ;; So we use one token with -1 prec to mark ending which is not used by other nud/led's to avoid ambiguity.

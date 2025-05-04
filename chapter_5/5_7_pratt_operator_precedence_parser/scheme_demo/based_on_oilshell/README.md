@@ -6,7 +6,7 @@ Python naming convention [see](https://stackoverflow.com/a/42127721/21294350). O
   It uses `LeftComma` etc.
 
 # TODO
-- "TODO tests" etc.
+- ~~"TODO tests" etc.~~
   - see ModularPratt.scm and test/parse_tests.scm for corrections.
 # Notice
 - Scheme recognizes `'N` and `'n` as the same thing, so better to use names without the conflict if all transformed into lowercase.

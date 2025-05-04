@@ -1,4 +1,3 @@
-@amalloy 0. My question seems a bit weird at first glance since for one algorithm we always consider just space and time complexity. I asked here because I know only a few about compiler with those taught mostly by SICP chapter 4. So I asked whether maybe there are some compiler-specific reasons. 2. "comparing those two approaches": That is implicit in my question, i.e. lazy vs non-lazy. I will update my question to clarify that. Thanks for your suggestion.
 # [wikipedia](https://en.wikipedia.org/wiki/Operator-precedence_parser#)
 - > an operator-precedence parser is a bottom-up parser that interprets an operator-precedence grammar.
   bottom-up due to ~~recursive descent~~ shift-reduce.
@@ -21,6 +20,9 @@
 ## [precedence climbing vs Pratt parsing](https://www.engr.mun.ca/~theo/Misc/pratt_parsing.htm)
 - > To accommodate operators like these and additional prefix operators in a *modular* way, we can use Pratt parsing.
   it just changes `LeD` based on [code](https://tdop.github.io/) instead of writing a sequence of conditional statements (see "The new E is").
+- > P is
+  This just corresponds to nud in Pratt based on the grammar
+  > P --> "-" E30 | "(" E0 ")" | v
 ### [precedence climbing](https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm#making-a-parser)
 - > We can transform G to an equivalent non-left-recursive grammar G1 as follows:
   because no `P-->P ...`

@@ -10,14 +10,15 @@
 ;; IMHO default bp being 0 is appropriate, since those unset ones should not bind anything,
 ;; so its lbp is least.
 ;; Then led won't be called, so similar to the above, rbp won't be used.
-(define (LeftInfo #!optional led lbp rbp)
-  (list (or* led LeftError) (or* lbp 0) (or* rbp 0))
+(define (LeftInfo #!optional led lbp rbp nbp)
+  (list (or* led LeftError) (or* lbp 0) (or* rbp 0) (or* nbp +inf.0))
   )
 (define get-nud car)
 (define get-null-bp cadr)
 (define get-led car)
 (define get-left-lbp cadr)
 (define get-left-rbp caddr)
+(define get-left-nbp cadddr)
 
 ;;; used by SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell/Parser.scm
 (define Token-tag 'token)
