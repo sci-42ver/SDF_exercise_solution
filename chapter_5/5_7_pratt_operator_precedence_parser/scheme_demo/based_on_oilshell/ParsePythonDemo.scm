@@ -133,9 +133,9 @@
     ;; > attributeref ::= primary "." identifier
     ;; Here primary can be atom like "literal"
     ;; So '"1" . __eq__' (allow space inside) and "1".__eq__("2") is fine https://stackoverflow.com/a/65474446/21294350.
-    (spec-with-implicit-prec spec 'Left PrsAttribute '(".") '("get-attrib") MAX-BP)
+    (spec-with-implicit-prec spec 'Left PrsAttribute '(".") `(get-attrib) MAX-BP)
     ;; similar to the above
-    (spec-with-implicit-prec spec 'Null NullPrefixOp '("'") '("quote") MAX-BP)
+    (spec-with-implicit-prec spec 'Null NullPrefixOp '("'") '(quote) MAX-BP)
 
     ;;; 0. For simplicity, from here I won't implement Sentinel. Anyway it can be done similar to the above.
     ;; If you are interested, you can do that.

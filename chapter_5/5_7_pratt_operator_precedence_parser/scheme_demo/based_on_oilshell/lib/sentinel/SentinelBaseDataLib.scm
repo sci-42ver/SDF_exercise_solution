@@ -35,6 +35,13 @@
     )
   (for-each
     (lambda (op)
+      (*token-type-list* 'insert op op 'Null)
+      )
+    ;; returns the former one with those in the second removed.
+    (lset-difference equal? UNARY-OP-LST BINARY-PM-OP-LST)
+    )
+  (for-each
+    (lambda (op)
       ;; Here we have '("WARNING" "comparison-expr" "will have more than one keys to map. Here we just reset to keys" ("not in" left))' etc.
       ;; That is fine since 'getKeys is only used at last by get-prec and all these have the same prec.
       ; (*token-type-list* 'insert COMPARISON-TYPE-STR op 'Left)

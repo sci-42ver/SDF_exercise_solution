@@ -32,3 +32,20 @@
 (define COMPARISON-TYPE-STR "comparison-expr")
 
 (define CONSTANT-TYPE-STR `(,ID-TAG-STR ,NUMBER-TAG-STR ,STAR-ARG-TAG-STR))
+
+(define ATTRIBUTEREF-TYPE-STR ".")
+
+(define ATOM-TYPE-LIST 
+  `(,@CONSTANT-TYPE-STR 
+    ,NULL-PAREN-TYPE-STR
+    ;; list_display | dict_display | set_display are all skipped in ParsePythonDemo.scm.
+    ;; generator_expression & yield are also skipped.
+    ))
+
+(define PRIMARY-TYPE-LIST
+  `(,@ATOM-TYPE-LIST
+    ,ATTRIBUTEREF-TYPE-STR
+    ;; subscription | slicing are skipped. (see PrsSubscription and PrsSlicing)
+    ,LEFT-PAREN-TYPE-STR
+    )
+  )

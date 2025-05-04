@@ -178,8 +178,40 @@
 
 ;;; PrsComparison
 (pl-assert
-  '(or a (and b c) (and (not (<= d e)) f) (not (and (in g h) (not_in h i) (== i j))))
-  ; '(and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in h i) (== i j)))))
+  '(or a (and b c) (and (not (<= d e)) f) (not (and (in g h) (not-in h i) (== i j))))
+  ; '(and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not-in h i) (== i j)))))
   "a or b and c or not d <= e and f or not g in h not in i == j")
 
+;;; LeftBitwise
+(pl-assert
+  '(or a (and b c) (and (not (<= d e)) f) (not (and (in g h) (not-in h i) (== i (bitwise-or (^ (& j k) m) n)))))
+  ; '(and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not-in h i) (== i j)))))
+  "a or b and c or not d <= e and f or not g in h not in i == j & k ^ m | n")
 
+;;; PrsSeqWithSentinel for shift_expr
+(pl-assert
+  '(& a (>> (<< b c) d))
+  "a & b << c >> d")
+
+;;; PrsPlusMinusWithSentinel & PrsSeqWithSentinel for OTHER-BINARY-OP-LST
+(pl-assert
+  '(<< (+ (* a d) b) c)
+  "a * d + b << c")
+
+;;; NullPrefixOpWithSentinel for UNARY-OP-LST
+(pl-assert
+  '(* (+ (- a)) b)
+  "+-a*b")
+
+;;; PrsPower
+(pl-assert
+  '(expt (get-attrib a elm) pow)
+  "a.elm**pow")
+(trace NullPrefixOpWithSentinel)
+(trace NullPrefixOpWithCustomSentinel)
+(pl-assert
+  '(- (expt (await a) (- (expt b (~ c)))))
+  "- await a ** -b ** ~c")
+(pl-assert
+  '(expt a (await b))
+  "a ** await b")

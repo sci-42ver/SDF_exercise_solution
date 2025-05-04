@@ -54,7 +54,13 @@
     ;; From tdop.py: maybe fail for some corner cases due to generality.
     (=> OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
       ;; (Not for irregex) Use (intern "|") for or.
-      (+ (or "-" "+" "*" "/" "%" "!" "~" "<" ">" "=" "&" "^" "|" "?" ":")))
+      (+ (or "*" "/" "%" "!" "~" "<" ">" "=" "&" "^" "|" "?" ":")))
+    
+    (=> PM-OPERATOR
+      ;; IGNORE TODO better use sub-group to reuse -/+.
+      (: (=> PM (or "-" "+")) (? (or "=" (backref PM))))
+      ; (or "-" "+" "--" "++" "+=" "-=")
+      )
     ;; IGNORE Since SDF exercise 5.7 only needs "infix expression", no "Statement terminator" is needed.
     ;; Also for "Line endings" (but we may introduce implicit newline, see SDF_exercises/chapter_5/5_7_tokenize_tests.scm).
     
@@ -77,16 +83,20 @@
     OPERATOR-WITH-SPACE-INSIDE
     ,STAR-ARG-TAG
     OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
+    PM-OPERATOR
     ,ID-TAG
     OPERATOR-LEN-ONE
     SKIP
     MISMATCH
     ))
 
-; (cd "~/SICP_SDF/SDF_exercises/common-lib")
-; (load "list_lib.scm")
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "load_lib.scm")
+(load* "list_lib.scm")
+(cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load* "list_lib.scm")
 (define (%Tokenize pat field-names input)
-  (define keywords '("if" "lambda" "then" "else" "is" "or" "and" "not" "in"))
+  (define keywords '("if" "lambda" "then" "else" "is" "or" "and" "not" "in" "await"))
   (append
     (filter-map-ordered
       (let ((line-num 1) (line-start 0))
@@ -125,7 +135,7 @@
                 )
               ((any 
                 (lambda (group-name) (regexp-match-submatch match group-name)) 
-                '(OPERATOR-LEN-ONE OPERATOR-WITH-SPACE-INSIDE OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE))
+                '(OPERATOR-LEN-ONE OPERATOR-WITH-SPACE-INSIDE OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE PM-OPERATOR))
                 (set! kind value)
                 )
               )
@@ -336,6 +346,45 @@
                        (token "id" val)
                        (token "eof" "eof")
                        ))
+
+(define test-lexer7
+  (%Tokenize 
+    pat
+    FIELD-NAMES
+    "+-++b+=2"
+    ))
+; (pp (lexer-contents test-lexer7))
+(assert-lexer
+  test-lexer7
+  '((token "+" "+")
+    (token "-" "-")
+    (token "++" "++")
+    (token "id" b)
+    (token "+=" "+=")
+    (token "number" 2)
+    (token "eof" "eof"))
+  )
+
+(define test-lexer8
+  (%Tokenize 
+    pat
+    FIELD-NAMES
+    "- await a ** -b ** ~c"
+    ))
+; (pp (lexer-contents test-lexer8))
+(assert-lexer
+  test-lexer8
+  '((token "-" "-")
+    (token "await" await)
+    (token "id" a)
+    (token "**" "**")
+    (token "-" "-")
+    (token "id" b)
+    (token "**" "**")
+    (token "~" "~")
+    (token "id" c)
+    (token "eof" "eof"))
+  )
 
 (define (Tokenize str)
   (%Tokenize pat FIELD-NAMES str)  

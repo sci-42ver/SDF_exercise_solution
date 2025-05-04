@@ -1,5 +1,6 @@
 ;; define-syntax put first to make all the following can use that, see https://stackoverflow.com/q/79147397/21294350.
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
+(load "load_lib.scm")
 (load "list_lib.scm")
 (load "application_lib.scm")
 (load "test_lib.scm")

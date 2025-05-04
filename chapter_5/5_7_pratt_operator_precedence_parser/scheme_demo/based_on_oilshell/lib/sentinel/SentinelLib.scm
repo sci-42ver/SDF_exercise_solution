@@ -31,6 +31,11 @@
     nodes
     )
   )
+;; Just for API compatibility.
+(define (ensure-identifier* token return-handler . nodes)
+  (declare (ignore token return-handler))
+  (apply ensure-identifier nodes)
+  )
 
 (define (%ensure-var node)
   (and (not (member (get-GeneralNode-token-type node) VAR-TYPES))
@@ -106,7 +111,7 @@
   (let ((pred (pred-ensuring-expr-with-consistent-precedence token)))
     (for-each 
       (lambda (node) 
-        (assert* (pred node) (list pred "for" node "fails"))) 
+        (assert* (pred node) (list pred "based on" token "fails for" node "in ensure-consistent"))) 
       nodes)
     (return-handler nodes)
     )
@@ -125,12 +130,33 @@
       (and 
         (null? (cdr nodes))
         (sentinel-proc token ret))
-      (list "sentinel-for-one-node fails with" nodes token ret)
+      (list "sentinel-for-one-node fails with" ret ";" 
+        token ";")
       )
     ret)
   )
 
-;; Just check the Token-type similar to the above.
-(define (ensure-primary node)
-  'ignored
+;; Just check the Token-type similar to the above, e.g. ensure-identifier.
+(define (ensure-primary . nodes)
+  (assert (list-of-type? nodes GeneralNode?))
+  (for-each
+    (lambda (node)
+      (let ((type (get-GeneralNode-token-type node)))
+        (assert*
+          (member
+            type
+            PRIMARY-TYPE-LIST
+            )
+          (list node "isn't one primary due to have no type in"
+            PRIMARY-TYPE-LIST
+            )  
+          )
+        )
+      )
+    nodes
+    )
+  )
+(define (ensure-primary* token return-handler . nodes)
+  (declare (ignore token return-handler))
+  (apply ensure-primary nodes)
   )

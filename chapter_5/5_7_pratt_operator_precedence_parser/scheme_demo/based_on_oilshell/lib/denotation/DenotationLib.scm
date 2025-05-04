@@ -323,7 +323,7 @@
 ;; Similar to that, seq is allowed.
 ;;;; TODO tests
 ;; "a or b and c or not d <= e and f or not g in h not in i == j & k ^ m | n"
-;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in i) (== i (& j (^ k (bitwise-or m n))))))))
+;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not-in i) (== i (& j (^ k (bitwise-or m n))))))))
 (define LeftBitwise PrsSeqWithSentinel)
 
 (define (PrsPlusMinusWithSentinel p token left rbp)
@@ -337,7 +337,7 @@
 ;; Also not infix by effbot which is same for "<<" etc.
 ;;;; TODO tests
 ;; 0. based on or's one: "a or b and c or not d <= e and f or not g in h not in i == j"
-;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not_in i) (== i j)))))
+;; => (and (or a (and b c) (not (<= d e))) (or f (not (and (in g h) (not-in i) (== i j)))))
 (define (PrsComparison p token left rbp)
   (%PrsComparison p token left rbp ensure-consistent)
   )
@@ -352,6 +352,7 @@
 ;; This has lhs being higher, rhs being power or u_expr.
 ;; 1.b. a ** await b => (expt a (await b))
 ;; rhs being higher.
+
 ;;; similar to LeftBinaryOpWithSentinel but with tweaks for prec Sentinel.
 (define (PrsPower p token left rbp)
   (define (right-sentinel token return-handler . nodes)
@@ -364,7 +365,8 @@
             (member (get-GeneralNode-token-type node)
               (map
                 (lambda (op-str) (*token-type-list* 'get op-str 'Null))
-                BINARY-PM-OP-LST
+                ;; u_expr
+                UNARY-OP-LST
                 )
               )
           )
@@ -382,9 +384,11 @@
 ;; await await a => error
 (define (PrsAwait p token rbp)
   (define (right-sentinel token return-handler . nodes)
-    (sentinel-for-one-node 
+    (apply-with-ending-list
+      sentinel-for-one-node 
       (lambda (token node)
-        (and ((pred-ensuring-expr-with-consistent-precedence token) node)
+        (and 
+          ((pred-ensuring-expr-with-consistent-precedence token) node)
           (not
             (member (get-GeneralNode-token-type node)
               (map
@@ -413,7 +417,7 @@
 ;; a[b,c].d => {a[b,c]}.d (use {} for enforced ordering)
 ;; a.b[c,d] => {a.b}[c,d]
 (define (PrsAttribute p token left rbp)
-  (%LeftBinaryOpWithSentinel ensure-identifier ensure-primary)
+  (%LeftBinaryOpWithSentinel p token left rbp ensure-identifier* ensure-primary*)
   )
 
 ;;;;;; Both of these: see LeftFuncCall.

@@ -79,7 +79,7 @@
         (symbol
           ;; chain behavior is implicitly done in PrsComparison.
           ; "chain-"
-          (string-replace* op-str " " "_"))
+          (string-replace* op-str " " "-"))
         op-str))
     COMPARISON-OP-LST
     )
