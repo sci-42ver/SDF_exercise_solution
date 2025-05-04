@@ -536,6 +536,7 @@ notice only doc'ed after *having checked* the reference implementation
   > However, primitives that take procedures as arguments, such as map or filter, will not accept nonprimitive procedures (i.e., those created by this interpreter from lambda expressions).
   see SCIP Exercise 4.14.
   IMHO just similar, due to the "created" "nonprimitive procedures" are by `make-compound-procedure` unrecognized by the "Scheme primitive".
+  - See 5_5_correction.scm for unsolved problems.
 ### @%TODO
 ## reference implementation checked
 chapter 2~3 seems to not use the regex shown in "@exercise solutions..." (I forgot). 

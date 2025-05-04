@@ -231,6 +231,8 @@
     (list proc1 proc2)
     (list '(1 2 3) '(1 2 3))))
 
+;; No #f in the above tests, so passed.
+
 ;;; test6
 (define fib
   (lambda (n)
@@ -246,5 +248,3 @@
 ;; here env of fib will contain itself which also needs rebinding.
 ;; so when calling (strict-compound-procedure->underlying-procedure fib-val), fib needs something like (all-strict-compound-procedure-binding-val->underlying-procedure (procedure-environment fib-val)) which will call (strict-compound-procedure->underlying-procedure fib-val).
 (map fib '(1 2))
-
-;; No #f in the above tests, so passed.
