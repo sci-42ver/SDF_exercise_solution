@@ -215,3 +215,40 @@
 (pl-assert
   '(expt a (await b))
   "a ** await b")
+
+;;; PrsAwait
+(pl-assert
+  '(await (get-attrib a elm))
+  "await a.elm")
+; (pl-assert
+;   'error-expected
+;   "await await a")
+; ("sentinel-for-one-node fails with" (compositenode (token "await" await) (await a)) "as the operand for op" (token "await" await))
+
+;;; PrsAttribute
+(pl-assert
+  '(await (get-attrib a b))
+  "await a . b")
+(pl-assert
+  '(get-attrib (a b c) d)
+  "a(b,c).d")
+(pl-assert
+  '((get-attrib a b) c d)
+  "a.b(c,d)")
+
+;;; NullPrefixOp for "'"
+;; From Scheme syntax, so no relative tests with other op's.
+(pl-assert
+  '(quote a)
+  "'a")
+(pl-assert
+  '(+ (quote a) b)
+  "'a+b")
+
+;;; NullConstant
+(pl-assert
+  1.2
+  "1.2")
+(pl-assert
+  '|AbC|
+  "AbC")

@@ -38,7 +38,7 @@
   )
 
 (define (%ensure-var node)
-  (and (not (member (get-GeneralNode-token-type node) VAR-TYPES))
+  (and (not (%ensure-primary node))
     (ParseError (list node "can't be called"))
     )
   )
@@ -130,27 +130,28 @@
       (and 
         (null? (cdr nodes))
         (sentinel-proc token ret))
-      (list "sentinel-for-one-node fails with" ret ";" 
-        token ";")
+      (list "sentinel-for-one-node fails with" ret 
+        "as the operand for op" token)
       )
     ret)
   )
 
 ;; Just check the Token-type similar to the above, e.g. ensure-identifier.
+(define (%ensure-primary node)
+  (let ((type (get-GeneralNode-token-type node)))
+    (member
+      type
+      PRIMARY-TYPE-LIST
+      )))
 (define (ensure-primary . nodes)
   (assert (list-of-type? nodes GeneralNode?))
   (for-each
     (lambda (node)
-      (let ((type (get-GeneralNode-token-type node)))
-        (assert*
-          (member
-            type
-            PRIMARY-TYPE-LIST
-            )
-          (list node "isn't one primary due to have no type in"
-            PRIMARY-TYPE-LIST
-            )  
-          )
+      (assert*
+        (%ensure-primary node)
+        (list node "isn't one primary due to have no type in"
+          PRIMARY-TYPE-LIST
+          )  
         )
       )
     nodes

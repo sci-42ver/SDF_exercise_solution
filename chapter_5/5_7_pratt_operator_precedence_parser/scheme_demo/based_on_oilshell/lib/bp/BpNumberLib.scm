@@ -20,7 +20,17 @@
           (begin
             (assert* (= (length op-type-lst) (length val-lst)) (list op-type-lst val-lst))
             (for-each
-              (lambda (op val) (multi-hash-set! table val op denotation-type))
+              (lambda (op val) 
+                (cond 
+                  ((multi-hash-table? table) 
+                    (multi-hash-set! table val op denotation-type))
+                  ((multi-bidirectional-map? table)
+                    (table 'insert val op denotation-type))
+                  (else 
+                    (error 
+                      (list "unrecognized table in spec-with-implicit-prec" table)))
+                  )
+                )
               op-type-lst val-lst
               )
             ))

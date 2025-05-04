@@ -35,11 +35,15 @@
 
 (define ATTRIBUTEREF-TYPE-STR ".")
 
+(define QUOTE-TYPE-STR "'")
 (define ATOM-TYPE-LIST 
   `(,@CONSTANT-TYPE-STR 
     ,NULL-PAREN-TYPE-STR
     ;; list_display | dict_display | set_display are all skipped in ParsePythonDemo.scm.
     ;; generator_expression & yield are also skipped.
+
+    ;; from Scheme
+    ,QUOTE-TYPE-STR
     ))
 
 (define PRIMARY-TYPE-LIST

@@ -33,7 +33,7 @@
     ; (neg-look-behind ,NUMBER-PATTERN)
     )
   )
-(define ADDITIONAL-OPERATORS (list "{" ";" "}" "."))
+(define ADDITIONAL-OPERATORS (list "{" ";" "}" "." "'"))
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_re_lib/")
 (load "group_name_lib.scm")
