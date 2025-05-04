@@ -1,7 +1,5 @@
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
 ; (load "multi_hash_table_lib.scm")
-;; https://stackoverflow.com/a/61180123/21294350
-;; TODO after CRLS: use the most efficient based on the needs here.
 (define *prec-list* (make-multi-hash))
 
 ;; op-type-lst is based on how LookupNull etc are used.

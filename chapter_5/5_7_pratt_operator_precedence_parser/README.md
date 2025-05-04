@@ -519,6 +519,9 @@ The 1st paragraph is same as thegreenplace codes although with small differences
   - In a nutshell, `lhs, op` will be in "one incarnation of the parser" while `rhs` is in one separate "incarnation of the parser". Delim like "(" and ")" are in one separate "incarnation of the parser" each.
 - `prefix  '           0  ["QUOTE", right & check "'"] $`
   seems to allow 'foo' etc ~~which is different from quote in Scheme~~ and then outputs (quote foo) in Lisp.
+- `infix   (           25 (left . if token ≠ ")" then ("," getlist 0) & check ")" else nil $`
+  Probably lacks the ending `)`.
+  TODO IMHO this should be `[...]` to return one list instead of running one proc like `("LIST" . "," getlist bp & check "]")` does. 
 #### terms
 - PROG2: http://boole.stanford.edu/pub/lingol.html
 - `infixr` just tries to grab as more as possible for right.

@@ -12,4 +12,6 @@
   (map cdr (hash-table->alist hash-table))
   )
 
+;; https://stackoverflow.com/a/61180123/21294350
+;; TODO after CRLS: use the most efficient based on the needs here.
 (define default-hash-table-constructor make-equal-hash-table)
