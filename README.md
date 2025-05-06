@@ -118,7 +118,7 @@ Just see "@% reference implementation checked".
   - 4.1~7, 4.8 (see SDF_exercises/chapter_4/4_8_based_on_transformation.scm), 4.9~4.11, 4.13~17, 4.19~24.
   - so all that can be done by myself have been done.
 - 5 Use `grep -w -E "(test|tests|demonstrate)" -r .`
-  all exercises done up to 5.6.
+  all exercises done up to 5.7.
 ## no need for tests
 ### due to about complexity analysis
 - 4.18
@@ -174,7 +174,7 @@ up to 30b5ddceb074ac5fe8928cde0764eb91980c93d6.
               -o -path ./CS_61A_lab -o -path ./exercise_codes -o -path ./lecs \) -prune \) -o \
             \( -type f \( ! -path "./6.945_assignment_solution/ps[0-9]*/code/*.scm" \
               -a ! -name "*.md" -a ! -name "*.rkt" -a ! -name "*.sample" \) \) \
-            -exec awk '!/SDF_exercises TODO/ && !/IGNORE/ && !/\(cph\)/ && !/SKIPPED/ && !/code_base TODO/ && gsub(/TODO/,"\033[1;31m" "&" "\033[0m") {printf "\033[1;31m" FILENAME "\033[0m: " $0 "\n"}' {} +
+            -exec awk '!/SDF_exercises TODO/ && !/IGNORE/ && !/CRLS/ && !/\(cph\)/ && !/SKIPPED/ && !/code_base TODO/ && gsub(/TODO/,"\033[1;31m" "&" "\033[0m") {printf "\033[1;31m" FILENAME "\033[0m: " $0 "\n"}' {} +
             ```
             - [perl](https://unix.stackexchange.com/a/788821/568529)
               - [`-p`](https://learnbyexample.github.io/learn_perl_oneliners/one-liner-introduction.html#substitution)
@@ -530,7 +530,8 @@ notice only doc'ed after *having checked* the reference implementation
 - 3 `(lambda (procedure operands calling-environment)`
 - 4 "fun "
 - 5 `(map (lambda (x) (* x x)) '(1 2 3))`
-- 6 mdl ?
+- 6 "mdl" ?
+- 7 "fact :=" with directory `SDF_exercises/chapter_5/,` excluded.
 ### comments
 - 5
   > However, primitives that take procedures as arguments, such as map or filter, will not accept nonprimitive procedures (i.e., those created by this interpreter from lambda expressions).

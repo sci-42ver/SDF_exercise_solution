@@ -26,12 +26,8 @@
 
 (define-syntax or*
   (syntax-rules ()
-    ;; TODO R7RS is not fully supported?
-    ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/R7RS.html
-    ;; > P is an underscore (_).
-    ; (_ #f)
     ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Conditionals.html#index-or
-    ;; ~~TODO why~~ this is not always matched since it is (P_1 … P_n).
+    ;; this is not always matched since it is (P_1 … P_n).
     ;; > P is a non-literal identifier;
     ;; > The keyword at the beginning of the pattern in a syntax-rule is not involved in the matching and is not considered a pattern variable or literal identifier. 
     ((_) #f)

@@ -33,7 +33,7 @@
 ;; {} will be replaced by xargs to $(...) which will then be run by sh...
 ;; 'for file do cmd > "$file"; done' will keep unchanged file args in $@, and then again only one de-reference by $file.
 ;; > avoiding running one sh per file and the error when list.txt doesn't contain any file.
-;; TODO no error for `<list.txt xargs -I{} sh -c 'cmd > {}'` when empty list.txt
+;; (Unrelated with the book, so SKIPPED) TODO no error for `<list.txt xargs -I{} sh -c 'cmd > {}'` when empty list.txt
 ;; 1. In summary, it just says {} should not be used in 'sh -c "..."' because it can't
 ;; > replace {} with the argument quoted in the *right syntax* for the shell.
 ;; as parallel.
