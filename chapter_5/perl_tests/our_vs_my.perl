@@ -21,7 +21,7 @@ for $x (1 .. 3) {  # Implicit localisation happens here.
   print "global $::x\n"; # Prints nothing for $::x.
   foo(); # Prints nothing for $x.
 }
-print $x;  # Prints 7.
+print "$x\n";  # Prints 7.
 
 $x = 7;
 for $x (1 .. 3) {  # Implicit localisation happens here.
@@ -29,7 +29,7 @@ for $x (1 .. 3) {  # Implicit localisation happens here.
   print "global $::x\n";  # Prints 1 .. 3 correspondingly.
   foo(); # Prints 1 .. 3 correspondingly.
 }
-print $x;  # Prints 7.
+print "$x\n";  # Prints 7.
 
 # https://stackoverflow.com/a/79492975/21294350
 # > then sub f { say $x } would capture, which would greatly complicate the explanation

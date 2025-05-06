@@ -18,7 +18,7 @@ for $x (1 .. 3) {  # Implicit localisation happens here.
   print "global $::x\n";  # Prints nothing for $::x.
   foo(); # Prints nothing for $x.
 }
-print $x;  # Prints 7.
+print "outside1: $x\n";  # Prints 7.
 
 # code block3
 $x = 7;
@@ -27,4 +27,4 @@ for my $x (1 .. 3) {
   print "global $::x\n";  # Prints nothing for $::x.
   foo(); # Prints nothing for $x.
 }
-print $x;  # Prints 7.
+print "outside2: $x\n";  # Prints 7.

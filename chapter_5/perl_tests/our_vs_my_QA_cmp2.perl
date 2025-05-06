@@ -1,33 +1,32 @@
-sub foo { print "foo: $x\n"; }
-
-## Description
-# Here "my $x = 7;" points to lexical.
-# https://stackoverflow.com/questions/79495318/what-is-the-difference-between-alias-our-and-the-original-global-variable/79495779#comment140196015_79495779
-# "our $x = 7;" and the latter "$x = 7;" both mean "alias to the package variable".
-# TODO "$x (1 .. 3)" https://chat.stackoverflow.com/transcript/message/57949475#57949475
-# TODO $::x points to global trivially. So 7 at least for code block3.
-# https://chat.stackoverflow.com/transcript/message/57947591#57947591
-# No lexical here, $x in foo points to global.
-
-# With this assignment added, all the following $::x and $x of foo in block2 and block3 are all empty.
-# But without it, those work as comments there show.
+#### CHECKED
+# https://stackoverflow.com/questions/79495318/what-is-the-difference-between-alias-our-and-the-original-global-variable/79495779#comment140195930_79495779
 my $x = 7;
 
+## Description
+# Here all "$x = 7", "my $x = 7;" and "$x (1 .. 3)" points to lexical. (The 3rd see https://chat.stackoverflow.com/transcript/message/57948075#57948075)
+# $::x points to global trivially. So undefined both for code block2 and code block3.
+# https://stackoverflow.com/questions/79495318/what-is-the-difference-between-alias-our-and-the-original-global-variable/79495779#comment140200515_79495779
+# Have lexical here, $x in foo is 7.
+
+sub foo { print "foo: $x\n"; }
+
 # code block2
-# implicitly set the global var $::x
-our $x = 7;
+$x = 7;
 for $x (1 .. 3) {  # Implicit localisation happens here.
   print "$x\n";
-  print "global $::x\n";  # Prints 1 .. 3 correspondingly.
-  foo(); # Prints 1 .. 3 correspondingly.
+  print "global $::x\n";  # Prints nothing for $::x.
+  # why not use dynamic scope here, i.e. 1 .. 3?
+  # see https://stackoverflow.com/questions/79495318/what-is-the-difference-between-alias-our-and-the-original-global-variable#comment140196015_79495779
+  # > foo() is bound to the 1st lexical at compile time
+  foo(); # Prints 7.
 }
-print $x;  # Prints 7.
+print "outside1: $x\n";  # Prints 7.
 
 # code block3
 $x = 7;
 for my $x (1 .. 3) {
   print "$x\n";
-  print "global $::x\n";  # Always prints 7.
+  print "global $::x\n";  # Prints nothing for $::x.
   foo(); # Always prints 7.
 }
-print $x;  # Prints 7.
+print "outside2: $x\n";  # Prints 7.
