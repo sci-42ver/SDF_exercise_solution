@@ -64,7 +64,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;; 0. Notice here constructor-tag *must* be same as field-tag which is shown in Specification.
 ;; This is needed for field-index to work.
 ;; 1. Based on 0, if (record-predicate type) is met, just record-ref, so similar to SICP.
-(define-record-type <*compound-procedure>
+(define-record-type <compound-procedure*>
     (make-compound-procedure vars bproc env)
     ;; changed to avoid overloading primitive 
     compound-procedure?*
@@ -82,7 +82,6 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 ;;; An ENVIRONMENT is a chain of FRAMES, made of vectors.
 
 (define (environment? x) #t)     ;make better!
-(register-predicate! environment? 'environment)
 
 ;; added besides the book
 (define (environment? x)
@@ -95,6 +94,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
       )
     )
   )
+(register-predicate! environment? 'environment)
 
 (define (extend-environment variables values base-environment)
   ;; see https://srfi.schemers.org/srfi-143/srfi-143.html for why we use fixnum
@@ -190,6 +190,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; run-time-data extension
 
+;; compared with SICP exercise_codes/SICP/book-codes/ch4-leval.scm
+;; fixed-len vector element accessing is faster than variant-len list.
 (define (postpone expression environment)
   (vector 'postponed expression environment))
 
@@ -214,6 +216,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (and (vector? x)
        (eq? (vector-ref x 0) 'continued-memo)))
 
+;; same as SICP exercise_codes/SICP/book-codes/ch4-leval.scm's force-it
+;; although using vector. 
 (define (advance-memo! x value)
   (vector-set! x 0 'continued-memo)
   (vector-set! x 1 value)

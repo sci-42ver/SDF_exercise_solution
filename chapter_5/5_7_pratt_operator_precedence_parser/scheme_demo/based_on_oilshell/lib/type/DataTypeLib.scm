@@ -98,10 +98,10 @@
       ((multi-hash-table? val)
        (assert (default-object? denotation-type))
        (get-the-only-elm
-          (filter-map 
-            (lambda (type) (multi-hash-ref* val type)) 
-            ALL-DENOTATION-TYPES)
-          )
+         (filter-map 
+           (lambda (type) (multi-hash-ref* val type)) 
+           ALL-DENOTATION-TYPES)
+         )
        )
       (val val)
       (else (Token-val->Scheme-val op-str)))
@@ -140,8 +140,8 @@
 (define (reconstruct-node-with-expr expr)
   (cond 
     ((symbol? expr)
-      (CompositeNode (Token ID-TAG-STR expr) expr)
-      )
+     (CompositeNode (Token ID-TAG-STR expr) expr)
+     )
     (else
       (error (list "unknown" expr "for reconstruction"))
       ))
@@ -210,60 +210,60 @@
 (define-syntax new-GeneralNode-simplified
   (syntax-rules ()
     ((_ possible-general-node token type)
-      (begin
-        (assert 
-          (and
-            (Token? token)
-            (Token-type? type)))
-        (set-Token-type! token type)
-        (let ((intermediate possible-general-node))
-          (CompositeNode
-            token
-            (cond 
-              ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
-              (else intermediate))
-            )
-          )
-        )
-      )
+     (begin
+       (assert 
+         (and
+           (Token? token)
+           (Token-type? type)))
+       (set-Token-type! token type)
+       (let ((intermediate possible-general-node))
+         (CompositeNode
+           token
+           (cond 
+             ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+             (else intermediate))
+           )
+         )
+       )
+     )
     ((_ possible-general-node token)
-      (begin
-        (assert (and (Token? token)))
-        (let ((intermediate possible-general-node))  
-          (CompositeNode
-            token
-            (cond 
-              ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
-              (else intermediate))
-            )
-          )
-        )
-      )
+     (begin
+       (assert (and (Token? token)))
+       (let ((intermediate possible-general-node))  
+         (CompositeNode
+           token
+           (cond 
+             ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+             (else intermediate))
+           )
+         )
+       )
+     )
     )
   )
 
 (define-syntax new-GeneralNode
   (syntax-rules ()
     ((_ possible-general-node token type)
-      ;; This let is to avoid duplicate calculation
-      ;; token is assumed to be identifier able to be set!.
-      (let ((intermediate possible-general-node)
-            (type* type)
-            )
-        (assert 
-          (and
-            (Token? token)
-            (Token-type? type*)))
-        ;; Use syntax here to ensure this work for the caller token instead of that local argument.
-        (set-Token-type! token type*)
-        (CompositeNode
-          token
-          (cond 
-            ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
-            (else intermediate))
-          )
-        )
-      )
+     ;; This let is to avoid duplicate calculation
+     ;; token is assumed to be identifier able to be set!.
+     (let ((intermediate possible-general-node)
+           (type* type)
+           )
+       (assert 
+         (and
+           (Token? token)
+           (Token-type? type*)))
+       ;; Use syntax here to ensure this work for the caller token instead of that local argument.
+       (set-Token-type! token type*)
+       (CompositeNode
+         token
+         (cond 
+           ((GeneralNode? intermediate) (get-GeneralNode-val intermediate))
+           (else intermediate))
+         )
+       )
+     )
     )
   )
 

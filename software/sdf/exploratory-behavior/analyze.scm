@@ -252,7 +252,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   (length operand-execs)))
         (error "Wrong number of operands supplied"))
     (let ((params (procedure-parameters procedure))
-          (penv (procedure-environment procedure))
+          (penv (procedure-environment* procedure))
           (body-exec (procedure-body procedure)))
       (let ((names (map procedure-parameter-name params)))
         (execute-operands (lambda (operand env succeed fail)

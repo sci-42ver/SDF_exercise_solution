@@ -14,10 +14,10 @@
 ;; with-expr-as-data-end means these things all have grammar ending with expression.
 (define NON-EXPR-TAG-WITH-EXPR-AS-DATA-END
   `(,STATEMENT-BLOCK-TYPE-STR
-    ,IF-STATEMENT-TYPE-STR
-    ,EXPR-LIST-TYPE-STR
-    ,:=-TYPE-STR
-    ))
+     ,IF-STATEMENT-TYPE-STR
+     ,EXPR-LIST-TYPE-STR
+     ,:=-TYPE-STR
+     ))
 
 ;; 0. implicitly consider expr precedence is higher than NON-EXPR-TAG-WITH-EXPR-AS-DATA-END.
 ;; 1. For left-if, 
@@ -38,18 +38,18 @@
 (define QUOTE-TYPE-STR "'")
 (define ATOM-TYPE-LIST 
   `(,@CONSTANT-TYPE-STR 
-    ,NULL-PAREN-TYPE-STR
-    ;; list_display | dict_display | set_display are all skipped in ParsePythonDemo.scm.
-    ;; generator_expression & yield are also skipped.
+     ,NULL-PAREN-TYPE-STR
+     ;; list_display | dict_display | set_display are all skipped in ParsePythonDemo.scm.
+     ;; generator_expression & yield are also skipped.
 
-    ;; from Scheme
-    ,QUOTE-TYPE-STR
-    ))
+     ;; from Scheme
+     ,QUOTE-TYPE-STR
+     ))
 
 (define PRIMARY-TYPE-LIST
   `(,@ATOM-TYPE-LIST
-    ,ATTRIBUTEREF-TYPE-STR
-    ;; subscription | slicing are skipped. (see PrsSubscription and PrsSlicing)
-    ,LEFT-PAREN-TYPE-STR
-    )
+     ,ATTRIBUTEREF-TYPE-STR
+     ;; subscription | slicing are skipped. (see PrsSubscription and PrsSlicing)
+     ,LEFT-PAREN-TYPE-STR
+     )
   )

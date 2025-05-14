@@ -93,11 +93,11 @@
 (define-syntax pl-assert 
   (syntax-rules ()
     ((_ expected exp)
-      (begin
-        (ParsePythonDemo exp expected)
-        ; (ParsePythonDemo exp)
-        )
-      )
+     (begin
+       (ParsePythonDemo exp expected)
+       ; (ParsePythonDemo exp)
+       )
+     )
     )
   )
 

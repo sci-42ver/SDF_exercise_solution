@@ -22,24 +22,24 @@
 (load "5_7_common_lib/re/general_re_lib.scm")
 (define unsplitted-var 
   `(: 
-    ;; IGNORE 0. only consider unary
-    ;; 0.a. word is not with "fixed length".
-    ; (? (or (: (neg-look-behind alphanumeric) "*") (: (neg-look-behind alphanumeric) "**")))
-    ;; 1. Here we only need to ensure *args etc won't be splitted further.
-    ;; Normal var "arg" etc trivially won't be splitted.
-    ; (? (or "*" "**"))
-    ;; 2. IGNORE Default to use greedy, so ** will always match ** instead of * followed by *.
-    ;; greedy only has influences when we can have more than one possible match results. See https://stackoverflow.com/a/11899069/21294350
-    (or "*" "**")
-    ;; 0. Not use - here since here we doesn't use Scheme syntax which must use space to delimit var
-    ;; See SDF_exercises/chapter_5/5_7.scm where 
-    ; (+ (or alphanumeric "_" "-"))
-    ;; 1. IGNORE Here we should not use (word (: "*" (+ (or alphanumeric "_")))) since * must be followed by bow 
-    ; (+ (or alphanumeric "_"))
-    ;; 2. See SDF_exercises/chapter_5/5_7_re_tests/miscs.scm
-    ;; The point 1 is also related with bow/eow probably.
-    ,word-corrected
-    ))
+     ;; IGNORE 0. only consider unary
+     ;; 0.a. word is not with "fixed length".
+     ; (? (or (: (neg-look-behind alphanumeric) "*") (: (neg-look-behind alphanumeric) "**")))
+     ;; 1. Here we only need to ensure *args etc won't be splitted further.
+     ;; Normal var "arg" etc trivially won't be splitted.
+     ; (? (or "*" "**"))
+     ;; 2. IGNORE Default to use greedy, so ** will always match ** instead of * followed by *.
+     ;; greedy only has influences when we can have more than one possible match results. See https://stackoverflow.com/a/11899069/21294350
+     (or "*" "**")
+     ;; 0. Not use - here since here we doesn't use Scheme syntax which must use space to delimit var
+     ;; See SDF_exercises/chapter_5/5_7.scm where 
+     ; (+ (or alphanumeric "_" "-"))
+     ;; 1. IGNORE Here we should not use (word (: "*" (+ (or alphanumeric "_")))) since * must be followed by bow 
+     ; (+ (or alphanumeric "_"))
+     ;; 2. See SDF_exercises/chapter_5/5_7_re_tests/miscs.scm
+     ;; The point 1 is also related with bow/eow probably.
+     ,word-corrected
+     ))
 ; (assert (and (valid-sre? '(neg-look-behind word)) (valid-sre? var)))
 
 ;; 0. can't be splitted into ("*" "*") etc.

@@ -4,9 +4,9 @@
   ;; from SDF_exercises/chapter_5/5_7_re_lib/5_7_regexp_lib_simplified_based_on_effbot.rkt
   ; "\\s*(?:(\\d+)|(\\w+)|((?<!\\w)(?:\\*|\\*\\*)\\w+)|([\\-\\+\\*/%!~<>=&^|?:]+)|([\\(\\)\\[\\]~^!?:,]))"
   `(or 
-    (-> number (+ numeric)) 
-    (-> var ,word-corrected)
-    )
+     (-> number (+ numeric)) 
+     (-> var ,word-corrected)
+     )
   )
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")

@@ -363,13 +363,13 @@
       (lambda (token node)
         (or ((pred-ensuring-expr-with-consistent-precedence token) node)
             (member (get-GeneralNode-token-type node)
-              (map
-                (lambda (op-str) (*token-type-list* 'get op-str 'Null))
-                ;; u_expr
-                UNARY-OP-LST
-                )
-              )
-          )
+                    (map
+                      (lambda (op-str) (*token-type-list* 'get op-str 'Null))
+                      ;; u_expr
+                      UNARY-OP-LST
+                      )
+                    )
+            )
         )
       token return-handler nodes)
     )
@@ -391,11 +391,11 @@
           ((pred-ensuring-expr-with-consistent-precedence token) node)
           (not
             (member (get-GeneralNode-token-type node)
-              (map
-                (lambda (op-str) (*token-type-list* 'get op-str 'Null))
-                AWAIT-OP-LST
-                )
-              ))
+                    (map
+                      (lambda (op-str) (*token-type-list* 'get op-str 'Null))
+                      AWAIT-OP-LST
+                      )
+                    ))
           )
         )
       token return-handler nodes)
@@ -512,11 +512,11 @@
               ))
         ;; used as `(get-slice ,primary ,@results-here) by caller
         (append lower_bound (list ":") upper_bound
-          (if (null? stride)
-            '() ; drop the mere ending ":" if existing.
-            (cons ":" stride)
-            )
-          )
+                (if (null? stride)
+                  '() ; drop the mere ending ":" if existing.
+                  (cons ":" stride)
+                  )
+                )
         )
       )
     )
@@ -533,7 +533,7 @@
   ;; TODO why I did this before?
   ;; type is already one string after %Tokenize is done.
   ; (set-Token-type-same-as-val! token) ; type is string.
-  
+
   ;; See 5_7_regexp_lib_simplified_based_on_effbot_based_on_irregex.scm
   (CompositeNode token (Token-val token))
   )

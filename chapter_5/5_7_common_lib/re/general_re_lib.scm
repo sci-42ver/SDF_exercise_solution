@@ -15,52 +15,52 @@
     (let ((res 
             ;; This can't be wrapped with regexp-extract* since we need to *internal* neg-look-behind logic.
             (regexp-fold normal-pat
-                          ;; IGNORE Here i is the index before m-start or 0 if m-start is 0.
-                          ;; Emm... sometimes i is the index of m-start inclusive, while sometimes exclusive.
-                          (lambda (i m str acc)
-                            (let* ((s (regexp-match-submatch m 0))
-                                    ;; If m matches "ab" in "mnabc", then start is 2 with index 0 for the leftmost.
-                                    (start (regexp-match-submatch-start m 0))
-                                    ;; For the former example, end is 4 which is the index *past* the match end.
-                                    (end (regexp-match-submatch-end m 0))
-                                    ;; Returns "" if start=0. Anyway this returns str-before due to exclusive end argument "start".
-                                    (str-before (substring str 0 start)))
-                              (let ((end-with-word (regexp-search `(: ,neg-pat eos) str-before))
-                                    (match (regexp-match-submatch m 0))
-                                    )
-                                ; (write-line (list "last-end" last-end "i" i "match" match "str-before" str-before))
-                                (if end-with-word
-                                  (begin
-                                    (write-line 
-                                      (list 
-                                        match
-                                        "with"
-                                        (regexp-match-submatch end-with-word 0) 
-                                        "before"
-                                        "is not one *args or **kwargs"
-                                        ))
-                                    ;; 0. arbitrary-len-neg-look-behind done here, i.e. not consider this match (negative).
-                                    ;; 1. Notice to return one valid object here for the usage in the next fold iteration.
-                                    acc
-                                    )
-                                  (let ((intermediate-str 
-                                          (substring-lst 
-                                            str 
-                                            last-end 
-                                            start
-                                            )))
-                                    ; (write-line (list "last-end" last-end "i" i "append" intermediate-str match))
-                                    ;; As the above shows, index end elem is not consumed. So it will be used as the next inclusive start.
-                                    (set! last-end end)
-                                    (append
-                                      acc
-                                      intermediate-str
-                                      (list match))
-                                    )
-                                  ))
-                              ))
-                          '()
-                          exp)
+                         ;; IGNORE Here i is the index before m-start or 0 if m-start is 0.
+                         ;; Emm... sometimes i is the index of m-start inclusive, while sometimes exclusive.
+                         (lambda (i m str acc)
+                           (let* ((s (regexp-match-submatch m 0))
+                                  ;; If m matches "ab" in "mnabc", then start is 2 with index 0 for the leftmost.
+                                  (start (regexp-match-submatch-start m 0))
+                                  ;; For the former example, end is 4 which is the index *past* the match end.
+                                  (end (regexp-match-submatch-end m 0))
+                                  ;; Returns "" if start=0. Anyway this returns str-before due to exclusive end argument "start".
+                                  (str-before (substring str 0 start)))
+                             (let ((end-with-word (regexp-search `(: ,neg-pat eos) str-before))
+                                   (match (regexp-match-submatch m 0))
+                                   )
+                               ; (write-line (list "last-end" last-end "i" i "match" match "str-before" str-before))
+                               (if end-with-word
+                                 (begin
+                                   (write-line 
+                                     (list 
+                                       match
+                                       "with"
+                                       (regexp-match-submatch end-with-word 0) 
+                                       "before"
+                                       "is not one *args or **kwargs"
+                                       ))
+                                   ;; 0. arbitrary-len-neg-look-behind done here, i.e. not consider this match (negative).
+                                   ;; 1. Notice to return one valid object here for the usage in the next fold iteration.
+                                   acc
+                                   )
+                                 (let ((intermediate-str 
+                                         (substring-lst 
+                                           str 
+                                           last-end 
+                                           start
+                                           )))
+                                   ; (write-line (list "last-end" last-end "i" i "append" intermediate-str match))
+                                   ;; As the above shows, index end elem is not consumed. So it will be used as the next inclusive start.
+                                   (set! last-end end)
+                                   (append
+                                     acc
+                                     intermediate-str
+                                     (list match))
+                                   )
+                                 ))
+                             ))
+                         '()
+                         exp)
             ))
       ;; consume the rest substring.
       (append res (substring-lst exp last-end))

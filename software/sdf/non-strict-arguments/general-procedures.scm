@@ -31,7 +31,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   car)
 
 (define (general-compound-procedure? object)
-  (and (compound-procedure? object)
+  ; (write-line (list "procedure-parameters" (procedure-parameters object)))
+  (and (compound-procedure?* object)
        (any (lambda (parameter)
               (not (symbol? parameter)))
             (procedure-parameters object))))
@@ -42,14 +43,19 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
               operands?
               environment?)
   (lambda (procedure operands calling-environment)
+    ; (write-line "inside g:apply for general-compound-procedure")
     (if (not (n:= (length (procedure-parameters procedure))
                   (length operands)))
         (error "Wrong number of operands supplied"))
+    ;; See g:eval for lambda? where body is got by sequence->begin.
     (let ((params (procedure-parameters procedure))
           (body (procedure-body procedure)))
+      ;; Similar to exercise_codes/SICP/4/4_31.scm
+      ;; but here it uses generic instead of one parameter-names procedure doing all those.
       (let ((names (map procedure-parameter-name params))
             (arguments
              (map (lambda (param operand)
+                    ;; similar to SICP ex 4.31 interpret-var-for-val.
                     (g:handle-operand param
                                       operand
                                       calling-environment))
@@ -57,7 +63,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   operands)))
         (g:eval body
                 (extend-environment names arguments
-                  (procedure-environment procedure)))))))
+                  (procedure-environment* procedure)))))))
 
 ;;; This handler was replaced to allow ordinary strict parameters
 ;;; to work as before.
@@ -66,6 +72,9 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (simple-generic-procedure 'g:handle-operand 3
     (lambda (parameter operand environment)
       (declare (ignore parameter))
+      ;; 0. same as that in eval-operands.
+      ;; 0.a. also said later in the book
+      ;; > as was previously done by eval-operands on page 245.
       (g:advance (g:eval operand environment)))))
 
 ;; coderef: handle-lazy
@@ -84,6 +93,8 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler g:advance
   (match-args postponed?)
   (lambda (object)
+    ;; > Notice that the result of g:advance may itself be a postponement,
+    ;; i.e. g:advance call itself.
     (g:advance (g:eval (postponed-expression object)
                        (postponed-environment object)))))
 

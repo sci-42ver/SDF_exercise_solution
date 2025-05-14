@@ -56,9 +56,9 @@
       (*token-type-list* 'insert op op 'Left)
       )
     (append SHIFT-OP-LST OTHER-BINARY-OP-LST
-      (list "or" "and")
-      (list "|" "^" "&")
-      )
+            (list "or" "and")
+            (list "|" "^" "&")
+            )
     )
   (for-each
     (lambda (op)
@@ -77,9 +77,9 @@
   (assert (string? type))
   (cond 
     ((any (lambda (type*) (equal? type type*)) '("left-plus" "null-plus"))
-      "+")
+     "+")
     ((any (lambda (type*) (equal? type type*)) '("left-minus" "null-minus"))
-      "-")
+     "-")
     (else
       (write-line (list "no available subtype for" type))
       type

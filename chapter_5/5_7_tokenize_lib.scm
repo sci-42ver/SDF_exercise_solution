@@ -20,15 +20,15 @@
   (check-split-lst-and-partition-lst split-lst partition-separtor-lst skipped-re-lst)
   (let* ((split-res (exp-split exp split-lst))
          (partition-res 
-          (append-map 
-            (lambda (res)
-              (exp-partition 
-                res 
-                partition-separtor-lst 
-                skipped-re-lst)
-              )
-            split-res
-            )
-          ))
+           (append-map 
+             (lambda (res)
+               (exp-partition 
+                 res 
+                 partition-separtor-lst 
+                 skipped-re-lst)
+               )
+             split-res
+             )
+           ))
     (remove empty-str? partition-res))
   )

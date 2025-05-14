@@ -56,7 +56,7 @@
         (is-right-to-left-order (eq? from-right-to-left-tag order-tag))
         (item-cnt (length item-list)))
     (and (not is-left-to-right-order) (not is-right-to-left-order)
-      (error "unrecognized precedence order"))
+         (error "unrecognized precedence order"))
     (let ((start-idx 
             (cond 
               (is-left-to-right-order 0)

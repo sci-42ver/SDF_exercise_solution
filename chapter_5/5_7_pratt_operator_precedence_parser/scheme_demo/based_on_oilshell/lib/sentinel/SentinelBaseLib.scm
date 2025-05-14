@@ -15,12 +15,12 @@
         )
       ;; needed because they are atom or primary https://docs.python.org/3/reference/expressions.html.
       `(,LEFT-PAREN-TYPE-STR ,NULL-PAREN-TYPE-STR "{"
-        ; ,@CONSTANT-TYPE-STR ; just atom in Python grammar.
-        ;; Here this proc is only used by pred-ensuring-expr-with-consistent-precedence
-        ;; which is only used by op with precedence lower than primary.
-        ;; So it is fine to put all primary types here.
-        ,@PRIMARY-TYPE-LIST
-        )
+                             ; ,@CONSTANT-TYPE-STR ; just atom in Python grammar.
+                             ;; Here this proc is only used by pred-ensuring-expr-with-consistent-precedence
+                             ;; which is only used by op with precedence lower than primary.
+                             ;; So it is fine to put all primary types here.
+                             ,@PRIMARY-TYPE-LIST
+                             )
       )
     )
   )

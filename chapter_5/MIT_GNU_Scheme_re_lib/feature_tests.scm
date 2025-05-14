@@ -20,21 +20,21 @@
 (define-syntax %feature-tests
   (syntax-rules ()
     ((_ idx feature1 feature2 ...)
-      (begin
-        (cond-expand
-          (feature1
-            (write-line (list "feature" idx "is supported")))
-          (else))
-        (%feature-tests (+ 1 idx) feature2 ...)))
+     (begin
+       (cond-expand
+         (feature1
+           (write-line (list "feature" idx "is supported")))
+         (else))
+       (%feature-tests (+ 1 idx) feature2 ...)))
     ((_ idx)
-      'finished)
+     'finished)
     )
   )
 (define-syntax feature-tests
   (syntax-rules ()
     ((_ feature1 ...)
-      (%feature-tests 0 feature1 ...)
-      )
+     (%feature-tests 0 feature1 ...)
+     )
     )
   )
 

@@ -70,6 +70,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   ;; fresh line => EOF
   ;; 0.b. flush (seemingly taught in CSAPP & OSTEP) https://stackoverflow.com/a/12450125/21294350
   ;; Anyway just ensure to output something.
+  ;; 0.c. IMHO this can be seen as one wrapper for read.
   ;; 1. TODO 
   ;; > Emacs ... The *first* expression that is submitted
   (prompt-for-command-expression "eval> "))

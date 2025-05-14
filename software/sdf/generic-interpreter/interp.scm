@@ -127,6 +127,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
 (define-generic-procedure-handler g:eval
   (match-args definition? environment?)
   (lambda (expression environment)
+    ; (write-line "inside g:eval for definition")
     (define-variable! (definition-variable expression)
       (g:eval (definition-value expression) environment)
       environment)

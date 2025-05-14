@@ -39,8 +39,8 @@
 
 (define (%ensure-var node)
   (and (not (%ensure-primary node))
-    (ParseError (list node "can't be called"))
-    )
+       (ParseError (list node "can't be called"))
+       )
   )
 (define (ensure-var . nodes)
   (assert (list-of-type? nodes GeneralNode?))
@@ -76,7 +76,7 @@
             res
             )
           )
-        
+
         )
       nodes
       )
@@ -119,8 +119,8 @@
 
 (define (relative-sentinel? sentinel)
   (and (procedure? sentinel)
-    (equal? '(2 . #f) (procedure-arity sentinel))
-    )
+       (equal? '(2 . #f) (procedure-arity sentinel))
+       )
   )
 
 (define (sentinel-for-one-node sentinel-proc token return-handler . nodes)
@@ -131,7 +131,7 @@
         (null? (cdr nodes))
         (sentinel-proc token ret))
       (list "sentinel-for-one-node fails with" ret 
-        "as the operand for op" token)
+            "as the operand for op" token)
       )
     ret)
   )
@@ -150,8 +150,8 @@
       (assert*
         (%ensure-primary node)
         (list node "isn't one primary due to have no type in"
-          PRIMARY-TYPE-LIST
-          )  
+              PRIMARY-TYPE-LIST
+              )  
         )
       )
     nodes

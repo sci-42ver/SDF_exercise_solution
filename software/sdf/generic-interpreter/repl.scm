@@ -40,9 +40,16 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
   (call-with-input-file filename
     (lambda (port)
       (let lp ()
+        ;; 0. >  It returns the next object parsable from the given textual input port, updating port to point to the first character past the end of the external representation of the object.
+        ;; So this "read" will finally read all definitions etc in the file.
+        ;; 1. Compared with g:read=>prompt-for-command-expression, this lacks "flush the output buffer".
         (let ((input (read port)))
+          ;; > If an end of file is encountered after the beginning of an object’s written representation, but the written representation is incomplete and therefore not parsable, an error is signalled. 
+          ;; "written representation" is used for output instead of input (see https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref.pdf p215).
+          ;; It is also not in R7RS https://standards.scheme.org/corrected-r7rs/r7rs-Z-H-8.html#TAG:__tex2page_index_1000.
           (if (not (eof-object? input))
               (begin
+                ;; similar to the above.
                 (write-line
                  (g:eval input the-global-environment))
                 (lp))

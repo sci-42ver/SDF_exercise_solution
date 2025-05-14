@@ -192,7 +192,7 @@ along with SDF.  If not, see <https://www.gnu.org/licenses/>.
                   params
                   operand-execs)))
         (body-exec (extend-environment names arguments
-                     (procedure-environment procedure)))))))
+                     (procedure-environment* procedure)))))))
 
 (define x:handle-operand
   (simple-generic-procedure 'x:handle-operand 3

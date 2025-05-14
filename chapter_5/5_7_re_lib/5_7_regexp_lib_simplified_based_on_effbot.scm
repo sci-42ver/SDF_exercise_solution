@@ -14,20 +14,20 @@
 (define pat 
   (regexp 
     `(: 
-      (* space) 
-      (or
-        ;; \w already has \d.
-        ($ word-corrected)
-        ;; default to be greedy, so ** will be matched instead of 2 *s.
-        ($ (+ (or "-" "+" "*" "/" "<" ">" "=" "?" ":" ","))) 
-        ($ (or "(" ")"))))))
+       (* space) 
+       (or
+         ;; \w already has \d.
+         ($ word-corrected)
+         ;; default to be greedy, so ** will be matched instead of 2 *s.
+         ($ (+ (or "-" "+" "*" "/" "<" ">" "=" "?" ":" ","))) 
+         ($ (or "(" ")"))))))
 
 (regexp-match-submatch (regexp-search pat "k*c+a*b") 1)
 (define str-with-spaces 
   "fact := lambda n:
-    if n == 0
-    then 1
-    else n*fact(n-1)")
+  if n == 0
+  then 1
+  else n*fact(n-1)")
 (define match1 (regexp-search pat str-with-spaces))
 ; (define (regexp-match-count* )
 ;   body)

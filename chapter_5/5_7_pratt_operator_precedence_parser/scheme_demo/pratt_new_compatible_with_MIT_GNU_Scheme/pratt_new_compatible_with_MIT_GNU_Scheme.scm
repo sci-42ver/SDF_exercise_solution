@@ -345,7 +345,7 @@
 
 (defsyntax *
            led parse-nary
-          ;  nud identity
+           ;  nud identity
            lbp 120
            ;; Must define rbp < (-lbp=200 here to avoid using default 200 which may grab proc-name unexpectedly.
            rbp 120

@@ -44,9 +44,9 @@
 (define (infix? exp) (tagged-list? exp 'infix))
 (define infix-str cadr)
 (define-generic-procedure-handler g:eval
-  (match-args infix? environment?)
-  (lambda (expression environment)
-    (g:eval (infix->polish (infix-str expression)) environment)))
+                                  (match-args infix? environment?)
+                                  (lambda (expression environment)
+                                    (g:eval (infix->polish (infix-str expression)) environment)))
 (define == =)
 
 (cd "~/SICP_SDF/SDF_exercises/chapter_5/5_7_pratt_operator_precedence_parser/scheme_demo/based_on_oilshell")
@@ -65,10 +65,10 @@
 ;;; book
 ;; here some spaces are necessary to make codes work.
 (infix
-"fact := lambda n:
-if n == 0
-then 1
-else n*fact(n-1)")
+  "fact := lambda n:
+  if n == 0
+  then 1
+  else n*fact(n-1)")
 
 ; (define fact (lambda (n) (if (== n 0) 1 (* n (fact (- n 1))))))
 ; (define fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))))

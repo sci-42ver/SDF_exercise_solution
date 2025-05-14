@@ -19,19 +19,19 @@
 (define NUMBER-PATTERN '(: (+ numeric) (? "." (* numeric))))
 (define IDENTIFIER
   `(: 
-    (neg-look-ahead ,NUMBER-PATTERN)
-    (: (~ ,@DELIMITER-LIST "#" ",") (* (~ ,@DELIMITER-LIST)))
-    ))
+     (neg-look-ahead ,NUMBER-PATTERN)
+     (: (~ ,@DELIMITER-LIST "#" ",") (* (~ ,@DELIMITER-LIST)))
+     ))
 ;; TODO here tokenizer is not good since only considering arglist case for STAR-ARG.
 (define IDENTIFIER-AS-ARG
   `(: 
-    (neg-look-ahead ,NUMBER-PATTERN)
-    ;; IGNORE This alone at the end will contain the former negative pattern, and the former negated is then positive...
-    ;; The above is due to for "(: (neg-look-behind ,word-corrected) (or "*" "**") ,IDENTIFIER-AS-ARG)", "*" is matched originally, and then "*45.23".
-    (: (~ ,@DELIMITER-LIST "#" ",") (* (~ ,@DELIMITER-LIST "," ":")))
-    ;; IGNORE So add (although very inefficient...) TODO
-    ; (neg-look-behind ,NUMBER-PATTERN)
-    )
+     (neg-look-ahead ,NUMBER-PATTERN)
+     ;; IGNORE This alone at the end will contain the former negative pattern, and the former negated is then positive...
+     ;; The above is due to for "(: (neg-look-behind ,word-corrected) (or "*" "**") ,IDENTIFIER-AS-ARG)", "*" is matched originally, and then "*45.23".
+     (: (~ ,@DELIMITER-LIST "#" ",") (* (~ ,@DELIMITER-LIST "," ":")))
+     ;; IGNORE So add (although very inefficient...) TODO
+     ; (neg-look-behind ,NUMBER-PATTERN)
+     )
   )
 (define ADDITIONAL-OPERATORS (list "{" ";" "}" "."))
 
@@ -40,30 +40,30 @@
 
 (define pat
   `(or
-    ;; See SDF_exercises/chapter_5/5_7_re_tests/optional.scm for "?" behavior.
-    (=> ,NUMBER-TAG ,NUMBER-PATTERN) ; better than tdop.py
-    ;; added
-    (=> OPERATOR-WITH-SPACE-INSIDE
-      (or "is not" "not in")
-      )
-    (=> ,STAR-ARG-TAG 
-      (: (look-behind ",") 
-        (or 
-          (: "*" (neg-look-ahead "*") ,IDENTIFIER-AS-ARG) 
-          (: "**" ,IDENTIFIER-AS-ARG))))
-    ;; From tdop.py: maybe fail for some corner cases due to generality.
-    (=> OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
-      ;; (Not for irregex) Use (intern "|") for or.
-      (+ (or "-" "+" "*" "/" "%" "!" "~" "<" ">" "=" "&" "^" "|" "?" ":")))
-    ;; IGNORE Since SDF exercise 5.7 only needs "infix expression", no "Statement terminator" is needed.
-    ;; Also for "Line endings" (but we may introduce implicit newline, see SDF_exercises/chapter_5/5_7_tokenize_tests.scm).
-    
-    (=> ,ID-TAG ,WORDS)
-    (=> OPERATOR-LEN-ONE (or "(" ")" "[" "]" ,@ADDITIONAL-OPERATORS "~" "^" "!" "?" ":" ","))
-    ;; Add "Line endings", more general than the Python doc example.
-    (=> SKIP (+ space))
-    (=> MISMATCH nonl)
-    )
+     ;; See SDF_exercises/chapter_5/5_7_re_tests/optional.scm for "?" behavior.
+     (=> ,NUMBER-TAG ,NUMBER-PATTERN) ; better than tdop.py
+     ;; added
+     (=> OPERATOR-WITH-SPACE-INSIDE
+         (or "is not" "not in")
+         )
+     (=> ,STAR-ARG-TAG 
+         (: (look-behind ",") 
+            (or 
+              (: "*" (neg-look-ahead "*") ,IDENTIFIER-AS-ARG) 
+              (: "**" ,IDENTIFIER-AS-ARG))))
+     ;; From tdop.py: maybe fail for some corner cases due to generality.
+     (=> OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
+         ;; (Not for irregex) Use (intern "|") for or.
+         (+ (or "-" "+" "*" "/" "%" "!" "~" "<" ">" "=" "&" "^" "|" "?" ":")))
+     ;; IGNORE Since SDF exercise 5.7 only needs "infix expression", no "Statement terminator" is needed.
+     ;; Also for "Line endings" (but we may introduce implicit newline, see SDF_exercises/chapter_5/5_7_tokenize_tests.scm).
+
+     (=> ,ID-TAG ,WORDS)
+     (=> OPERATOR-LEN-ONE (or "(" ")" "[" "]" ,@ADDITIONAL-OPERATORS "~" "^" "!" "?" ":" ","))
+     ;; Add "Line endings", more general than the Python doc example.
+     (=> SKIP (+ space))
+     (=> MISMATCH nonl)
+     )
   )
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib/")
@@ -74,14 +74,14 @@
 
 (define FIELD-NAMES
   `(NUMBER
-    OPERATOR-WITH-SPACE-INSIDE
-    ,STAR-ARG-TAG
-    OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
-    ,ID-TAG
-    OPERATOR-LEN-ONE
-    SKIP
-    MISMATCH
-    ))
+     OPERATOR-WITH-SPACE-INSIDE
+     ,STAR-ARG-TAG
+     OPERATOR-LEN-POSSIBLY-GREATER-THAN-ONE
+     ,ID-TAG
+     OPERATOR-LEN-ONE
+     SKIP
+     MISMATCH
+     ))
 
 (define (%Tokenize pat field-names input)
   (define keywords '("if" "lambda" "then" "else" "is" "or" "and" "not" "in"))
@@ -96,25 +96,25 @@
                 )
             (cond 
               ((regexp-match-submatch match 'NUMBER)
-                (set! value (string->number value))
-                ;; Use lowercase since keywords like lambda etc default to be that.
-                (set! kind "number")
-                )
+               (set! value (string->number value))
+               ;; Use lowercase since keywords like lambda etc default to be that.
+               (set! kind "number")
+               )
               ;; tdop doesn't consider keywords for expression
               ((regexp-match-submatch match ID-TAG)
-                (if (member value keywords)
-                  (set! kind value)
-                  (set! kind ID-TAG-STR))
-                (set! value (string->symbol value))
-                )
+               (if (member value keywords)
+                 (set! kind value)
+                 (set! kind ID-TAG-STR))
+               (set! value (string->symbol value))
+               )
               ((regexp-match-submatch match 'SKIP)
-                (set! continue #t)
-                )
+               (set! continue #t)
+               )
               ((regexp-match-submatch match 'MISMATCH)
-                ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Taxonomy.html#index-condition_002dtype_003aarithmetic_002derror
-                ;; For simplicity, just use error instead of using one specific condition-type.
-                (error (list value "is unexpected on line" line-num))
-                )
+               ;; https://www.gnu.org/software/mit-scheme/documentation/stable/mit-scheme-ref/Taxonomy.html#index-condition_002dtype_003aarithmetic_002derror
+               ;; For simplicity, just use error instead of using one specific condition-type.
+               (error (list value "is unexpected on line" line-num))
+               )
               )
             ;; consistently make all types string.
             (and (symbol? kind) (set! kind (symbol->string kind)))
@@ -133,9 +133,9 @@
     pat
     FIELD-NAMES
     "fact := lambda a,b=0,/,c,*args,*,kwarg1,**kwargs:
-      if n == 0
-      then 1
-      else n*fact(n-1)"
+    if n == 0
+    then 1
+    else n*fact(n-1)"
     ))
 
 (cd "~/SICP_SDF/SDF_exercises/common-lib")
@@ -145,18 +145,18 @@
 (define (lexer-contents lexer)
   (let ((res '()))
     (while (lexer 'alive?)
-      (let ((next-elm (lexer 'next)))
-        ; (write-line next-elm)
-        (set! res (cons next-elm res)))
-      ;; IGNORE Here continuation in coroutine is a bit complex to debug.
-      ;; This will always have '() for res in (cons (lexer 'next) res).
-      ;; That is due to continuation (set! res (cons _ res)) is stored *with res '()* by (lexer 'next).
-      ;; Then at the next iteration, (lexer 'next) implicitly returns to that caller with res *still* as '().
-      ;; But for the above, (next-elm _) won't have state *across iteration*, so it won't be influenced.
-      ; (write-line res)
-      ; (set! res (cons (lexer 'next) res))
-      ; (write-line res)
-      )
+           (let ((next-elm (lexer 'next)))
+             ; (write-line next-elm)
+             (set! res (cons next-elm res)))
+           ;; IGNORE Here continuation in coroutine is a bit complex to debug.
+           ;; This will always have '() for res in (cons (lexer 'next) res).
+           ;; That is due to continuation (set! res (cons _ res)) is stored *with res '()* by (lexer 'next).
+           ;; Then at the next iteration, (lexer 'next) implicitly returns to that caller with res *still* as '().
+           ;; But for the above, (next-elm _) won't have state *across iteration*, so it won't be influenced.
+           ; (write-line res)
+           ; (set! res (cons (lexer 'next) res))
+           ; (write-line res)
+           )
     (reverse res))
   )
 (define (meet-finish-elem? elem)
@@ -227,7 +227,7 @@
     FIELD-NAMES
     ;; Just one artifical and a bit nonsense demo
     "fact := lambda a,**45.23:
-      a"
+    a"
     ))
 ;; lookahead should be always preceded by something.
 ;; See `man perlre`
@@ -265,7 +265,7 @@
     FIELD-NAMES
     ;; Just one artifical and a bit nonsense demo
     "fact := lambda a,**45.23:
-      {a+a;a*2}"
+    {a+a;a*2}"
     ))
 ; (pp (lexer-contents test-lexer3))
 (assert-lexer
@@ -310,7 +310,7 @@
     (token "operator-len-possibly-greater-than-one" ":")
     (token "skip" " ")
     (token "id" a_b) (token "eof" "eof")
- finish-routine))
+    finish-routine))
 
 (define test-lexer5
   (%Tokenize 
@@ -323,19 +323,19 @@
 (assert-lexer
   test-lexer5
   '((token "id" a) (token "skip" " ")
-                  (token "operator-with-space-inside" "is not")
-                  (token "skip" " ")
-                  (token "id" b)
-                  (token "skip" " ")
-                  (token "operator-with-space-inside" "not in")
-                  (token "skip" " ")
-                  (token "id" c)
-                  (token "skip" " ")
-                  (token "operator-len-possibly-greater-than-one" "<=")
-                  (token "skip" " ")
-                  (token "id" d)
-                  (token "eof" "eof")
-                  finish-routine))
+                   (token "operator-with-space-inside" "is not")
+                   (token "skip" " ")
+                   (token "id" b)
+                   (token "skip" " ")
+                   (token "operator-with-space-inside" "not in")
+                   (token "skip" " ")
+                   (token "id" c)
+                   (token "skip" " ")
+                   (token "operator-len-possibly-greater-than-one" "<=")
+                   (token "skip" " ")
+                   (token "id" d)
+                   (token "eof" "eof")
+                   finish-routine))
 
 (define test-lexer6
   (%Tokenize 
@@ -348,14 +348,14 @@
 (assert-lexer
   test-lexer6
   '((token "number" 3.14) (token "operator-len-possibly-greater-than-one" "==")
-                       (token "id" f)
-                       (token "operator-len-one" "(")
-                       (token "id" b)
-                       (token "operator-len-one" ")")
-                       (token "operator-len-one" ".")
-                       (token "id" val)
-                       (token "eof" "eof")
-                       finish-routine))
+                          (token "id" f)
+                          (token "operator-len-one" "(")
+                          (token "id" b)
+                          (token "operator-len-one" ")")
+                          (token "operator-len-one" ".")
+                          (token "id" val)
+                          (token "eof" "eof")
+                          finish-routine))
 
 (define (Tokenize str)
   (%Tokenize pat FIELD-NAMES str)  

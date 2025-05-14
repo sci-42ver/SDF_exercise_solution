@@ -15,23 +15,23 @@
       (let ((table (car val-lst-with-table))
             (val-lst (cdr val-lst-with-table)))
         (and* val-lst
-          (begin
-            (assert* (= (length op-type-lst) (length val-lst)) (list op-type-lst val-lst))
-            (for-each
-              (lambda (op val) 
-                (cond 
-                  ((multi-hash-table? table) 
-                    (multi-hash-set! table val op denotation-type))
-                  ((multi-bidirectional-map? table)
-                    (table 'insert val op denotation-type))
-                  (else 
-                    (error 
-                      (list "unrecognized table in spec-with-implicit-prec" table)))
+              (begin
+                (assert* (= (length op-type-lst) (length val-lst)) (list op-type-lst val-lst))
+                (for-each
+                  (lambda (op val) 
+                    (cond 
+                      ((multi-hash-table? table) 
+                       (multi-hash-set! table val op denotation-type))
+                      ((multi-bidirectional-map? table)
+                       (table 'insert val op denotation-type))
+                      (else 
+                        (error 
+                          (list "unrecognized table in spec-with-implicit-prec" table)))
+                      )
+                    )
+                  op-type-lst val-lst
                   )
-                )
-              op-type-lst val-lst
-              )
-            ))
+                ))
         )
       )
     (list 
@@ -39,11 +39,11 @@
       (cons *token-type-list* token-type-lst)
       ;; for consistency
       (cons *prec-list*
-        (if (default-object? prec)
-          (default-object)
-          (map (lambda (ignore) prec) op-type-lst)
-          )
-        )
+            (if (default-object? prec)
+              (default-object)
+              (map (lambda (ignore) prec) op-type-lst)
+              )
+            )
       )
     )
   ;; assume op-type-lst having the same prec.
@@ -58,17 +58,17 @@
   (assert (string? op-str))
   (let ((possible-prec 
           (apply-with-no-default-object-arg multi-hash-ref
-            *prec-list* op-str denotation-type
-            )))
+                                            *prec-list* op-str denotation-type
+                                            )))
     (cond 
       ((multi-hash-table? possible-prec)
-        (get-the-only-elm
-          (filter-map 
-            (lambda (type) 
-              (multi-hash-ref* *prec-list* op-str type)) 
-            ALL-DENOTATION-TYPES)
-          )
-        )
+       (get-the-only-elm
+         (filter-map 
+           (lambda (type) 
+             (multi-hash-ref* *prec-list* op-str type)) 
+           ALL-DENOTATION-TYPES)
+         )
+       )
       ((number? possible-prec) possible-prec)
       (else (error (list op-str "has no prec")))
       )
@@ -90,8 +90,8 @@
   (let ((prec-key 
           (cond 
             ((equal? token-type COMPARISON-TYPE-STR) 
-              ;; This can't be in *token-type-list*, otherwise (<= 'Left) etc will have 2 maps...
-              (*token-type-list* 'getKeys* (car COMPARISON-OP-LST)))
+             ;; This can't be in *token-type-list*, otherwise (<= 'Left) etc will have 2 maps...
+             (*token-type-list* 'getKeys* (car COMPARISON-OP-LST)))
             (else 
               (*token-type-list* 'getKeys* token-type)))
           ))
@@ -116,8 +116,8 @@
 (load "lib/bp/BpNumberBaseLib.scm")
 (define prec-list-higher-than-or-op
   `(,LEFT-IF-BP
-    .
-    ((Left ("or"))
+     .
+     ((Left ("or"))
       (Left ("and"))
       (Null ("not"))
       ;; Add one total name since a<=b<c etc are thought as one whole object instead of (a<=b)<c.

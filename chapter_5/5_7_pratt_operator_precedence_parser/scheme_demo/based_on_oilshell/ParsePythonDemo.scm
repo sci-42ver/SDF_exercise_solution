@@ -49,7 +49,7 @@
     (spec-with-implicit-prec spec 'Left LeftSemicolon (list ";"))
 
     (spec-with-implicit-prec spec 'Null NullLambda (list "lambda"))
-    
+
     ;; IGNORE For if – else (not offered in oilshell since it is not used in C-expr),
     ;; we should do as https://docs.python.org/3/reference/expressions.html#if-expr
     ;; instead of that in pratt_new_compatible_with_MIT_GNU_Scheme.scm
@@ -85,7 +85,7 @@
     ;; infix_r & infix has no seq.
     ;; prefix has no Sentinel.
     ;; 1. IMHO "infix("not", 60)" is inappropriate since it allows a not b.
-    
+
     ;;;; BEHAVIOR
     ;; See LeftLogical for or&and.
     ;; For not (i.e. ! in oilshell), here we add Sentinel.
@@ -143,7 +143,7 @@
     ;;; 1. IGNORE Also here [] has different parsing rules for Subscription and Slicing,
     ; (spec-with-implicit-prec spec 'Left PrsSubscription '("[") '("sublist") MAX-BP)
     ; (spec-with-implicit-prec spec 'Left PrsSlicing '("[") '("slicing") MAX-BP)
-    
+
     ;;;; BEHAVIOR for NullParen (detailed)
     ;; 0. Notice for "parenth_form", we need to ensure "[starred_expression]"
     ;; IMHO that can be combined with expr_list as I have done in NullParen.
