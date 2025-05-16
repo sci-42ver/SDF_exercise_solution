@@ -203,6 +203,7 @@ The read-eval-print loop is moved to be in that environment."
       ;; SKIPPED SDF_exercises TODO all 3 used procedures in force-top-level-repl! are not defined anywhere in this code base. 
       ;; And they are also not shown in MIT_Scheme_Reference.
       ;; Google "scheme doc "abort->top-level"" no useful references.
+      ;; So I don't know why `scheme < file.scm` will automatically stop after `(manage 'new 'non-strict-arguments)` etc.
       (force-top-level-repl! flavors
                              `(manage 'new-environment
                                       ,@(map (lambda (flavor) `',flavor)
